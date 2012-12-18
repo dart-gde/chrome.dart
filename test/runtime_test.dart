@@ -6,7 +6,11 @@ class RuntimeTest {
   void main() {
     group('chrome.runtime', () {
       test('lastError', () {
-        expect(false, isTrue);
+        Runtime runtime = new Runtime();
+        runtime.lastError.then(expectAsync1((String s) {
+          logger.fine("lastError = ${s}");
+          expect(s.isEmpty, isTrue);
+        }));
       });
       
       test('id', () {

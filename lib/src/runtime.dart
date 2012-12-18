@@ -4,20 +4,46 @@ library chrome_runtime;
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
 
+typedef void onStartupCallback();
+typedef void onInstalledCallback(Map details); // TODO(adam): replace map with structured object. 
+typedef void onSuspendCallback();
+typedef void onSuspendCanceledCallback();
+typedef void onUpdateAvailableCallback(Map details); // TODO(adam): replace map with structured object. 
+
+class RuntimeError {
+  String message;
+  RuntimeError(this.message);
+}
+
 class Runtime {
-  
+  Logger logger = new Logger("chrome.runtime");
   /// Properties
   
   /**
    * This will be defined during an API method callback if there was an error.
    */
   Future get lastError {
-    Completer completer = new Completer();
+    var completer = new Completer();
     
     js.scoped(() {
       var chrome = js.context.chrome;
-      var lastError = chrome.runtime.lastError;
-      completer.complete({"message": lastError.message});
+      logger.fine("accessing ${chrome.runtime}");
+      var lastError = null; 
+      
+      try {
+        lastError = chrome.runtime.lastError;
+      } on NoSuchMethodError catch (e, trace) {
+        // No error was in the chrome.runtime context.
+        completer.complete("");
+        return;
+      }
+      
+      // This null check might not be needed. 
+      if (lastError == null) {
+        completer.complete("");
+      } else {
+        completer.completeException(new RuntimeError(lastError.message));
+      }
     });
     
     return completer.future;
@@ -27,7 +53,7 @@ class Runtime {
    * The ID of the extension/app.
    */
   Future<String> get id {
-    Completer completer = new Completer();
+    var completer = new Completer();
     
     js.scoped(() {
       var chrome = js.context.chrome;
@@ -49,12 +75,21 @@ class Runtime {
    * If there is no background page, an error is set.
    */
   Future getBackgroundPage() { 
-    Completer completer = new Completer();
+    var completer = new Completer();
+    
     js.scoped(() {
       
       void callback(object) {
         // TODO(adam): log this value and figure out its proper runtime mapping. 
-        completer.complete(object);
+        
+        lastError
+        ..handleException((RuntimeError error) {
+          completer.completeException(error);
+        })
+        ..then((success) {
+          completer.complete(object);
+        });
+        
       };
       
       js.context.getBackgroundPageCallback = new js.Callback.once(callback);
@@ -71,7 +106,7 @@ class Runtime {
    * The [object] returned is a serialization of the full [manifest] file.
    */ 
   Future getManifest() {
-    Completer completer = new Completer();
+    var completer = new Completer();
     
     js.scoped(() {
       var chrome = js.context.chrome;
@@ -92,7 +127,7 @@ class Runtime {
    * expressed relative to its install directory.
    */
   Future<String> getURL(String path) {
-    Completer completer = new Completer();
+    var completer = new Completer();
     
     js.scoped(() {
       var chrome = js.context.chrome;
@@ -117,7 +152,8 @@ class Runtime {
    * Requests an update check for this app/extension.
    */
   Future requestUpdateCheck() {
-    Completer completer = new Completer();
+    var completer = new Completer();
+    
     js.scoped(() {
       void callback(status, details) {
         // TODO(adam): break out into native dart objects. 
@@ -127,6 +163,7 @@ class Runtime {
       var chrome = js.context.chrome;
       chrome.runtime.requestUpdateCheck(js.context.requestUpdateCheckCallback);
     });
+    
     return completer.future;
   }
   
@@ -135,7 +172,7 @@ class Runtime {
   /**
    * Fired when the browser first starts up.
    */
-  void onStartup(Function listener) {
+  void onStartup(onStartupCallback listener) {
     // TODO(adam): typedef the listener
     js.scoped(() {
       void event() {
@@ -155,8 +192,7 @@ class Runtime {
    * when the extension is updated to a new version, 
    * and when Chrome is updated to a new version.
    */
-  void onInstalled(Function listener) {
-    // TODO(adam): typedef the listener
+  void onInstalled(onInstalledCallback listener) {
     js.scoped(() {
       void event(details) {
         if (listener!=null) {
@@ -180,8 +216,7 @@ class Runtime {
    * before it gets unloaded the onSuspendCanceled event will be 
    * sent and the page won't be unloaded.
    */
-  void onSuspend(Function listener) {
-    // TODO(adam): typedef the listener
+  void onSuspend(onSuspendCallback listener) {
     js.scoped(() {
       void event() {
         if (listener!=null) {
@@ -199,8 +234,7 @@ class Runtime {
   /**
    * Sent after onSuspend() to indicate that the app won't be unloaded after all.
    */
-  void onSuspendCanceled(Function listener) {
-    // TODO(adam): typedef the listener
+  void onSuspendCanceled(onSuspendCanceledCallback listener) {
     js.scoped(() {
       void event() {
         if (listener!=null) {
@@ -223,8 +257,7 @@ class Runtime {
    * the background page gets unloaded, if you want it to be installed 
    * sooner you can explicitly call chrome.runtime.reload().
    */
-  void onUpdateAvailable(Function listener) {
-    // TODO(adam): typedef the listener
+  void onUpdateAvailable(onUpdateAvailableCallback listener) {
     js.scoped(() {
       void event(details) {
         if (listener!=null) {
