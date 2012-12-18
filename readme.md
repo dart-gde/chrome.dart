@@ -9,7 +9,7 @@ Our goal is to follow [Semantic Versioning](http://semver.org/).
 # Building unit tests
 
 ```
-~/dart/chrome.dart$ bin/hop test_dart2js
+./bin/hop test_dart2js
 ```
 
 # Authors
