@@ -9,10 +9,9 @@ import 'package:chrome/chrome.dart';
 part 'runtime_test.dart';
 
 main() {
-  Logger.root.level = Level.ALL; 
-  Logger logger = new Logger("main");
+  Logger.root.level = Level.ALL;
   Logger.root.on.record.add((LogRecord r)=>print(r.message.toString()));
-  
+
   groupSep = '.';
   useHtmlEnhancedConfiguration();
 
