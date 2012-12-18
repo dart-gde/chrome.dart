@@ -1,6 +1,8 @@
 // http://developer.chrome.com/trunk/apps/runtime.html
 library chrome_runtime;
 
+import 'dart:json';
+
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
 
@@ -67,27 +69,29 @@ class Runtime {
   /// Methods
   
   /**
-   * Retrieves the JavaScript 'window' object for the background page 
+   * Retrieves the js.Proxy [window] object for the background page 
    * running inside the current extension. 
    * 
    * If the background page is an event page, 
    * the system will ensure it is loaded before calling the callback. 
    * If there is no background page, an error is set.
    */
-  Future getBackgroundPage() { 
+  Future<js.Proxy> getBackgroundPage() { 
     var completer = new Completer();
     
     js.scoped(() {
       
-      void callback(object) {
-        // TODO(adam): log this value and figure out its proper runtime mapping. 
-        
+      /**
+       * callback returns a proxy to the window object. 
+       */
+      void callback(js.Proxy window) {
+
         lastError
         ..handleException((RuntimeError error) {
           completer.completeException(error);
         })
-        ..then((success) {
-          completer.complete(object);
+        ..then((_) {
+          completer.complete(window);
         });
         
       };
@@ -103,17 +107,17 @@ class Runtime {
   /**
    * Returns details about the app or extension from the manifest. 
    * 
-   * The [object] returned is a serialization of the full [manifest] file.
+   * The [Map] returned is a de-serialization of the full [manifest] file.
    */ 
-  Future getManifest() {
+  Future<Map> getManifest() {
     var completer = new Completer();
     
     js.scoped(() {
       var chrome = js.context.chrome;
-      // TODO(adam): figure out what object is returned and 
-      // turn into a primative dart object. 
-      Object object = chrome.runtime.getManifest();
-      completer.complete(object);
+      var manifest_proxy = chrome.runtime.getManifest();
+      var manifest_string = js.context.JSON.stringify(manifest_proxy);
+      var manifest = JSON.parse(manifest_string);
+      completer.complete(manifest);
     });
     
     return completer.future;    
