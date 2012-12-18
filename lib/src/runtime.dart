@@ -135,7 +135,7 @@ class Runtime {
   /**
    * Fired when the browser first starts up.
    */
-  onStartup(Function listener) {
+  void onStartup(Function listener) {
     // TODO(adam): typedef the listener
     js.scoped(() {
       void event() {
@@ -155,7 +155,7 @@ class Runtime {
    * when the extension is updated to a new version, 
    * and when Chrome is updated to a new version.
    */
-  onInstalled(Function listener) {
+  void onInstalled(Function listener) {
     // TODO(adam): typedef the listener
     js.scoped(() {
       void event(details) {
@@ -180,7 +180,7 @@ class Runtime {
    * before it gets unloaded the onSuspendCanceled event will be 
    * sent and the page won't be unloaded.
    */
-  onSuspend(Function listener) {
+  void onSuspend(Function listener) {
     // TODO(adam): typedef the listener
     js.scoped(() {
       void event() {
@@ -199,7 +199,7 @@ class Runtime {
   /**
    * Sent after onSuspend() to indicate that the app won't be unloaded after all.
    */
-  onSuspendCanceled(Function listener) {
+  void onSuspendCanceled(Function listener) {
     // TODO(adam): typedef the listener
     js.scoped(() {
       void event() {
@@ -223,7 +223,7 @@ class Runtime {
    * the background page gets unloaded, if you want it to be installed 
    * sooner you can explicitly call chrome.runtime.reload().
    */
-  onUpdateAvailable(Function listener) {
+  void onUpdateAvailable(Function listener) {
     // TODO(adam): typedef the listener
     js.scoped(() {
       void event(details) {
