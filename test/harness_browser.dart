@@ -2,14 +2,19 @@ library harness_browser;
 
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
+import 'package:logging/logging.dart';
+
+import 'package:chrome/chrome.dart';
+
+part 'runtime_test.dart';
 
 main() {
-  groupSep = ' - ';
+  Logger.root.level = Level.ALL; 
+  Logger logger = new Logger("main");
+  Logger.root.on.record.add((LogRecord r)=>print(r.message.toString()));
+  
+  groupSep = '.';
   useHtmlEnhancedConfiguration();
 
-  group('dummy', () {
-    test('hello, world!', () {
-      expect(true, isTrue);
-    });
-  });
+  new RuntimeTest().main();
 }
