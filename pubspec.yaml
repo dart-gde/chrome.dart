@@ -5,3 +5,4 @@ dependencies:
   bot: 0.9.0-beta2
   js: 0.0.13
   unittest: '>=0.2.8 <2.9.0'
+  logging: 0.2.8+2
