@@ -6,9 +6,6 @@ import 'package:bot/hop_tasks.dart';
 void main() {
   _assertKnownPath();
 
-  //
-  //
-  //
   addTask('test_dart2js', createDart2JsTask(['test/harness_browser.dart'],
       minify: true,
       allowUnsafeEval: false,
