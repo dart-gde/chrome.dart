@@ -12,7 +12,7 @@ import 'package:chrome/chrome.dart';
 part 'src/test_runtime.dart';
 
 main() {
-  Logger.root.level = Level.ALL; 
+  Logger.root.level = Level.ALL;
   Logger.root.on.record.add((LogRecord r) {
     StringBuffer sb = new StringBuffer();
     sb
@@ -25,9 +25,9 @@ main() {
     ..add(r.sequenceNumber)
     ..add(": ")
     ..add(r.message.toString());
-    print(sb.toString()); 
+    logMessage(sb.toString());
   });
-    
+
   groupSep = '.';
   useHtmlEnhancedConfiguration();
 
@@ -36,6 +36,6 @@ main() {
       new Runtime().reload();
     }
   });
-  
+
   new TestRuntime().main();
 }
