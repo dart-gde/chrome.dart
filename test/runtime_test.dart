@@ -6,19 +6,15 @@ class RuntimeTest {
   void main() {
     group('chrome.runtime', () {
       test('lastError', () {
-        Runtime runtime = new Runtime();
-        runtime.lastError.then(expectAsync1((String s) {
-          logger.fine("lastError = ${s}");
-          expect(s.isEmpty, isTrue);
-        }));
+        var lastError = Runtime.lastError;
+        logger.fine("lastError = ${lastError}");
+        expect(lastError.message.isEmpty, isTrue);
       });
       
       test('id', () {
-        Runtime runtime = new Runtime();
-        runtime.id.then(expectAsync1((String s) {
-          logger.fine("id = ${s}");
-          expect(s is String, isTrue);
-        }));
+        String id = Runtime.id;
+        logger.fine("id = ${id}");
+        expect(id is String, isTrue);
       });
       
       test('getBackgroundPage()', () {
@@ -38,58 +34,81 @@ class RuntimeTest {
       
       test('getManifest()', () {
         Runtime runtime = new Runtime();
-        runtime.getManifest().then(expectAsync1((Map manifest) {
-          logger.fine("manifest = ${manifest}");
-          expect(manifest is Map, isTrue);
-          expect(manifest["manifest_version"], equals(2));
-          expect(manifest["name"], equals("chrome.dart - test"));
-          expect(manifest["version"], equals("1"));
-          expect(manifest["minimum_chrome_version"], equals("23"));
-          expect(manifest.containsKey("app"), isTrue);
-          expect(manifest["app"].containsKey("background"), isTrue);
-          expect(manifest["app"]["background"].containsKey("scripts"), isTrue);
-          expect(manifest["app"]["background"]["scripts"], equals(["main.js"]));
-        }));
+        var manifest = runtime.getManifest();
+        logger.fine("manifest = ${manifest}");
+        expect(manifest is Map, isTrue);
+        expect(manifest["manifest_version"], equals(2));
+        expect(manifest["name"], equals("chrome.dart - test"));
+        expect(manifest["version"], equals("1"));
+        expect(manifest["minimum_chrome_version"], equals("23"));
+        expect(manifest.containsKey("app"), isTrue);
+        expect(manifest["app"].containsKey("background"), isTrue);
+        expect(manifest["app"]["background"].containsKey("scripts"), isTrue);
+        expect(manifest["app"]["background"]["scripts"], equals(["main.js"]));
       });
       
       test('getURL(String path)', () {
         Runtime runtime = new Runtime();
-        runtime.getURL("some/path").then(expectAsync1((String path) {
-          logger.fine("getURL = ${path}");
-          expect(path is String, isTrue);
-          expect(path.startsWith('chrome-extension://'), isTrue);
-          expect(path.endsWith('/some/path'), isTrue);
+        var path = runtime.getURL("some/path");
+        logger.fine("getURL = ${path}");
+        expect(path is String, isTrue);
+        expect(path.startsWith('chrome-extension://'), isTrue);
+        expect(path.endsWith('/some/path'), isTrue);
+      });
+      
+//      test('reload()', () {
+//        // we pass this or else we would just continue to reload the app. 
+//        expect(true, isTrue);
+//      });
+      
+      test('requestUpdateCheck()', () {
+        Runtime runtime = new Runtime();
+        runtime.requestUpdateCheck().then(expectAsync1((update) {
+          logger.fine("update = ${update}");
+          
+          expect(update is Map, isTrue);
+          expect(update.containsKey('status'), isTrue);
+          expect(update.containsKey('details'), isTrue);
+          expect(update['status'], equals('no_update'));
+          expect(update['details'], isNull);
         }));
       });
       
-      test('reload()', () {
-        // we pass this or else we would just continue to reload the app. 
-        expect(true, isTrue);
-      });
+//      test('onStartup(Function listener)', () {   
+//        Runtime runtime = new Runtime();
+//        runtime.onStartup(expectAsync0(() {
+//          expect(true, isTrue);
+//        }, 1));
+//      });
+//      
+//      test('onInstalled(Function listener)', () {
+//        Runtime runtime = new Runtime();
+//        runtime.onInstalled(expectAsync1((Map m) {
+//          expect(true, isTrue);
+//        }));
+//      });
+//      
+//      test('onSuspend(Function listener)', () {
+//        Runtime runtime = new Runtime();
+//        runtime.onStartup(expectAsync0(() {
+//          expect(true, isTrue);
+//        }, 1));
+//      });
+//      
+//      test('onSuspendCanceled(Function listener)', () {
+//        Runtime runtime = new Runtime();
+//        runtime.onStartup(expectAsync0(() {
+//          expect(true, isTrue);
+//        }, 1));
+//      });
+//      
+//      test('onUpdateAvailable(Function listener)', () {
+//        Runtime runtime = new Runtime();
+//        runtime.onUpdateAvailable(expectAsync1((Map m) {
+//          expect(true, isTrue);
+//        }));
+//      });
       
-      test('requestUpdateCheck()', () {
-        expect(false, isTrue);
-      });
-      
-      test('onStartup(Function listener)', () {
-        expect(false, isTrue);
-      });
-      
-      test('onInstalled(Function listener)', () {
-        expect(false, isTrue);
-      });
-      
-      test('onSuspend(Function listener)', () {
-        expect(false, isTrue);
-      });
-      
-      test('onSuspendCanceled(Function listener)', () {
-        expect(false, isTrue);
-      });
-      
-      test('onUpdateAvailable(Function listener)', () {
-        expect(false, isTrue);
-      });
     });
   }
 }

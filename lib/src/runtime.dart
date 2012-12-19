@@ -12,58 +12,55 @@ typedef void onSuspendCallback();
 typedef void onSuspendCanceledCallback();
 typedef void onUpdateAvailableCallback(Map details); // TODO(adam): replace map with structured object. 
 
+/**
+ * Created from [Runtime].[lastError] checks.  
+ */ 
 class RuntimeError {
+  /**
+   * Details about the error which occurred.
+   */ 
   String message;
-  RuntimeError(this.message);
+  RuntimeError({this.message: ""});
 }
 
 class Runtime {
-  Logger logger = new Logger("chrome.runtime");
+  
   /// Properties
+  
+  final Logger logger = new Logger("chrome.runtime");
   
   /**
    * This will be defined during an API method callback if there was an error.
    */
-  Future get lastError {
-    var completer = new Completer();
-    
-    js.scoped(() {
+  static RuntimeError get lastError {
+    return js.scoped(() {
       var chrome = js.context.chrome;
-      logger.fine("accessing ${chrome.runtime}");
       var lastError = null; 
       
       try {
         lastError = chrome.runtime.lastError;
       } on NoSuchMethodError catch (e, trace) {
         // No error was in the chrome.runtime context.
-        completer.complete("");
-        return;
+        return new RuntimeError();
       }
       
       // This null check might not be needed. 
       if (lastError == null) {
-        completer.complete("");
+        // No error was in the chrome.runtime context.
+        return new RuntimeError();
       } else {
-        completer.completeException(new RuntimeError(lastError.message));
+        return new RuntimeError(message: lastError.message);
       }
     });
-    
-    return completer.future;
   }
   
   /**
    * The ID of the extension/app.
    */
-  Future<String> get id {
-    var completer = new Completer();
-    
-    js.scoped(() {
-      var chrome = js.context.chrome;
-      String id = chrome.runtime.id;
-      completer.complete(id);
+  static String get id {
+    return js.scoped(() {
+      return js.context.chrome.runtime.id;
     });
-    
-    return completer.future;
   }
   
   /// Methods
@@ -80,20 +77,16 @@ class Runtime {
     var completer = new Completer();
     
     js.scoped(() {
-      
       /**
        * callback returns a proxy to the window object. 
        */
       void callback(js.Proxy window) {
-
-        lastError
-        ..handleException((RuntimeError error) {
-          completer.completeException(error);
-        })
-        ..then((_) {
+        var le = lastError;
+        if (le.message.isEmpty) {
           completer.complete(window);
-        });
-        
+        } else {
+          completer.completeException(le);
+        }
       };
       
       js.context.getBackgroundPageCallback = new js.Callback.once(callback);
@@ -109,18 +102,11 @@ class Runtime {
    * 
    * The [Map] returned is a de-serialization of the full [manifest] file.
    */ 
-  Future<Map> getManifest() {
-    var completer = new Completer();
-    
-    js.scoped(() {
+  Map getManifest() {
+    return js.scoped(() {
       var chrome = js.context.chrome;
-      var manifest_proxy = chrome.runtime.getManifest();
-      var manifest_string = js.context.JSON.stringify(manifest_proxy);
-      var manifest = JSON.parse(manifest_string);
-      completer.complete(manifest);
+      return JSON.parse(js.context.JSON.stringify(chrome.runtime.getManifest()));
     });
-    
-    return completer.future;    
   }
   
   /**
@@ -130,16 +116,10 @@ class Runtime {
    * A [path] to a resource within an app/extension 
    * expressed relative to its install directory.
    */
-  Future<String> getURL(String path) {
-    var completer = new Completer();
-    
-    js.scoped(() {
-      var chrome = js.context.chrome;
-      String full_path = chrome.runtime.getURL(path);
-      completer.complete(full_path);
+  String getURL(String path) {
+    return js.scoped(() {
+      return js.context.chrome.runtime.getURL(path);
     });
-    
-    return completer.future;
   }
   
   /**
@@ -147,21 +127,33 @@ class Runtime {
    */
   void reload() {
     js.scoped(() {
-      var chrome = js.context.chrome;
-      chrome.runtime.reload();
+      js.context.chrome.runtime.reload();
     });
   }
   
   /**
    * Requests an update check for this app/extension.
+   * 
+   * Completed Map contains key 'status' with the following enumeration of
+   * strings "throttled", "no_update", "update_available". 
+   * 
+   * Completed Map will also contain key 'details' which could be Map or null.
+   * null object is returned if no details are provided. In the case of details
+   * available, a Map with 'version' key, value being the version of the 
+   * available update. 
    */
-  Future requestUpdateCheck() {
+  Future<Map> requestUpdateCheck() {
     var completer = new Completer();
     
     js.scoped(() {
-      void callback(status, details) {
-        // TODO(adam): break out into native dart objects. 
-        completer.complete({"status": status, "details": details});
+      void callback(status, [details]) {
+        var le = lastError;
+        if (le.message.isEmpty) {
+          var d = JSON.parse(js.context.JSON.stringify(details));
+          completer.complete({"status": status, "details": d});
+        } else {
+          completer.completeException(le);
+        }
       };
       js.context.requestUpdateCheckCallback = new js.Callback.once(callback);
       var chrome = js.context.chrome;
@@ -179,13 +171,14 @@ class Runtime {
   void onStartup(onStartupCallback listener) {
     // TODO(adam): typedef the listener
     js.scoped(() {
-      void event() {
+      void event() {        
         if (listener!=null) {
           listener();
         }
       };
       
       js.context.onStartupEvent = new js.Callback.once(event);
+      js.retain(js.context.onStartupEvent);
       var chrome = js.context.chrome;
       chrome.runtime.onStartup.addListener(js.context.onStartupEvent);
     });
@@ -195,16 +188,27 @@ class Runtime {
    * Fired when the extension is first installed, 
    * when the extension is updated to a new version, 
    * and when Chrome is updated to a new version.
+   * 
+   * [details] Map passed to the [listener] will contain keys
+   * 'reason' and 'previousVersion'. 
+   * 
+   * 'reason' is an enumerated string of "install", "update", "chrome_update".
+   * 
+   * 'previousVersion' is optionally passed. Indicates the previous version 
+   * of the extension, which has just been updated. This is present only if 
+   * 'reason' is 'update'.
    */
   void onInstalled(onInstalledCallback listener) {
     js.scoped(() {
       void event(details) {
         if (listener!=null) {
-          listener({"details": details});
+          var d = JSON.parse(js.context.JSON.stringify(details));
+          listener({"details": d});
         }
       };
       
       js.context.onInstalledEvent = new js.Callback.once(event);
+      js.retain(js.context.onInstalledEvent);
       var chrome = js.context.chrome;
       chrome.runtime.onInstalled.addListener(js.context.onInstalledEvent);
     });
@@ -260,6 +264,9 @@ class Runtime {
    * If you do nothing, the update will be installed the next time 
    * the background page gets unloaded, if you want it to be installed 
    * sooner you can explicitly call chrome.runtime.reload().
+   * 
+   * [details] Map passed to the [listener] will contain keys 'version'.
+   * 'version' is the version number of the available update.
    */
   void onUpdateAvailable(onUpdateAvailableCallback listener) {
     js.scoped(() {
