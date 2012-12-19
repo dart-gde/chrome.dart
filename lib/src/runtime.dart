@@ -69,7 +69,7 @@ class Runtime {
    * the system will ensure it is loaded before calling the callback.
    * If there is no background page, an error is set.
    */
-  Future<js.Proxy> getBackgroundPage() {
+  static Future<js.Proxy> getBackgroundPage() {
     var completer = new Completer();
 
     js.scoped(() {
@@ -98,7 +98,7 @@ class Runtime {
    *
    * The [Map] returned is a de-serialization of the full [manifest] file.
    */
-  Map getManifest() {
+  static Map getManifest() {
     return js.scoped(() {
       var chrome = js.context.chrome;
       return JSON.parse(js.context.JSON.stringify(chrome.runtime.getManifest()));
@@ -112,7 +112,7 @@ class Runtime {
    * A [path] to a resource within an app/extension
    * expressed relative to its install directory.
    */
-  String getURL(String path) {
+  static String getURL(String path) {
     return js.scoped(() {
       return js.context.chrome.runtime.getURL(path);
     });
@@ -121,7 +121,7 @@ class Runtime {
   /**
    * Reloads the app or extension.
    */
-  void reload() {
+  static void reload() {
     js.scoped(() {
       js.context.chrome.runtime.reload();
     });
@@ -138,7 +138,7 @@ class Runtime {
    * available, a Map with 'version' key, value being the version of the
    * available update.
    */
-  Future<Map> requestUpdateCheck() {
+  static Future<Map> requestUpdateCheck() {
     var completer = new Completer();
 
     js.scoped(() {
@@ -164,7 +164,7 @@ class Runtime {
   /**
    * Fired when the browser first starts up.
    */
-  void onStartup(onStartupCallback listener) {
+  static void onStartup(onStartupCallback listener) {
     // TODO(adam): typedef the listener
     js.scoped(() {
       void event() {
@@ -194,7 +194,7 @@ class Runtime {
    * of the extension, which has just been updated. This is present only if
    * 'reason' is 'update'.
    */
-  void onInstalled(onInstalledCallback listener) {
+  static void onInstalled(onInstalledCallback listener) {
     js.scoped(() {
       void event(details) {
         if (listener!=null) {
@@ -220,7 +220,7 @@ class Runtime {
    * before it gets unloaded the onSuspendCanceled event will be
    * sent and the page won't be unloaded.
    */
-  void onSuspend(onSuspendCallback listener) {
+  static void onSuspend(onSuspendCallback listener) {
     js.scoped(() {
       void event() {
         if (listener!=null) {
@@ -238,7 +238,7 @@ class Runtime {
   /**
    * Sent after onSuspend() to indicate that the app won't be unloaded after all.
    */
-  void onSuspendCanceled(onSuspendCanceledCallback listener) {
+  static void onSuspendCanceled(onSuspendCanceledCallback listener) {
     js.scoped(() {
       void event() {
         if (listener!=null) {
@@ -264,7 +264,7 @@ class Runtime {
    * [details] Map passed to the [listener] will contain keys 'version'.
    * 'version' is the version number of the available update.
    */
-  void onUpdateAvailable(onUpdateAvailableCallback listener) {
+  static void onUpdateAvailable(onUpdateAvailableCallback listener) {
     js.scoped(() {
       void event(details) {
         if (listener!=null) {

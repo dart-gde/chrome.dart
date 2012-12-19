@@ -33,7 +33,7 @@ main() {
 
   html.window.on.keyUp.add((html.KeyboardEvent event) {
     if (event.keyCode == html.KeyCode.R) {
-      new Runtime().reload();
+      Runtime.reload();
     }
   });
 

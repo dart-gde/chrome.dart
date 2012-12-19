@@ -16,8 +16,7 @@ class TestRuntime {
       });
 
       test('getBackgroundPage()', () {
-        Runtime runtime = new Runtime();
-        runtime.getBackgroundPage().then(expectAsync1((backgroundPage) {
+        Runtime.getBackgroundPage().then(expectAsync1((backgroundPage) {
           logMessage("backgroundPage = ${backgroundPage}");
           logMessage("backgroundPage = ${backgroundPage.location.href}");
 
@@ -31,8 +30,7 @@ class TestRuntime {
       });
 
       test('getManifest()', () {
-        Runtime runtime = new Runtime();
-        var manifest = runtime.getManifest();
+        var manifest = Runtime.getManifest();
         logMessage("manifest = ${manifest}");
         expect(manifest is Map, isTrue);
         expect(manifest["manifest_version"], equals(2));
@@ -46,8 +44,7 @@ class TestRuntime {
       });
 
       test('getURL(String path)', () {
-        Runtime runtime = new Runtime();
-        var path = runtime.getURL("some/path");
+        var path = Runtime.getURL("some/path");
         logMessage("getURL = ${path}");
         expect(path is String, isTrue);
         expect(path.startsWith('chrome-extension://'), isTrue);
@@ -60,8 +57,7 @@ class TestRuntime {
 //      });
 
       test('requestUpdateCheck()', () {
-        Runtime runtime = new Runtime();
-        runtime.requestUpdateCheck().then(expectAsync1((update) {
+        Runtime.requestUpdateCheck().then(expectAsync1((update) {
           logMessage("update = ${update}");
 
           expect(update is Map, isTrue);
