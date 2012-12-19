@@ -9,7 +9,7 @@ import 'package:js/js.dart' as js;
 
 import 'package:chrome/chrome.dart';
 
-part 'runtime_test.dart';
+part 'src/runtime_test.dart';
 
 main() {
   Logger.root.level = Level.ALL; 
