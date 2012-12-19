@@ -20,7 +20,7 @@ class RuntimeError {
    * Details about the error which occurred.
    */
   String message;
-  RuntimeError({this.message: ""});
+  RuntimeError([this.message = ""]);
 }
 
 class Runtime {
@@ -42,10 +42,9 @@ class Runtime {
 
       // This null check might not be needed.
       if (lastError == null) {
-        // No error was in the chrome.runtime context.
-        return new RuntimeError();
+        return null;
       } else {
-        return new RuntimeError(message: lastError.message);
+        return new RuntimeError(lastError.message);
       }
     });
   }
