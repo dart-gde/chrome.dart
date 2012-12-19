@@ -1,6 +1,6 @@
 part of harness_browser;
 
-class RuntimeTest {
+class TestRuntime {
   Logger logger = new Logger("RuntimeTest");
   
   void main() {
