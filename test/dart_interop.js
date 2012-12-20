@@ -362,31 +362,6 @@
     }
   }
 
-  // Instantiate a Date with arguments.
-  function instantiateDate(args) {
-    // 7 arguments because the longest constructor is : new Date(year, month,
-    // day, hour, minute, second, millisecond)
-    if (args.length === 0) {
-      return new Date();
-    } else if (args.length === 1) {
-      return new Date(args[0]);
-    } else if (args.length === 2) {
-      return new Date(args[0], args[1]);
-    } else if (args.length === 3) {
-      return new Date(args[0], args[1], args[2]);
-    } else if (args.length === 4) {
-      return new Date(args[0], args[1], args[2], args[3]);
-    } else if (args.length === 5) {
-      return new Date(args[0], args[1], args[2], args[3], args[4]);
-    } else if (args.length === 6) {
-      return new Date(args[0], args[1], args[2], args[3], args[4], args[5]);
-    } else if (args.length === 7) {
-      return new Date(args[0], args[1], args[2], args[3], args[4], args[5],
-                     args[6]);
-    }
-    return null;
-  }
-
   // Remote handler to construct a new JavaScript object given its
   // serialized constructor and arguments.
   function construct(args) {
@@ -394,10 +369,37 @@
     var constructor = args[0];
     args = Array.prototype.slice.call(args, 1);
 
+    // Until 10 args, the 'new' operator is used. With more arguments we use a
+    // generic way that may not work, particulary when the constructor does not
+    // have an "apply" method.
     var ret = null;
-    // Date can only be instantiated with the new operator.
-    if (constructor === Date) {
-      ret = instantiateDate(args);
+    if (args.length === 0) {
+      ret = new constructor();
+    } else if (args.length === 1) {
+      ret = new constructor(args[0]);
+    } else if (args.length === 2) {
+      ret = new constructor(args[0], args[1]);
+    } else if (args.length === 3) {
+      ret = new constructor(args[0], args[1], args[2]);
+    } else if (args.length === 4) {
+      ret = new constructor(args[0], args[1], args[2], args[3]);
+    } else if (args.length === 5) {
+      ret = new constructor(args[0], args[1], args[2], args[3], args[4]);
+    } else if (args.length === 6) {
+      ret = new constructor(args[0], args[1], args[2], args[3], args[4],
+                            args[5]);
+    } else if (args.length === 7) {
+      ret = new constructor(args[0], args[1], args[2], args[3], args[4],
+                            args[5], args[6]);
+    } else if (args.length === 8) {
+      ret = new constructor(args[0], args[1], args[2], args[3], args[4],
+                            args[5], args[6]);
+    } else if (args.length === 9) {
+      ret = new constructor(args[0], args[1], args[2], args[3], args[4],
+                            args[5], args[6]);
+    } else if (args.length === 10) {
+      ret = new constructor(args[0], args[1], args[2], args[3], args[4],
+                            args[5], args[6], args[7], args[8], args[9]);
     } else {
       // Dummy Type with correct constructor.
       var Type = function(){};
