@@ -11,6 +11,11 @@ void main() {
       packageRoot: 'packages/'
   ));
 
+  addTask('example_serial', createDart2JsTask(['example/serial_example/web/chrome_app_serial_example.dart'],
+      allowUnsafeEval: false,
+      packageRoot: 'packages/'
+  ));
+
   runHopCore();
 }
 
