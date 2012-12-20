@@ -15,6 +15,17 @@ class TestSerial {
           expect(ports is List<String>, isTrue);
         }));
       });
+
+      test('open exception', () {
+        Serial serial = new Serial('/tmp/comcomcomcom', 9600);
+
+        Future<OpenInfo> open = serial.open();
+        open.then((value) {});
+        open.handleException(expectAsync1((error) {
+          expect(error is StateError, isTrue);
+          expect(serial.isConnected, isFalse);
+        }));
+      });
     });
   }
 }

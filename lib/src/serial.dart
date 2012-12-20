@@ -179,7 +179,6 @@ class Serial {
           bool listening = false;
           if (openInfo != null) {
             this.openInfo = new OpenInfo(openInfo.connectionId);
-            listening = _startListening();
           }
 
           if (listening) {
@@ -193,6 +192,8 @@ class Serial {
       js.context.openCallback = new js.Callback.once(openCallback);
       openOptions = new OpenOptions(bitrate: speed);
       var jsOpenOptions = js.map(openOptions.toMap());
+      // TODO(adam): set control options before opening, control options should
+      // an optioanl parameter.
       js.context.chrome.serial.open(port, jsOpenOptions, js.context.openCallback);
     };
 
@@ -201,7 +202,7 @@ class Serial {
     return completer.future;
   }
 
-  bool _startListening() {
+  bool startListening() {
     if (isConnected) {
       _dataRead = new StringBuffer();
       _onCharRead();
