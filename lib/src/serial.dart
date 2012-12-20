@@ -176,16 +176,12 @@ class Serial {
       void openCallback(var openInfo) {
         _safeExecute(completer, () {
           logger.fine("openInfo = $openInfo");
-          bool listening = false;
+
           if (openInfo != null) {
             this.openInfo = new OpenInfo(openInfo.connectionId);
           }
 
-          if (listening) {
-            completer.complete(openInfo);
-          } else {
-            completer.completeException(new StateError("unable to open $port $speed"));
-          }
+          completer.complete(openInfo);
         });
       };
 
