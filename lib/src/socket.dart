@@ -1,4 +1,8 @@
+// TODO(adam): correct all optional parameters
+
 library chrome_socket;
+
+import 'dart:html' as html;
 
 import 'dart:json';
 
@@ -27,10 +31,9 @@ class AcceptInfo {
   AcceptInfo(this.resultCode, this.socketId);
 }
 
-// duplicate, move to common lib
 class ReadInfo {
   int resultCode;
-  var data; /* arrayBuffer */
+  html.ArrayBuffer data; /* ArrayBuffer */
   ReadInfo(this.resultCode, this.data);
 }
 
@@ -41,7 +44,7 @@ class WriteInfo {
 
 class RecvFromInfo {
   int resultCode;
-  var data; /* arrayBuffer */
+  html.ArrayBuffer data; /* arrayBuffer */
   int port;
   String address;
   RecvFromInfo(this.resultCode, this.address, this.port, this.data);
@@ -65,7 +68,7 @@ class NetworkInterface {
 }
 
 class Socket {
-  static Future<CreateInfo> create(SocketType socketType, CreateOptions options) {
+  static Future<CreateInfo> create(SocketType socketType, {CreateOptions options: null}) {
     var completer = new Completer();
     _jsCreate() {
       void createCallback(var result) {
@@ -121,12 +124,22 @@ class Socket {
     js.scoped(_jsDisconnect);
   }
 
-  static Future<ReadInfo> read(int socketId, int bufferSize) {
+  static Future<ReadInfo> read(int socketId, {int bufferSize: null}) {
+    // XXX: does it matter if we use uint8 or larger?
     var completer = new Completer();
     _jsRead() {
       void readCallback(var result) {
-        // TODO(adam): convert result.data to native dart data type.
-        var readInfo = new ReadInfo(result.resultCode, result.data);
+
+        // Convert from javascript ArrayBuffer to dart ArrayBuffer
+        var jsArrayBuffer = new js.Proxy(js.context.ArrayBuffer, result.data);
+        var arrayBuffer = new html.ArrayBuffer(jsArrayBuffer.length);
+        var arrayBufferView = new html.Uint8Array.fromBuffer(arrayBuffer);
+
+        for (int i = 0; i < jsArrayBuffer.length; i++) {
+          arrayBufferView[i] = jsArrayBuffer[i];
+        }
+
+        var readInfo = new ReadInfo(result.resultCode, arrayBufferView.buffer);
         completer.complete(readInfo);
       };
 
@@ -137,7 +150,8 @@ class Socket {
     return completer.future;
   }
 
-  static Future<WriteInfo> write(int socketId, /* arraybuffer */ data) {
+  static Future<WriteInfo> write(int socketId, html.Uint8Array data) {
+    // XXX: does it matter if we use uint8 or larger?
     var completer = new Completer();
     _jsWrite() {
       void writeCallback(var result) {
@@ -146,7 +160,11 @@ class Socket {
       };
 
       js.context.writeCallback = new js.Callback.once(writeCallback);
-      js.context.chrome.socket.write(socketId, data, js.context.writeCallback);
+      var buf = new js.Proxy(js.context.ArrayBuffer, data.length);
+      var bufView = new js.Proxy(js.context.Uint8Array, buf)
+      ..set(js.array(data));
+
+      js.context.chrome.socket.write(socketId, buf, js.context.writeCallback);
     };
     js.scoped(js.context.readCallback);
     return completer.future;
@@ -277,10 +295,92 @@ class Socket {
   }
 }
 
-class TcpSocket {
+typedef void OnReadTcpSocket(ReadInfo readInfo);
+typedef void OnReceived(String message);
 
+class TcpSocket {
+  String host;
+  int port;
+
+  bool _isConnected = false;
+  bool get isConnected => _isConnected;
+
+  SocketType _socketType;
+  CreateInfo _createInfo;
+
+  TcpSocket(this.host, this.port);
+
+  Future<SocketInfo> get state {
+    return Socket.getInfo(_createInfo.socketId);
+  }
+
+  Future<bool> connect() {
+    var completer = new Completer();
+    _socketType = new SocketType('tcp');
+    Socket.create(_socketType).then((CreateInfo createInfo) {
+      _createInfo = createInfo;
+      Socket.connect(_createInfo.socketId, host, port).then((int result) {
+        _isConnected = true;
+        _setupDataPoll();
+        completer.complete(_isConnected);
+      });
+    });
+    return completer.future;
+  }
+
+  disconnect() {
+    Socket.disconnect(_createInfo.socketId);
+    _isConnected = false;
+  }
+
+  Future<WriteInfo> send(String message) {
+    var completer = new Completer();
+    var blob = new html.Blob([message]);
+    var fileReader = new html.FileReader();
+    fileReader.on.load.add((html.Event event) {
+      Socket.write(_createInfo.socketId, fileReader.result).then((WriteInfo writeInfo) {
+        completer.complete(writeInfo);
+      });
+    });
+    fileReader.readAsArrayBuffer(blob);
+    return completer.future;
+  }
+
+  void _setupDataPoll() {
+    html.window.setInterval(_read, 500);
+  }
+
+  OnReceived receive; // passed a String
+  OnReadTcpSocket onRead; // passed a ReadInfo
+  void _read() {
+    Socket.read(_createInfo.socketId).then((ReadInfo readInfo) {
+      if (onRead != null) {
+        onRead(readInfo);
+      }
+
+      if (receive != null) {
+        // Convert back to string and invoke receive
+        // Might want to add this kind of method
+        // onto ReadInfo
+        var blob = new html.Blob([new html.Uint8Array.fromBuffer(readInfo.data)]);
+        var fileReader = new html.FileReader();
+        fileReader.on.load.add((html.Event event) {
+          receive(fileReader.result);
+        });
+        fileReader.readAsText(blob);
+      }
+    });
+  }
 }
 
 class UdpSocket {
 
+  UdpSocket() {
+
+  }
+
+  connect() {}
+  poll() {}
+  receive() {}
+  disconnect() {}
 }
