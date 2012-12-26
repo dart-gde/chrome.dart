@@ -59,6 +59,20 @@ class SocketInfo {
   bool connected;
 
   SocketInfo(this.socketType, this.localPort, this.peerAddress, this.peerPort, this.localAddress, this.connected);
+
+  SocketInfo.fromMap(Map map) {
+    _parseMap(map);
+  }
+
+  _parseMap(Map map) {
+    this.connected = map.containsKey('connected') ? map['connected'] : null;
+    this.localAddress = map.containsKey('localAddress') ? map['localAddress'] : null;
+    this.localPort = map.containsKey('localPort') ? map['localPort'] : null;
+    this.peerAddress = map.containsKey('peerAddress') ? map['peerAddress'] : null;
+    this.peerPort = map.containsKey('peerPort') ? map['peerPort'] : null;
+    this.socketType = map.containsKey('socketType') ? new SocketType(map['socketType']) : null;
+  }
+
 }
 
 class NetworkInterface {
@@ -68,6 +82,8 @@ class NetworkInterface {
 }
 
 class Socket {
+  static final Logger _logger = new Logger("chrome.socket");
+
   static Future<CreateInfo> create(SocketType socketType, {CreateOptions options: null}) {
     var completer = new Completer();
     _jsCreate() {
@@ -77,7 +93,7 @@ class Socket {
       };
 
       js.context.createCallback = new js.Callback.once(createCallback);
-      js.context.chrome.socket.create(socketType.type, {}, js.context.createCallback);
+      js.context.chrome.socket.create(socketType.type, options, js.context.createCallback);
     };
     js.scoped(_jsCreate);
     return completer.future;
@@ -129,13 +145,16 @@ class Socket {
     var completer = new Completer();
     _jsRead() {
       void readCallback(var result) {
+        // result.resultCode returns the count via the C call
+        // to read();
 
+        // XXX: maybe using a blob reader would be easier to read.
         // Convert from javascript ArrayBuffer to dart ArrayBuffer
         var jsArrayBuffer = new js.Proxy(js.context.ArrayBuffer, result.data);
-        var arrayBuffer = new html.ArrayBuffer(jsArrayBuffer.length);
+        var arrayBuffer = new html.ArrayBuffer(result.resultCode);
         var arrayBufferView = new html.Uint8Array.fromBuffer(arrayBuffer);
 
-        for (int i = 0; i < jsArrayBuffer.length; i++) {
+        for (int i = 0; i < result.resultCode; i++) {
           arrayBufferView[i] = jsArrayBuffer[i];
         }
 
@@ -166,7 +185,7 @@ class Socket {
 
       js.context.chrome.socket.write(socketId, buf, js.context.writeCallback);
     };
-    js.scoped(js.context.readCallback);
+    js.scoped(_jsWrite);
     return completer.future;
   }
 
@@ -261,8 +280,7 @@ class Socket {
     var completer = new Completer();
     _jsGetInfo() {
       void getInfoCallback(var result) {
-        // TODO(adam): parse to dart map, then parse in SocketInfo.fromMap(m) constructor.
-        var socketInfo = new SocketInfo(result.socketType, result.localPort, result.peerAddress, result.peerPort, result.localAddress, result.connected);
+        var socketInfo = new SocketInfo.fromMap(JSON.parse(js.context.JSON.stringify(result)));
         completer.complete(socketInfo);
       };
 
