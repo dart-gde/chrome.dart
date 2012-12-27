@@ -33,8 +33,9 @@ class AcceptInfo {
 
 class ReadInfo {
   int resultCode;
+  int socketId;
   html.ArrayBuffer data; /* ArrayBuffer */
-  ReadInfo(this.resultCode, this.data);
+  ReadInfo(this.resultCode, this.data, {this.socketId});
 }
 
 class WriteInfo {
@@ -158,7 +159,7 @@ class Socket {
           arrayBufferView[i] = jsArrayBuffer[i];
         }
 
-        var readInfo = new ReadInfo(result.resultCode, arrayBufferView.buffer);
+        var readInfo = new ReadInfo(result.resultCode, arrayBufferView.buffer, socketId: socketId);
         completer.complete(readInfo);
       };
 
@@ -316,7 +317,7 @@ class Socket {
 typedef void OnReadTcpSocket(ReadInfo readInfo);
 typedef void OnReceived(String message);
 
-class TcpSocket {
+class TcpClient {
   String host;
   int port;
 
@@ -326,7 +327,21 @@ class TcpSocket {
   SocketType _socketType;
   CreateInfo _createInfo;
 
-  TcpSocket(this.host, this.port);
+  TcpClient(this.host, this.port);
+
+  TcpClient.fromSocketId(int socketId, {OnAcceptedCallback connected: null}) {
+    state.then((SocketInfo socketInfo) {
+      port = socketInfo.peerPort;
+      host = socketInfo.peerAddress;
+
+      _isConnected = true;
+      _setupDataPoll();
+
+      if (connected != null) {
+        connected(this, socketInfo);
+      }
+    });
+  }
 
   Future<SocketInfo> get state {
     return Socket.getInfo(_createInfo.socketId);
@@ -389,6 +404,96 @@ class TcpSocket {
       }
     });
   }
+}
+
+typedef OnAcceptedCallback(TcpClient client, SocketInfo socketInfo);
+
+class TcpServer {
+  Logger _logger = new Logger("TcpServer");
+
+  var _openConnections = []; // list of open sockets
+  CreateInfo _createInfo; // socketid data
+
+  String address;
+  int port;
+  int backlog;
+  var options;
+
+  bool _isListening = false;
+  bool get isListening => _isListening;
+
+  TcpServer(this.address, this.port, {this.backlog: 5, this.options});
+
+  _onReceived(String message) {
+    _logger.fine("message: ${message}");
+  }
+
+  _onReadTcpSocket(ReadInfo readInfo) {
+
+  }
+
+  OnAcceptedCallback onAccept;
+  _onAccept(AcceptInfo acceptInfo) {
+    // continue to accept other connections.
+    Socket.accept(_createInfo.socketId).then(_onAccept);
+
+    if (acceptInfo.resultCode == 0) {
+      // successful
+      var tcpConnection = new TcpClient.fromSocketId(acceptInfo.socketId, connected: onAccept);
+      tcpConnection
+      ..receive = _onReceived
+      ..onRead = _onReadTcpSocket;
+      _openConnections.add(tcpConnection);
+
+    } else {
+      // error
+      _logger.shout("accept(): resultCode = ${acceptInfo.resultCode}");
+    }
+  }
+
+  _onListen() {
+    Socket.listen(_createInfo.socketId, address, port, backlog)
+    .then((int resultCode) {
+      if (resultCode == 0) {
+        Socket.accept(_createInfo.socketId).then(_onAccept);
+      } else {
+        // error
+        _logger.shout("listen(): resultCode = ${resultCode}");
+      }
+    });
+  }
+
+  Future<bool> listen() {
+    var completer = new Completer();
+    Socket.create(new SocketType('tcp')).then((CreateInfo createInfo) {
+      _createInfo = createInfo;
+
+      _onListen();
+
+      _isListening = true;
+      completer.complete(isListening);
+    });
+
+    return completer.future;
+  }
+
+  connect() {}
+
+  void disconnect() {
+    if (_createInfo != null) {
+      Socket.disconnect(_createInfo.socketId);
+    }
+
+    _openConnections.forEach((s) {
+      Socket.disconnect(s.socketId);
+    });
+
+    _openConnections.clear();
+    _createInfo = null;
+  }
+
+  receive() {}
+  send() {}
 }
 
 class UdpSocket {
