@@ -1,0 +1,13 @@
+{
+  "manifest_version": 2,
+  "name": "clock example",
+  "version": "1",
+  "minimum_chrome_version": "23",
+  "icons": {"128": "dart_icon.png"},
+  "permissions": ["serial"],
+  "app": {
+    "background": {
+      "scripts": ["main.js"]
+    }
+  }
+}
