@@ -12,6 +12,8 @@ import 'package:chrome/chrome.dart' as chrome;
 import 'package:chrome/src/socket.dart';
 
 class TestSocket {
+  Logger _logger = new Logger("TestSocket");
+
   void main() {
     // TODO(adam): might want to remove the local
     // reference to tempSocketId, tests could be run
@@ -136,6 +138,39 @@ class TestSocket {
             }));
         });
 
+    });
+
+    group("chrome.socket.TcpClient", () {
+      test("connect", () {
+        TcpClient client = new TcpClient("google.com", 80);
+        client.connect().then(expectAsync1((int isConnected) {
+          expect(isConnected, isTrue);
+          expect(client.isConnected, isTrue);
+          client.onRead = expectAsync1((ReadInfo readInfo) {
+            logMessage("readInfo.data = ${readInfo.data}");
+            var i = new html.Uint8Array.fromBuffer(readInfo.data);
+            logMessage("i.length = ${i.length}");
+
+            List chars = [];
+            for (int ii = 0; ii < i.length; ii++) {
+              chars.add(i[ii]);
+            }
+            var str = new String.fromCharCodes(chars);
+
+            expect(readInfo.resultCode, greaterThan(0));
+
+          });
+
+          client.receive = expectAsync1((String message) {
+            logMessage("message = ${message}");
+            expect(message, isNotNull);
+          });
+
+          client.send("GET /\n").then(expectAsync1((writeInfo){
+            expect(writeInfo.bytesWritten, equals(6));
+          }));
+        }));
+      });
     });
   }
 }

@@ -148,15 +148,14 @@ class Socket {
       void readCallback(var result) {
         // result.resultCode returns the count via the C call
         // to read();
-
-        // XXX: maybe using a blob reader would be easier to read.
-        // Convert from javascript ArrayBuffer to dart ArrayBuffer
-        var jsArrayBuffer = new js.Proxy(js.context.ArrayBuffer, result.data);
+        // The result.data comes in as ArrayBuffer. Convert to js.context.Uint8Array
+        // and copy to native dart Uint8Array.
+        var jsArrayBufferView = new js.Proxy(js.context.Uint8Array, result.data);
         var arrayBuffer = new html.ArrayBuffer(result.resultCode);
         var arrayBufferView = new html.Uint8Array.fromBuffer(arrayBuffer);
 
         for (int i = 0; i < result.resultCode; i++) {
-          arrayBufferView[i] = jsArrayBuffer[i];
+          arrayBufferView[i] = jsArrayBufferView[i];
         }
 
         var readInfo = new ReadInfo(result.resultCode, arrayBufferView.buffer, socketId: socketId);
@@ -171,13 +170,15 @@ class Socket {
   }
 
   static Future<WriteInfo> write(int socketId, html.Uint8Array data) {
-    // XXX: does it matter if we use uint8 or larger?
+    // XXX: does it matter if we use uint8 or larger? Prob Should be a generic
+    // ArrayBuffer.
     var completer = new Completer();
     _jsWrite() {
       void writeCallback(var result) {
         var writeInfo = new WriteInfo(result.bytesWritten);
         completer.complete(writeInfo);
       };
+
 
       js.context.writeCallback = new js.Callback.once(writeCallback);
       var buf = new js.Proxy(js.context.ArrayBuffer, data.length);
@@ -318,6 +319,8 @@ typedef void OnReadTcpSocket(ReadInfo readInfo);
 typedef void OnReceived(String message);
 
 class TcpClient {
+  Logger _logger = new Logger("TcpClient");
+
   String host;
   int port;
 
@@ -371,7 +374,8 @@ class TcpClient {
     var blob = new html.Blob([message]);
     var fileReader = new html.FileReader();
     fileReader.on.load.add((html.Event event) {
-      Socket.write(_createInfo.socketId, fileReader.result).then((WriteInfo writeInfo) {
+      var uint8Array = new html.Uint8Array.fromBuffer(fileReader.result);
+      Socket.write(_createInfo.socketId, uint8Array).then((WriteInfo writeInfo) {
         completer.complete(writeInfo);
       });
     });
@@ -395,12 +399,16 @@ class TcpClient {
         // Convert back to string and invoke receive
         // Might want to add this kind of method
         // onto ReadInfo
-        var blob = new html.Blob([new html.Uint8Array.fromBuffer(readInfo.data)]);
-        var fileReader = new html.FileReader();
-        fileReader.on.load.add((html.Event event) {
-          receive(fileReader.result);
-        });
-        fileReader.readAsText(blob);
+//        var blob = new html.Blob([new html.Uint8Array.fromBuffer(readInfo.data)]);
+//        var fileReader = new html.FileReader();
+//        fileReader.on.load.add((html.Event event) {
+//          _logger.fine("fileReader.result = ${fileReader.result}");
+//          receive(fileReader.result);
+//        });
+//        fileReader.readAsText(blob);
+        var str = new String.fromCharCodes(new html.Uint8Array.fromBuffer(readInfo.data));
+        _logger.fine("receive(str) = ${str}");
+        receive(str);
       }
     });
   }
