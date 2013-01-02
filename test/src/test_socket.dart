@@ -141,34 +141,74 @@ class TestSocket {
     });
 
     group("chrome.socket.TcpClient", () {
+
+      TcpClient client;
+      setUp(() {
+        client = new TcpClient("google.com", 80);
+      });
+      tearDown(() {
+        client.disconnect();
+      });
+
       test("connect", () {
-        TcpClient client = new TcpClient("google.com", 80);
-        client.connect().then(expectAsync1((int isConnected) {
+        client.connect().then(expectAsync1((bool isConnected) {
           expect(isConnected, isTrue);
           expect(client.isConnected, isTrue);
           client.onRead = expectAsync1((ReadInfo readInfo) {
-            logMessage("readInfo.data = ${readInfo.data}");
-            var i = new html.Uint8Array.fromBuffer(readInfo.data);
-            logMessage("i.length = ${i.length}");
-
-            List chars = [];
-            for (int ii = 0; ii < i.length; ii++) {
-              chars.add(i[ii]);
-            }
-            var str = new String.fromCharCodes(chars);
-
             expect(readInfo.resultCode, greaterThan(0));
-
           });
 
           client.receive = expectAsync1((String message) {
-            logMessage("message = ${message}");
+            //_logger.fine("message = ${message}");
             expect(message, isNotNull);
           });
 
           client.send("GET /\n").then(expectAsync1((writeInfo){
             expect(writeInfo.bytesWritten, equals(6));
           }));
+        }));
+      });
+    });
+
+    group("chrome.socket.TcpServer", () {
+
+      TcpServer server;
+      TcpClient client;
+      setUp(() {
+        server = new TcpServer("127.0.0.1", 7765);
+        client = new TcpClient("127.0.0.1", 7765);
+      });
+
+      tearDown(() {
+        client.disconnect();
+        server.disconnect();
+      });
+
+      test("listen", () {
+        var m = "hello from client\n";
+        server.onAccept = expectAsync2((TcpClient c, SocketInfo socketInfo) {
+          _logger.fine("server onAccept of client");
+          expect(c.isConnected, isTrue);
+        });
+
+        server.receive = (String message) {
+          _logger.fine("message = $message");
+          expect(message, equals(m));
+        };
+
+        server.listen().then(expectAsync1((bool isListening) {
+          expect(isListening, isTrue);
+          expect(server.isListening, isTrue);
+          client.connect().then(expectAsync1((bool isConnected) {
+            expect(isConnected, isTrue);
+            expect(client.isConnected, isTrue);
+            _logger.fine("client is connected");
+
+            client.send(m).then(expectAsync1((writeInfo) {
+              expect(writeInfo.bytesWritten, equals(m.length));
+            }));
+          }));
+
         }));
       });
     });

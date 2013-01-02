@@ -23,12 +23,18 @@ class CreateOptions {
 class CreateInfo {
   int socketId;
   CreateInfo(this.socketId);
+  String toString() {
+    return "[socketId=$socketId]";
+  }
 }
 
 class AcceptInfo {
   int resultCode;
   int socketId;
   AcceptInfo(this.resultCode, this.socketId);
+  String toString() {
+    return "[resultCode=$resultCode, socketId=$socketId]";
+  }
 }
 
 class ReadInfo {
@@ -74,6 +80,9 @@ class SocketInfo {
     this.socketType = map.containsKey('socketType') ? new SocketType(map['socketType']) : null;
   }
 
+  String toString() {
+    return "[socketType=$socketType, localPort=$localPort, peerAddress=$peerAddress, peerPort=$peerPort, localAddress=$localAddress, connected=$connected]";
+  }
 }
 
 class NetworkInterface {
@@ -225,6 +234,7 @@ class Socket {
     var completer = new Completer();
     _jsListen() {
       void listenCallback(var result) {
+        _logger.fine("listen: result = ${0}");
         completer.complete(result);
       };
 
@@ -329,10 +339,12 @@ class TcpClient {
 
   SocketType _socketType;
   CreateInfo _createInfo;
+  int get socketId => _createInfo.socketId;
 
   TcpClient(this.host, this.port);
 
-  TcpClient.fromSocketId(int socketId, {OnAcceptedCallback connected: null}) {
+  TcpClient.fromSocketId(int socketId, {OnAcceptedCallback connected: null, OnReadTcpSocket this.onRead: null, OnReceived this.receive: null}) {
+    _createInfo = new CreateInfo(socketId);
     state.then((SocketInfo socketInfo) {
       port = socketInfo.peerPort;
       host = socketInfo.peerAddress;
@@ -341,19 +353,21 @@ class TcpClient {
       _setupDataPoll();
 
       if (connected != null) {
+        _logger.fine("connected != null, socketInfo = $socketInfo");
         connected(this, socketInfo);
       }
     });
   }
 
   Future<SocketInfo> get state {
-    return Socket.getInfo(_createInfo.socketId);
+    return Socket.getInfo(socketId);
   }
 
   Future<bool> connect() {
     var completer = new Completer();
     _socketType = new SocketType('tcp');
     Socket.create(_socketType).then((CreateInfo createInfo) {
+      _logger.fine("Socket.create.then = ${createInfo}");
       _createInfo = createInfo;
       Socket.connect(_createInfo.socketId, host, port).then((int result) {
         _isConnected = true;
@@ -364,8 +378,10 @@ class TcpClient {
     return completer.future;
   }
 
-  disconnect() {
-    Socket.disconnect(_createInfo.socketId);
+  void disconnect() {
+    if (_createInfo != null) {
+      Socket.disconnect(_createInfo.socketId);
+    }
     _isConnected = false;
   }
 
@@ -399,15 +415,17 @@ class TcpClient {
         // Convert back to string and invoke receive
         // Might want to add this kind of method
         // onto ReadInfo
-//        var blob = new html.Blob([new html.Uint8Array.fromBuffer(readInfo.data)]);
-//        var fileReader = new html.FileReader();
-//        fileReader.on.load.add((html.Event event) {
-//          _logger.fine("fileReader.result = ${fileReader.result}");
-//          receive(fileReader.result);
-//        });
-//        fileReader.readAsText(blob);
+        /*
+        var blob = new html.Blob([new html.Uint8Array.fromBuffer(readInfo.data)]);
+        var fileReader = new html.FileReader();
+        fileReader.on.load.add((html.Event event) {
+          _logger.fine("fileReader.result = ${fileReader.result}");
+          receive(fileReader.result);
+        });
+        fileReader.readAsText(blob);
+        */
         var str = new String.fromCharCodes(new html.Uint8Array.fromBuffer(readInfo.data));
-        _logger.fine("receive(str) = ${str}");
+        //_logger.fine("receive(str) = ${str}");
         receive(str);
       }
     });
@@ -419,7 +437,7 @@ typedef OnAcceptedCallback(TcpClient client, SocketInfo socketInfo);
 class TcpServer {
   Logger _logger = new Logger("TcpServer");
 
-  var _openConnections = []; // list of open sockets
+  List<TcpClient> _openConnections = []; // list of open sockets
   CreateInfo _createInfo; // socketid data
 
   String address;
@@ -432,25 +450,38 @@ class TcpServer {
 
   TcpServer(this.address, this.port, {this.backlog: 5, this.options});
 
+  // TODO(adam): the server needs to know which
+  // client has sent the data.
+  OnReceived receive;
   _onReceived(String message) {
     _logger.fine("message: ${message}");
+    if (receive != null) {
+      receive(message);
+    }
   }
 
+  // TODO(adam): the server needs to know which
+  // client has sent the data.
+  OnReadTcpSocket onRead;
   _onReadTcpSocket(ReadInfo readInfo) {
-
+    _logger.fine("readInfo: ${readInfo}");
+    if (onRead != null) {
+      onRead(readInfo);
+    }
   }
 
   OnAcceptedCallback onAccept;
   _onAccept(AcceptInfo acceptInfo) {
+    _logger.fine("acceptInfo = ${acceptInfo}");
+
     // continue to accept other connections.
     Socket.accept(_createInfo.socketId).then(_onAccept);
 
+    _logger.fine("moved onto new connection");
+
     if (acceptInfo.resultCode == 0) {
       // successful
-      var tcpConnection = new TcpClient.fromSocketId(acceptInfo.socketId, connected: onAccept);
-      tcpConnection
-      ..receive = _onReceived
-      ..onRead = _onReadTcpSocket;
+      var tcpConnection = new TcpClient.fromSocketId(acceptInfo.socketId, connected: onAccept, onRead: _onReadTcpSocket, receive: _onReceived);
       _openConnections.add(tcpConnection);
 
     } else {
@@ -459,24 +490,22 @@ class TcpServer {
     }
   }
 
-  _onListen() {
-    Socket.listen(_createInfo.socketId, address, port, backlog)
-    .then((int resultCode) {
-      if (resultCode == 0) {
-        Socket.accept(_createInfo.socketId).then(_onAccept);
-      } else {
-        // error
-        _logger.shout("listen(): resultCode = ${resultCode}");
-      }
-    });
-  }
-
   Future<bool> listen() {
     var completer = new Completer();
     Socket.create(new SocketType('tcp')).then((CreateInfo createInfo) {
       _createInfo = createInfo;
+      _logger.fine("listen(): Socket.create(): _createInfo = ${_createInfo}");
 
-      _onListen();
+      Socket.listen(_createInfo.socketId, address, port, backlog)
+      .then((int resultCode) {
+        _logger.fine("listen(): Socket.listen() resultCode = ${resultCode}");
+        if (resultCode == 0) {
+          Socket.accept(_createInfo.socketId).then(_onAccept);
+        } else {
+          // error
+          _logger.shout("listen(): resultCode = ${resultCode}");
+        }
+      });
 
       _isListening = true;
       completer.complete(isListening);
@@ -492,15 +521,15 @@ class TcpServer {
       Socket.disconnect(_createInfo.socketId);
     }
 
-    _openConnections.forEach((s) {
-      Socket.disconnect(s.socketId);
+    _openConnections.forEach((TcpClient c) {
+      Socket.disconnect(c.socketId);
     });
 
     _openConnections.clear();
     _createInfo = null;
   }
 
-  receive() {}
+  // receive() {}
   send() {}
 }
 
