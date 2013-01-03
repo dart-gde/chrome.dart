@@ -13,14 +13,14 @@ void main() {
   server.onAccept = (TcpClient c, SocketInfo socketInfo) {
     logger.fine("server onAccept of client");
     var paragraphElement = new ParagraphElement();
-    paragraphElement.text = "server onAccept of client";
+    paragraphElement.text = "client[${c.socketId}]: server onAccept of client";
     query("#container").children.add(paragraphElement);
   };
 
-  server.receive = (String message) {
-    logger.fine("message = $message");
+  server.receive = (String message, TcpClient client) {
+    logger.fine("client[${client.socketId}]: $message");
     var paragraphElement = new ParagraphElement();
-    paragraphElement.text = message;
+    paragraphElement.text = "client[${client.socketId}]: $message";
     query("#container").children.add(paragraphElement);
   };
 

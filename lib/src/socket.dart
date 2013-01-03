@@ -1,4 +1,6 @@
 // TODO(adam): correct all optional parameters
+// TODO(adam): check resultCode for errors in reading and writting.
+
 
 library chrome_socket;
 
@@ -155,20 +157,26 @@ class Socket {
     var completer = new Completer();
     _jsRead() {
       void readCallback(var result) {
-        // result.resultCode returns the count via the C call
-        // to read();
-        // The result.data comes in as ArrayBuffer. Convert to js.context.Uint8Array
-        // and copy to native dart Uint8Array.
-        var jsArrayBufferView = new js.Proxy(js.context.Uint8Array, result.data);
-        var arrayBuffer = new html.ArrayBuffer(result.resultCode);
-        var arrayBufferView = new html.Uint8Array.fromBuffer(arrayBuffer);
+        if (result.resultCode < 0) {
+          //completer.completeException("nothing to read");
+          completer.complete(null);
+        } else {
 
-        for (int i = 0; i < result.resultCode; i++) {
-          arrayBufferView[i] = jsArrayBufferView[i];
+          // result.resultCode returns the count via the C call
+          // to read();
+          // The result.data comes in as ArrayBuffer. Convert to js.context.Uint8Array
+          // and copy to native dart Uint8Array.
+          var jsArrayBufferView = new js.Proxy(js.context.Uint8Array, result.data);
+          var arrayBuffer = new html.ArrayBuffer(result.resultCode);
+          var arrayBufferView = new html.Uint8Array.fromBuffer(arrayBuffer);
+
+          for (int i = 0; i < result.resultCode; i++) {
+            arrayBufferView[i] = jsArrayBufferView[i];
+          }
+
+          var readInfo = new ReadInfo(result.resultCode, arrayBufferView.buffer, socketId: socketId);
+          completer.complete(readInfo);
         }
-
-        var readInfo = new ReadInfo(result.resultCode, arrayBufferView.buffer, socketId: socketId);
-        completer.complete(readInfo);
       };
 
       js.context.readCallback = new js.Callback.once(readCallback);
@@ -326,13 +334,15 @@ class Socket {
 }
 
 typedef void OnReadTcpSocket(ReadInfo readInfo);
-typedef void OnReceived(String message);
+typedef void OnReceived(String message, TcpClient client);
 
 class TcpClient {
   Logger _logger = new Logger("TcpClient");
 
   String host;
   int port;
+
+  int _intervalHandle;
 
   bool _isConnected = false;
   bool get isConnected => _isConnected;
@@ -382,6 +392,11 @@ class TcpClient {
     if (_createInfo != null) {
       Socket.disconnect(_createInfo.socketId);
     }
+
+    if (_intervalHandle != null) {
+      html.window.clearInterval(_intervalHandle);
+    }
+
     _isConnected = false;
   }
 
@@ -400,13 +415,19 @@ class TcpClient {
   }
 
   void _setupDataPoll() {
-    html.window.setInterval(_read, 500);
+    _intervalHandle = html.window.setInterval(_read, 500);
   }
 
   OnReceived receive; // passed a String
   OnReadTcpSocket onRead; // passed a ReadInfo
   void _read() {
+    _logger.fine("enter: read()");
     Socket.read(_createInfo.socketId).then((ReadInfo readInfo) {
+      if (readInfo == null) {
+        return;
+      }
+
+      _logger.fine("then: read()");
       if (onRead != null) {
         onRead(readInfo);
       }
@@ -426,7 +447,7 @@ class TcpClient {
         */
         var str = new String.fromCharCodes(new html.Uint8Array.fromBuffer(readInfo.data));
         //_logger.fine("receive(str) = ${str}");
-        receive(str);
+        receive(str, this);
       }
     });
   }
@@ -450,18 +471,14 @@ class TcpServer {
 
   TcpServer(this.address, this.port, {this.backlog: 5, this.options});
 
-  // TODO(adam): the server needs to know which
-  // client has sent the data.
   OnReceived receive;
-  _onReceived(String message) {
+  _onReceived(String message, TcpClient client) {
     _logger.fine("message: ${message}");
     if (receive != null) {
-      receive(message);
+      receive(message, client);
     }
   }
 
-  // TODO(adam): the server needs to know which
-  // client has sent the data.
   OnReadTcpSocket onRead;
   _onReadTcpSocket(ReadInfo readInfo) {
     _logger.fine("readInfo: ${readInfo}");
@@ -521,10 +538,7 @@ class TcpServer {
       Socket.disconnect(_createInfo.socketId);
     }
 
-    _openConnections.forEach((TcpClient c) {
-      Socket.disconnect(c.socketId);
-    });
-
+    _openConnections.forEach((TcpClient client) => client.disconnect());
     _openConnections.clear();
     _createInfo = null;
   }

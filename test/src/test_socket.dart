@@ -158,7 +158,7 @@ class TestSocket {
             expect(readInfo.resultCode, greaterThan(0));
           });
 
-          client.receive = expectAsync1((String message) {
+          client.receive = expectAsync2((String message, TcpClient client) {
             //_logger.fine("message = ${message}");
             expect(message, isNotNull);
           });
@@ -191,7 +191,7 @@ class TestSocket {
           expect(c.isConnected, isTrue);
         });
 
-        server.receive = (String message) {
+        server.receive = (String message, TcpClient client) {
           _logger.fine("message = $message");
           expect(message, equals(m));
         };
