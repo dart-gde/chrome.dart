@@ -12,6 +12,8 @@ import 'package:chrome/chrome.dart' as chrome;
 import 'package:chrome/src/socket.dart';
 
 class TestSocket {
+  Logger _logger = new Logger("TestSocket");
+
   void main() {
     // TODO(adam): might want to remove the local
     // reference to tempSocketId, tests could be run
@@ -136,6 +138,79 @@ class TestSocket {
             }));
         });
 
+    });
+
+    group("chrome.socket.TcpClient", () {
+
+      TcpClient client;
+      setUp(() {
+        client = new TcpClient("google.com", 80);
+      });
+      tearDown(() {
+        client.disconnect();
+      });
+
+      test("connect", () {
+        client.connect().then(expectAsync1((bool isConnected) {
+          expect(isConnected, isTrue);
+          expect(client.isConnected, isTrue);
+          client.onRead = expectAsync1((ReadInfo readInfo) {
+            expect(readInfo.resultCode, greaterThan(0));
+          });
+
+          client.receive = expectAsync2((String message, TcpClient client) {
+            //_logger.fine("message = ${message}");
+            expect(message, isNotNull);
+          });
+
+          client.send("GET /\n").then(expectAsync1((writeInfo){
+            expect(writeInfo.bytesWritten, equals(6));
+          }));
+        }));
+      });
+    });
+
+    group("chrome.socket.TcpServer", () {
+
+      TcpServer server;
+      TcpClient client;
+      setUp(() {
+        server = new TcpServer("127.0.0.1", 7765);
+        client = new TcpClient("127.0.0.1", 7765);
+      });
+
+      tearDown(() {
+        client.disconnect();
+        server.disconnect();
+      });
+
+      test("listen", () {
+        var m = "hello from client\n";
+        server.onAccept = expectAsync2((TcpClient c, SocketInfo socketInfo) {
+          _logger.fine("server onAccept of client");
+          expect(c.isConnected, isTrue);
+        });
+
+        server.receive = (String message, TcpClient client) {
+          _logger.fine("message = $message");
+          expect(message, equals(m));
+        };
+
+        server.listen().then(expectAsync1((bool isListening) {
+          expect(isListening, isTrue);
+          expect(server.isListening, isTrue);
+          client.connect().then(expectAsync1((bool isConnected) {
+            expect(isConnected, isTrue);
+            expect(client.isConnected, isTrue);
+            _logger.fine("client is connected");
+
+            client.send(m).then(expectAsync1((writeInfo) {
+              expect(writeInfo.bytesWritten, equals(m.length));
+            }));
+          }));
+
+        }));
+      });
     });
   }
 }

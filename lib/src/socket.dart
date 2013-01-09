@@ -1,4 +1,6 @@
 // TODO(adam): correct all optional parameters
+// TODO(adam): check resultCode for errors in reading and writting.
+
 
 library chrome_socket;
 
@@ -23,18 +25,25 @@ class CreateOptions {
 class CreateInfo {
   int socketId;
   CreateInfo(this.socketId);
+  String toString() {
+    return "[socketId=$socketId]";
+  }
 }
 
 class AcceptInfo {
   int resultCode;
   int socketId;
   AcceptInfo(this.resultCode, this.socketId);
+  String toString() {
+    return "[resultCode=$resultCode, socketId=$socketId]";
+  }
 }
 
 class ReadInfo {
   int resultCode;
+  int socketId;
   html.ArrayBuffer data; /* ArrayBuffer */
-  ReadInfo(this.resultCode, this.data);
+  ReadInfo(this.resultCode, this.data, {this.socketId});
 }
 
 class WriteInfo {
@@ -73,6 +82,9 @@ class SocketInfo {
     this.socketType = map.containsKey('socketType') ? new SocketType(map['socketType']) : null;
   }
 
+  String toString() {
+    return "[socketType=$socketType, localPort=$localPort, peerAddress=$peerAddress, peerPort=$peerPort, localAddress=$localAddress, connected=$connected]";
+  }
 }
 
 class NetworkInterface {
@@ -145,21 +157,26 @@ class Socket {
     var completer = new Completer();
     _jsRead() {
       void readCallback(var result) {
-        // result.resultCode returns the count via the C call
-        // to read();
+        if (result.resultCode < 0) {
+          //completer.completeException("nothing to read");
+          completer.complete(null);
+        } else {
 
-        // XXX: maybe using a blob reader would be easier to read.
-        // Convert from javascript ArrayBuffer to dart ArrayBuffer
-        var jsArrayBuffer = new js.Proxy(js.context.ArrayBuffer, result.data);
-        var arrayBuffer = new html.ArrayBuffer(result.resultCode);
-        var arrayBufferView = new html.Uint8Array.fromBuffer(arrayBuffer);
+          // result.resultCode returns the count via the C call
+          // to read();
+          // The result.data comes in as ArrayBuffer. Convert to js.context.Uint8Array
+          // and copy to native dart Uint8Array.
+          var jsArrayBufferView = new js.Proxy(js.context.Uint8Array, result.data);
+          var arrayBuffer = new html.ArrayBuffer(result.resultCode);
+          var arrayBufferView = new html.Uint8Array.fromBuffer(arrayBuffer);
 
-        for (int i = 0; i < result.resultCode; i++) {
-          arrayBufferView[i] = jsArrayBuffer[i];
+          for (int i = 0; i < result.resultCode; i++) {
+            arrayBufferView[i] = jsArrayBufferView[i];
+          }
+
+          var readInfo = new ReadInfo(result.resultCode, arrayBufferView.buffer, socketId: socketId);
+          completer.complete(readInfo);
         }
-
-        var readInfo = new ReadInfo(result.resultCode, arrayBufferView.buffer);
-        completer.complete(readInfo);
       };
 
       js.context.readCallback = new js.Callback.once(readCallback);
@@ -170,13 +187,15 @@ class Socket {
   }
 
   static Future<WriteInfo> write(int socketId, html.Uint8Array data) {
-    // XXX: does it matter if we use uint8 or larger?
+    // XXX: does it matter if we use uint8 or larger? Prob Should be a generic
+    // ArrayBuffer.
     var completer = new Completer();
     _jsWrite() {
       void writeCallback(var result) {
         var writeInfo = new WriteInfo(result.bytesWritten);
         completer.complete(writeInfo);
       };
+
 
       js.context.writeCallback = new js.Callback.once(writeCallback);
       var buf = new js.Proxy(js.context.ArrayBuffer, data.length);
@@ -223,6 +242,7 @@ class Socket {
     var completer = new Completer();
     _jsListen() {
       void listenCallback(var result) {
+        _logger.fine("listen: result = ${0}");
         completer.complete(result);
       };
 
@@ -314,28 +334,50 @@ class Socket {
 }
 
 typedef void OnReadTcpSocket(ReadInfo readInfo);
-typedef void OnReceived(String message);
+typedef void OnReceived(String message, TcpClient client);
 
-class TcpSocket {
+class TcpClient {
+  Logger _logger = new Logger("TcpClient");
+
   String host;
   int port;
+
+  int _intervalHandle;
 
   bool _isConnected = false;
   bool get isConnected => _isConnected;
 
   SocketType _socketType;
   CreateInfo _createInfo;
+  int get socketId => _createInfo.socketId;
 
-  TcpSocket(this.host, this.port);
+  TcpClient(this.host, this.port);
+
+  TcpClient.fromSocketId(int socketId, {OnAcceptedCallback connected: null, OnReadTcpSocket this.onRead: null, OnReceived this.receive: null}) {
+    _createInfo = new CreateInfo(socketId);
+    state.then((SocketInfo socketInfo) {
+      port = socketInfo.peerPort;
+      host = socketInfo.peerAddress;
+
+      _isConnected = true;
+      _setupDataPoll();
+
+      if (connected != null) {
+        _logger.fine("connected != null, socketInfo = $socketInfo");
+        connected(this, socketInfo);
+      }
+    });
+  }
 
   Future<SocketInfo> get state {
-    return Socket.getInfo(_createInfo.socketId);
+    return Socket.getInfo(socketId);
   }
 
   Future<bool> connect() {
     var completer = new Completer();
     _socketType = new SocketType('tcp');
     Socket.create(_socketType).then((CreateInfo createInfo) {
+      _logger.fine("Socket.create.then = ${createInfo}");
       _createInfo = createInfo;
       Socket.connect(_createInfo.socketId, host, port).then((int result) {
         _isConnected = true;
@@ -346,8 +388,15 @@ class TcpSocket {
     return completer.future;
   }
 
-  disconnect() {
-    Socket.disconnect(_createInfo.socketId);
+  void disconnect() {
+    if (_createInfo != null) {
+      Socket.disconnect(_createInfo.socketId);
+    }
+
+    if (_intervalHandle != null) {
+      html.window.clearInterval(_intervalHandle);
+    }
+
     _isConnected = false;
   }
 
@@ -356,7 +405,8 @@ class TcpSocket {
     var blob = new html.Blob([message]);
     var fileReader = new html.FileReader();
     fileReader.on.load.add((html.Event event) {
-      Socket.write(_createInfo.socketId, fileReader.result).then((WriteInfo writeInfo) {
+      var uint8Array = new html.Uint8Array.fromBuffer(fileReader.result);
+      Socket.write(_createInfo.socketId, uint8Array).then((WriteInfo writeInfo) {
         completer.complete(writeInfo);
       });
     });
@@ -365,13 +415,19 @@ class TcpSocket {
   }
 
   void _setupDataPoll() {
-    html.window.setInterval(_read, 500);
+    _intervalHandle = html.window.setInterval(_read, 500);
   }
 
   OnReceived receive; // passed a String
   OnReadTcpSocket onRead; // passed a ReadInfo
   void _read() {
+    _logger.fine("enter: read()");
     Socket.read(_createInfo.socketId).then((ReadInfo readInfo) {
+      if (readInfo == null) {
+        return;
+      }
+
+      _logger.fine("then: read()");
       if (onRead != null) {
         onRead(readInfo);
       }
@@ -380,25 +436,191 @@ class TcpSocket {
         // Convert back to string and invoke receive
         // Might want to add this kind of method
         // onto ReadInfo
+        /*
         var blob = new html.Blob([new html.Uint8Array.fromBuffer(readInfo.data)]);
         var fileReader = new html.FileReader();
         fileReader.on.load.add((html.Event event) {
+          _logger.fine("fileReader.result = ${fileReader.result}");
           receive(fileReader.result);
         });
         fileReader.readAsText(blob);
+        */
+        var str = new String.fromCharCodes(new html.Uint8Array.fromBuffer(readInfo.data));
+        //_logger.fine("receive(str) = ${str}");
+        receive(str, this);
       }
     });
   }
 }
 
-class UdpSocket {
+typedef OnAcceptedCallback(TcpClient client, SocketInfo socketInfo);
 
-  UdpSocket() {
+class TcpServer {
+  Logger _logger = new Logger("TcpServer");
 
+  List<TcpClient> _openConnections = []; // list of open sockets
+  CreateInfo _createInfo; // socketid data
+
+  String address;
+  int port;
+  int backlog;
+  var options;
+
+  bool _isListening = false;
+  bool get isListening => _isListening;
+
+  TcpServer(this.address, this.port, {this.backlog: 5, this.options});
+
+  OnReceived receive;
+  _onReceived(String message, TcpClient client) {
+    _logger.fine("message: ${message}");
+    if (receive != null) {
+      receive(message, client);
+    }
+  }
+
+  OnReadTcpSocket onRead;
+  _onReadTcpSocket(ReadInfo readInfo) {
+    _logger.fine("readInfo: ${readInfo}");
+    if (onRead != null) {
+      onRead(readInfo);
+    }
+  }
+
+  OnAcceptedCallback onAccept;
+  _onAccept(AcceptInfo acceptInfo) {
+    _logger.fine("acceptInfo = ${acceptInfo}");
+
+    // continue to accept other connections.
+    Socket.accept(_createInfo.socketId).then(_onAccept);
+
+    _logger.fine("moved onto new connection");
+
+    if (acceptInfo.resultCode == 0) {
+      // successful
+      var tcpConnection = new TcpClient.fromSocketId(acceptInfo.socketId, connected: onAccept, onRead: _onReadTcpSocket, receive: _onReceived);
+      _openConnections.add(tcpConnection);
+
+    } else {
+      // error
+      _logger.shout("accept(): resultCode = ${acceptInfo.resultCode}");
+    }
+  }
+
+  Future<bool> listen() {
+    var completer = new Completer();
+    Socket.create(new SocketType('tcp')).then((CreateInfo createInfo) {
+      _createInfo = createInfo;
+      _logger.fine("listen(): Socket.create(): _createInfo = ${_createInfo}");
+
+      Socket.listen(_createInfo.socketId, address, port, backlog)
+      .then((int resultCode) {
+        _logger.fine("listen(): Socket.listen() resultCode = ${resultCode}");
+        if (resultCode == 0) {
+          Socket.accept(_createInfo.socketId).then(_onAccept);
+        } else {
+          // error
+          _logger.shout("listen(): resultCode = ${resultCode}");
+        }
+      });
+
+      _isListening = true;
+      completer.complete(isListening);
+    });
+
+    return completer.future;
   }
 
   connect() {}
-  poll() {}
-  receive() {}
-  disconnect() {}
+
+  void disconnect() {
+    if (_createInfo != null) {
+      Socket.disconnect(_createInfo.socketId);
+    }
+
+    _openConnections.forEach((TcpClient client) => client.disconnect());
+    _openConnections.clear();
+    _createInfo = null;
+  }
+
+  // receive() {}
+  send() {}
+}
+
+class UdpClient {
+  Logger _logger = new Logger("UdpClient");
+
+  String host;
+  int port;
+  SocketType _socketType;
+  CreateInfo _createInfo;
+  bool _isConnected = false;
+  bool get isConnected => _isConnected;
+
+  Function onData; // Called when data is available.
+
+  UdpClient(this.host, this.port);
+
+  Future <bool> connect() {
+    var completer = new Completer();
+
+    _socketType = new SocketType('udp');
+    Socket.create(_socketType).then((CreateInfo createInfo) {
+      _logger.fine("Socket.create.then = ${createInfo}");
+      _createInfo = createInfo;
+
+      Socket.connect(_createInfo.socketId, host, port).then((int result) {
+
+        if (result == 0) {
+          _isConnected = true;
+
+          // TODO(adam): setup poll?
+
+          completer.complete(_isConnected);
+        } else {
+          completer.complete(_isConnected);
+        }
+
+      });
+    });
+
+    return completer.future;
+  }
+
+  void poll() {
+    _logger.fine("poll()");
+    Socket.read(_createInfo.socketId).then((ReadInfo readInfo) {
+      if (readInfo.resultCode > 0 && onData != null) {
+        onData(readInfo);
+      }
+      poll();
+    });
+  }
+
+  Future<WriteInfo> send(String message) {
+    _logger.fine("send()");
+    var completer = new Completer();
+    var blob = new html.Blob([message]);
+    var fileReader = new html.FileReader();
+    fileReader.on.load.add((html.Event event) {
+      var uint8Array = new html.Uint8Array.fromBuffer(fileReader.result);
+      Socket.write(_createInfo.socketId, uint8Array).then((WriteInfo writeInfo) {
+        completer.complete(writeInfo);
+      });
+    });
+    fileReader.readAsArrayBuffer(blob);
+    return completer.future;
+  }
+
+  //receive() {}
+
+  void disconnect() {
+    _logger.fine("disconnect()");
+    if (_createInfo != null) {
+      Socket.disconnect(_createInfo.socketId);
+      Socket.destroy(_createInfo.socketId);
+    }
+
+    _isConnected = false;
+  }
 }
