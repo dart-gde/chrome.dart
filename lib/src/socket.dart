@@ -547,14 +547,80 @@ class TcpServer {
   send() {}
 }
 
-class UdpSocket {
+class UdpClient {
+  Logger _logger = new Logger("UdpClient");
 
-  UdpSocket() {
+  String host;
+  int port;
+  SocketType _socketType;
+  CreateInfo _createInfo;
+  bool _isConnected = false;
+  bool get isConnected => _isConnected;
 
+  Function onData; // Called when data is available.
+
+  UdpClient(this.host, this.port);
+
+  Future <bool> connect() {
+    var completer = new Completer();
+
+    _socketType = new SocketType('udp');
+    Socket.create(_socketType).then((CreateInfo createInfo) {
+      _logger.fine("Socket.create.then = ${createInfo}");
+      _createInfo = createInfo;
+
+      Socket.connect(_createInfo.socketId, host, port).then((int result) {
+
+        if (result == 0) {
+          _isConnected = true;
+
+          // TODO(adam): setup poll?
+
+          completer.complete(_isConnected);
+        } else {
+          completer.complete(_isConnected);
+        }
+
+      });
+    });
+
+    return completer.future;
   }
 
-  connect() {}
-  poll() {}
-  receive() {}
-  disconnect() {}
+  void poll() {
+    _logger.fine("poll()");
+    Socket.read(_createInfo.socketId).then((ReadInfo readInfo) {
+      if (readInfo.resultCode > 0 && onData != null) {
+        onData(readInfo);
+      }
+      poll();
+    });
+  }
+
+  Future<WriteInfo> send(String message) {
+    _logger.fine("send()");
+    var completer = new Completer();
+    var blob = new html.Blob([message]);
+    var fileReader = new html.FileReader();
+    fileReader.on.load.add((html.Event event) {
+      var uint8Array = new html.Uint8Array.fromBuffer(fileReader.result);
+      Socket.write(_createInfo.socketId, uint8Array).then((WriteInfo writeInfo) {
+        completer.complete(writeInfo);
+      });
+    });
+    fileReader.readAsArrayBuffer(blob);
+    return completer.future;
+  }
+
+  //receive() {}
+
+  void disconnect() {
+    _logger.fine("disconnect()");
+    if (_createInfo != null) {
+      Socket.disconnect(_createInfo.socketId);
+      Socket.destroy(_createInfo.socketId);
+    }
+
+    _isConnected = false;
+  }
 }
