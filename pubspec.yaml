@@ -6,3 +6,4 @@ dependencies:
   js: { git: git://github.com/dart-lang/js-interop.git }
   unittest: '>=0.2.9 <2.10.0'
   logging: '>=0.2.9 <2.10.0'
+  browser: 0.0.1
