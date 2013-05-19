@@ -79,6 +79,9 @@ class Runtime {
       void callback(js.Proxy window) {
         var le = lastError;
         if (le.message.isEmpty) {
+          // XXX: This is a hack, remove or dont send the entire window object
+          // as a js.Proxy to the completer.
+          js.retain(window);
           completer.complete(window);
         } else {
           completer.completeException(le);
