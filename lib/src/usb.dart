@@ -2,7 +2,7 @@ library chrome_usb;
 
 import 'dart:async';
 import 'dart:html' as html;
-import 'dart:json';
+import 'dart:json' as JSON;
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
 

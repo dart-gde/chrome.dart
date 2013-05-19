@@ -2,7 +2,7 @@
 library chrome_runtime;
 
 import 'dart:async';
-import 'dart:json';
+import 'dart:json' as JSON;
 
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
