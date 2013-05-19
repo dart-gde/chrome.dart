@@ -5,7 +5,7 @@ import 'package:chrome/chrome.dart';
 void main() {
   Logger.root.level = Level.ALL;
   Logger logger = new Logger("main");
-  Logger.root.on.record.add((LogRecord r)=>print(r.message.toString()));
+  Logger.root.onRecord.listen((LogRecord r)=>print(r.message.toString()));
 
   SelectElement selectElement = query("#serialPorts");
 
@@ -25,7 +25,7 @@ void main() {
   Serial serial;
 
   query("#openSerial")
-  ..on.click.add((Event event) {
+  ..onClick.listen((Event event) {
     // TODO(adam) fix speed here to input element or drop down.
     serial = new Serial(selectElement.value, 9600);
     serial.open().then((result) {
@@ -42,8 +42,8 @@ void main() {
   });
 
   query("#ping")
-  ..on.click.add((Event event) {
-    String data = query("#pingData").value;
+  ..onClick.listen((Event event) {
+    String data = (query("#pingData") as InputElement).value;
     logger.fine("data ${data}");
     serial.write("${data}\n").then((result) {
       logger.fine("serial.write ${result.bytesWritten}");

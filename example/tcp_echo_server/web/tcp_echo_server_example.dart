@@ -5,7 +5,7 @@ import 'package:chrome/src/socket.dart';
 void main() {
   Logger.root.level = Level.ALL;
   Logger logger = new Logger("main");
-  Logger.root.on.record.add((LogRecord r)=>print(r.message.toString()));
+  Logger.root.onRecord.listen((LogRecord r)=>print(r.message.toString()));
 
   TcpServer server;
   server = new TcpServer("127.0.0.1", 7765);

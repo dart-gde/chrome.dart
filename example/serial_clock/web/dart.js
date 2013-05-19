@@ -25,8 +25,11 @@ if (navigator.webkitStartDart) {
         // Remap foo.dart to foo.dart.js.
         if (scripts[i].src && scripts[i].src != '') {
           var script = document.createElement('script');
-          script.src = scripts[i].src + '.js';
+          script.src = scripts[i].src.replace(/\.dart(?=\?|$)/, '.dart.js');
           var parent = scripts[i].parentNode;
+          // TODO(vsm): Find a solution for issue 8455 that works with more
+          // than one script.
+          document.currentScript = script;
           parent.replaceChild(script, scripts[i]);
         }
       }

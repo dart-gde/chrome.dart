@@ -85,7 +85,7 @@ class TestSocket {
 
             expect(connected, isZero);
 
-            var writeBuffer = new html.Uint8Array.fromList("GET /\n".charCodes);
+            var writeBuffer = new html.Uint8Array.fromList("GET /\n".codeUnits);
             Socket.write(createInfo.socketId, writeBuffer).then(expectAsync1((WriteInfo writeInfo) {
 
               Socket.disconnect(createInfo.socketId);

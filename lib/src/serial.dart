@@ -1,6 +1,7 @@
 library chrome_serial;
 
-import 'dart:json';
+import 'dart:async';
+import 'dart:json' as JSON;
 
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
@@ -222,7 +223,7 @@ class Serial {
 
             var str = new String.fromCharCodes(chars);
             if (str.endsWith("\n")) {
-              _dataRead.add(str.substring(0, str.length - 1));
+              _dataRead.write(str.substring(0, str.length - 1));
 
               if (onRead != null) {
                 onRead(_dataRead.toString());
@@ -230,7 +231,7 @@ class Serial {
 
               _dataRead.clear();
             } else {
-              _dataRead.add(str);
+              _dataRead.write(str);
             }
           }
 
@@ -292,9 +293,9 @@ class Serial {
 
         js.context.writeCallback = new js.Callback.once(writeCallback);
 
-        var buf = new js.Proxy(js.context.ArrayBuffer, data.charCodes.length);
+        var buf = new js.Proxy(js.context.ArrayBuffer, data.codeUnits.length);
         var bufView = new js.Proxy(js.context.Uint8Array, buf)
-        ..set(js.array(data.charCodes));
+        ..set(js.array(data.codeUnits));
 
         js.context.chrome.serial.write(openInfo.connectionId, buf, js.context.writeCallback);
       };

@@ -12,6 +12,36 @@
 
   var globalContext = window;
 
+  // Support for binding the receiver (this) in proxied functions.
+  function bindIfFunction(f, _this) {
+    if (typeof(f) != "function") {
+      return f;
+    } else {
+      return new BoundFunction(_this, f);
+    }
+  }
+
+  function unbind(obj) {
+    if (obj instanceof BoundFunction) {
+      return obj.object;
+    } else {
+      return obj;
+    }
+  }
+
+  function getBoundThis(obj) {
+    if (obj instanceof BoundFunction) {
+      return obj._this;
+    } else {
+      return globalContext;
+    }
+  }
+
+  function BoundFunction(_this, object) {
+    this._this = _this;
+    this.object = object;
+  }
+
   // Table for local objects and functions that are proxied.
   function ProxiedObjectTable() {
     // Name for debugging.
@@ -127,7 +157,8 @@
     this.port.receive(function (message) {
       // TODO(vsm): Support a mechanism to register a handler here.
       try {
-        var receiver = table.get(message[0]);
+        var object = table.get(message[0]);
+        var receiver = unbind(object);
         var member = message[1];
         var kind = message[2];
         var args = message[3].map(deserialize);
@@ -135,7 +166,8 @@
           // Getter.
           var field = member;
           if (field in receiver && args.length == 0) {
-            return [ 'return', serialize(receiver[field]) ];
+            var result = bindIfFunction(receiver[field], receiver);
+            return [ 'return', serialize(result) ];
           }
         } else if (kind == 'set') {
           // Setter.
@@ -145,15 +177,17 @@
           }
         } else if (kind == 'apply') {
           // Direct function invocation.
-          // TODO(vsm): Should we capture _this_ automatically?
-          return [ 'return', serialize(receiver.apply(null, args)) ];
+          var _this = getBoundThis(object);
+          return [ 'return', serialize(receiver.apply(_this, args)) ];
         } else if (member == '[]' && args.length == 1) {
           // Index getter.
-          return [ 'return', serialize(receiver[args[0]]) ];
+          var result = bindIfFunction(receiver[args[0]], receiver);
+          return [ 'return', serialize(result) ];
         } else if (member == '[]=' && args.length == 2) {
           // Index setter.
           return [ 'return', serialize(receiver[args[0]] = args[1]) ];
         } else {
+          // Member function invocation.
           var f = receiver[member];
           if (f) {
             var result = f.apply(receiver, args);
@@ -276,6 +310,12 @@
     } else if (message instanceof Element &&
         (message.ownerDocument == null || message.ownerDocument == document)) {
       return [ 'domref', serializeElement(message) ];
+    } else if (message instanceof BoundFunction &&
+               typeof(message.object) == 'function') {
+      // Local function proxy.
+      return [ 'funcref',
+               proxiedObjectTable.add(message),
+               proxiedObjectTable.sendPort ];
     } else if (typeof(message) == 'function') {
       if ('_dart_id' in message) {
         // Remote function proxy.
@@ -327,13 +367,15 @@
     // TODO(vsm): Add a more robust check for a local SendPortSync.
     if ("receivePort" in port) {
       // Local function.
-      return proxiedObjectTable.get(id);
+      return unbind(proxiedObjectTable.get(id));
     } else {
       // Remote function.  Forward to its port.
       var f = function () {
         var depth = enterScope();
         try {
-          var args = Array.prototype.slice.apply(arguments).map(serialize);
+          var args = Array.prototype.slice.apply(arguments);
+          args.splice(0, 0, this);
+          args = args.map(serialize);
           var result = port.callSync([id, '#call', args]);
           if (result[0] == 'throws') throw deserialize(result[1]);
           return deserialize(result[1]);
@@ -366,7 +408,7 @@
   // serialized constructor and arguments.
   function construct(args) {
     args = args.map(deserialize);
-    var constructor = args[0];
+    var constructor = unbind(args[0]);
     args = Array.prototype.slice.call(args, 1);
 
     // Until 10 args, the 'new' operator is used. With more arguments we use a
@@ -420,12 +462,11 @@
     return serialize(globalContext);
   }
 
-  // Remote handler for debugging.
-  function debug() {
+  // Remote handler to track number of live / allocated proxies.
+  function proxyCount() {
     var live = proxiedObjectTable.count();
     var total = proxiedObjectTable.total();
-    return 'JS objects Live : ' + live +
-           ' (out of ' + total + ' ever allocated).';
+    return [live, total];
   }
 
   // Return true if two JavaScript proxies are equal (==).
@@ -435,7 +476,16 @@
 
   // Return true if a JavaScript proxy is instance of a given type (instanceof).
   function proxyInstanceof(args) {
-    return deserialize(args[0]) instanceof deserialize(args[1]);
+    var obj = unbind(deserialize(args[0]));
+    var type = unbind(deserialize(args[1]));
+    return obj instanceof type;
+  }
+
+  // Return true if a JavaScript proxy is instance of a given type (instanceof).
+  function proxyDeleteProperty(args) {
+    var obj = unbind(deserialize(args[0]));
+    var member = unbind(deserialize(args[1]));
+    delete obj[member];
   }
 
   function proxyConvert(args) {
@@ -501,9 +551,10 @@
 
   makeGlobalPort('dart-js-context', context);
   makeGlobalPort('dart-js-create', construct);
-  makeGlobalPort('dart-js-debug', debug);
+  makeGlobalPort('dart-js-proxy-count', proxyCount);
   makeGlobalPort('dart-js-equals', proxyEquals);
   makeGlobalPort('dart-js-instanceof', proxyInstanceof);
+  makeGlobalPort('dart-js-delete-property', proxyDeleteProperty);
   makeGlobalPort('dart-js-convert', proxyConvert);
   makeGlobalPort('dart-js-enter-scope', enterJavaScriptScope);
   makeGlobalPort('dart-js-exit-scope', exitJavaScriptScope);
