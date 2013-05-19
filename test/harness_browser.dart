@@ -14,25 +14,25 @@ part 'src/test_serial.dart';
 
 main() {
   Logger.root.level = Level.ALL;
-  Logger.root.on.record.add((LogRecord r) {
+  Logger.root.onRecord.listen((LogRecord r) {
     StringBuffer sb = new StringBuffer();
     sb
-    ..add(r.time.toString())
-    ..add(":")
-    ..add(r.loggerName)
-    ..add(":")
-    ..add(r.level.name)
-    ..add(":")
-    ..add(r.sequenceNumber)
-    ..add(": ")
-    ..add(r.message.toString());
+    ..write(r.time.toString())
+    ..write(":")
+    ..write(r.loggerName)
+    ..write(":")
+    ..write(r.level.name)
+    ..write(":")
+    ..write(r.sequenceNumber)
+    ..write(": ")
+    ..write(r.message.toString());
     logMessage(sb.toString());
   });
 
   groupSep = '.';
   useHtmlEnhancedConfiguration();
 
-  html.window.on.keyUp.add((html.KeyboardEvent event) {
+  html.window.onKeyUp.listen((html.KeyboardEvent event) {
     if (event.keyCode == html.KeyCode.R) {
       Runtime.reload();
     }

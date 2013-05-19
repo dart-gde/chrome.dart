@@ -1,7 +1,8 @@
 // http://developer.chrome.com/trunk/apps/runtime.html
 library chrome_runtime;
 
-import 'dart:json';
+import 'dart:async';
+import 'dart:json' as JSON;
 
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
@@ -13,7 +14,7 @@ typedef void onSuspendCanceledCallback();
 typedef void onUpdateAvailableCallback(Map details); // TODO(adam): replace map with structured object.
 
 /**
- * Created from [Runtime].[lastError] checks.
+ * Created from [Runtime].lastError checks.
  */
 class RuntimeError {
   /**
@@ -61,7 +62,7 @@ class Runtime {
   /// Methods
 
   /**
-   * Retrieves the js.Proxy [window] object for the background page
+   * Retrieves the js.Proxy window object for the background page
    * running inside the current extension.
    *
    * If the background page is an event page,
@@ -78,6 +79,9 @@ class Runtime {
       void callback(js.Proxy window) {
         var le = lastError;
         if (le.message.isEmpty) {
+          // XXX: This is a hack, remove or dont send the entire window object
+          // as a js.Proxy to the completer.
+          js.retain(window);
           completer.complete(window);
         } else {
           completer.completeException(le);
@@ -95,7 +99,7 @@ class Runtime {
   /**
    * Returns details about the app or extension from the manifest.
    *
-   * The [Map] returned is a de-serialization of the full [manifest] file.
+   * The [Map] returned is a de-serialization of the full manifest file.
    */
   static Map getManifest() {
     return js.scoped(() {
@@ -184,7 +188,7 @@ class Runtime {
    * when the extension is updated to a new version,
    * and when Chrome is updated to a new version.
    *
-   * [details] Map passed to the [listener] will contain keys
+   * details Map passed to the [listener] will contain keys
    * 'reason' and 'previousVersion'.
    *
    * 'reason' is an enumerated string of "install", "update", "chrome_update".
@@ -260,7 +264,7 @@ class Runtime {
    * the background page gets unloaded, if you want it to be installed
    * sooner you can explicitly call chrome.runtime.reload().
    *
-   * [details] Map passed to the [listener] will contain keys 'version'.
+   * details Map passed to the [listener] will contain keys 'version'.
    * 'version' is the version number of the available update.
    */
   static void onUpdateAvailable(onUpdateAvailableCallback listener) {

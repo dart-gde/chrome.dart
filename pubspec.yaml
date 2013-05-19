@@ -1,9 +1,12 @@
 name: chrome
 homepage: https://github.com/dart-gde/chrome.dart
-version: 0.0.0-dev
+version: 0.0.1
+authors:
+- Adam Singer <financeCoding@gmail.com>
+- Kevin Moore <kevin@thinkpixellab.com>
 dependencies:
-  bot: 0.10.0
-  js: { git: git://github.com/dart-lang/js-interop.git }
-  unittest: '>=0.2.9 <2.10.0'
-  logging: '>=0.2.9 <2.10.0'
-  browser: 0.0.1
+  hop: '>=0.22.1'
+  js: '0.0.22'
+  unittest: any
+  logging: any
+  browser: '0.5.7'
