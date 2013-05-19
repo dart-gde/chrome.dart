@@ -12,6 +12,7 @@ void main() {
   ));
 
   addTask('analyze_libs', createDartAnalyzerTask(['lib/chrome.dart']));
+  addTask('analyze_tests', createDartAnalyzerTask(['test/harness_browser.dart']));
   addTask('analyze_examples', createDartAnalyzerTask(['example/serial_clock/web/clock.dart',
                                                       'example/serial_example/web/chrome_app_serial_example.dart',
                                                       'example/tcp_echo_server/web/tcp_echo_server_example.dart',
