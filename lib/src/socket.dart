@@ -404,7 +404,7 @@ class TcpClient {
     var completer = new Completer();
     var blob = new html.Blob([message]);
     var fileReader = new html.FileReader();
-    fileReader.on.load.add((html.Event event) {
+    fileReader.onLoad.listen((html.Event event) {
       var uint8Array = new html.Uint8Array.fromBuffer(fileReader.result);
       Socket.write(_createInfo.socketId, uint8Array).then((WriteInfo writeInfo) {
         completer.complete(writeInfo);
@@ -602,7 +602,7 @@ class UdpClient {
     var completer = new Completer();
     var blob = new html.Blob([message]);
     var fileReader = new html.FileReader();
-    fileReader.on.load.add((html.Event event) {
+    fileReader.onLoad.listen((html.Event event) {
       var uint8Array = new html.Uint8Array.fromBuffer(fileReader.result);
       Socket.write(_createInfo.socketId, uint8Array).then((WriteInfo writeInfo) {
         completer.complete(writeInfo);
