@@ -1,5 +1,6 @@
 library chrome_serial;
 
+import 'dart:async';
 import 'dart:json';
 
 import 'package:js/js.dart' as js;

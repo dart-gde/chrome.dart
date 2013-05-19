@@ -4,8 +4,8 @@
 
 library chrome_socket;
 
+import 'dart:async';
 import 'dart:html' as html;
-
 import 'dart:json';
 
 import 'package:js/js.dart' as js;
