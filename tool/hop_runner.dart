@@ -1,11 +1,6 @@
-import 'dart:io';
-import 'package:bot/bot.dart';
-import 'package:bot/hop.dart';
-import 'package:bot/hop_tasks.dart';
-
+import 'package:hop/hop.dart';
+import 'package:hop/hop_tasks.dart';
 void main() {
-  _assertKnownPath();
-
   addTask('test_dart2js', createDart2JsTask(['test/harness_browser.dart'],
       allowUnsafeEval: false,
       packageRoot: 'packages/'
@@ -16,13 +11,12 @@ void main() {
       packageRoot: 'packages/'
   ));
 
-  runHopCore();
-}
+  addTask('analyze_libs', createDartAnalyzerTask(['lib/chrome.dart']));
+  addTask('analyze_examples', createDartAnalyzerTask(['example/serial_clock/web/clock.dart',
+                                                      'example/serial_example/web/chrome_app_serial_example.dart',
+                                                      'example/tcp_echo_server/web/tcp_echo_server_example.dart',
+                                                      'example/udp_echo_client/web/udp_echo_client_example.dart'
+                                                      ]));
 
-void _assertKnownPath() {
-  // since there is no way to determine the path of 'this' file
-  // assume that Directory.current() is the root of the project.
-  // So check for existance of /bin/hop_runner.dart
-  final thisFile = new File('tool/hop_runner.dart');
-  assert(thisFile.existsSync());
+  runHop();
 }
