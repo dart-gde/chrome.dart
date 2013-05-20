@@ -1,12 +1,12 @@
 // TODO(adam): correct all optional parameters
 // TODO(adam): check resultCode for errors in reading and writting.
 
-
 library chrome_socket;
 
 import 'dart:async';
 import 'dart:html' as html;
 import 'dart:json' as JSON;
+import 'dart:typed_data' as typed_data;
 
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
@@ -42,7 +42,7 @@ class AcceptInfo {
 class ReadInfo {
   int resultCode;
   int socketId;
-  html.ArrayBuffer data; /* ArrayBuffer */
+  typed_data.ByteBuffer data; /* ArrayBuffer */
   ReadInfo(this.resultCode, this.data, {this.socketId});
 }
 
@@ -53,7 +53,7 @@ class WriteInfo {
 
 class RecvFromInfo {
   int resultCode;
-  html.ArrayBuffer data; /* arrayBuffer */
+  typed_data.ByteBuffer data; /* arrayBuffer */
   int port;
   String address;
   RecvFromInfo(this.resultCode, this.address, this.port, this.data);
@@ -167,8 +167,8 @@ class Socket {
           // The result.data comes in as ArrayBuffer. Convert to js.context.Uint8Array
           // and copy to native dart Uint8Array.
           var jsArrayBufferView = new js.Proxy(js.context.Uint8Array, result.data);
-          var arrayBuffer = new html.ArrayBuffer(result.resultCode);
-          var arrayBufferView = new html.Uint8Array.fromBuffer(arrayBuffer);
+          var arrayBuffer = new typed_data.ByteData(result.resultCode);
+          var arrayBufferView = new typed_data.Uint8List.fromBuffer(arrayBuffer);
 
           for (int i = 0; i < result.resultCode; i++) {
             arrayBufferView[i] = jsArrayBufferView[i];
@@ -186,7 +186,7 @@ class Socket {
     return completer.future;
   }
 
-  static Future<WriteInfo> write(int socketId, html.Uint8Array data) {
+  static Future<WriteInfo> write(int socketId, typed_data.Uint8List data) {
     // XXX: does it matter if we use uint8 or larger? Prob Should be a generic
     // ArrayBuffer.
     var completer = new Completer();
@@ -405,7 +405,7 @@ class TcpClient {
     var blob = new html.Blob([message]);
     var fileReader = new html.FileReader();
     fileReader.onLoad.listen((html.Event event) {
-      var uint8Array = new html.Uint8Array.fromBuffer(fileReader.result);
+      var uint8Array = new typed_data.Uint8List.fromBuffer(fileReader.result);
       Socket.write(_createInfo.socketId, uint8Array).then((WriteInfo writeInfo) {
         completer.complete(writeInfo);
       });
@@ -445,7 +445,7 @@ class TcpClient {
         });
         fileReader.readAsText(blob);
         */
-        var str = new String.fromCharCodes(new html.Uint8Array.fromBuffer(readInfo.data));
+        var str = new String.fromCharCodes(new typed_data.Uint8List.fromBuffer(readInfo.data));
         //_logger.fine("receive(str) = ${str}");
         receive(str, this);
       }
@@ -603,7 +603,7 @@ class UdpClient {
     var blob = new html.Blob([message]);
     var fileReader = new html.FileReader();
     fileReader.onLoad.listen((html.Event event) {
-      var uint8Array = new html.Uint8Array.fromBuffer(fileReader.result);
+      var uint8Array = new typed_data.Uint8List.fromBuffer(fileReader.result);
       Socket.write(_createInfo.socketId, uint8Array).then((WriteInfo writeInfo) {
         completer.complete(writeInfo);
       });
