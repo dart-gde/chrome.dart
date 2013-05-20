@@ -1,4 +1,6 @@
+.project
+*.js.deps
+*.js.map
+out
 packages
 pubspec.lock
-out
-.project
