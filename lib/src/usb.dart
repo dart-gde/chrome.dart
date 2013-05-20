@@ -6,6 +6,8 @@ import 'dart:json' as JSON;
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
 
+import 'runtime.dart';
+
 class Direction {
   /**
    * ( enumerated string ["in", "out"] )
@@ -38,6 +40,13 @@ class Device {
   int handle;
   int productId;
   Device(this.vendorId, this.handle, this.productId);
+  Device.fromMap(Map map) {
+    this.vendorId = map['vendorId'];
+    this.productId = map['productId'];
+    this.handle = map['handle'];
+  }
+
+  Map toMap() => { 'vendorId': this.vendorId, 'productId': this.productId, 'handle': this.handle };
 }
 
 class ControlTransferInfo {
@@ -149,17 +158,65 @@ class FindDevicesOptions {
   int vendorId;
   int productId;
   FindDevicesOptions(this.vendorId, this.productId);
+
+  Map toMap() => { 'vendorId': this.vendorId, 'productId': this.productId };
 }
 
 class Usb {
-  static Future findDevices(FindDevicesOptions options) {
+
+  /// callbacks need to check lastError
+  static _safeExecute(completer, f) {
+    var lastError = Runtime.lastError;
+    if (!lastError.message.isEmpty) {
+      completer.completeException(lastError);
+      return;
+    } else {
+      f();
+    }
+  }
+
+  static Future<List<Device>> findDevices(FindDevicesOptions options) {
     var completer = new Completer();
+
+    _jsFindDevices() {
+      void findDevicesCallback(var result) {
+        _safeExecute(completer, () {
+          List devices = new List();
+
+          for(var i = 0; i < result.length; i++) {
+            devices.add(new Device.fromMap(JSON.parse(js.context.JSON.stringify(result[i]))));
+          }
+
+          completer.complete(devices);
+        });
+      }
+
+      js.context.findDevicesCallback = new js.Callback.once(findDevicesCallback);
+      var chrome = js.context.chrome;
+
+      chrome.usb.findDevices(js.map(options.toMap()), js.context.findDevicesCallback);
+    }
+
+    js.scoped(_jsFindDevices);
 
     return completer.future;
   }
 
   static Future closeDevice(Device device) {
     var completer = new Completer();
+
+    _jsCloseDevice() {
+      void closeDeviceCallback() {
+        _safeExecute(completer, () => completer.complete());
+      }
+
+      js.context.closeDeviceCallback = new js.Callback.once(closeDeviceCallback);
+
+      var chrome = js.context.chrome;
+      chrome.usb.closeDevice(js.map(device.toMap()), js.context.closeDeviceCallback);
+    }
+
+    js.scoped(_jsCloseDevice);
 
     return completer.future;
   }
