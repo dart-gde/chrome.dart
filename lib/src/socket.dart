@@ -166,9 +166,15 @@ class Socket {
           // to read();
           // The result.data comes in as ArrayBuffer. Convert to js.context.Uint8Array
           // and copy to native dart Uint8Array.
+//          _logger.fine("result = ${result}");
+//          _logger.fine("result.data = ${result.data}");
+//          _logger.fine("result.resultCode = ${result.resultCode}");
+
           var jsArrayBufferView = new js.Proxy(js.context.Uint8Array, result.data);
-          var arrayBuffer = new typed_data.ByteData(result.resultCode);
-          var arrayBufferView = new typed_data.Uint8List.fromBuffer(arrayBuffer);
+          //var arrayBuffer = new typed_data.ByteData(result.resultCode);
+          //var arrayBufferView = new typed_data.Uint8List.view(arrayBuffer.buffer);
+
+          var arrayBufferView = new typed_data.Uint8List(result.resultCode);
 
           for (int i = 0; i < result.resultCode; i++) {
             arrayBufferView[i] = jsArrayBufferView[i];
@@ -342,7 +348,7 @@ class TcpClient {
   String host;
   int port;
 
-  int _intervalHandle;
+  Timer _intervalHandle;
 
   bool _isConnected = false;
   bool get isConnected => _isConnected;
@@ -394,7 +400,7 @@ class TcpClient {
     }
 
     if (_intervalHandle != null) {
-      html.window.clearInterval(_intervalHandle);
+      _intervalHandle.cancel();
     }
 
     _isConnected = false;
@@ -405,7 +411,7 @@ class TcpClient {
     var blob = new html.Blob([message]);
     var fileReader = new html.FileReader();
     fileReader.onLoad.listen((html.Event event) {
-      var uint8Array = new typed_data.Uint8List.fromBuffer(fileReader.result);
+      var uint8Array = new typed_data.Uint8List.view(fileReader.result);
       Socket.write(_createInfo.socketId, uint8Array).then((WriteInfo writeInfo) {
         completer.complete(writeInfo);
       });
@@ -415,12 +421,12 @@ class TcpClient {
   }
 
   void _setupDataPoll() {
-    _intervalHandle = html.window.setInterval(_read, 500);
+    _intervalHandle = new Timer.periodic(const Duration(milliseconds: 500), _read);
   }
 
   OnReceived receive; // passed a String
   OnReadTcpSocket onRead; // passed a ReadInfo
-  void _read() {
+  void _read(Timer timer) {
     _logger.fine("enter: read()");
     Socket.read(_createInfo.socketId).then((ReadInfo readInfo) {
       if (readInfo == null) {
@@ -445,7 +451,8 @@ class TcpClient {
         });
         fileReader.readAsText(blob);
         */
-        var str = new String.fromCharCodes(new typed_data.Uint8List.fromBuffer(readInfo.data));
+        _logger.fine(readInfo.data);
+        var str = new String.fromCharCodes(new typed_data.Uint8List.view(readInfo.data));
         //_logger.fine("receive(str) = ${str}");
         receive(str, this);
       }
