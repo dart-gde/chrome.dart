@@ -1,3 +1,4 @@
+// TODO(adam): enable sending data instead of just receiving
 import 'dart:html';
 import 'package:logging/logging.dart';
 import 'package:chrome/src/socket.dart';
