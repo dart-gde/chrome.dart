@@ -9,6 +9,7 @@ import 'package:js/js.dart' as js;
 
 import 'package:chrome/chrome.dart';
 
+part 'src/test_i18n.dart';
 part 'src/test_runtime.dart';
 part 'src/test_serial.dart';
 
@@ -38,6 +39,7 @@ main() {
     }
   });
 
+  new TestI18N().main();
   new TestRuntime().main();
   new TestSerial().main();
 }

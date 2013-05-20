@@ -31,7 +31,7 @@ class StorageArea {
    */
   num get QUOTA_BYTES {
     return js.scoped(() {
-      return chrome.storage[_type].QUOTA_BYTES;
+      return chromeProxy.storage[_type].QUOTA_BYTES;
     });
   }
 
@@ -70,9 +70,9 @@ class StorageArea {
       });
 
       if (keys == null) {
-        chrome.storage[_type].get(null, callback);
+        chromeProxy.storage[_type].get(null, callback);
       } else {
-        chrome.storage[_type].get(js.array(keys), callback);
+        chromeProxy.storage[_type].get(js.array(keys), callback);
       }
     });
 
@@ -96,7 +96,7 @@ class StorageArea {
         }
       });
 
-      chrome.storage[_type].set(js.map(items), callback);
+      chromeProxy.storage[_type].set(js.map(items), callback);
     });
 
     return completer.future;
@@ -119,7 +119,7 @@ class StorageArea {
         }
       });
 
-      chrome.storage[_type].remove(js.array(keys), callback);
+      chromeProxy.storage[_type].remove(js.array(keys), callback);
     });
 
     return completer.future;
@@ -142,7 +142,7 @@ class StorageArea {
         }
       });
 
-      chrome.storage[_type].clear(callback);
+      chromeProxy.storage[_type].clear(callback);
     });
 
     return completer.future;
@@ -159,25 +159,25 @@ class SyncStorageArea extends StorageArea {
 
   num get MAX_ITEMS {
     return js.scoped(() {
-      return chrome.storage[_type].MAX_ITEMS;
+      return chromeProxy.storage[_type].MAX_ITEMS;
     });
   }
 
   num get QUOTA_BYTES_PER_ITEM {
     return js.scoped(() {
-      return chrome.storage[_type].MAX_ITEMS;
+      return chromeProxy.storage[_type].MAX_ITEMS;
     });
   }
 
   num get MAX_WRITE_OPERATIONS_PER_HOUR {
     return js.scoped(() {
-      return chrome.storage[_type].MAX_ITEMS;
+      return chromeProxy.storage[_type].MAX_ITEMS;
     });
   }
 
   num get MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE {
     return js.scoped(() {
-      return chrome.storage[_type].MAX_ITEMS;
+      return chromeProxy.storage[_type].MAX_ITEMS;
     });
   }
 

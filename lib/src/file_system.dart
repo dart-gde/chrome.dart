@@ -58,7 +58,7 @@ class ChromeFileSystem {
         }
       });
 
-      chrome.fileSystem.chooseEntry(js.map({'type': 'openFile'}), callback);
+      chromeProxy.fileSystem.chooseEntry(js.map({'type': 'openFile'}), callback);
     });
 
     return completer.future;
@@ -76,7 +76,7 @@ class ChromeFileSystem {
         }
       });
 
-      chrome.fileSystem.chooseEntry(js.map({'type': 'saveFile'}), callback);
+      chromeProxy.fileSystem.chooseEntry(js.map({'type': 'saveFile'}), callback);
     });
 
     return completer.future;
@@ -95,7 +95,7 @@ class ChromeFileSystem {
         completer.complete(path);
       });
 
-      chrome.fileSystem.getDisplayPath(fileEntry._proxy, callback);
+      chromeProxy.fileSystem.getDisplayPath(fileEntry._proxy, callback);
 
       return completer.future;
     });
@@ -112,7 +112,7 @@ class ChromeFileSystem {
         completer.complete(writeable);
       });
 
-      chrome.fileSystem.isWritableEntry(fileEntry._proxy, callback);
+      chromeProxy.fileSystem.isWritableEntry(fileEntry._proxy, callback);
 
       return completer.future;
     });
@@ -123,7 +123,7 @@ class ChromeFileSystem {
    */
   ChromeFileEntry getEntryById(String id) {
     return js.scoped(() {
-      return new ChromeFileEntry(chrome.fileSystem.getEntryById(id));
+      return new ChromeFileEntry(chromeProxy.fileSystem.getEntryById(id));
     });
   }
 
@@ -135,7 +135,7 @@ class ChromeFileSystem {
    */
   String getEntryId(ChromeFileEntry fileEntry) {
     return js.scoped(() {
-      return chrome.fileSystem.getEntryId(fileEntry._proxy);
+      return chromeProxy.fileSystem.getEntryId(fileEntry._proxy);
     });
   }
 }
@@ -232,7 +232,7 @@ class ChromeFileEntry {
       });
 
       js.Callback callback = new js.Callback.once((var file) {
-        var reader = new js.Proxy(context.FileReader);
+        var reader = new js.Proxy(js.context.FileReader);
         (reader as dynamic).onloadend = contentsCallback;
         (reader as dynamic).readAsText(file);
       });
@@ -269,7 +269,7 @@ class ChromeFileEntry {
 
       js.Callback writerCallback = new js.Callback.once((var writer) {
         // blob = new Blob([contents])
-        var blob = new js.Proxy(context.Blob, js.array([contents]));
+        var blob = new js.Proxy(js.context.Blob, js.array([contents]));
 
         writer.onwriteend = writeEndCallback;
         writer.onerror = errorCallback;
@@ -280,13 +280,13 @@ class ChromeFileEntry {
         writeableEntry.createWriter(writerCallback, errorCallback);
       });
 
-      chrome.fileSystem.getWritableEntry(_proxy, writeableCallback);
+      chromeProxy.fileSystem.getWritableEntry(_proxy, writeableCallback);
     });
 
     return completer.future;
   }
 
   void dispose() {
-    jsRelease(_proxy);
+    js.release(_proxy);
   }
 }
