@@ -7,6 +7,8 @@ import 'package:logging/logging.dart';
 
 import 'common.dart';
 
+final ChromeStorage storage = new ChromeStorage();
+
 // chrome.storage
 
 class ChromeStorage {

@@ -8,6 +8,8 @@ import 'package:logging/logging.dart';
 
 import 'common.dart';
 
+final ChromeI18n i18n = new ChromeI18n();
+
 // chrome.i18n
 
 /**
