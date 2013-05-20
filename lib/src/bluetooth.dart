@@ -19,6 +19,11 @@ class AdapterState {
   bool available;
 
   bool discovering;
+
+  AdapterState(this.address, this.name, this.powered, this.available,
+      this.discovering);
+
+  toString() => "[$address, $name, $powered, $available, $discovering]";
 }
 
 class Device {
@@ -52,15 +57,72 @@ class OutOfBandPairingData {
 typedef void onAdapterStateChanged(AdapterState state);
 
 class ChromeBluetooth {
-  Future<AdapterState> getAdapterState() {}
-  Future getDevices(options) {}
-  Future<ServiceRecord> getServices(options) {}
-  Future connect(options) {}
-  Future disconnect(options) {}
-  Future read(options) {}
-  Future<int> write(options) {}
-  Future<OutOfBandPairingData> getLocalOutOfBandPairingData() {}
-  Future setOutOfBandPairingData(options) {}
-  Future startDiscovery(options) {}
-  Future stopDiscovery(options) {}
+  Future<AdapterState> getAdapterState() {
+    Completer completer = new Completer();
+
+    js.scoped(() {
+      js.Callback callback = new js.Callback.once((var result) {
+        if (result != null) {
+          var adapterState = new AdapterState(result.address, result.name,
+              result.powered, result.available, result.discovering);
+          completer.complete(adapterState);
+        } else {
+          completer.complete(null);
+        }
+      });
+
+      chromeProxy.bluetooth.getAdapterState(callback);
+    });
+
+    return completer.future;
+  }
+
+  Future getDevices(options) {
+    Completer completer = new Completer();
+    return completer.future;
+  }
+
+  Future<ServiceRecord> getServices(options) {
+    Completer completer = new Completer();
+    return completer.future;
+  }
+
+  Future connect(options) {
+    Completer completer = new Completer();
+    return completer.future;
+  }
+  Future disconnect(options) {
+    Completer completer = new Completer();
+    return completer.future;
+  }
+
+  Future read(options) {
+    Completer completer = new Completer();
+    return completer.future;
+  }
+
+  Future<int> write(options) {
+    Completer completer = new Completer();
+    return completer.future;
+  }
+
+  Future<OutOfBandPairingData> getLocalOutOfBandPairingData() {
+    Completer completer = new Completer();
+    return completer.future;
+  }
+
+  Future setOutOfBandPairingData(options) {
+    Completer completer = new Completer();
+    return completer.future;
+  }
+
+  Future startDiscovery(options) {
+    Completer completer = new Completer();
+    return completer.future;
+  }
+
+  Future stopDiscovery(options) {
+    Completer completer = new Completer();
+    return completer.future;
+  }
 }
