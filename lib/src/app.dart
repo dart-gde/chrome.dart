@@ -7,6 +7,8 @@ import 'package:logging/logging.dart';
 
 import 'common.dart';
 
+final ChromeApp app = new ChromeApp();
+
 // chrome.app
 
 class ChromeApp {
