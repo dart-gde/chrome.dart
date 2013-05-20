@@ -60,7 +60,7 @@ class ChromeBluetooth {
   Future<AdapterState> getAdapterState() {
     Completer completer = new Completer();
 
-    js.scoped(() {
+    //js.scoped(() {
       js.Callback callback = new js.Callback.once((var result) {
         if (result != null) {
           var adapterState = new AdapterState(result.address, result.name,
@@ -72,13 +72,14 @@ class ChromeBluetooth {
       });
 
       chromeProxy.bluetooth.getAdapterState(callback);
-    });
+    //});
 
     return completer.future;
   }
 
-  Future getDevices(options) {
+  Future getDevices({String uuid: null, String name: null, deviceCallback: null /* todo typedef */}) {
     Completer completer = new Completer();
+
     return completer.future;
   }
 
