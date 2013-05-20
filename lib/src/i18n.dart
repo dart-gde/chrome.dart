@@ -31,7 +31,7 @@ class ChromeI18n {
   String getMessage(String key, [List<String> substitutions]) {
     return js.scoped(() {
       // TODO: use the substitutions param
-      return chrome.i18n.getMessage(key);
+      return chromeProxy.i18n.getMessage(key);
     });
   }
 
@@ -47,7 +47,7 @@ class ChromeI18n {
         completer.complete(new js_wrapping.JsArrayToListAdapter.fromProxy(languages).toList());
       });
 
-      chrome.i18n.getAcceptLanguages(callback);
+      chromeProxy.i18n.getAcceptLanguages(callback);
 
       return completer.future;
     });

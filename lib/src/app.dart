@@ -25,7 +25,7 @@ class ChromeWindow {
   AppWindow current() {
     if (_current == null) {
       _current = js.scoped(() {
-        return new AppWindow(chrome.app.window.current());
+        return new AppWindow(chromeProxy.app.window.current());
       });
     }
 
@@ -46,7 +46,7 @@ class ChromeWindow {
 //        options['bounds'] = bounds;
 //      }
 
-      chrome.app.window.create(
+      chromeProxy.app.window.create(
           url,
           js.map(options),
           new js.Callback.once((var proxy) => completer.complete(new AppWindow(proxy))));
@@ -58,7 +58,7 @@ class ChromeWindow {
   // chrome.app.window.onClosed.addListener(function() {...});
   void onClosed(var callback) {
     return js.scoped(() {
-      return chrome.app.window.onClosed.addListener(new js.Callback.once(() {
+      return chromeProxy.app.window.onClosed.addListener(new js.Callback.once(() {
         callback();
       }));
     });
@@ -131,7 +131,7 @@ class AppWindow {
   }
 
   void dispose() {
-    jsRelease(proxy);
+    js.release(proxy);
   }
 }
 
