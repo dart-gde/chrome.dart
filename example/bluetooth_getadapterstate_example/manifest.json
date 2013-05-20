@@ -1,0 +1,13 @@
+{
+  "manifest_version": 2,
+  "name": "bluetooth getadapterstate example",
+  "version": "1",
+  "minimum_chrome_version": "23",
+  "icons": {"128": "dart_icon.png"},
+  "permissions": ["webview", "bluetooth", "experimental"],
+  "app": {
+    "background": {
+      "scripts": ["main.js"]
+    }
+  }
+}
