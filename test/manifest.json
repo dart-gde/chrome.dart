@@ -1,13 +1,18 @@
 {
-  "manifest_version": 2,
   "name": "chrome.dart - test",
+  "manifest_version": 2,  
+  
   "version": "1",
   "minimum_chrome_version": "23",
+  
+  "default_locale": "en",
+  
   "permissions": [
     "serial",
     { "fileSystem": ["write"] },
     "storage"
   ],
+  
   "app": {
     "background": {
       "scripts": ["main.js"]
