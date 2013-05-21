@@ -46,5 +46,6 @@ main() {
   new TestFileSystem().main();
   new TestI18N().main();
   new TestRuntime().main();
+  new TestSerial().main();
   new TestStorage().main();
 }
