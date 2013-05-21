@@ -1,13 +1,15 @@
 name: chrome
+description: Library for access chrome.* apis in a chrome packaged app or extension
 homepage: https://github.com/dart-gde/chrome.dart
 version: 0.0.1
 authors:
 - Adam Singer <financeCoding@gmail.com>
 - Kevin Moore <kevin@thinkpixellab.com>
 - Devon Carew <devoncarew@gmail.com>
-dependencies:
+dev_dependencies:
+  unittest: '>=0.5.7 <0.5.8'
   hop: '>=0.22.1'
+dependencies:
   js: '0.0.22'
-  unittest: any
-  logging: any
   browser: '0.5.7'
+  logging: '>=0.5.7 <0.5.8'
