@@ -4,6 +4,7 @@ version: 0.0.1
 authors:
 - Adam Singer <financeCoding@gmail.com>
 - Kevin Moore <kevin@thinkpixellab.com>
+- Devon Carew <devoncarew@gmail.com>
 dependencies:
   hop: '>=0.22.1'
   js: '0.0.22'
