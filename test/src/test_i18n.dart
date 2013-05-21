@@ -9,6 +9,9 @@ class TestI18N {
       test('getMessage', () {
         expect(i18n.getMessage("app_name"), equals("chrome.dart - test"));
       });
+      test('not_found', () {
+        expect(i18n.getMessage('not_found'), equals(''));
+      });
       test('getAcceptLanguages', () {
         Future future = i18n.getAcceptLanguages().then((List<String> languages) {
           expect(languages, isList);
