@@ -1,7 +1,10 @@
 import 'dart:html';
+import 'dart:async';
+
 import 'package:logging/logging.dart';
 import 'package:chrome/chrome.dart';
 import 'package:chrome/src/usb.dart';
+import 'package:js/js.dart' as js;
 
 class Soldier {
   FindDevicesOptions props;
@@ -22,19 +25,25 @@ void main() {
 
   // They come marching one-by-one hurrah....
   var army = [
-    new Soldier(new FindDevicesOptions(0x04e8, 0x6860), "Galaxy Nexus")
+    // Phones.
+    new Soldier(new FindDevicesOptions(0x04e8, 0x6860), "Galaxy Nexus"),
+    new Soldier(new FindDevicesOptions(0x18d1, 0x4ee1), "Nexus 4"),
+    // Tablets.
+    new Soldier(new FindDevicesOptions(0x18d1, 0x4e42), "Nexus 7")
   ];
-
-  adbDevices.children.clear();
 
   int done = -1;
 
   void tenHut(int i) {
-    if(i > army.length) {
-      return;
+
+    if(i == 0) {
+      adbDevices.children.clear();
     }
 
-    if(i <= done) { 
+    if(i > army.length) {
+      adbDevices.append(new LIElement()
+        ..text = "Press the button again to refresh!");
+
       return;
     }
 
@@ -44,8 +53,6 @@ void main() {
 
     Usb.findDevices(soldier.props).then(
     (result) {
-      window.console.log(result);
-
       if(result.length > 0) {
         LIElement devElem = new LIElement();
 
@@ -57,23 +64,56 @@ void main() {
 
         adbDevices.append(devElem);
 
-        done = i;
+        result.forEach((dev) => Usb.closeDevice(dev));
 
-        result.forEach((dev) => Usb.closeDevice(dev).then(() => tenHut(i + 1)));
+        tenHut(i + 1);
       }
     }, onError: (err) {
       window.console.error(err);
 
       LIElement errElem = new LIElement();
-      errElem.text = "Error scanning for ${soldier.name}: ${err.toString()}";
-      // errElem.classes.add('error');
+      errElem.text = "Error scanning for ${soldier.name}: ${err.message}";
 
       adbDevices.append(errElem);
     });
   }
 
-  tenHut(0);
+  query("#load").onClick.listen((_) {
+    js.scoped(() {
+      var chrome = js.context.chrome;
+
+      window.console.log("Converting...");
+      var jsPerms = [];
+    
+      army.forEach((soldier) {
+        jsPerms.add({
+          "vendorId": soldier.props.vendorId,
+          "productId": soldier.props.productId
+        });
+      });
+
+      jsPerms = [
+        {
+          "usbDevices": jsPerms,
+        }
+      ];
+
+      window.console.log(jsPerms);
+
+      chrome.permissions.request(js.map({
+        "permissions": jsPerms
+      }),
+        new js.Callback.once((granted) {
+          if(granted) {
+            tenHut(0);
+          } else {
+            window.console.log("Permissions Denied.");
+
+            // TODO: Something helpful.
+          }
+        })
+      );
+    });
+  });
+
 }
-
-
-

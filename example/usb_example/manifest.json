@@ -4,7 +4,19 @@
   "version": "1",
   "minimum_chrome_version": "26",
   "icons": {"128": "dart_icon.png"},
-  "permissions": ["usb"],
+  "permissions": [
+    "usb"    
+  ],
+
+  "optional_permissions": [
+    { "usbDevices": [
+      { "vendorId": 1256, "productId": 26720 },
+      { "vendorId": 6353, "productId": 20193 },
+      { "vendorId": 6353, "productId": 20034 }
+    ]
+    }
+  ],
+  
   "app": {
     "background": {
       "scripts": ["main.js"]
