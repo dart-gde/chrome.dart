@@ -8,14 +8,17 @@
   "default_locale": "en",
   
   "permissions": [
-    "serial",
-    { "fileSystem": ["write"] },
-    "storage"
+    "serial", {
+      "fileSystem": ["write"]
+    },
+    "storage",
+    "power"
   ],
   
   "app": {
     "background": {
-      "scripts": ["main.js"]
+      "scripts": ["main.js"],
+      "persistent": false
     }
   }
 }
