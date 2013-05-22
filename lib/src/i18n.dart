@@ -31,10 +31,8 @@ class ChromeI18n {
    * undefined.
    */
   String getMessage(String key, [List<String> substitutions]) {
-    return js.scoped(() {
-      // TODO: use the substitutions param
-      return chromeProxy.i18n.getMessage(key);
-    });
+    // TODO: use the substitutions param
+    return chromeProxy.i18n.getMessage(key);
   }
 
   /**

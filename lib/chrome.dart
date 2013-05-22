@@ -9,6 +9,9 @@ export 'src/file_system.dart';
 import 'src/i18n.dart';
 export 'src/i18n.dart';
 
+import 'src/power.dart';
+export 'src/power.dart';
+
 import 'src/runtime.dart';
 export 'src/runtime.dart';
 
