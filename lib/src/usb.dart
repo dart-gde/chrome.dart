@@ -39,6 +39,7 @@ class Device {
   int vendorId;
   int handle;
   int productId;
+  
   Device(this.vendorId, this.handle, this.productId);
   Device.fromMap(Map map) {
     this.vendorId = map['vendorId'];
@@ -163,12 +164,13 @@ class FindDevicesOptions {
 }
 
 class Usb {
+  static Logger logger = new Logger("chrome.usb");
 
   /// callbacks need to check lastError
   static _safeExecute(completer, f) {
     var lastError = Runtime.lastError;
     if (!lastError.message.isEmpty) {
-      completer.completeException(lastError);
+      completer.completeError(lastError);
       return;
     } else {
       f();
@@ -178,23 +180,33 @@ class Usb {
   static Future<List<Device>> findDevices(FindDevicesOptions options) {
     var completer = new Completer();
 
+    logger.fine("Looking for ${options.vendorId}:${options.productId}");
+
     _jsFindDevices() {
       void findDevicesCallback(var result) {
-        _safeExecute(completer, () {
-          List devices = new List();
+        if(result == null) {
+          // In theory, this should always be set in the case of
+          // result == null -- in theory.
 
-          for(var i = 0; i < result.length; i++) {
-            devices.add(new Device.fromMap(JSON.parse(js.context.JSON.stringify(result[i]))));
-          }
+          completer.completeError(Runtime.lastError);
+          return;
+        }
 
-          completer.complete(devices);
-        });
+        List devices = new List<Device>();
+
+        for(var i = 0; i < result.length; i++) {
+          devices.add(new Device(
+            result[i].vendorId,
+            result[i].handle,
+            result[i].productId ));
+        }
+
+        completer.complete(devices);
       }
 
-      js.context.findDevicesCallback = new js.Callback.once(findDevicesCallback);
       var chrome = js.context.chrome;
-
-      chrome.usb.findDevices(js.map(options.toMap()), js.context.findDevicesCallback);
+      chrome.usb.findDevices(js.map(options.toMap()), 
+        new js.Callback.once(findDevicesCallback));
     }
 
     js.scoped(_jsFindDevices);
@@ -203,6 +215,8 @@ class Usb {
   }
 
   static Future closeDevice(Device device) {
+    logger.fine("Calling closeDevice on handle ${device.handle}");
+
     var completer = new Completer();
 
     _jsCloseDevice() {
@@ -210,10 +224,9 @@ class Usb {
         _safeExecute(completer, () => completer.complete());
       }
 
-      js.context.closeDeviceCallback = new js.Callback.once(closeDeviceCallback);
-
       var chrome = js.context.chrome;
-      chrome.usb.closeDevice(js.map(device.toMap()), js.context.closeDeviceCallback);
+      chrome.usb.closeDevice(js.map(device.toMap()),
+        new js.Callback.once(closeDeviceCallback));
     }
 
     js.scoped(_jsCloseDevice);
