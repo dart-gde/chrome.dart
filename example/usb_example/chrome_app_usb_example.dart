@@ -13,7 +13,7 @@ class Soldier {
 
   Soldier(this.vendorId, this.productId, this.name);
 
-  get props => new FindDevicesOptions(this.vendorId, this.productId)
+  get props => new FindDevicesOptions(this.vendorId, this.productId);
 }
 
 void main() {
