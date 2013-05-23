@@ -1,0 +1,21 @@
+
+body {
+  background-color: #F8F8F8;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: normal;
+  margin: 15px;
+}
+
+p {
+  color: #333;
+}
+
+#adb-devices {
+  list-style: none;
+  margin-left: -15px;
+}
+
+li.error {
+	background-color: red;
+	color: white;
+}
