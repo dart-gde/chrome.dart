@@ -9,7 +9,11 @@ void main() {
   Logger logger = new Logger("main");
   Logger.root.onRecord.listen((LogRecord r)=>print(r.message.toString()));
 
-  chromeBluetooth.getAdapterState().then((r) => logger.fine(r));
+  //chromeBluetooth.getAdapterState().then((r) {
+    ///logger.fine(r);
+    chromeBluetooth.getDevices((device) => print("main(): device = $device")
+    ).then((_)=>print("getDevices completed"));
+  //});
 
   logger.fine("Hello world");
 }
