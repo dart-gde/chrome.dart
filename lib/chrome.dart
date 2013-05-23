@@ -12,6 +12,9 @@ export 'src/i18n.dart';
 import 'src/power.dart';
 export 'src/power.dart';
 
+import 'src/push_messaging.dart';
+export 'src/push_messaging.dart';
+
 import 'src/runtime.dart';
 export 'src/runtime.dart';
 

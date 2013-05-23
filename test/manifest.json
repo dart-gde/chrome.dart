@@ -12,7 +12,8 @@
       "fileSystem": ["write"]
     },
     "storage",
-    "power"
+    "power",
+    "pushMessaging"
   ],
   
   "app": {
