@@ -287,7 +287,7 @@ class Usb {
         new js.Callback.once(claimInterfaceCallback));
     }
 
-    ls.scoped(_jsClaimInterface);
+    js.scoped(_jsClaimInterface);
 
     return completer.future;
   }
