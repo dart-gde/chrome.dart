@@ -6,11 +6,16 @@ import 'package:chrome/chrome.dart';
 import 'package:chrome/src/usb.dart';
 import 'package:js/js.dart' as js;
 
+import 'android-accessory.dart';
+
 class Soldier {
-  FindDevicesOptions props;
+  int vendorId;
+  int productId;
   String name;
 
-  Soldier(this.props, this.name);
+  Soldier(this.vendorId, this.productId, this.name);
+
+  get props => new FindDevicesOptions(this.vendorId, this.productId)
 }
 
 void main() {
@@ -26,10 +31,10 @@ void main() {
   // They come marching one-by-one hurrah....
   var army = [
     // Phones.
-    new Soldier(new FindDevicesOptions(0x04e8, 0x6860), "Galaxy Nexus"),
-    new Soldier(new FindDevicesOptions(0x18d1, 0x4ee1), "Nexus 4"),
+    new Soldier(0x04e8, 0x6860, "Galaxy Nexus"),
+    new Soldier(0x18d1, 0x4ee1, "Nexus 4"),
     // Tablets.
-    new Soldier(new FindDevicesOptions(0x18d1, 0x4e42), "Nexus 7")
+    new Soldier(0x18d1, 0x4e42, "Nexus 7"),
   ];
 
   int done = -1;
@@ -48,8 +53,6 @@ void main() {
     }
 
     var soldier = army[i];
-
-    window.console.log("Looking for ${soldier.name}");
 
     Usb.findDevices(soldier.props).then(
     (result) {
@@ -82,13 +85,12 @@ void main() {
     js.scoped(() {
       var chrome = js.context.chrome;
 
-      window.console.log("Converting...");
       var jsPerms = [];
     
       army.forEach((soldier) {
         jsPerms.add({
-          "vendorId": soldier.props.vendorId,
-          "productId": soldier.props.productId
+          "vendorId": soldier.vendorId,
+          "productId": soldier.productId
         });
       });
 
@@ -98,8 +100,6 @@ void main() {
         }
       ];
 
-      window.console.log(jsPerms);
-
       chrome.permissions.request(js.map({
         "permissions": jsPerms
       }),
@@ -107,9 +107,8 @@ void main() {
           if(granted) {
             tenHut(0);
           } else {
-            window.console.log("Permissions Denied.");
-
-            // TODO: Something helpful.
+            adbDevices.append(new LIElement()
+              ..text = "You need to give us permission!");
           }
         })
       );
