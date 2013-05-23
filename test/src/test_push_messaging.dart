@@ -5,10 +5,10 @@ class TestPushMessaging {
     group('chrome.pushMessaging', () {
       test('getChannelId', () {
         Future future = pushMessaging.getChannelId(false).then((String channelId) {
-          print("channelId = ${channelId}");
+          print("pushMessaging channelId = ${channelId}");
           expect(true, true);
         }).catchError((var error) {
-          print("error = ${error}");
+          print("pushMessaging error = ${error}");
           expect(true, true);
         });
         
@@ -18,7 +18,7 @@ class TestPushMessaging {
       test('onMessage', () {
         // test that calling this method does not throw
         pushMessaging.onMessage.listen((PushMessage message) {
-          print(message);
+          print("new pushMessaging message = ${message}");
         });
       });
     });

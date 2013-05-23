@@ -1,8 +1,4 @@
 
-/**
- * Use the chrome.power module to temporarily disable aspects of system power
- * management.
- */
 library chrome_push_messaging;
 
 import 'dart:async';
