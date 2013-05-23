@@ -29,8 +29,14 @@ void main() {
       packageRoot: 'packages/'
   ));
 
-  addTask('udp_echo_server', createDart2JsTask(
-      ['example/udp_echo_server/web/udp_echo_server_example.dart'],
+  addTask('udp_echo_client', createDart2JsTask(
+      ['example/udp_echo_client/web/udp_echo_server_example.dart'],
+      allowUnsafeEval: false,
+      packageRoot: 'packages/'
+  ));
+
+  addTask('usb_example', createDart2JsTask(
+      ['example/usb_example/chrome_app_usb_example.dart'],
       allowUnsafeEval: false,
       packageRoot: 'packages/'
   ));
