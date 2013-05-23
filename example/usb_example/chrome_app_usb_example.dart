@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:chrome/chrome.dart';
 import 'package:chrome/src/usb.dart';
+import 'package:chrome/src/permissions.dart';
 import 'package:js/js.dart' as js;
 
 class Soldier {
@@ -80,6 +81,33 @@ void main() {
   }
 
   query("#load").onClick.listen((_) {
+    Permissions perms = new Permissions();
+
+    Map usbPerm = { "usbDevices": [] };
+
+    army.forEach((soldier) {
+      usbPerm["usbDevices"].add({
+        "vendorId": soldier.vendorId, "productId": soldier.productId,
+      });
+    });
+
+    window.console.log(usbPerm);
+
+    perms.permissions = [usbPerm];
+
+    Permissions.request(perms).then((result) {
+      if(result) {
+        tenHut(0);
+      } else {
+        adbDevices.append(new LIElement()
+          ..text = "You must grant us permission to use the devices!");
+      }
+    });
+  });
+
+
+  /*
+  query("#load").onClick.listen((_) {
     js.scoped(() {
       var chrome = js.context.chrome;
 
@@ -112,5 +140,6 @@ void main() {
       );
     });
   });
+  */
 
 }
