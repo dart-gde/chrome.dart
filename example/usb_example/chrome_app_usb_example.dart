@@ -6,8 +6,6 @@ import 'package:chrome/chrome.dart';
 import 'package:chrome/src/usb.dart';
 import 'package:js/js.dart' as js;
 
-import 'android-accessory.dart';
-
 class Soldier {
   int vendorId;
   int productId;
