@@ -94,7 +94,7 @@ class ControlTransferInfo {
 
       "request": this.request,
       "value": this.value
-    }
+    };
 
     if(this.length != null) {
       ret["length"] = this.length;
@@ -105,6 +105,7 @@ class ControlTransferInfo {
     }
 
     return ret;
+  }
 }
 
 class GenericTransferInfo {
