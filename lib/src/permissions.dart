@@ -10,7 +10,7 @@ class Permissions {
 	List permissions;
 	List origins;
 
-	Permissions({this.permissions = null, this.origins = null});
+	Permissions({this.permissions: null, this.origins: null});
 
 	Permissions.fromJs(js.Proxy prox) {
 		if(prox["permissions"] != null) {
