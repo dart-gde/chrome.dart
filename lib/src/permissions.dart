@@ -77,7 +77,7 @@ class Permissions {
 
 			var chrome = js.context.chrome;
 			chrome.permissions.release(js.map(perms.toMap()),
-				new Callback.once(releaseCallback));
+				new js.Callback.once(releaseCallback));
 		}
 
 		js.scoped(_jsRelease);
