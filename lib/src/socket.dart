@@ -451,7 +451,7 @@ class TcpClient {
         });
         fileReader.readAsText(blob);
         */
-        _logger.fine(readInfo.data);
+        _logger.fine(readInfo.data.toString());
         var str = new String.fromCharCodes(new typed_data.Uint8List.view(readInfo.data));
         //_logger.fine("receive(str) = ${str}");
         receive(str, this);
