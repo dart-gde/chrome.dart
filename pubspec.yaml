@@ -7,9 +7,9 @@ authors:
 description: A library for accessing the chrome.* apis in a Chrome packaged app or extension.
 homepage: https://github.com/dart-gde/chrome.dart
 dependencies:
-  browser: 0.5.7
-  js: 0.0.22
-  logging: '>=0.5.7 <0.5.8'
+  browser: any
+  js: any
+  logging: any
 dev_dependencies:
-  hop: '>=0.22.1'
-  unittest: '>=0.5.7 <0.5.8'
+  hop: any
+  unittest: any
