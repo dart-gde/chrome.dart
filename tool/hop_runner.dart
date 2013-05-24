@@ -53,7 +53,8 @@ void main() {
       ['example/serial_clock/web/clock.dart',
        'example/serial_example/web/chrome_app_serial_example.dart',
        'example/tcp_echo_server/web/tcp_echo_server_example.dart',
-       'example/udp_echo_client/web/udp_echo_client_example.dart']));
+       'example/udp_echo_client/web/udp_echo_client_example.dart',
+       'example/usb_example/chrome_app_usb_example.dart']));
 
   runHop();
 }
