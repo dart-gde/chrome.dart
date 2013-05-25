@@ -1,6 +1,7 @@
 .project
-*.js.deps
-*.js.map
+*.dart.js.deps
+*.dart.js.map
+*.dart.js
 out
 packages
 pubspec.lock

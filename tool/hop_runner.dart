@@ -18,7 +18,7 @@ void main() {
   ));
 
   addTask('serial_clock', createDart2JsTask(
-      ['example/serial_clock/web/chrome_app_serial_example.dart'],
+      ['example/serial_clock/web/clock.dart'],
       allowUnsafeEval: false,
       packageRoot: 'packages/'
   ));
@@ -29,8 +29,14 @@ void main() {
       packageRoot: 'packages/'
   ));
 
-  addTask('udp_echo_server', createDart2JsTask(
-      ['example/udp_echo_server/web/udp_echo_server_example.dart'],
+  addTask('udp_echo_client', createDart2JsTask(
+      ['example/udp_echo_client/web/udp_echo_client_example.dart'],
+      allowUnsafeEval: false,
+      packageRoot: 'packages/'
+  ));
+
+  addTask('usb_example', createDart2JsTask(
+      ['example/usb_example/chrome_app_usb_example.dart'],
       allowUnsafeEval: false,
       packageRoot: 'packages/'
   ));
@@ -47,7 +53,8 @@ void main() {
       ['example/serial_clock/web/clock.dart',
        'example/serial_example/web/chrome_app_serial_example.dart',
        'example/tcp_echo_server/web/tcp_echo_server_example.dart',
-       'example/udp_echo_client/web/udp_echo_client_example.dart']));
+       'example/udp_echo_client/web/udp_echo_client_example.dart',
+       'example/usb_example/chrome_app_usb_example.dart']));
 
   runHop();
 }
