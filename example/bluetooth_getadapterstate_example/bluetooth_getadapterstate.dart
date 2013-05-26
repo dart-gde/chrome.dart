@@ -8,12 +8,11 @@ void main() {
   Logger.root.level = Level.ALL;
   Logger logger = new Logger("main");
   Logger.root.onRecord.listen((LogRecord r)=>print(r.message.toString()));
+  DivElement d = query("#d");
+  UListElement ul = new UListElement();
+  d.children.add(ul);
 
-  //chromeBluetooth.getAdapterState().then((r) {
-    ///logger.fine(r);
-    chromeBluetooth.getDevices((device) => print("main(): device = $device")
-    ).then((_)=>print("getDevices completed"));
-  //});
-
-  logger.fine("Hello world");
+  chromeBluetooth.getDevices((Device device) =>
+      ul.children.add(new LIElement()..text = device.toString()))
+      .then((_)=>ul.children.add(new LIElement()..text = "getDevices Done"));
 }
