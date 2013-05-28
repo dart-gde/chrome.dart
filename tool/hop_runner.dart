@@ -41,6 +41,12 @@ void main() {
       packageRoot: 'packages/'
   ));
 
+  addTask('bluetooth_example', createDart2JsTask(
+      ['example/bluetooth_getdevices/bluetooth_getdevices.dart'],
+      allowUnsafeEval: false,
+      packageRoot: 'packages/'
+  ));
+
   addTask('analyze_libs', createDartAnalyzerTask(['lib/chrome.dart']));
 
   addAsyncTask('analyze_libs_hack', (ctx) => startProcess(ctx, 'dart_analyzer',
