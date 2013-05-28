@@ -100,10 +100,10 @@ class Socket {
   int id;
   Socket(this.device, this.profile, this.id);
 
-  Map toMap() => { 'device': this.device.toMap(),
-                   'profile': this.profile.toMap(), 'id': id};
+  Map toMap() => { 'device': device.toMap(),
+                   'profile': profile.toMap(), 'id': id};
 
-  String toString() => "[${this.device}, ${this.profile}, $id]";
+  String toString() => "[$device, $profile, $id]";
 }
 
 class OutOfBandPairingData {
