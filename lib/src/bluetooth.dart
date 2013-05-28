@@ -413,8 +413,8 @@ class ChromeBluetooth {
     js.scoped(() {
       var _deviceCallback = new js.Callback.many((var device) {
         try {
-          deviceCallback(new Device(device.address, device.name, device.paired,
-              device.connected));
+          deviceCallback(new Device(device.address, name: device.name,
+              paired: device.paired, connected: device.connected));
         } catch (ex) {
           _logger.fine("startDiscovery: _deviceCallback has thrown exception = $ex");
         }
