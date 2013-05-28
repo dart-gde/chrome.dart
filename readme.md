@@ -47,6 +47,7 @@ Then you can `cp -r` the `packages` to the containing chrome app package directo
  * [Kevin Moore](https://github.com/kevmoo) ([@kevmoo](http://twitter.com/kevmoo))
  * [Adam Singer](http://goo.gl/v5xRS)
  * [Devon Carew](https://github.com/devoncarew)
+ * [Amanda Cameron](http://github.com/AmandaCameron)
  * _You? File bugs. Fork and Fix bugs. Let's build this community._
 
 ### Versioning
