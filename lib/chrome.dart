@@ -21,5 +21,8 @@ export 'src/runtime.dart';
 import 'src/serial.dart';
 export 'src/serial.dart';
 
+import 'src/socket.dart';
+export 'src/socket.dart';
+
 import 'src/storage.dart';
 export 'src/storage.dart';

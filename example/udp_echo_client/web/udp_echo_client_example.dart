@@ -1,6 +1,6 @@
 import 'dart:html';
 import 'package:logging/logging.dart';
-import 'package:chrome/src/socket.dart';
+import 'package:chrome/chrome.dart';
 
 void main() {
   Logger.root.level = Level.ALL;
@@ -10,7 +10,7 @@ void main() {
   UdpClient client;
   client = new UdpClient("127.0.0.1", 3007);
 
-  client.onData = (ReadInfo readInfo) {
+  client.onData = (SocketReadInfo readInfo) {
     logger.fine("onData = ${readInfo.resultCode}");
   };
 

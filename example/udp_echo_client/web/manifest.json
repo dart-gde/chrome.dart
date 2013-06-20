@@ -4,7 +4,7 @@
   "version": "1",
   "minimum_chrome_version": "23",
   "icons": {"128": "dart_icon.png"},
-  "permissions": ["webview", { "socket" : ["tcp-connect", "tcp-listen", "udp-bind", "udp-send-to"] }, "experimental"  ],
+  "permissions": ["webview", { "socket" : ["tcp-connect", "tcp-listen", "udp-bind", "udp-send-to"] } ],
   "app": {
     "background": {
       "scripts": ["main.js"]
