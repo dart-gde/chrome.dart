@@ -47,15 +47,15 @@ void main() {
       packageRoot: 'packages/'
   ));
 
-  addTask('analyze_libs', createDartAnalyzerTask(['lib/chrome.dart']));
+  addTask('analyze_libs', createAnalyzerTask(['lib/chrome.dart']));
 
   addAsyncTask('analyze_libs_hack', (ctx) => startProcess(ctx, 'dart_analyzer',
       ['lib/chrome.dart']));
 
-  addTask('analyze_tests', createDartAnalyzerTask(
+  addTask('analyze_tests', createAnalyzerTask(
       ['test/harness_browser.dart']));
 
-  addTask('analyze_examples', createDartAnalyzerTask(
+  addTask('analyze_examples', createAnalyzerTask(
       ['example/serial_clock/web/clock.dart',
        'example/serial_example/web/chrome_app_serial_example.dart',
        'example/tcp_echo_server/web/tcp_echo_server_example.dart',
