@@ -11,6 +11,7 @@
     "serial", {
       "fileSystem": ["write"]
     },
+    { "socket" : ["tcp-connect", "tcp-listen", "udp-bind", "udp-send-to"] },
     "storage",
     "power",
     "pushMessaging"
