@@ -2,6 +2,7 @@ library harness_browser;
 
 import 'dart:async';
 import 'dart:html' as html;
+import 'dart:typed_data' as typed_data;
 
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
@@ -17,6 +18,7 @@ part 'src/test_power.dart';
 part 'src/test_push_messaging.dart';
 part 'src/test_runtime.dart';
 part 'src/test_serial.dart';
+part 'src/test_socket.dart';
 part 'src/test_storage.dart';
 
 main() {
@@ -52,5 +54,6 @@ main() {
   new TestPushMessaging().main();
   new TestRuntime().main();
   new TestSerial().main();
+  new TestSocket().main();
   new TestStorage().main();
 }
