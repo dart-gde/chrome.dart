@@ -6,51 +6,27 @@ import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
 
 void main() {
-  addTask('test_dart2js', createDart2JsTask(['test/harness_browser.dart'],
-      allowUnsafeEval: false,
-      packageRoot: 'packages/'
-  ));
+  addTask('test_dart2js', createAnalyzerTask(['test/harness_browser.dart']));
 
-  addTask('serial_example', createDart2JsTask(
-      ['example/serial_example/web/chrome_app_serial_example.dart'],
-      allowUnsafeEval: false,
-      packageRoot: 'packages/'
-  ));
+  addTask('serial_example', createAnalyzerTask(
+      ['example/serial_example/web/chrome_app_serial_example.dart']));
 
-  addTask('serial_clock', createDart2JsTask(
-      ['example/serial_clock/web/clock.dart'],
-      allowUnsafeEval: false,
-      packageRoot: 'packages/'
-  ));
+  addTask('serial_clock', createAnalyzerTask(
+      ['example/serial_clock/web/clock.dart']));
 
-  addTask('tcp_echo_server', createDart2JsTask(
-      ['example/tcp_echo_server/web/tcp_echo_server_example.dart'],
-      allowUnsafeEval: false,
-      packageRoot: 'packages/'
-  ));
+  addTask('tcp_echo_server', createAnalyzerTask(
+      ['example/tcp_echo_server/web/tcp_echo_server_example.dart']));
 
-  addTask('udp_echo_client', createDart2JsTask(
-      ['example/udp_echo_client/web/udp_echo_client_example.dart'],
-      allowUnsafeEval: false,
-      packageRoot: 'packages/'
-  ));
+  addTask('udp_echo_client', createAnalyzerTask(
+      ['example/udp_echo_client/web/udp_echo_client_example.dart']));
 
-  addTask('usb_example', createDart2JsTask(
-      ['example/usb_example/chrome_app_usb_example.dart'],
-      allowUnsafeEval: false,
-      packageRoot: 'packages/'
-  ));
+  addTask('usb_example', createAnalyzerTask(
+      ['example/usb_example/chrome_app_usb_example.dart']));
 
-  addTask('bluetooth_example', createDart2JsTask(
-      ['example/bluetooth_getdevices/bluetooth_getdevices.dart'],
-      allowUnsafeEval: false,
-      packageRoot: 'packages/'
-  ));
+  addTask('bluetooth_example', createAnalyzerTask(
+      ['example/bluetooth_getdevices/bluetooth_getdevices.dart']));
 
   addTask('analyze_libs', createAnalyzerTask(['lib/chrome.dart']));
-
-  addAsyncTask('analyze_libs_hack', (ctx) => startProcess(ctx, 'dart_analyzer',
-      ['lib/chrome.dart']));
 
   addTask('analyze_tests', createAnalyzerTask(
       ['test/harness_browser.dart']));
