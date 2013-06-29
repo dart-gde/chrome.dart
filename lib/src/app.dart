@@ -4,15 +4,19 @@ import 'dart:async';
 import 'package:js/js.dart' as js;
 import 'common.dart';
 
-final app = const _App();
+// chrome.app
 
-class _App {
-  final window = const _Window();
-  const _App();
+final ChromeApp app = const ChromeApp._();
+
+class ChromeApp {
+  final ChromeWindow window = const ChromeWindow._();
+  const ChromeApp._();
 }
 
-class _Window {
-  const _Window();
+// chrome.app.window
+
+class ChromeWindow {
+  const ChromeWindow._();
   
   static AppWindow _current;
   AppWindow get current {
