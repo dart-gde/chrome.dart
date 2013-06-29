@@ -91,15 +91,23 @@ class AppWindow {
   js.Callback _jsOnMinimized;
   js.Callback _jsOnRestored;
   
+  /// The bounds of this window.
   Bounds 
     get bounds => new Bounds._(_proxy.getBounds());
     set bounds(Bounds value) => _proxy.setBounds(value);
   
+  /// The JavaScript 'window' object for the created child.
   /* Window */ get contentWindow => throw new UnimplementedError();
-    
+  
   bool get isDisposed => _proxy == null;
+  
+  /// Is this window fullscreen?
   bool get isFullscreen => _proxy.isFullscreen();
+  
+  /// Is this window maximized?
   bool get isMaximized => _proxy.isMaximized();
+  
+  /// Is this window minimized?
   bool get isMinimized => _proxy.isMinimized();
   
   final _onBoundsChanged = new StreamController.broadcast();
@@ -111,11 +119,22 @@ class AppWindow {
   final _onMinimized = new StreamController.broadcast();
   final _onRestored = new StreamController.broadcast();
   
-  Stream get onBoundsChanged => _onBoundsChanged.stream;  
+  /// Fired when this window is resized.
+  Stream get onBoundsChanged => _onBoundsChanged.stream;
+  
+  /// Fired when this window is closed.
   Stream get onClosed => _onClosed.stream;
+  
+  /// Fired when this window is fullscreened.
   Stream get onFullscreened => _onFullscreened.stream;
+  
+  /// Fired when this window is maximized.
   Stream get onMaximized => _onMaximized.stream;
+  
+  /// Fired when this window is minimized.
   Stream get onMinimized => _onMinimized.stream;
+  
+  /// Fired when this window is restored from being minimized or maximized.
   Stream get onRestored => _onRestored.stream;
   
   AppWindow._(js.Proxy proxy) : _proxy = js.retain(proxy) {
@@ -151,15 +170,36 @@ class AppWindow {
     _proxy = null;
   }
   
+  /// Clear attention from this window.
   void clearAttention() => _proxy.clearAttention();
+  
+  /// Close this window.
   void close() => _proxy.close();
+  
+  /// Draw attention to this window.
   void drawAttention() => _proxy.drawAttention();
+  
+  /// Focus this window.
   void focus() => _proxy.focus();
+  
+  /// Hide this window. Does nothing if this window is already hidden.
   void hide() => _proxy.hide();
+  
+  /// Maximize this window.
   void maximize() => _proxy.maximize();
+  
+  /// Minimize this window.
   void minimize() => _proxy.minimize();
+  
+  /// Move this window to the position ([left], [top]).
   void moveTo(int left, int top) => _proxy.moveTo(left, top);
+  
+  /// Resize this window to [width] x [height] pixels in size.
   void resizeTo(int width, int height) => _proxy.resizeTo(width, height);
+  
+  /// Restore this window, exiting a maximized or minimized state.
   void restore() => _proxy.restore();
+  
+  /// Show this window. Does nothing if this window is already visible.
   void show() => _proxy.show();
 }
