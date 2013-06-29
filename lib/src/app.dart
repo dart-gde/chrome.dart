@@ -19,6 +19,8 @@ class ChromeWindow {
   const ChromeWindow._();
   
   static AppWindow _current;
+  /// An [AppWindow] object for the current script context (ie JavaScript 
+  /// 'window' object).
   AppWindow get current {
     if (_current == null) {
       _current = new AppWindow._(js.context.chrome.app.window.current());
