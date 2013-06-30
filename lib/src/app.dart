@@ -4,23 +4,26 @@ import 'dart:async';
 import 'package:js/js.dart' as js;
 import 'common.dart';
 
-// chrome.app
-
+/// Accessor for the `chrome.app` namespace.
 final ChromeApp app = const ChromeApp._();
 
+/// Encapsulation of the `chrome.app` namespace.
+/// 
+/// The single instance of this class is accessed from the [app] getter.
 class ChromeApp {
+  /// Accessor for the `chrome.app.window` namespace.
   final ChromeWindow window = const ChromeWindow._();
   const ChromeApp._();
 }
 
-// chrome.app.window
-
+/// Encapsulation of the `chrome.app.window` namespace.
+/// 
+/// The single instance of this class is accessed from the [app.window] getter.
 class ChromeWindow {
   const ChromeWindow._();
   
   static AppWindow _current;
-  /// An [AppWindow] object for the current script context (ie JavaScript 
-  /// 'window' object).
+  /// An [AppWindow] object for the current script context.
   AppWindow get current {
     if (_current == null) {
       _current = new AppWindow._(js.context.chrome.app.window.current());
@@ -65,6 +68,7 @@ class ChromeWindow {
 }
 
 // http://developer.chrome.com/apps/app.window.html#type-Bounds
+/// The bounds of an [AppWindow].
 class Bounds {
   final int left, top, width, height;
   Map get _map {
