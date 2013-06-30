@@ -88,6 +88,10 @@ class Bounds {
 }
 
 // http://developer.chrome.com/apps/app.window.html#type-AppWindow
+/// A Chrome application window.
+/// 
+/// Windows have an optional frame with title bar and size controls. They are 
+/// not associated with any Chrome browser windows.
 class AppWindow {  
   js.Proxy _proxy;
   js.Callback _jsOnBoundsChanged;
@@ -102,7 +106,7 @@ class AppWindow {
     get bounds => new Bounds._(_proxy.getBounds());
     set bounds(Bounds value) => _proxy.setBounds(value);
   
-  /// The JavaScript 'window' object for the created child.
+  /// The html 'window' object for the created child.
   /* Window */ get contentWindow => throw new UnimplementedError();
   
   bool get isDisposed => _proxy == null;
