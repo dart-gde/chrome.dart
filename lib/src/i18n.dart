@@ -1,4 +1,4 @@
-library chrome_i18n;
+library chrome.i18n;
 
 import 'dart:async';
 

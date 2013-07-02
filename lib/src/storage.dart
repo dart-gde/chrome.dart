@@ -1,4 +1,4 @@
-library chrome_storage;
+library chrome.storage;
 
 import 'dart:async';
 

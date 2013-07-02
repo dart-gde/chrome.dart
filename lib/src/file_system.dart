@@ -1,4 +1,4 @@
-library chrome_file_system;
+library chrome.file_system;
 
 import 'dart:async';
 

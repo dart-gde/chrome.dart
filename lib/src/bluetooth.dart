@@ -1,4 +1,4 @@
-library chrome_bluetooth;
+library chrome.bluetooth;
 
 import 'dart:async';
 import 'dart:typed_data';
