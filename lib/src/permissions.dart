@@ -1,4 +1,4 @@
-library chrome_permissions;
+library chrome.permissions;
 
 import "dart:async";
 

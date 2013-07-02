@@ -1,4 +1,4 @@
-library chrome_usb;
+library chrome.usb;
 
 import 'dart:async';
 import 'dart:html' as html;

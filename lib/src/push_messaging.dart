@@ -1,5 +1,5 @@
 
-library chrome_push_messaging;
+library chrome.push_messaging;
 
 import 'dart:async';
 

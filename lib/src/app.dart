@@ -1,4 +1,4 @@
-library chrome_app;
+library chrome.app;
 
 import 'dart:async';
 import 'package:js/js.dart' as js;

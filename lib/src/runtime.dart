@@ -1,5 +1,5 @@
 // http://developer.chrome.com/trunk/apps/runtime.html
-library chrome_runtime;
+library chrome.runtime;
 
 import 'dart:async';
 import 'dart:json' as JSON;

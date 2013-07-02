@@ -1,4 +1,4 @@
-library common;
+library chrome.common;
 
 import 'dart:async';
 import 'dart:html';
