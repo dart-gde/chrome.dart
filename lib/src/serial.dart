@@ -1,4 +1,4 @@
-library chrome_serial;
+library chrome.serial;
 
 import 'dart:async';
 import 'dart:json' as JSON;

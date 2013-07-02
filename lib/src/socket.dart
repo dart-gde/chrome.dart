@@ -1,7 +1,7 @@
 // TODO(adam): correct all optional parameters
 // TODO(adam): check resultCode for errors in reading and writting.
 
-library chrome_socket;
+library chrome.socket;
 
 import 'dart:async';
 import 'dart:html' as html;
