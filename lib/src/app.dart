@@ -1,6 +1,7 @@
 library chrome.app;
 
 import 'dart:async';
+import 'dart:html' as html;
 import 'package:js/js.dart' as js;
 import 'common.dart';
 
@@ -155,9 +156,15 @@ class AppWindow {
   Bounds 
     get bounds => new Bounds._(_proxy.getBounds());
     set bounds(Bounds value) => _proxy.setBounds(value);
-  
+    
+  HtmlWindow _contentWindow;
   /// The html 'window' object for the created child.
-  /* Window */ get contentWindow => throw new UnimplementedError();
+  HtmlWindow get contentWindow {
+    if(_contentWindow == null) {
+      _contentWindow = new HtmlWindow._(_proxy.contentWindow);
+    }
+    return _contentWindow;
+  }
   
   bool get isDisposed => _proxy == null;
   
@@ -214,6 +221,7 @@ class AppWindow {
   
   void dispose() {
     assert(!isDisposed);
+    if (_contentWindow != null) _contentWindow._dispose();
     _onBoundsChanged.close();
     _onClosed.close();
     _onFullscreened.close();
@@ -265,4 +273,43 @@ class AppWindow {
   
   /// Show this window. Does nothing if this window is already visible.
   void show() => _proxy.show();
+}
+
+/// The top-level context object for web scripting.
+class HtmlWindow implements html.WindowBase {  
+  bool get closed => _proxy.closed;
+  html.HistoryBase get history => throw new UnimplementedError();  
+  html.LocationBase get location => throw new UnimplementedError();  
+  html.WindowBase get opener => throw new UnimplementedError();  
+  html.WindowBase get parent => throw new UnimplementedError();  
+  html.WindowBase get top => throw new UnimplementedError();  
+  
+  js.Proxy _proxy;
+  js.Callback _jsOnContentLoaded;
+  
+  final _onContentLoaded = new StreamController.broadcast();  
+  Stream get onContentLoaded => _onContentLoaded.stream; 
+  
+  HtmlWindow._(js.Proxy proxy) : _proxy = js.retain(proxy) {
+    _jsOnContentLoaded = 
+        new js.Callback.many((_) => _onContentLoaded.add(this));
+    _proxy.addEventListener("DOMContentLoaded", _jsOnContentLoaded);
+  }
+  
+  // The owning [AppWindow] is responsible for disposing this html window.
+  void _dispose() {
+    assert(_proxy != null);
+    _onContentLoaded.close();
+    _jsOnContentLoaded.dispose();
+    js.release(_proxy);
+    _proxy = null;
+  }
+  
+  void close() => _proxy.close();
+  
+  void postMessage(message, String targetOrigin, [List messagePorts]) {
+      if(messagePorts != null)
+        throw new UnsupportedError("messagePorts are not supported.");
+      _proxy.postMessage(message, targetOrigin);
+  }
 }

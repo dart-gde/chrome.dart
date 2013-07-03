@@ -142,7 +142,31 @@ class TestApp {
           return win.onMaximized.first.then((win) => win.restore());
         });
       });
-                  
+      
+      test('Test getting the contentWindow of an AppWindow', () {
+        final verify = expectAsync1((HtmlWindow contentWindow) {          
+          expect(contentWindow.closed, isFalse);
+        });
+        createWindow().then((AppWindow win) {              
+          HtmlWindow contentWindow = win.contentWindow;
+          contentWindow.onContentLoaded.listen(verify);
+        });
+      });
+      
+      test('Test postMessage to the contentWindow of an AppWindow', () {
+        StreamSubscription sub;
+        sub = html.window.onMessage.listen(
+            expectAsync1((html.MessageEvent msg) {
+              expect(msg.data, equals('echo: hello friend'));
+              sub.cancel();
+            }));
+        createWindow().then((AppWindow win) {              
+          HtmlWindow contentWindow = win.contentWindow;
+          contentWindow.onContentLoaded.first.then((_) {
+            contentWindow.postMessage('hello friend', '*');
+          });
+        });
+      });
     });
   }
 }
