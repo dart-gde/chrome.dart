@@ -61,6 +61,28 @@ class TestApp {
           }));
       });
       
+      test('Test a call to create() with options: { state : minimized }', () {
+        app.window.create(TEST_WINDOW_URL, state : 'minimized')
+          .then(expectAsync1((AppWindow win) { 
+            windows.add(win);          
+            expect(win, const isInstanceOf<AppWindow>());
+            expect(win.isMinimized, isTrue);
+            expect(win.isFullscreen, isFalse);
+            expect(win.isMaximized, isFalse);                     
+          }));
+      });
+      
+      test('Test a call to create() with options: { state : maximized }', () {
+        app.window.create(TEST_WINDOW_URL, state : 'maximized')
+          .then(expectAsync1((AppWindow win) { 
+            windows.add(win);          
+            expect(win, const isInstanceOf<AppWindow>());
+            expect(win.isMaximized, isTrue);
+            expect(win.isMinimized, isFalse);
+            expect(win.isFullscreen, isFalse);                                 
+          }));
+      });
+      
       test('Test a call to create() with options: { state : fullscreen }', () {
         app.window.create(TEST_WINDOW_URL, state : 'fullscreen')
           .then(expectAsync1((AppWindow win) { 
