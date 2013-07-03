@@ -61,6 +61,39 @@ class TestApp {
           }));
       });
       
+      test('Test a call to create() with options: { state : minimized }', () {
+        app.window.create(TEST_WINDOW_URL, state : 'minimized')
+          .then(expectAsync1((AppWindow win) { 
+            windows.add(win);          
+            expect(win, const isInstanceOf<AppWindow>());
+            expect(win.isMinimized, isTrue);
+            expect(win.isFullscreen, isFalse);
+            expect(win.isMaximized, isFalse);                     
+          }));
+      });
+      
+      test('Test a call to create() with options: { state : maximized }', () {
+        app.window.create(TEST_WINDOW_URL, state : 'maximized')
+          .then(expectAsync1((AppWindow win) { 
+            windows.add(win);          
+            expect(win, const isInstanceOf<AppWindow>());
+            expect(win.isMaximized, isTrue);
+            expect(win.isMinimized, isFalse);
+            expect(win.isFullscreen, isFalse);                                 
+          }));
+      });
+      
+      test('Test a call to create() with options: { state : fullscreen }', () {
+        app.window.create(TEST_WINDOW_URL, state : 'fullscreen')
+          .then(expectAsync1((AppWindow win) { 
+            windows.add(win);          
+            expect(win, const isInstanceOf<AppWindow>());
+            expect(win.isFullscreen, isTrue);
+            expect(win.isMaximized, isFalse);
+            expect(win.isMinimized, isFalse);                      
+          }));
+      });
+      
       test('Test a successful call to minimize()', () {
         final verify = expectAsync1((AppWindow win) {
           expect(win.isMinimized, isTrue);
@@ -85,6 +118,18 @@ class TestApp {
         });
       });
       
+      test('Test a successful call to fullscreen()', () {
+        final verify = expectAsync1((AppWindow win) {
+          expect(win.isFullscreen, isTrue);
+          expect(win.isMaximized, isFalse);          
+          expect(win.isMinimized, isFalse);
+        });        
+        createWindow().then((AppWindow win) {          
+          win.onFullscreened.listen(verify);
+          win.fullscreen();
+        });
+      });
+      
       test('Test a successful call to restore() from isMaximized', () {
         final verify = expectAsync1((AppWindow win) {          
           expect(win.isMaximized, isFalse);
@@ -98,8 +143,30 @@ class TestApp {
         });
       });
       
-      // TODO(rms): more test coverage
+      test('Test getting the contentWindow of an AppWindow', () {
+        final verify = expectAsync1((HtmlWindow contentWindow) {          
+          expect(contentWindow.closed, isFalse);
+        });
+        createWindow().then((AppWindow win) {              
+          HtmlWindow contentWindow = win.contentWindow;
+          contentWindow.onContentLoaded.listen(verify);
+        });
+      });
       
+      test('Test postMessage to the contentWindow of an AppWindow', () {
+        StreamSubscription sub;
+        sub = html.window.onMessage.listen(
+            expectAsync1((html.MessageEvent msg) {
+              expect(msg.data, equals('echo: hello friend'));
+              sub.cancel();
+            }));
+        createWindow().then((AppWindow win) {              
+          HtmlWindow contentWindow = win.contentWindow;
+          contentWindow.onContentLoaded.first.then((_) {
+            contentWindow.postMessage('hello friend', '*');
+          });
+        });
+      });
     });
   }
 }
