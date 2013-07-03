@@ -1,10 +1,11 @@
 # chrome.dart
 
-[![Build Status](https://drone.io/github.com/dart-gde/chrome.dart/status.png)](https://drone.io/github.com/dart-gde/chrome.dart/latest)
+[![Build Status](https://drone.io/github.com/dart-gde/chrome.dart/status.png)][badge]
 
 ### Description
 
-A team effort to create interop with the [chrome.* APIs](http://developer.chrome.com/trunk/apps/api_index.html) used for [Chrome Packaged Apps](http://developer.chrome.com/trunk/apps/about_apps.html).
+A team effort to create interop with the [Chrome.* APIs][] used for 
+[Chrome Packaged Apps][].
 
 ### Using
 
@@ -12,7 +13,8 @@ A team effort to create interop with the [chrome.* APIs](http://developer.chrome
 import 'package:chrome/chrome.dart';
 ```
 
-The best results will happen when compiling to javascript with the following command. 
+The best results will happen when compiling to javascript with the following 
+command. 
 
 ```
 dart2js --verbose --disallow-unsafe-eval -o<name>.dart.js <name>.dart
@@ -22,7 +24,10 @@ Check out the [example](example) folder on setup.
 
 ### Using in dartium
 
-It is possible to run a dart chrome app in dartium within the dartvm. Chrome apps do not like having sym links outside of there project folder. One solution is to clone the package dependencies and breaking the symlinks. Something like the following might work.
+It is possible to run a dart chrome app in dartium within the dartvm. Chrome 
+apps do not like having sym links outside of there project folder. One solution 
+is to clone the package dependencies and breaking the symlinks. Something like 
+the following might work.
 
 ```
 pub install
@@ -33,7 +38,8 @@ rm -rf packages
 mv packages_snapshots packages
 ```
 
-Then you can `cp -r` the `packages` to the containing chrome app package directory. 
+Then you can `cp -r` the `packages` to the containing chrome app package 
+directory. 
 
 ### Building unit tests and loading
 
@@ -87,3 +93,7 @@ The views and conclusions contained in the software and documentation are those
 of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of the FreeBSD Project.
 ```
+
+[badge]: https://drone.io/github.com/dart-gde/chrome.dart/latest
+[Chrome.* APIs]: http://developer.chrome.com/trunk/apps/api_index.html
+[Chrome Packaged Apps]: http://developer.chrome.com/trunk/apps/about_apps.html
