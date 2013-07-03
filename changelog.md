@@ -1,6 +1,6 @@
 # Changelog - chrome.dart
 
-## 0.0.2-dev
+## 0.2.0-dev
 
 - Work on the `chrome.app.window` API including several breaking changes, please
 refer to the dartdoc for usage.
