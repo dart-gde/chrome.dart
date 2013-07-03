@@ -31,6 +31,54 @@ class ChromeWindow {
     return _current;
   }
 
+  /// Create an [AppWindow].
+  ///
+  /// The size and position of a window can be specified in a number of 
+  /// different ways. The most simple option is not specifying anything at all, 
+  /// in which case a default size and platform dependent position will be used.
+  /// 
+  /// Another option is to specify a [bounds], which will always put the window 
+  /// at the specified coordinates with the specified size.  
+  /// 
+  /// Yet another option is to give the window a (unique) [id]. This id is then 
+  /// used to remember the bounds of the window whenever it is moved or resized. 
+  /// This bounds is then used instead of the specified bounds on subsequent 
+  /// opening of a window with the same id. If you need to open a window with an 
+  /// id at a location other than the remembered default, you can create it 
+  /// [hidden], move it to the desired location, then [AppWindow.show] it. 
+  /// 
+  /// You can also combine these various options, explicitly specifying for 
+  /// example the size while having the position be remembered or other 
+  /// combinations like that. Size and position are dealt with seperately, but 
+  /// individual coordinates are not. So if you specify a top (or left) 
+  /// coordinate, you should also specify a left (or top) coordinate, and 
+  /// similar for size.
+  /// 
+  /// The following optional parameters may be specified:
+  /// 
+  /// [id] : An identifier for the window. This will be used to remember the 
+  /// size and position of the window and restore that geometry when a window 
+  /// with the same id (and no explicit size or position) is later opened.
+  /// [minWidth]: Minimum width for the lifetime of the window.
+  /// [minHeight]: Minimum height for the lifetime of the window.
+  /// [maxWidth]: Maximum width for the lifetime of the window.
+  /// [maxHeight]: Maximum height for the lifetime of the window.
+  /// [frame]: Frame type: 'none' or 'chrome' (defaults to 'chrome').
+  /// [bounds]: Position and size of the content in the window (excluding the 
+  /// titlebar).
+  /// [transparentBackground]: Enable window background transparency. Only 
+  /// supported in ash. Requires experimental API permission.
+  /// [hidden]: If true, the window will be created in a hidden state. Call 
+  /// [AppWindow.show] to show it once it has been created. Defaults to false.
+  /// [resizable]: If true, the window will be resizable by the user. Defaults 
+  /// to true.
+  /// [singleton]: By default if you specify an id for the window, the window 
+  /// will only be created if another window with the same id doesn't already 
+  /// exist. If a window with the same id already exists that window is 
+  /// activated instead. If you do want to create multiple windows with the same 
+  /// id, you can set this property to false.
+  /// [state]: The initial state of the window, allowing it to be created 
+  /// already fullscreen, maximized, or minimized. Defaults to 'normal'.
   Future<AppWindow> create(String url, 
                            {String id, 
                            int minWidth,
