@@ -98,7 +98,17 @@ class TestApp {
         });
       });
       
-      // TODO(rms): more test coverage
+      test('Test a successful call to fullscreen()', () {
+        final verify = expectAsync1((AppWindow win) {
+          expect(win.isFullscreen, isTrue);
+          expect(win.isMaximized, isFalse);          
+          expect(win.isMinimized, isFalse);
+        });        
+        createWindow().then((AppWindow win) {          
+          win.onFullscreened.listen(verify);
+          win.fullscreen();
+        });
+      });
       
     });
   }

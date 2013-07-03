@@ -192,6 +192,9 @@ class AppWindow {
   /// Focus this window.
   void focus() => _proxy.focus();
   
+  /// Fullscreens this window.
+  void fullscreen() => _proxy.fullscreen();
+  
   /// Hide this window. Does nothing if this window is already hidden.
   void hide() => _proxy.hide();
   
@@ -207,7 +210,7 @@ class AppWindow {
   /// Resize this window to [width] x [height] pixels in size.
   void resizeTo(int width, int height) => _proxy.resizeTo(width, height);
   
-  /// Restore this window, exiting a maximized or minimized state.
+  /// Restore this window, exiting a maximized, minimized, or fullscreen state.
   void restore() => _proxy.restore();
   
   /// Show this window. Does nothing if this window is already visible.
