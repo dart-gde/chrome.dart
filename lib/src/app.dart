@@ -42,7 +42,8 @@ class ChromeWindow {
                            bool transparentBackground,
                            bool hidden,
                            bool resizable,
-                           bool singleton}) {
+                           bool singleton,
+                           String state}) {
     final options = {};
     if (id != null) options['id'] = id;
     if (minWidth != null) options['minWidth'] = minWidth;
@@ -56,6 +57,7 @@ class ChromeWindow {
     if (hidden != null) options['hidden'] = hidden;
     if (resizable != null) options['resizable'] = resizable;
     if (singleton != null) options['singleton'] = singleton;
+    if (state != null) options['state'] = state;
     
     final completer = new Completer<AppWindow>();
     js.context.chrome.app.window.create(

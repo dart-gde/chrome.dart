@@ -61,6 +61,17 @@ class TestApp {
           }));
       });
       
+      test('Test a call to create() with options: { state : fullscreen }', () {
+        app.window.create(TEST_WINDOW_URL, state : 'fullscreen')
+          .then(expectAsync1((AppWindow win) { 
+            windows.add(win);          
+            expect(win, const isInstanceOf<AppWindow>());
+            expect(win.isFullscreen, isTrue);
+            expect(win.isMaximized, isFalse);
+            expect(win.isMinimized, isFalse);                      
+          }));
+      });
+      
       test('Test a successful call to minimize()', () {
         final verify = expectAsync1((AppWindow win) {
           expect(win.isMinimized, isTrue);
@@ -85,19 +96,6 @@ class TestApp {
         });
       });
       
-      test('Test a successful call to restore() from isMaximized', () {
-        final verify = expectAsync1((AppWindow win) {          
-          expect(win.isMaximized, isFalse);
-          expect(win.isFullscreen, isFalse);
-          expect(win.isMinimized, isFalse);
-        });        
-        createWindow().then((AppWindow win) {    
-          win.onRestored.listen(verify);
-          win.maximize();
-          return win.onMaximized.first.then((win) => win.restore());
-        });
-      });
-      
       test('Test a successful call to fullscreen()', () {
         final verify = expectAsync1((AppWindow win) {
           expect(win.isFullscreen, isTrue);
@@ -110,6 +108,19 @@ class TestApp {
         });
       });
       
+      test('Test a successful call to restore() from isMaximized', () {
+        final verify = expectAsync1((AppWindow win) {          
+          expect(win.isMaximized, isFalse);
+          expect(win.isFullscreen, isFalse);
+          expect(win.isMinimized, isFalse);
+        });        
+        createWindow().then((AppWindow win) {    
+          win.onRestored.listen(verify);
+          win.maximize();
+          return win.onMaximized.first.then((win) => win.restore());
+        });
+      });
+                  
     });
   }
 }
