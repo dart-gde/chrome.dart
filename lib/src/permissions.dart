@@ -14,11 +14,11 @@ class Permissions {
 
 	Permissions.fromJs(js.Proxy prox) {
 		if(prox["permissions"] != null) {
-			this.permissions = jsw.JSArrayToListAdapter.cast(prox["permissions"]);
+			this.permissions = jsw.JsArrayToListAdapter.cast(prox["permissions"]);
 		}
 
 		if(prox["origins"] != null) {
-			this.origins = jsw.JSArrayToListAdapter.cast(prox["origins"]);
+			this.origins = jsw.JsArrayToListAdapter.cast(prox["origins"]);
 		}
 	}
 
