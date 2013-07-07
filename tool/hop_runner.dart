@@ -26,7 +26,8 @@ void main() {
   addTask('bluetooth_example', createAnalyzerTask(
       ['example/bluetooth_getdevices/bluetooth_getdevices.dart']));
 
-  addTask('analyze_libs', createAnalyzerTask(['lib/chrome.dart']));
+  addTask('analyze_libs', createAnalyzerTask(
+      ['lib/chrome.dart', 'lib/chrome_ext.dart']));
 
   addTask('analyze_tests', createAnalyzerTask(
       ['test/harness_browser.dart']));
