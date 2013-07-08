@@ -46,7 +46,6 @@ class Windows {
           windowId,
           _createGetInfoMap(populate),
           completer.callback);
-
     });
     return completer.future;
   }
@@ -65,7 +64,6 @@ class Windows {
       js.context.chrome.windows.getCurrent(
           _createGetInfoMap(populate),
           completer.callback);
-
     });
     return completer.future;
   }
@@ -83,7 +81,6 @@ class Windows {
       js.context.chrome.windows.getLastFocused(
           _createGetInfoMap(populate),
           completer.callback);
-
     });
     return completer.future;
   }
@@ -168,7 +165,7 @@ class Windows {
    * Updates the properties of a window. Specify only the properties that you
    * want to change; unspecified properties will be left unchanged.
    */
-  static Future<Window> update({
+  static Future<Window> update(int windowId, {
       int left,
       int top,
       int width,
@@ -202,7 +199,9 @@ class Windows {
     var completer =
         new ChromeCompleter.transform((window) => new Window(window));
     js.scoped(() {
-      js.context.chrome.windows.update(js.map(updateData), completer.callback);
+      js.context.chrome.windows.update(windowId,
+          js.map(updateData),
+          completer.callback);
     });
     return completer.future;
   }
