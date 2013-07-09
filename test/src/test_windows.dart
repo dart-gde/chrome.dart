@@ -4,69 +4,69 @@ class TestWindows {
   void main() {
     group('chrome.windows', () {
       test('get', () {
-        var id = Windows.WINDOW_ID_CURRENT;
-        Windows.get(id)
-            .then(expectAsync1((Window window) {
+        var id = ext.windows.WINDOW_ID_CURRENT;
+        ext.windows.get(id)
+            .then(expectAsync1((ext.Window window) {
               expect(window.id, equals(id));
-              expect(window.state is WindowState, isTrue);
-              expect(window.type is WindowType, isTrue);
+              expect(window.state is ext.WindowState, isTrue);
+              expect(window.type is ext.WindowType, isTrue);
             }));
       });
 
       test('getCurrent', () {
-        var id = Windows.WINDOW_ID_CURRENT;
-        Windows.getCurrent()
-            .then(expectAsync1((Window window) {
+        var id = ext.windows.WINDOW_ID_CURRENT;
+        ext.windows.getCurrent()
+            .then(expectAsync1((ext.Window window) {
               expect(window.id, equals(id));
-              expect(window.state is WindowState, isTrue);
-              expect(window.type is WindowType, isTrue);
+              expect(window.state is ext.WindowState, isTrue);
+              expect(window.type is ext.WindowType, isTrue);
             }));
       });
 
       test('getLastFocused', () {
-        Windows.getLastFocused()
-            .then(expectAsync1((Window window) {
-              expect(window.state is WindowState, isTrue);
-              expect(window.type is WindowType, isTrue);
+        ext.windows.getLastFocused()
+            .then(expectAsync1((ext.Window window) {
+              expect(window.state is ext.WindowState, isTrue);
+              expect(window.type is ext.WindowType, isTrue);
             }));
       });
 
       test('getAll', () {
-        Windows.getAll()
-            .then(expectAsync1((List<Window> windows) {
+        ext.windows.getAll()
+            .then(expectAsync1((List<ext.Window> windows) {
               expect(windows.isNotEmpty, isTrue);
-              expect(windows.first.state is WindowState, isTrue);
-              expect(windows.first.type is WindowType, isTrue);
+              expect(windows.first.state is ext.WindowState, isTrue);
+              expect(windows.first.type is ext.WindowType, isTrue);
             }));
       });
 
 
       test('create', () {
-        Windows.create(type: WindowType.NORMAL)
-            .then(expectAsync1((Window window) {
-              expect(window.state is WindowState, isTrue);
-              expect(window.type, WindowType.NORMAL);
+        ext.windows.create(type: ext.WindowType.NORMAL)
+            .then(expectAsync1((ext.Window window) {
+              expect(window.state is ext.WindowState, isTrue);
+              expect(window.type, ext.WindowType.NORMAL);
             }));
       });
 
       test('update', () {
-        Windows.create()
+        ext.windows.create()
           .then((window) =>
-              Windows.update(window.id, state: WindowState.MINIMIZED))
-          .then(expectAsync1((Window window) {
-            expect(window.state, WindowState.FULLSCREEN);
-            expect(window.type, WindowType.NORMAL);
+              ext.windows.update(window.id, state: ext.WindowState.MINIMIZED))
+          .then(expectAsync1((ext.Window window) {
+            expect(window.state, ext.WindowState.FULLSCREEN);
+            expect(window.type, ext.WindowType.NORMAL);
           }));
       });
 
       test('remove', () {
-        Windows.create()
-          .then((window) => Windows.remove(window.id));
+        ext.windows.create()
+          .then((window) => ext.Windows.remove(window.id));
       });
 
       test('remove', () {
-        Windows.create()
-          .then((window) => Windows.remove(window.id));
+        ext.windows.create()
+          .then((window) => ext.Windows.remove(window.id));
       });
     });
   }
