@@ -339,6 +339,7 @@ class Window {
     return _window.height as int;
   }
 
+// TODO(DrMarcII): Uncomment when chrome.tabs api is implemented.
 //  List<Tab> get tabs {
 //    dynamic jsTabs = _window.tabs;
 //    List<Tab> tabs = [];

@@ -1,4 +1,5 @@
-part of harness_browser;
+// TODO Figure out how we want to run extension API tests.
+// part of harness_browser;
 
 class TestWindows {
   void main() {
