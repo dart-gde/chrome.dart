@@ -99,7 +99,6 @@ class Windows {
           List<Window> windows = [];
 
           for (js.Proxy window in jsWindows) {
-            js.retain(window);
             windows.add(new Window(window));
           }
           return windows;
