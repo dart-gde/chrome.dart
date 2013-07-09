@@ -19,17 +19,19 @@ typedef void onCreatedCallback(Window window);
  */
 typedef void windowChangedCallback(int windowId);
 
+final Windows windows = new Windows();
+
 class Windows {
 
   /**
    * The windowId value that represents the absence of a chrome browser window.
    */
-  static int get WINDOW_ID_NONE =>
+  int get WINDOW_ID_NONE =>
       js.context.chrome.windows.WINDOW_ID_NONE as int;
   /**
    * The windowId value that represents the current window.
    */
-  static int get WINDOW_ID_CURRENT =>
+  int get WINDOW_ID_CURRENT =>
       js.context.chrome.windows.WINDOW_ID_CURRENT as int;
 
   /**
@@ -38,7 +40,7 @@ class Windows {
    * @param populate If true, the window object will have a tabs property that
    *                 contains a list of the tabs.Tab objects
    */
-  static Future<Window> get(int windowId, [bool populate]) {
+  Future<Window> get(int windowId, [bool populate]) {
     var completer =
         new ChromeCompleter.transform((window) => new Window(window));
     js.scoped(() {
@@ -57,7 +59,7 @@ class Windows {
    * @param populate If true, the window object will have a tabs property that
    *                 contains a list of the tabs.Tab objects
    */
-  static Future<Window> getCurrent([bool populate]) {
+  Future<Window> getCurrent([bool populate]) {
     var completer =
         new ChromeCompleter.transform((window) => new Window(window));
     js.scoped(() {
@@ -74,7 +76,7 @@ class Windows {
    * @param populate If true, the window object will have a tabs property that
    *                 contains a list of the tabs.Tab objects
    */
-  static Future<Window> getLastFocused([bool populate]) {
+  Future<Window> getLastFocused([bool populate]) {
     var completer =
         new ChromeCompleter.transform((window) => new Window(window));
     js.scoped(() {
@@ -91,7 +93,7 @@ class Windows {
    * @param populate If true, the window objects will have a tabs property that
    *                 contains a list of the tabs.Tab objects
    */
-  static Future<List<Window>> getAll([bool populate]) {
+  Future<List<Window>> getAll([bool populate]) {
     var completer =
         new ChromeCompleter.transform((js.Proxy jsWindows) {
           List<Window> windows = [];
@@ -114,7 +116,7 @@ class Windows {
    * Creates (opens) a new browser with any optional sizing, position or
    * default URL provided.
    */
-  static Future<Window> create({
+  Future<Window> create({
       String url,
       int tabId,
       int left,
@@ -165,7 +167,7 @@ class Windows {
    * Updates the properties of a window. Specify only the properties that you
    * want to change; unspecified properties will be left unchanged.
    */
-  static Future<Window> update(int windowId, {
+  Future<Window> update(int windowId, {
       int left,
       int top,
       int width,
@@ -209,7 +211,7 @@ class Windows {
   /**
    * Removes (closes) a window, and all the tabs inside it.
    */
-  static Future remove(int windowId) {
+  Future remove(int windowId) {
     var completer = new ChromeCompleter.noArgs();
     js.scoped(() {
       js.context.chrome.windows.remove(windowId, completer.callback);
@@ -220,7 +222,7 @@ class Windows {
   /**
    * Fired when a window is created.
    */
-  static void onCreated(onCreatedCallback listener) {
+  void onCreated(onCreatedCallback listener) {
     js.scoped(() {
       void event(js.Proxy window) {
         if (listener!=null) {
@@ -236,7 +238,7 @@ class Windows {
   /**
    * Fired when a window is removed (closed).
    */
-  static void onRemoved(windowChangedCallback listener) {
+  void onRemoved(windowChangedCallback listener) {
     js.scoped(() {
       void event(int windowId) {
         if (listener!=null) {
@@ -256,7 +258,7 @@ class Windows {
    * Note: On some Linux window managers, {@link WINDOW_ID_NONE} will always be
    * sent immediately preceding a switch from one chrome window to another.
    */
-  static void onFocusChanged(windowChangedCallback listener) {
+  void onFocusChanged(windowChangedCallback listener) {
     js.scoped(() {
       void event(int windowId) {
         if (listener!=null) {
@@ -269,7 +271,7 @@ class Windows {
     });
   }
 
-  static js.Proxy _createGetInfoMap(bool populate) {
+  js.Proxy _createGetInfoMap(bool populate) {
     Map<String, dynamic> getInfo = {};
     if (populate != null) {
       getInfo['populate'] = populate;
