@@ -10,7 +10,7 @@ import 'windows.dart';
 /**
  * @param tab Details of the tab that was created.
  */
-typedef void onCreatedCallback(Tab tab);
+typedef void onTabCreatedCallback(Tab tab);
 
 /**
  * @param tab Gives The state of the tab that was updated.
@@ -19,13 +19,13 @@ typedef void onCreatedCallback(Tab tab);
  * @param pinned The tab's new pinned state if it has changed.
  * @param favIconUrl The tab's new favicon URL if it has changed.
  */
-typedef void onUpdatedCallback(Tab tab, {
+typedef void onTabUpdatedCallback(Tab tab, {
     TabStatus status,
     String url,
     bool pinned,
     String favIconUrl});
 
-typedef void onMovedCallback(
+typedef void onTabMovedCallback(
     int tabId,
     int windowId,
     int fromIndex,
@@ -35,17 +35,17 @@ typedef void onMovedCallback(
  * @param tabId The ID of the tab that has become active.
  * @param windowId The ID of the window the active tab changed inside of.
  */
-typedef void onActivatedCallback(int tabId, int windowId);
+typedef void onTabActivatedCallback(int tabId, int windowId);
 
 /**
  * @param windowId The window whose tabs changed.
  * @param tabIds All highlighted tabs in the window.
  */
-typedef void onHighlightedCallback(int windowId, List<int> tabIds);
+typedef void onTabsHighlightedCallback(int windowId, List<int> tabIds);
 
-typedef void onDetachedCallback(int tabId, int oldWindowId, int oldPosition);
+typedef void onTabDetachedCallback(int tabId, int oldWindowId, int oldPosition);
 
-typedef void onAttachedCallback(int tabId, int newWindowId, int newPosition);
+typedef void onTabAttachedCallback(int tabId, int newWindowId, int newPosition);
 
 /**
  * @param windowId The window whose tab is closed.
@@ -525,7 +525,7 @@ class Tabs {
    * time this event fired, but you can listen to onUpdated events to be
    * notified when a URL is set.
    */
-  void onCreated(onCreatedCallback callback) {
+  void onCreated(onTabCreatedCallback callback) {
     var jsCallback = new js.Callback.many((tab) {
       if (callback != null) {
         callback(new Tab(tab));
@@ -540,7 +540,7 @@ class Tabs {
   /**
    * Fired when a tab is updated.
    */
-  void onUpdated(onUpdatedCallback callback) {
+  void onUpdated(onTabUpdatedCallback callback) {
     var jsCallback = new js.Callback.many((tabId, changeInfo, tab) {
       if (callback != null) {
         var status;
@@ -566,7 +566,7 @@ class Tabs {
    * for the other tabs that must move in response. This event is not fired
    * when a tab is moved between windows. For that, see onDetached.
    */
-  void onMoved(onMovedCallback callback) {
+  void onMoved(onTabMovedCallback callback) {
     var jsCallback = new js.Callback.many((tabId, moveInfo) {
       if (callback != null) {
         callback(tabId, moveInfo.windowId,
@@ -584,7 +584,7 @@ class Tabs {
    * not be set at the time this event fired, but you can listen to onUpdated
    * events to be notified when a URL is set.
    */
-  void onActivated(onActivatedCallback callback) {
+  void onActivated(onTabActivatedCallback callback) {
     var jsCallback = new js.Callback.many((tabId, windowId) {
       if (callback != null) {
         callback(tabId, windowId);
@@ -599,7 +599,7 @@ class Tabs {
   /**
    * Fired when the highlighted or selected tabs in a window changes.
    */
-  void onHighlighted(onActivatedCallback callback) {
+  void onHighlighted(onTabActivatedCallback callback) {
     var jsCallback = new js.Callback.many((windowId, jsTabIds) {
       var tabIds = [].addAll(jsTabIds);
       if (callback != null) {
@@ -616,7 +616,7 @@ class Tabs {
    * Fired when a tab is detached from a window, for example because it is
    * being moved between windows.
    */
-  void onDetached(onDetachedCallback callback) {
+  void onDetached(onTabDetachedCallback callback) {
     var jsCallback = new js.Callback.many((tabId, detachInfo) {
       if (callback != null) {
         callback(tabId, detachInfo.oldWindowId, detachInfo.oldPosition);
@@ -632,7 +632,7 @@ class Tabs {
    * Fired when a tab is attached to a window, for example because it was moved
    * between windows.
    */
-  void onAttached(onAttachedCallback callback) {
+  void onAttached(onTabAttachedCallback callback) {
     var jsCallback = new js.Callback.many((tabId, attachInfo) {
       if (callback != null) {
         callback(tabId, attachInfo.newWindowId, attachInfo.newPosition);

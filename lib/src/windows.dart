@@ -10,7 +10,7 @@ import 'tabs.dart';
 /**
  * @param window Details of the window that was created.
  */
-typedef void onCreatedCallback(Window window);
+typedef void onWindowCreatedCallback(Window window);
 
 /**
  * Used for onRemoved and onFocusedChange events.
@@ -222,7 +222,7 @@ class Windows {
   /**
    * Fired when a window is created.
    */
-  void onCreated(onCreatedCallback listener) {
+  void onCreated(onWindowCreatedCallback listener) {
     js.scoped(() {
       void event(js.Proxy window) {
         if (listener!=null) {

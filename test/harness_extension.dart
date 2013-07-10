@@ -22,6 +22,7 @@ import 'package:chrome/chrome_ext.dart';
 //part 'src/test_runtime.dart';
 //part 'src/test_storage.dart';
 part 'src/test_windows.dart';
+part 'src/test_tabs.dart';
 
 main() {
   Logger.root.level = Level.ALL;
@@ -55,5 +56,6 @@ main() {
 //  new TestPushMessaging().main();
 //  new TestRuntime().main();
 //  new TestStorage().main();
+  new TestTabs().main();
   new TestWindows().main();
 }
