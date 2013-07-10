@@ -30,7 +30,7 @@ void main() {
       ['lib/chrome.dart', 'lib/chrome_ext.dart']));
 
   addTask('analyze_tests', createAnalyzerTask(
-      ['test/harness_browser.dart']));
+      ['test/harness_browser.dart', 'test/harness_extension.dart']));
 
   addTask('analyze_examples', createAnalyzerTask(
       ['example/serial_clock/web/clock.dart',
