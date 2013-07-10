@@ -3,6 +3,7 @@
 library chrome_ext;
 
 //export 'src/debugger.dart';
+export 'src/browser_action.dart';
 export 'src/i18n.dart';
 export 'src/power.dart';
 export 'src/push_messaging.dart';
