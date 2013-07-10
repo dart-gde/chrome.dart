@@ -15,7 +15,7 @@ ContextMenus contextMenus = new ContextMenus();
  * @param tab The details of the tab where the click took place. If the click
  *            did not take place in a tab, this parameter will be missing.
  */
-typedef void onContextMenuClickedListener(
+typedef void onContextMenuClickedCallback(
     OnContextMenuClickData info, {Tab tab});
 
 class ContextMenus {
@@ -69,7 +69,7 @@ class ContextMenus {
       String title,
       bool checked,
       List<ContextMenuContext> contexts,
-      onContextMenuClickedListener onClick,
+      onContextMenuClickedCallback onClick,
       String parentId,
       List<String> documentUrlPatterns,
       List<String> targetUrlPatterns,
@@ -126,7 +126,7 @@ class ContextMenus {
       String title,
       bool checked,
       List<ContextMenuContext> contexts,
-      onContextMenuClickedListener onClick,
+      onContextMenuClickedCallback onClick,
       String parentId,
       List<String> documentUrlPatterns,
       List<String> targetUrlPatterns,
@@ -195,14 +195,14 @@ class ContextMenus {
   /**
    * Fired when a context menu item is clicked.
    */
-  void onClicked(onContextMenuClickedListener listener) {
+  void onClicked(onContextMenuClickedCallback listener) {
     js.scoped(() {
       _contextMenus.onClicked
           .addListener(_createClickListenerFunction(listener));
     });
   }
 
-  js.Callback _createClickListenerFunction(onContextMenuClickedListener listener) {
+  js.Callback _createClickListenerFunction(onContextMenuClickedCallback listener) {
     return new js.Callback.many((dynamic clickData, [dynamic tab]) {
       if (listener != null) {
         if (tab != null) {

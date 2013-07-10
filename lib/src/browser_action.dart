@@ -7,7 +7,7 @@ import 'package:js/js.dart' as js;
 import 'common.dart';
 import 'tabs.dart';
 
-typedef void onBrowserActionClicked(Tab tab);
+typedef void onBrowserActionClickedCallback(Tab tab);
 
 BrowserAction browserAction = new BrowserAction();
 
@@ -202,7 +202,7 @@ class BrowserAction {
    * Fired when a browser action icon is clicked. This event will not fire if
    * the browser action has a popup.
    */
-  void onClicked(onBrowserActionClicked callback) {
+  void onClicked(onBrowserActionClickedCallback callback) {
     var jsCallback = new js.Callback.many((tab) {
       if (callback != null) {
         callback(new Tab(tab));
