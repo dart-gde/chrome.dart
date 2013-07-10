@@ -4,19 +4,19 @@ class TestRuntime {
   void main() {
     group('chrome.runtime', () {
       test('lastError', () {
-        var lastError = Runtime.lastError;
+        var lastError = runtime.lastError;
         logMessage("lastError = ${lastError}");
         expect(lastError.message.isEmpty, isTrue);
       });
 
       test('id', () {
-        String id = Runtime.id;
+        String id = runtime.id;
         logMessage("id = ${id}");
         expect(id is String, isTrue);
       });
 
       test('getBackgroundPage()', () {
-        Runtime.getBackgroundPage().then(expectAsync1((backgroundPage) {
+        runtime.getBackgroundPage().then(expectAsync1((backgroundPage) {
           logMessage("backgroundPage = ${backgroundPage}");
           logMessage("backgroundPage = ${backgroundPage.location.href}");
 
@@ -30,7 +30,7 @@ class TestRuntime {
       });
 
       test('getManifest()', () {
-        var manifest = Runtime.getManifest();
+        var manifest = runtime.getManifest();
         logMessage("manifest = ${manifest}");
         expect(manifest is Map, isTrue);
         expect(manifest["manifest_version"], equals(2));
@@ -44,7 +44,7 @@ class TestRuntime {
       });
 
       test('getURL(String path)', () {
-        var path = Runtime.getURL("some/path");
+        var path = runtime.getURL("some/path");
         logMessage("getURL = ${path}");
         expect(path is String, isTrue);
         expect(path.startsWith('chrome-extension://'), isTrue);
@@ -57,7 +57,7 @@ class TestRuntime {
 //      });
 
       test('requestUpdateCheck()', () {
-        Runtime.requestUpdateCheck().then(expectAsync1((update) {
+        runtime.requestUpdateCheck().then(expectAsync1((update) {
           logMessage("update = ${update}");
 
           expect(update is Map, isTrue);
@@ -69,35 +69,30 @@ class TestRuntime {
       });
 
 //      test('onStartup(Function listener)', () {
-//        Runtime runtime = new Runtime();
 //        runtime.onStartup(expectAsync0(() {
 //          expect(true, isTrue);
 //        }, 1));
 //      });
 //
 //      test('onInstalled(Function listener)', () {
-//        Runtime runtime = new Runtime();
 //        runtime.onInstalled(expectAsync1((Map m) {
 //          expect(true, isTrue);
 //        }));
 //      });
 //
 //      test('onSuspend(Function listener)', () {
-//        Runtime runtime = new Runtime();
 //        runtime.onStartup(expectAsync0(() {
 //          expect(true, isTrue);
 //        }, 1));
 //      });
 //
 //      test('onSuspendCanceled(Function listener)', () {
-//        Runtime runtime = new Runtime();
 //        runtime.onStartup(expectAsync0(() {
 //          expect(true, isTrue);
 //        }, 1));
 //      });
 //
 //      test('onUpdateAvailable(Function listener)', () {
-//        Runtime runtime = new Runtime();
 //        runtime.onUpdateAvailable(expectAsync1((Map m) {
 //          expect(true, isTrue);
 //        }));

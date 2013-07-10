@@ -5,11 +5,12 @@ import 'dart:async';
 import 'package:js/js.dart' as js;
 
 import 'common.dart';
+import 'tabs.dart';
 
 /**
  * @param window Details of the window that was created.
  */
-typedef void onCreatedCallback(Window window);
+typedef void onWindowCreatedCallback(Window window);
 
 /**
  * Used for onRemoved and onFocusedChange events.
@@ -221,7 +222,7 @@ class Windows {
   /**
    * Fired when a window is created.
    */
-  void onCreated(onCreatedCallback listener) {
+  void onCreated(onWindowCreatedCallback listener) {
     js.scoped(() {
       void event(js.Proxy window) {
         if (listener!=null) {
@@ -338,17 +339,20 @@ class Window {
     return _window.height as int;
   }
 
-// TODO(DrMarcII): Uncomment when chrome.tabs api is implemented.
-//  List<Tab> get tabs {
-//    dynamic jsTabs = _window.tabs;
-//    List<Tab> tabs = [];
-//    if (jsTabs != null) {
-//      for (var i = 0; i < jsTabs.length; i++) {
-//        tabs.add(new Tab(jsTabs[i]));
-//      }
-//    }
-//    return tabs;
-//  }
+
+  /**
+   * The current tabs in the window.
+   */
+  List<Tab> get tabs {
+    dynamic jsTabs = _window.tabs;
+    List<Tab> tabs = [];
+    if (jsTabs != null) {
+      for (var i = 0; i < jsTabs.length; i++) {
+        tabs.add(new Tab(jsTabs[i]));
+      }
+    }
+    return tabs;
+  }
 
   /**
    * Whether the window is incognito.
