@@ -183,6 +183,16 @@ class Runtime {
     return completer.future;
   }
 
+  /**
+   * Sends a single message to onMessage event listeners within the extension
+   * (or another extension/app). Similar to chrome.runtime.connect, but only
+   * sends a single message with an optional response. The onMessage event is
+   * fired in each extension page of the extension. Note that extensions cannot
+   * send messages to content scripts using this method. To send messages to
+   * content scripts, use tabs.sendMessage.
+   *
+   * @returns The JSON response object sent by the handler of the message.
+   */
   Future<dynamic> sendMessage(dynamic message) {
     var completer = new ChromeCompleter.oneArg();
     js.scoped(() {

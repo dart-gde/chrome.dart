@@ -10,7 +10,7 @@ class TestRuntime {
       });
 
       test('id', () {
-        String id = Runtime.id;
+        String id = runtime.id;
         logMessage("id = ${id}");
         expect(id is String, isTrue);
       });

@@ -47,7 +47,7 @@ main() {
 
   html.window.onKeyUp.listen((html.KeyboardEvent event) {
     if (event.keyCode == html.KeyCode.R) {
-      Runtime.reload();
+      runtime.reload();
     }
   });
 
