@@ -11,6 +11,8 @@ import 'package:js/js.dart' as js;
 
 import 'package:chrome/chrome_ext.dart';
 
+part 'src/test_browser_action.dart';
+part 'src/test_tabs.dart';
 part 'src/test_windows.dart';
 
 main() {
@@ -35,10 +37,13 @@ main() {
 
   html.window.onKeyUp.listen((html.KeyboardEvent event) {
     if (event.keyCode == html.KeyCode.R) {
-      Runtime.reload();
+      runtime.reload();
     }
   });
 
+  new TestBrowserAction().main();
+  new TestTabs().main();
   new TestWindows().main();
+
   Logger.root.info("leaving main");
 }
