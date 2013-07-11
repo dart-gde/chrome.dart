@@ -7,11 +7,32 @@ import 'dart:json' as JSON;
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
 
+import 'common.dart';
+import 'tabs.dart';
+
 typedef void onStartupCallback();
 typedef void onInstalledCallback(Map details); // TODO(adam): replace map with structured object.
 typedef void onSuspendCallback();
 typedef void onSuspendCanceledCallback();
 typedef void onUpdateAvailableCallback(Map details); // TODO(adam): replace map with structured object.
+
+/**
+ * @param message The message sent by the calling script.
+ * @param sendResponse Function to call (at most once) when you have a
+ *                     response. The argument should be any JSON-ifiable
+ *                     object. If you have more than one onMessage listener in
+ *                     the same document, then only one may send a response.
+ *                     This function becomes invalid when the event listener
+ *                     returns, unless you return true from the event listener
+ *                     to indicate you wish to send a response asynchronously
+ *                     (this will keep the message channel open to the other
+ *                     end until sendResponse is called).
+ */
+typedef bool onMessageCallback(
+    message, MessageSender sender, sendResponseCallback sendResponse);
+typedef void sendResponseCallback();
+
+Runtime runtime = new Runtime();
 
 /**
  * Created from [Runtime].lastError checks.
@@ -29,7 +50,7 @@ class Runtime {
   /**
    * This will be defined during an API method callback if there was an error.
    */
-  static RuntimeError get lastError {
+  RuntimeError get lastError {
     return js.scoped(() {
       var chrome = js.context.chrome;
       var lastError = null;
@@ -53,7 +74,7 @@ class Runtime {
   /**
    * The ID of the extension/app.
    */
-  static String get id {
+  String get id {
     return js.scoped(() {
       return js.context.chrome.runtime.id;
     });
@@ -69,7 +90,7 @@ class Runtime {
    * the system will ensure it is loaded before calling the callback.
    * If there is no background page, an error is set.
    */
-  static Future<js.Proxy> getBackgroundPage() {
+  Future<js.Proxy> getBackgroundPage() {
     var completer = new Completer();
 
     js.scoped(() {
@@ -101,7 +122,7 @@ class Runtime {
    *
    * The [Map] returned is a de-serialization of the full manifest file.
    */
-  static Map getManifest() {
+  Map getManifest() {
     return js.scoped(() {
       var chrome = js.context.chrome;
       return JSON.parse(js.context.JSON.stringify(chrome.runtime.getManifest()));
@@ -115,7 +136,7 @@ class Runtime {
    * A [path] to a resource within an app/extension
    * expressed relative to its install directory.
    */
-  static String getURL(String path) {
+  String getURL(String path) {
     return js.scoped(() {
       return js.context.chrome.runtime.getURL(path);
     });
@@ -124,7 +145,7 @@ class Runtime {
   /**
    * Reloads the app or extension.
    */
-  static void reload() {
+  void reload() {
     js.scoped(() {
       js.context.chrome.runtime.reload();
     });
@@ -141,7 +162,7 @@ class Runtime {
    * available, a Map with 'version' key, value being the version of the
    * available update.
    */
-  static Future<Map> requestUpdateCheck() {
+  Future<Map> requestUpdateCheck() {
     var completer = new Completer();
 
     js.scoped(() {
@@ -162,12 +183,38 @@ class Runtime {
     return completer.future;
   }
 
+  /**
+   * Sends a single message to onMessage event listeners within the extension
+   * (or another extension/app). Similar to chrome.runtime.connect, but only
+   * sends a single message with an optional response. The onMessage event is
+   * fired in each extension page of the extension. Note that extensions cannot
+   * send messages to content scripts using this method. To send messages to
+   * content scripts, use tabs.sendMessage.
+   *
+   * @returns The JSON response object sent by the handler of the message.
+   */
+  Future<dynamic> sendMessage(dynamic message) {
+    var completer = new ChromeCompleter.oneArg();
+    js.scoped(() {
+      var jsMessage;
+      if (message is Map) {
+        jsMessage = js.map(message);
+      } else if (message is Iterable) {
+        jsMessage = js.array(message);
+      } else {
+        jsMessage = message;
+      }
+      js.context.chrome.runtime.sendMessage(jsMessage, completer.callback);
+    });
+    return completer.future;
+  }
+
   /// Events
 
   /**
    * Fired when the browser first starts up.
    */
-  static void onStartup(onStartupCallback listener) {
+  void onStartup(onStartupCallback listener) {
     // TODO(adam): typedef the listener
     js.scoped(() {
       void event() {
@@ -197,7 +244,7 @@ class Runtime {
    * of the extension, which has just been updated. This is present only if
    * 'reason' is 'update'.
    */
-  static void onInstalled(onInstalledCallback listener) {
+  void onInstalled(onInstalledCallback listener) {
     js.scoped(() {
       void event(details) {
         if (listener!=null) {
@@ -223,7 +270,7 @@ class Runtime {
    * before it gets unloaded the onSuspendCanceled event will be
    * sent and the page won't be unloaded.
    */
-  static void onSuspend(onSuspendCallback listener) {
+  void onSuspend(onSuspendCallback listener) {
     js.scoped(() {
       void event() {
         if (listener!=null) {
@@ -241,7 +288,7 @@ class Runtime {
   /**
    * Sent after onSuspend() to indicate that the app won't be unloaded after all.
    */
-  static void onSuspendCanceled(onSuspendCanceledCallback listener) {
+  void onSuspendCanceled(onSuspendCanceledCallback listener) {
     js.scoped(() {
       void event() {
         if (listener!=null) {
@@ -267,7 +314,7 @@ class Runtime {
    * details Map passed to the [listener] will contain keys 'version'.
    * 'version' is the version number of the available update.
    */
-  static void onUpdateAvailable(onUpdateAvailableCallback listener) {
+  void onUpdateAvailable(onUpdateAvailableCallback listener) {
     js.scoped(() {
       void event(details) {
         if (listener!=null) {
@@ -282,4 +329,37 @@ class Runtime {
     });
   }
 
+  /**
+   * Fired when a message is sent from either an extension process or a content
+   * script.
+   */
+  void onMessage(onMessageCallback listener) {
+    var jsCallback = new js.Callback.many((message, sender, sendResponse) {
+      if (listener != null) {
+        return listener(message, new MessageSender(sender), sendResponse);
+      }
+      return false;
+    });
+    js.scoped(() {
+      js.context.chrome.runtime.onMessage.addListener(jsCallback);
+    });
+  }
+}
+
+class MessageSender {
+  final js.Proxy _sender;
+
+  MessageSender(this._sender);
+
+  Tab get tab {
+    if (_sender['tab'] != null) {
+      return new Tab(_sender['tab']);
+    } else {
+      return null;
+    }
+  }
+
+  String get id => _sender['id'];
+
+  String get url => _sender['url'];
 }
