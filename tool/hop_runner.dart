@@ -30,7 +30,7 @@ void main() {
       ['lib/chrome.dart', 'lib/chrome_ext.dart']));
 
   addTask('analyze_tests', createAnalyzerTask(
-      ['test/harness_browser.dart', 'test/harness_extension.dart']));
+      ['test/harness_browser.dart', 'test_ext/harness_extension.dart']));
 
   addTask('analyze_examples', createAnalyzerTask(
       ['example/serial_clock/web/clock.dart',
@@ -39,7 +39,12 @@ void main() {
        'example/udp_echo_client/web/udp_echo_client_example.dart',
        'example/usb_example/chrome_app_usb_example.dart']));
 
-  addTask('build_harness_extension', createDartCompilerTask(['test_ext/harness_extension.dart'],
+  addTask('build_test_harness',
+      createDartCompilerTask(['test/harness_browser.dart'],
+      allowUnsafeEval: false));
+
+  addTask('build_test_harness_extension',
+      createDartCompilerTask(['test_ext/harness_extension.dart'],
       allowUnsafeEval: false));
 
   runHop();
