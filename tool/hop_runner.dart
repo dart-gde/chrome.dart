@@ -39,5 +39,8 @@ void main() {
        'example/udp_echo_client/web/udp_echo_client_example.dart',
        'example/usb_example/chrome_app_usb_example.dart']));
 
+  addTask('build_harness_extension', createDartCompilerTask(['test_ext/harness_extension.dart'],
+      allowUnsafeEval: false));
+
   runHop();
 }
