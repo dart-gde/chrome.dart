@@ -1,4 +1,3 @@
-// TODO Figure out how we want to run extension API tests.
 part of harness_extension;
 
 class TestWindows {
@@ -32,15 +31,14 @@ class TestWindows {
             }));
       });
 
-      test('getAll', () {
-        windows.getAll()
-            .then(expectAsync1((List<Window> windows) {
-              expect(windows.isNotEmpty, isTrue);
-              expect(windows.first.state is WindowState, isTrue);
-              expect(windows.first.type is WindowType, isTrue);
-            }));
-      });
-
+//      test('getAll', () {
+//        windows.getAll()
+//            .then(expectAsync1((List<Window> windows) {
+//              expect(windows.isNotEmpty, isTrue);
+//              expect(windows.first.state is WindowState, isTrue);
+//              expect(windows.first.type is WindowType, isTrue);
+//            }));
+//      });
 
       test('create', () {
         windows.create(type: WindowType.NORMAL)
@@ -58,11 +56,6 @@ class TestWindows {
             expect(window.state, WindowState.FULLSCREEN);
             expect(window.type, WindowType.NORMAL);
           }));
-      });
-
-      test('remove', () {
-        windows.create()
-          .then((window) => windows.remove(window.id));
       });
 
       test('remove', () {
