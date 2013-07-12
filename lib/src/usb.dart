@@ -209,7 +209,7 @@ class Usb {
 
   /// callbacks need to check lastError
   static _safeExecute(completer, f) {
-    var lastError = Runtime.lastError;
+    var lastError = runtime.lastError;
     if (!lastError.message.isEmpty) {
       completer.completeError(lastError);
       return;
