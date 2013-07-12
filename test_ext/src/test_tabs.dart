@@ -11,11 +11,11 @@ class TestTabs {
         }));
       });
 
-      test('query', () {
-        tabs.query().then(expectAsync1((List<Tab> tab) {
-          expect(tab.first.status is TabStatus, isTrue);
-        }));
-      });
+//      test('query', () {
+//        tabs.query().then(expectAsync1((List<Tab> tab) {
+//          expect(tab.first.status is TabStatus, isTrue);
+//        }));
+//      });
     });
   }
 }
