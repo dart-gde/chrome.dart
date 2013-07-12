@@ -1,6 +1,3 @@
-// TODO(devoncarew): we need to create a general test harness for the extensions
-// APIs
-
 library harness_extension;
 
 import 'dart:async';
@@ -14,16 +11,9 @@ import 'package:js/js.dart' as js;
 
 import 'package:chrome/chrome_ext.dart';
 
-// TODO(devoncarew): we currently can't part these because they're used by the
-// harness_browser.dart library. Possibly convert the parts into libraries?
-//part 'src/test_i18n.dart';
-//part 'src/test_power.dart';
-//part 'src/test_push_messaging.dart';
-//part 'src/test_runtime.dart';
-//part 'src/test_storage.dart';
 part 'src/test_browser_action.dart';
-part 'src/test_windows.dart';
 part 'src/test_tabs.dart';
+part 'src/test_windows.dart';
 
 main() {
   Logger.root.level = Level.ALL;
@@ -39,7 +29,7 @@ main() {
     ..write(r.sequenceNumber)
     ..write(": ")
     ..write(r.message.toString());
-    logMessage(sb.toString());
+    print(sb.toString());
   });
 
   groupSep = '.';
@@ -51,13 +41,9 @@ main() {
     }
   });
 
-  // TODO: add these back in
-//  new TestI18N().main();
-//  new TestPower().main();
-//  new TestPushMessaging().main();
-//  new TestRuntime().main();
-//  new TestStorage().main();
   new TestBrowserAction().main();
   new TestTabs().main();
   new TestWindows().main();
+
+  Logger.root.info("leaving main");
 }
