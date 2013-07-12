@@ -32,7 +32,7 @@ typedef bool onMessageCallback(
     message, MessageSender sender, sendResponseCallback sendResponse);
 typedef void sendResponseCallback();
 
-Runtime runtime = new Runtime();
+final Runtime runtime = const Runtime._();
 
 /**
  * Created from [Runtime].lastError checks.
@@ -47,6 +47,8 @@ class RuntimeError {
 
 class Runtime {
 
+  const Runtime._();
+  
   /**
    * This will be defined during an API method callback if there was an error.
    */
