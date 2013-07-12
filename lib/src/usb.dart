@@ -227,7 +227,7 @@ class Usb {
           // In theory, this should always be set in the case of
           // result == null -- in theory.
 
-          completer.completeError(Runtime.lastError);
+          completer.completeError(runtime.lastError);
           return;
         }
 
