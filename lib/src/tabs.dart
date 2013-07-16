@@ -240,8 +240,8 @@ class Tabs {
     var completer = new ChromeCompleter.transform((jsTabs) {
       List<Tab> tabs = [];
 
-      for (js.Proxy tab in jsTabs) {
-        tabs.add(new Tab(tab));
+      for (int i = 0; i < jsTabs.length; i++ ) {
+        tabs.add(new Tab(jsTabs[i]));
       }
       return tabs;
     });

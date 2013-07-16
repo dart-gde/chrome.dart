@@ -239,7 +239,7 @@ class Color {
     return toArray().toString();
   }
 
-  bool equals(Color color) {
+  bool operator ==(Color color) {
     return red == color.red &&
         green == color.green &&
         blue == color.blue &&
