@@ -99,8 +99,8 @@ class Windows {
         new ChromeCompleter.transform((js.Proxy jsWindows) {
           List<Window> windows = [];
 
-          for (js.Proxy window in jsWindows) {
-            windows.add(new Window(window));
+          for (int i = 0; i < jsWindows.length; i++) {
+            windows.add(new Window(jsWindows[i]));
           }
           return windows;
         });
