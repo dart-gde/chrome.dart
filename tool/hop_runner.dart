@@ -5,57 +5,48 @@ import 'dart:io';
 import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
 
+Task createUpdateJSTask(String directory) =>
+    new Task.async((TaskContext context){
+      var dartjs = new File('packages/browser/dart.js').readAsStringSync();
+      new File('$directory/dart.js').writeAsStringSync(dartjs);
+
+      var dartInteropjs = new File('packages/js/dart_interop.js').readAsStringSync();
+      new File('$directory/dart_interop.js').writeAsStringSync(dartInteropjs);
+
+      return true;
+    }, description: 'update js files from packages');
+
+void buildTasks(String name, String directory, String filename) {
+  final file = ['${directory}/${filename}'];
+  addTask('update_js_$name', createUpdateJSTask(directory));
+  addTask('analyze_$name', createAnalyzerTask(file));
+  addTask('build_$name', createDartCompilerTask(file, allowUnsafeEval: false));
+}
+
 void main() {
-  final serialExample = ['example/serial_example/web/chrome_app_serial_example.dart'];
-  addTask('serial_example', createAnalyzerTask(serialExample));
-  addTask('build_serial_example', createDartCompilerTask(serialExample,
-      allowUnsafeEval: false));
+  buildTasks('serial_example', 'example/serial_example/web',
+      'chrome_app_serial_example.dart');
 
-  final serialClockExample = ['example/serial_clock/web/clock.dart'];
-  addTask('serial_clock', createAnalyzerTask(serialClockExample));
-  addTask('build_serial_clock', createDartCompilerTask(serialClockExample,
-      allowUnsafeEval: false));
+  buildTasks('serial_clock', 'example/serial_clock/web', 'clock.dart');
 
-  final tcpEchoExample = ['example/tcp_echo_server/web/tcp_echo_server_example.dart'];
-  addTask('tcp_echo_server', createAnalyzerTask(tcpEchoExample));
-  addTask('build_tcp_echo_server', createDartCompilerTask(tcpEchoExample,
-      allowUnsafeEval: false));
+  buildTasks('tcp_echo_server', 'example/tcp_echo_server/web',
+      'tcp_echo_server_example.dart');
 
-  final udpEchoExample = ['example/udp_echo_client/web/udp_echo_client_example.dart'];
-  addTask('udp_echo_client', createAnalyzerTask(udpEchoExample));
-  addTask('build_udp_echo_client', createDartCompilerTask(udpEchoExample,
-      allowUnsafeEval: false));
+  buildTasks('udp_echo_client', 'example/udp_echo_client/web',
+      'udp_echo_client_example.dart');
 
-  final usbExample = ['example/usb_example/chrome_app_usb_example.dart'];
-  addTask('usb_example', createAnalyzerTask(usbExample));
-  addTask('build_usb_example', createDartCompilerTask(usbExample,
-      allowUnsafeEval: false));
+  buildTasks('usb_example', 'example/usb_example',
+      'chrome_app_usb_example.dart');
 
-  final bluetoothExample = ['example/bluetooth_getdevices/bluetooth_getdevices.dart'];
-  addTask('bluetooth_example', createAnalyzerTask(bluetoothExample));
-  addTask('build_bluetooth_example', createDartCompilerTask(bluetoothExample,
-      allowUnsafeEval: false));
+  buildTasks('bluetooth_example', 'example/bluetooth_getdevices',
+      'bluetooth_getdevices.dart');
 
-  addTask('analyze_examples', createAnalyzerTask(
-      ['example/serial_clock/web/clock.dart',
-       'example/serial_example/web/chrome_app_serial_example.dart',
-       'example/tcp_echo_server/web/tcp_echo_server_example.dart',
-       'example/udp_echo_client/web/udp_echo_client_example.dart',
-       'example/usb_example/chrome_app_usb_example.dart']));
+  buildTasks('test_harness', 'test', 'harness_browser.dart');
+
+  buildTasks('test_harness_extension', 'test_ext', 'harness_extension.dart');
 
   final libs = ['lib/chrome.dart', 'lib/chrome_ext.dart'];
   addTask('analyze_libs', createAnalyzerTask(libs));
-
-  final tests = ['test/harness_browser.dart', 'test_ext/harness_extension.dart'];
-  addTask('analyze_tests', createAnalyzerTask(tests));
-
-  addTask('build_test_harness',
-      createDartCompilerTask(['test/harness_browser.dart'],
-      allowUnsafeEval: false));
-
-  addTask('build_test_harness_extension',
-      createDartCompilerTask(['test_ext/harness_extension.dart'],
-      allowUnsafeEval: false));
 
   runHop();
 }
