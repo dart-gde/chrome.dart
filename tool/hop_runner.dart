@@ -10,6 +10,9 @@ Task createUpdateJSTask(String directory) =>
       var dartjs = new File('packages/browser/dart.js').readAsStringSync();
       new File('$directory/dart.js').writeAsStringSync(dartjs);
 
+      var interopjs = new File('packages/browser/interop.js').readAsStringSync();
+      new File('$directory/interop.js').writeAsStringSync(interopjs);
+
       var dartInteropjs = new File('packages/js/dart_interop.js').readAsStringSync();
       new File('$directory/dart_interop.js').writeAsStringSync(dartInteropjs);
 
