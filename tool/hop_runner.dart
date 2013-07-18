@@ -5,17 +5,16 @@ import 'dart:io';
 import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
 
+void copy(String fileName, String sourceDirectory, String destinationDirectory) {
+  var srcFile = new File('$sourceDirectory/$fileName').readAsStringSync();
+  new File('$destinationDirectory/$fileName').writeAsStringSync(srcFile);
+}
+
 Task createUpdateJSTask(String directory) =>
     new Task.async((TaskContext context){
-      var dartjs = new File('packages/browser/dart.js').readAsStringSync();
-      new File('$directory/dart.js').writeAsStringSync(dartjs);
-
-      var interopjs = new File('packages/browser/interop.js').readAsStringSync();
-      new File('$directory/interop.js').writeAsStringSync(interopjs);
-
-      var dartInteropjs = new File('packages/js/dart_interop.js').readAsStringSync();
-      new File('$directory/dart_interop.js').writeAsStringSync(dartInteropjs);
-
+      copy('dart.js', 'packages/browser', directory);
+      copy('interop.js', 'packages/browser', directory);
+      copy('dart_interop.js', 'packages/js', directory);
       return true;
     }, description: 'update js files from packages');
 
