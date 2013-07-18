@@ -60,6 +60,8 @@ final Tabs tabs = new Tabs();
 
 class Tabs {
 
+  get _tabs => js.context.chrome.tabs;
+
   /**
    * Retrieves details about the specified tab.
    */
@@ -67,7 +69,7 @@ class Tabs {
     var completer =
         new ChromeCompleter.transform((tab) => new Tab(tab));
     js.scoped(() {
-      js.context.chrome.tabs.get(tabId, completer.callback);
+      _tabs.get(tabId, completer.callback);
     });
     return completer.future;
   }
@@ -81,7 +83,7 @@ class Tabs {
     var completer =
         new ChromeCompleter.transform((tab) => new Tab(tab));
     js.scoped(() {
-      js.context.chrome.tabs.getCurrent(completer.callback);
+      _tabs.getCurrent(completer.callback);
     });
     return completer.future;
   }
@@ -104,7 +106,7 @@ class Tabs {
       } else {
         jsMessage = message;
       }
-      js.context.chrome.tabs.sendMessage(tabId, jsMessage, completer.callback);
+      _tabs.sendMessage(tabId, jsMessage, completer.callback);
     });
     return completer.future;
   }
@@ -131,7 +133,13 @@ class Tabs {
    *
    * @returns Details about the created tab. Will contain the ID of the new tab.
    */
-  Future<Tab> create({int windowId, int index, String url, bool active, bool pinned}) {
+  Future<Tab> create({
+      int windowId,
+      int index,
+      String url,
+      bool active,
+      bool pinned,
+      int openerTabId}) {
     Map<String, dynamic> createProperties = {};
     if (windowId != null) {
       createProperties['windowId'] = windowId;
@@ -148,9 +156,12 @@ class Tabs {
     if (pinned != null) {
       createProperties['pinned'] = pinned;
     }
+    if (openerTabId != null) {
+      createProperties['openerTabId'] = openerTabId;
+    }
     var completer = new ChromeCompleter.transform((tab) => new Tab(tab));
     js.scoped(() {
-      js.context.chrome.tabs.create(js.map(createProperties), completer.callback);
+      _tabs.create(js.map(createProperties), completer.callback);
     });
     return completer.future;
   }
@@ -168,7 +179,7 @@ class Tabs {
   Future<Tab> duplicate(int tabId) {
     var completer = new ChromeCompleter.transform((tab) => new Tab(tab));
     js.scoped(() {
-      js.context.chrome.tabs.duplicate(tabId, completer.callback);
+      _tabs.duplicate(tabId, completer.callback);
     });
     return completer.future;
   }
@@ -246,7 +257,7 @@ class Tabs {
       return tabs;
     });
     js.scoped(() {
-      js.context.chrome.tabs.query(js.map(queryInfo), completer.callback);
+      _tabs.query(js.map(queryInfo), completer.callback);
     });
     return completer.future;
   }
@@ -259,15 +270,15 @@ class Tabs {
    *
    * @returns Contains details about the window whose tabs were highlighted.
    */
-  Future<Window> highlight(List<int> tabs, {int windowId}) {
-    Map<String, dynamic> highlightInfo = { 'tabs': tabs };
+  Future<Window> highlight(List<int> tabIndices, {int windowId}) {
+    Map<String, dynamic> highlightInfo = { 'tabs': js.array(tabIndices) };
     if (windowId != null) {
       highlightInfo['windowId'] = windowId;
     }
     var completer =
         new ChromeCompleter.transform((window) => new Window(window));
     js.scoped(() {
-      js.context.chrome.tabs.highlight(
+      _tabs.highlight(
           js.map(highlightInfo), completer.callback);
     });
     return completer.future;
@@ -321,7 +332,7 @@ class Tabs {
           }
         });
     js.scoped(() {
-      js.context.chrome.tabs.update(
+      _tabs.update(
           tabId, js.map(updateProperties), completer.callback);
     });
     return completer.future;
@@ -348,9 +359,9 @@ class Tabs {
         new ChromeCompleter.transform((jsTabs) {
           List<Tab> tabs = [];
           // jsTabs can either be an array of tabs or a single tab
-          if (jsTabs.length != null) {
-            for (tab in jsTabs) {
-              tabs.add(new Tab(tab));
+          if (jsTabs['length'] != null) {
+            for (int i = 0; i < jsTabs.length; i++) {
+              tabs.add(new Tab(jsTabs[i]));
             }
           } else {
             tabs.add(new Tab(jsTabs));
@@ -359,7 +370,7 @@ class Tabs {
           return tabs;
         });
     js.scoped(() {
-      js.context.chrome.tabs.move(
+      _tabs.move(
           js.array(tabIds), js.map(moveProperties), completer.callback);
     });
     return completer.future;
@@ -374,14 +385,15 @@ class Tabs {
    */
   Future reload({int tabId, bool bypassCache}) {
     var reloadProperties = {};
+
     if (bypassCache != null) {
       reloadProperties['bypassCache'] = bypassCache;
     }
 
     var completer = new ChromeCompleter.noArgs();
     js.scoped(() {
-      js.context.chrome.tabs.reload(
-          tabId, reloadProperties, completer.callback);
+      _tabs.reload(
+          tabId, js.map(reloadProperties), completer.callback);
     });
     return completer.future;
   }
@@ -395,7 +407,7 @@ class Tabs {
   Future remove(List<int> tabIds) {
     var completer = new ChromeCompleter.noArgs();
     js.scoped(() {
-      js.context.chrome.tabs.remove(js.array(tabIds), completer.callback);
+      _tabs.remove(js.array(tabIds), completer.callback);
     });
     return completer.future;
   }
@@ -414,7 +426,7 @@ class Tabs {
   Future<String> detectLanguage({int tabId}) {
     var completer = new ChromeCompleter.oneArg();
     js.scoped(() {
-      js.context.chrome.tabs.detectLanguage(tabId, completer.callback);
+      _tabs.detectLanguage(tabId, completer.callback);
     });
     return completer.future;
   }
@@ -448,7 +460,7 @@ class Tabs {
     }
     var completer = new ChromeCompleter.oneArg();
     js.scoped(() {
-      js.context.chrome.tabs.captureVisibleTab(
+      _tabs.captureVisibleTab(
           windowId, js.map(options), completer.callback);
     });
     return completer.future;
@@ -480,7 +492,7 @@ class Tabs {
       RunAt runAt}) {
     var completer = new ChromeCompleter.oneArg();
     js.scoped(() {
-      js.context.chrome.tabs.executeScript(
+      _tabs.executeScript(
           tabId,
           _createInjectDetails(code, file, allFrames, runAt),
           completer.callback);
@@ -512,7 +524,7 @@ class Tabs {
       RunAt runAt}) {
     var completer = new ChromeCompleter.noArgs();
     js.scoped(() {
-      js.context.chrome.tabs.insertCSS(
+      _tabs.insertCSS(
           tabId,
           _createInjectDetails(code, file, allFrames, runAt),
           completer.callback);
@@ -520,45 +532,34 @@ class Tabs {
     return completer.future;
   }
 
+  final ChromeStreamController<Tab> _onCreated =
+      new ChromeStreamController<Tab>.oneArg(
+          () => js.context.chrome.tabs.onCreated,
+          (tab) => new Tab(tab));
+
   /**
    * Fired when a tab is created. Note that the tab's URL may not be set at the
    * time this event fired, but you can listen to onUpdated events to be
    * notified when a URL is set.
    */
-  void onCreated(onTabCreatedCallback callback) {
-    var jsCallback = new js.Callback.many((tab) {
-      if (callback != null) {
-        callback(new Tab(tab));
-      }
-    });
+  Stream<Tab> get onCreated => _onCreated.stream;
 
-    js.scoped(() {
-      js.context.chrome.tabs.onCreated.addListener(jsCallback);
-    });
-  }
+  final ChromeStreamController<TabUpdatedEvent> _onUpdated =
+      new ChromeStreamController<TabUpdatedEvent>.threeArgs(
+          () => js.context.chrome.tabs.onUpdated,
+          (tabId, changeInfo, tab) =>
+              new TabUpdatedEvent(new Tab(tab), changeInfo));
 
   /**
    * Fired when a tab is updated.
    */
-  void onUpdated(onTabUpdatedCallback callback) {
-    var jsCallback = new js.Callback.many((tabId, changeInfo, tab) {
-      if (callback != null) {
-        var status;
-        if (changeInfo['status'] != null) {
-          status = new TabStatus(changeInfo['status']);
-        }
-        callback(new Tab(tab),
-            status: status,
-            url: changeInfo['url'],
-            pinned: changeInfo['pinned'],
-            favIconUrl: changeInfo['favIconUrl']);
-      }
-    });
+  Stream<TabUpdatedEvent> get onUpdated => _onUpdated.stream;
 
-    js.scoped(() {
-      js.context.chrome.tabs.onUpdated.addListener(jsCallback);
-    });
-  }
+  final ChromeStreamController<TabMovedEvent> _onMoved =
+      new ChromeStreamController<TabMovedEvent>.twoArgs(
+          () => js.context.chrome.tabs.onMoved,
+          (tabId, moveInfo) =>
+              new TabMovedEvent.moved(tabId, moveInfo));
 
   /**
    * Fired when a tab is moved within a window. Only one move event is fired,
@@ -566,115 +567,79 @@ class Tabs {
    * for the other tabs that must move in response. This event is not fired
    * when a tab is moved between windows. For that, see onDetached.
    */
-  void onMoved(onTabMovedCallback callback) {
-    var jsCallback = new js.Callback.many((tabId, moveInfo) {
-      if (callback != null) {
-        callback(tabId, moveInfo.windowId,
-            moveInfo.fromIndex, moveInfo.toIndex);
-      }
-    });
+  Stream<TabMovedEvent>  get onMoved => _onMoved.stream;
 
-    js.scoped(() {
-      js.context.chrome.tabs.onMoved.addListener(jsCallback);
-    });
-  }
+  final ChromeStreamController<TabActivatedEvent> _onActivated =
+      new ChromeStreamController<TabActivatedEvent>.oneArg(
+          () => js.context.chrome.tabs.onActivated,
+          (activeInfo) =>
+              new TabActivatedEvent(activeInfo));
 
   /**
    * Fires when the active tab in a window changes. Note that the tab's URL may
    * not be set at the time this event fired, but you can listen to onUpdated
    * events to be notified when a URL is set.
    */
-  void onActivated(onTabActivatedCallback callback) {
-    var jsCallback = new js.Callback.many((tabId, windowId) {
-      if (callback != null) {
-        callback(tabId, windowId);
-      }
-    });
+  Stream<TabActivatedEvent> get onActivated => _onActivated.stream;
 
-    js.scoped(() {
-      js.context.chrome.tabs.onActivated.addListener(jsCallback);
-    });
-  }
-
+  final ChromeStreamController<TabHighlightedEvent> _onHighlighted =
+      new ChromeStreamController<TabHighlightedEvent>.oneArg(
+          () => js.context.chrome.tabs.onHighlighted,
+          (highlightInfo) =>
+              new TabHighlightedEvent(highlightInfo));
   /**
    * Fired when the highlighted or selected tabs in a window changes.
    */
-  void onHighlighted(onTabActivatedCallback callback) {
-    var jsCallback = new js.Callback.many((windowId, jsTabIds) {
-      var tabIds = [].addAll(jsTabIds);
-      if (callback != null) {
-        callback(windowId, tabIds);
-      }
-    });
+  Stream<TabHighlightedEvent> get onHighlighted => _onHighlighted.stream;
 
-    js.scoped(() {
-      js.context.chrome.tabs.onHighlighted.addListener(jsCallback);
-    });
-  }
+  final ChromeStreamController<TabMovedEvent> _onDetached =
+      new ChromeStreamController<TabMovedEvent>.twoArgs(
+          () => js.context.chrome.tabs.onDetached,
+          (tabId, detachInfo) =>
+              new TabMovedEvent.detached(tabId, detachInfo));
 
   /**
    * Fired when a tab is detached from a window, for example because it is
    * being moved between windows.
    */
-  void onDetached(onTabDetachedCallback callback) {
-    var jsCallback = new js.Callback.many((tabId, detachInfo) {
-      if (callback != null) {
-        callback(tabId, detachInfo.oldWindowId, detachInfo.oldPosition);
-      }
-    });
+  Stream<TabMovedEvent> get onDetached => _onDetached.stream;
 
-    js.scoped(() {
-      js.context.chrome.tabs.onDetached.addListener(jsCallback);
-    });
-  }
-
+  final ChromeStreamController<TabMovedEvent> _onAttached =
+      new ChromeStreamController<TabMovedEvent>.twoArgs(
+          () => js.context.chrome.tabs.onAttached,
+          (tabId, attachInfo) =>
+              new TabMovedEvent.attached(tabId, attachInfo));
   /**
    * Fired when a tab is attached to a window, for example because it was moved
    * between windows.
    */
-  void onAttached(onTabAttachedCallback callback) {
-    var jsCallback = new js.Callback.many((tabId, attachInfo) {
-      if (callback != null) {
-        callback(tabId, attachInfo.newWindowId, attachInfo.newPosition);
-      }
-    });
+  Stream<TabMovedEvent> get onAttached => _onAttached.stream;
 
-    js.scoped(() {
-      js.context.chrome.tabs.onAttached.addListener(jsCallback);
-    });
-  }
+  TabRemovedEvent(this.tabId, js.proxy removeInfo);
+
+  final ChromeStreamController<TabRemovedEvent> _onRemoved =
+      new ChromeStreamController<TabRemovedEvent>.twoArgs(
+          () => js.context.chrome.tabs.onRemoved,
+          (tabId, removeInfo) =>
+              new TabRemovedEvent(tabId, removeInfo));
 
   /**
    * Fired when a tab is closed. Note: A listener can be registered for this
    * event without requesting the 'tabs' permission in the manifest.
    */
-  void onRemoved(onRemovedCallback callback) {
-    var jsCallback = new js.Callback.many((tabId, removeInfo) {
-      if (callback != null) {
-        callback(tabId, removeInfo.windowId, removeInfo.isWindowClosing);
-      }
-    });
+  Stream<TabRemovedEvent> get onRemoved => _onRemoved.stream;
 
-    js.scoped(() {
-      js.context.chrome.tabs.onRemoved.addListener(jsCallback);
-    });
-  }
+  final ChromeStreamController<TabReplacedEvent> _onReplaced =
+      new ChromeStreamController<TabReplacedEvent>.twoArgs(
+          () => js.context.chrome.tabs.onReplaced,
+          (addedTabId, removedTabId) =>
+              new TabReplacedEvent(addedTabId, addedTabId));
 
   /**
    * Fired when a tab is replaced with another tab due to prerendering or
    * instant.
    */
-  void onReplaced(onReplacedCallback callback) {
-    var jsCallback = new js.Callback.many((addedTabId, removedTabId) {
-      if (callback != null) {
-        callback(addedTabId, removedTabId);
-      }
-    });
-
-    js.scoped(() {
-      js.context.chrome.tabs.onReplaced.addListener(jsCallback);
-    });
-  }
+  Stream<TabReplacedEvent> get onReplaced => _onReplaced.stream;
 
   js.Proxy _createInjectDetails(
       String code,
@@ -696,10 +661,10 @@ class Tabs {
     }
     return js.map(injectDetails);
   }
-
-  // TODO(DrMarcII): add listener methods
 }
 
+// TODO(DrMarcII): copy all tab fields into Dart data structures so we can
+//                 get rid of the js.Proxy
 class Tab {
   final js.Proxy _tab;
 
@@ -733,7 +698,7 @@ class Tab {
    * if the opener tab still exists.
    */
   int get openerTabId {
-    return _tab.openerTabId as int;
+    return _tab['openerTabId'] as int;
   }
 
   /**
@@ -780,7 +745,7 @@ class Tab {
    * string if the tab is loading.
    */
   String get favIconUrl {
-    return _tab.favIconUrl as String;
+    return _tab['favIconUrl'] as String;
   }
 
   /**
@@ -884,4 +849,92 @@ class RunAt {
   static const RunAt DOCUMENT_START = const RunAt._internal('document_start');
   static const RunAt DOCUMENT_END = const RunAt._internal('document_end');
   static const RunAt DOCUMENT_IDLE = const RunAt._internal('document_idle');
+}
+
+// TODO(DrMarcII): make event classes immutable.
+
+class TabUpdatedEvent {
+  final Tab tab;
+  TabStatus status;
+  String url;
+  bool pinned;
+  String favIconUrl;
+
+  TabUpdatedEvent(this.tab, js.Proxy changeInfo) {
+    var status = changeInfo['status'];
+    if (status == null) {
+      this.status = null;
+    } else {
+      this.status = new TabStatus(status);
+    }
+    this.url = changeInfo['url'];
+    this.pinned = changeInfo['pinned'];
+    this.favIconUrl = changeInfo['favIconUrl'];
+  }
+}
+
+class TabMovedEvent {
+  final String type;
+  final int tabId;
+  int windowId;
+  int fromIndex;
+  int toIndex;
+
+  TabMovedEvent.moved(this.tabId, js.Proxy moveInfo) : this.type = 'moved' {
+    this.windowId = moveInfo['windowId'];
+    this.fromIndex = moveInfo['fromIndex'];
+    this.toIndex = moveInfo['toIndex'];
+  }
+
+  TabMovedEvent.detached(this.tabId, js.Proxy detachInfo) :
+      this.type = 'detached' {
+    this.windowId = detachInfo.oldWindowId;
+    this.fromIndex = detachInfo.oldPosition;
+  }
+
+  TabMovedEvent.attached(this.tabId, js.Proxy attachInfo) :
+      this.type = 'attached' {
+    this.windowId = attachInfo.newWindowId;
+    this.toIndex = attachInfo.newPosition;
+  }
+}
+
+class TabActivatedEvent {
+  int tabId;
+  int windowId;
+
+  TabActivatedEvent(js.Proxy activeInfo) {
+    this.tabId = activeInfo.tabId;
+    this.windowId = activeInfo.windowId;
+  }
+}
+
+class TabHighlightedEvent {
+  List<int> tabIds;
+  int windowId;
+
+  TabHighlightedEvent(js.Proxy highlightInfo) {
+    this.windowId = highlightInfo.windowId;
+    for(int i = 0; i < highlightInfo.tabIds.length; i++) {
+      tabIds[i] = highlightInfo.tabIds[i];
+    }
+  }
+}
+
+class TabRemovedEvent {
+  final int tabId;
+  int windowId;
+  bool isWindowClosing;
+
+  TabRemovedEvent(this.tabId, js.Proxy removeInfo) {
+    this.windowId = removeInfo.windowId;
+    this.isWindowClosing = removeInfo.isWindowClosing;
+  }
+}
+
+class TabReplacedEvent {
+  final int addedTabId;
+  final int removedTabId;
+
+  TabRemovedEvent(this.addedTabId, this.removedTabId);
 }

@@ -77,3 +77,41 @@ class ChromeCompleter<T> {
     }
   }
 }
+
+class ChromeStreamController<T> {
+  final _event;
+  dynamic _transformer;
+  StreamController<T> _controller = new StreamController<T>.broadcast();
+  bool _handlerAdded = false;
+
+  ChromeStreamController.zeroArgs(this._event, dynamic transformer) {
+    _transformer = () => _controller.add(transformer());
+  }
+
+  ChromeStreamController.oneArg(this._event, dynamic transformer) {
+    _transformer = (arg1) => _controller.add(transformer(arg1));
+  }
+
+  ChromeStreamController.twoArgs(this._event, dynamic transformer) {
+    _transformer = (arg1, arg2) => _controller.add(transformer(arg1, arg2));
+  }
+
+  ChromeStreamController.threeArgs(this._event, dynamic transformer) {
+    _transformer = (arg1, arg2, arg3) =>
+        _controller.add(transformer(arg1, arg2, arg3));
+  }
+
+  Stream<T> get stream {
+    _ensureHandlerAdded();
+    return _controller.stream;
+  }
+
+  void _ensureHandlerAdded() {
+    if (!_handlerAdded) {
+      js.scoped(() {
+        _event().addListener(new js.Callback.many(_transformer));
+      });
+      _handlerAdded = true;
+    }
+  }
+}
