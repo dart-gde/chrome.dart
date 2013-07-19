@@ -113,6 +113,7 @@ class TestWindows {
             .then(expectAsync1((_) { }));
       });
 
+      // Requires extension access to incognito windows.
       test('create incognito window', () {
         windows.create(
             url: 'http://www.google.com/',
@@ -139,7 +140,7 @@ class TestWindows {
             }).then(expectAsync1((_) { }));
       });
 
-      // requires enable panels flag to be set.
+      // Requires enable panels flag to be set.
       test('create panel', () {
         windows.create(type: WindowType.PANEL)
             .then((Window window) {
