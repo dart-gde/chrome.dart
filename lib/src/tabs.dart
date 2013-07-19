@@ -615,8 +615,6 @@ class Tabs {
    */
   Stream<TabMovedEvent> get onAttached => _onAttached.stream;
 
-  TabRemovedEvent(this.tabId, js.proxy removeInfo);
-
   final ChromeStreamController<TabRemovedEvent> _onRemoved =
       new ChromeStreamController<TabRemovedEvent>.twoArgs(
           () => js.context.chrome.tabs.onRemoved,
@@ -936,5 +934,5 @@ class TabReplacedEvent {
   final int addedTabId;
   final int removedTabId;
 
-  TabRemovedEvent(this.addedTabId, this.removedTabId);
+  TabReplacedEvent(this.addedTabId, this.removedTabId);
 }
