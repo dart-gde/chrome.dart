@@ -198,21 +198,17 @@ class BrowserAction {
     });
   }
 
+  final ChromeStreamController<Tab> _onClicked =
+      new ChromeStreamController<Tab>.oneArg(
+          () => js.context.chrome.browserAction.onClicked,
+          (tab) =>
+              new Tab(tab));
+
   /**
    * Fired when a browser action icon is clicked. This event will not fire if
    * the browser action has a popup.
    */
-  void onClicked(onBrowserActionClickedCallback callback) {
-    var jsCallback = new js.Callback.many((tab) {
-      if (callback != null) {
-        callback(new Tab(tab));
-      }
-    });
-
-    js.scoped(() {
-      _browserAction.onClicked.addListener(jsCallback);
-    });
-  }
+  Stream<Tab> get onClicked => _onClicked.stream;
 }
 
 class Color {
