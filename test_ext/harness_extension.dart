@@ -41,8 +41,8 @@ main() {
     }
   });
 
-  new TestBrowserAction().main();
-  new TestTabs().main();
+//  new TestBrowserAction().main();
+//  new TestTabs().main();
   new TestWindows().main();
 
   Logger.root.info("leaving main");

@@ -41,9 +41,9 @@ class Windows {
    * @param populate If true, the window object will have a tabs property that
    *                 contains a list of the tabs.Tab objects
    */
-  Future<Window> get(int windowId, [bool populate]) {
+  Future<Window> get(int windowId, {bool populate}) {
     var completer =
-        new ChromeCompleter.transform((window) => new Window(window));
+        new ChromeCompleter((window) => new Window(window));
     js.scoped(() {
       js.context.chrome.windows.get(
           windowId,
@@ -60,9 +60,9 @@ class Windows {
    * @param populate If true, the window object will have a tabs property that
    *                 contains a list of the tabs.Tab objects
    */
-  Future<Window> getCurrent([bool populate]) {
+  Future<Window> getCurrent({bool populate}) {
     var completer =
-        new ChromeCompleter.transform((window) => new Window(window));
+        new ChromeCompleter((window) => new Window(window));
     js.scoped(() {
       js.context.chrome.windows.getCurrent(
           _createGetInfoMap(populate),
@@ -77,9 +77,9 @@ class Windows {
    * @param populate If true, the window object will have a tabs property that
    *                 contains a list of the tabs.Tab objects
    */
-  Future<Window> getLastFocused([bool populate]) {
+  Future<Window> getLastFocused({bool populate}) {
     var completer =
-        new ChromeCompleter.transform((window) => new Window(window));
+        new ChromeCompleter((window) => new Window(window));
     js.scoped(() {
       js.context.chrome.windows.getLastFocused(
           _createGetInfoMap(populate),
@@ -94,9 +94,9 @@ class Windows {
    * @param populate If true, the window objects will have a tabs property that
    *                 contains a list of the tabs.Tab objects
    */
-  Future<List<Window>> getAll([bool populate]) {
+  Future<List<Window>> getAll({bool populate}) {
     var completer =
-        new ChromeCompleter.transform((js.Proxy jsWindows) {
+        new ChromeCompleter((js.Proxy jsWindows) {
           List<Window> windows = [];
 
           for (int i = 0; i < jsWindows.length; i++) {
@@ -156,7 +156,7 @@ class Windows {
     }
 
     var completer =
-        new ChromeCompleter.transform((window) => new Window(window));
+        new ChromeCompleter((window) => new Window(window));
     js.scoped(() {
       js.context.chrome.windows.create(js.map(createData), completer.callback);
     });
@@ -199,7 +199,7 @@ class Windows {
     }
 
     var completer =
-        new ChromeCompleter.transform((window) => new Window(window));
+        new ChromeCompleter((window) => new Window(window));
     js.scoped(() {
       js.context.chrome.windows.update(windowId,
           js.map(updateData),
@@ -212,44 +212,37 @@ class Windows {
    * Removes (closes) a window, and all the tabs inside it.
    */
   Future remove(int windowId) {
-    var completer = new ChromeCompleter.noArgs();
+    var completer = new ChromeCompleter();
     js.scoped(() {
       js.context.chrome.windows.remove(windowId, completer.callback);
     });
     return completer.future;
   }
 
+  final ChromeStreamController<Window> _onCreated =
+      new ChromeStreamController<Window>.oneArg(
+          () => js.context.chrome.windows.onCreated,
+          (window) => new Window(window));
+
   /**
    * Fired when a window is created.
    */
-  void onCreated(onWindowCreatedCallback listener) {
-    js.scoped(() {
-      void event(js.Proxy window) {
-        if (listener!=null) {
-          listener(new Window(window));
-        }
-      };
+  Stream<Window> get onCreated => _onCreated.stream;
 
-      js.context.chrome.windows.onCreated
-          .addListener(new js.Callback.many(event));
-    });
-  }
+  final ChromeStreamController<int> _onRemoved =
+      new ChromeStreamController<int>.oneArg(
+          () => js.context.chrome.windows.onRemoved,
+          (windowId) => windowId);
 
   /**
    * Fired when a window is removed (closed).
    */
-  void onRemoved(windowChangedCallback listener) {
-    js.scoped(() {
-      void event(int windowId) {
-        if (listener!=null) {
-          listener(windowId);
-        }
-      };
+  Stream<int> get onRemoved => _onRemoved.stream;
 
-      js.context.chrome.windows.onRemoved
-          .addListener(new js.Callback.many(event));
-    });
-  }
+  final ChromeStreamController<int> _onFocusChanged =
+      new ChromeStreamController<int>.oneArg(
+          () => js.context.chrome.windows.onFocusChanged,
+          (windowId) => windowId);
 
   /**
    * Fired when the currently focused window changes. Will be
@@ -258,18 +251,7 @@ class Windows {
    * Note: On some Linux window managers, {@link WINDOW_ID_NONE} will always be
    * sent immediately preceding a switch from one chrome window to another.
    */
-  void onFocusChanged(windowChangedCallback listener) {
-    js.scoped(() {
-      void event(int windowId) {
-        if (listener!=null) {
-          listener(windowId);
-        }
-      };
-
-      js.context.chrome.windows.onFocusChanged
-          .addListener(new js.Callback.many(event));
-    });
-  }
+  Stream<int> get onFocusChanged => _onFocusChanged.stream;
 
   js.Proxy _createGetInfoMap(bool populate) {
     Map<String, dynamic> getInfo = {};
@@ -280,6 +262,8 @@ class Windows {
   }
 }
 
+// TODO(DrMarcII): copy all data out of proxy into dart objects so we don't
+//                 have to worry about proxy lifetime.
 class Window {
   final js.Proxy _window;
 
@@ -344,14 +328,16 @@ class Window {
    * The current tabs in the window.
    */
   List<Tab> get tabs {
-    dynamic jsTabs = _window.tabs;
-    List<Tab> tabs = [];
-    if (jsTabs != null) {
+    dynamic jsTabs = _window['tabs'];
+    if (jsTabs == null) {
+      return null;
+    } else {
+      List<Tab> tabs = [];
       for (var i = 0; i < jsTabs.length; i++) {
         tabs.add(new Tab(jsTabs[i]));
       }
+      return tabs;
     }
-    return tabs;
   }
 
   /**
