@@ -221,7 +221,7 @@ class TestTabs {
         subscription = tabs.onUpdated.listen(expectAsync1((TabUpdatedEvent evt) {
           expect(evt.tab.windowId, window.id);
           expect(evt.status, anyOf(isNull, new isInstanceOf<TabStatus>()));
-          expect(evt.url, 'http://www.google.com/');
+          expect(evt.url, contains('www.google.com'));
           subscription.cancel();
         }));
         tabs.update(tabId: window.tabs.first.id, url: 'http://www.google.com/')

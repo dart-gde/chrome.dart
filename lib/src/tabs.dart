@@ -908,13 +908,13 @@ class TabActivatedEvent {
 }
 
 class TabHighlightedEvent {
-  List<int> tabIds;
+  List<int> tabIds = [];
   int windowId;
 
   TabHighlightedEvent(js.Proxy highlightInfo) {
     this.windowId = highlightInfo.windowId;
     for(int i = 0; i < highlightInfo.tabIds.length; i++) {
-      tabIds[i] = highlightInfo.tabIds[i];
+      tabIds.add(highlightInfo.tabIds[i]);
     }
   }
 }
