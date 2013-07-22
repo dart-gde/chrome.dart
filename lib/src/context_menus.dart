@@ -9,15 +9,6 @@ import 'tabs.dart';
 
 ContextMenus contextMenus = new ContextMenus();
 
-/**
- * @param info Information about the item clicked and the context where the
- *             click happened.
- * @param tab The details of the tab where the click took place. If the click
- *            did not take place in a tab, this parameter will be missing.
- */
-typedef void onContextMenuClickedCallback(
-    OnContextMenuClickData info, {Tab tab});
-
 class ContextMenus {
 
   js.Proxy get _contextMenus => js.context.chrome.contextMenus;
@@ -47,7 +38,7 @@ class ContextMenus {
    *                 launcher/taskbar/dock/etc. Different platforms might put
    *                 limitations on what is actually supported in a launcher
    *                 context menu.
-   * @param onclick A function that will be called back when the menu item is
+   * @param onClick A function that will be called back when the menu item is
    *                clicked. Event pages cannot use this; instead, they should
    *                register a listener for chrome.contextMenus.onClicked.
    * @param parentId The ID of a parent menu item; this makes the item a child
@@ -62,18 +53,22 @@ class ContextMenus {
    *                          img/audio/video tags and the href of anchor tags.
    * @param enabled Whether this context menu item is enabled or disabled.
    *                Defaults to true.
+   *
+   * @returns if onClick is provided, then returns a StreamSubscription object
+   *          for that event, otherwise returns null.
    */
-  Future create({
-    ContextMenuType type,
+  Future<StreamSubscription<ContextMenuClickEvent>> create({
+      ContextMenuType type,
       String id,
       String title,
       bool checked,
       List<ContextMenuContext> contexts,
-      onContextMenuClickedCallback onClick,
+      void onClick(ContextMenuClickEvent event),
       String parentId,
       List<String> documentUrlPatterns,
       List<String> targetUrlPatterns,
       bool enabled}) {
+    var subscription;
     Map<String, dynamic> createProperties = { };
     if (type != null) {
       createProperties['type'] = type.toString();
@@ -92,7 +87,7 @@ class ContextMenus {
           context.toString());
     }
     if (onClick != null) {
-      createProperties['onclick'] = _createClickListenerFunction(onClick);
+      subscription = _createController(createProperties, onClick);
     }
     if (parentId != null) {
       createProperties['parentId'] = parentId;
@@ -111,7 +106,7 @@ class ContextMenus {
     js.scoped(() {
       _contextMenus.create(js.map(createProperties), completer.callback);
     });
-    return completer.future;
+    return completer.future.then((_) => subscription);
   }
 
   /**
@@ -120,17 +115,21 @@ class ContextMenus {
    * @param id The ID of the item to update.
    * @param parentId Note: You cannot change an item to be a child of one of
    *                 its own descendants.
+   *
+   * @returns if onClick is provided, then returns a StreamSubscription object
+   *          for that event, otherwise returns null
    */
-  Future update(String id, {
-    ContextMenuType type,
+  Future<StreamSubscription<ContextMenuClickEvent>> update(String id, {
+      ContextMenuType type,
       String title,
       bool checked,
       List<ContextMenuContext> contexts,
-      onContextMenuClickedCallback onClick,
+      void onClick(ContextMenuClickEvent event),
       String parentId,
       List<String> documentUrlPatterns,
       List<String> targetUrlPatterns,
       bool enabled}) {
+    var subscription;
     Map<String, dynamic> updateProperties = { };
     if (type != null) {
       updateProperties['type'] = type.toString();
@@ -146,7 +145,7 @@ class ContextMenus {
           context.toString());
     }
     if (onClick != null) {
-      updateProperties['onclick'] = _createClickListenerFunction(onClick);
+      subscription = _createController(updateProperties, onClick);
     }
     if (parentId != null) {
       updateProperties['parentId'] = parentId;
@@ -165,7 +164,21 @@ class ContextMenus {
     js.scoped(() {
       _contextMenus.update(id, js.map(updateProperties), completer.callback);
     });
-    return completer.future;
+    return completer.future.then((_) => subscription);
+  }
+
+  StreamSubscription<ContextMenuClickEvent> _createController(
+      Map<String, dynamic> properties, Function callback) {
+    var controller = new StreamController.broadcast();
+    properties['onclick'] =
+        new js.Callback.many((dynamic clickData, [dynamic jsTab]) {
+          Tab tab;
+          if (jsTab != null) {
+            tab = new Tab(jsTab);
+          }
+          controller.add(new ContextMenuClickEvent(clickData, tab));
+        });
+    return controller.stream.listen(callback);
   }
 
   /**
@@ -192,76 +205,50 @@ class ContextMenus {
     return completer.future;
   }
 
+  final ChromeStreamController<ContextMenuClickEvent> _onClicked =
+      new ChromeStreamController<ContextMenuClickEvent>.twoArgs(
+          () => js.context.chrome.contextMenus.onClicked,
+          (clickData, jsTab) {
+            Tab tab;
+            if (jsTab != null) {
+              tab = new Tab(jsTab);
+            }
+            return new ContextMenuClickEvent(clickData, tab);
+          });
+
   /**
    * Fired when a context menu item is clicked.
    */
-  void onClicked(onContextMenuClickedCallback listener) {
-    js.scoped(() {
-      _contextMenus.onClicked
-          .addListener(_createClickListenerFunction(listener));
-    });
-  }
-
-  js.Callback _createClickListenerFunction(onContextMenuClickedCallback listener) {
-    return new js.Callback.many((dynamic clickData, [dynamic tab]) {
-      if (listener != null) {
-        if (tab != null) {
-          listener(new OnContextMenuClickData(clickData), tab: new Tab(tab));
-        } else {
-          listener(new OnContextMenuClickData(clickData));
-        }
-      }
-    });
-  }
+  Stream<ContextMenuClickEvent> get onClicked => _onClicked.stream;
 }
 
-class OnContextMenuClickData {
-  js.Proxy _onClickData;
+// TODO(DrMarcII): Make this immutable.
+class ContextMenuClickEvent {
+  final Tab tab;
+  dynamic menuItemId; // int or String
+  dynamic parentMenuItemId; // int or String
+  String mediaType;
+  String linkUrl;
+  String srcUrl;
+  String pageUrl;
+  String frameUrl;
+  String selectionText;
+  bool editable;
+  bool wasChecked;
+  bool checked;
 
-  OnContextMenuClickData(this._onClickData);
-
-  String get menuItemId {
-    return _onClickData.menutItemId.toString();
-  }
-
-  String get parentMenuItemId {
-    return _onClickData.parentMenuItemId.toString();
-  }
-
-  String get mediaType {
-    return _onClickData.mediaType;
-  }
-
-  String get linkUrl {
-    return _onClickData.linkUrl;
-  }
-
-  String get srcUrl {
-    return _onClickData.srcUrl;
-  }
-
-  String get pageUrl {
-    return _onClickData.pageUrl;
-  }
-
-  String get frameUrl {
-    return _onClickData.frameUrl;
-  }
-
-  String get selectionText {
-    return _onClickData.selectionText;
-  }
-
-  bool get editable {
-    return _onClickData.editable;
-  }
-
-  bool get wasChecked {
-    return _onClickData.wasChecked;
-  }
-
-  bool get checked {
-    return _onClickData.checked;
+  ContextMenuClickEvent(js.Proxy onClickData, this.tab) {
+    this.menuItemId = onClickData.menuItemId;
+    this.parentMenuItemId = onClickData['parentMenuItemId'];
+    this.mediaType = onClickData['mediaType'];
+    this.linkUrl = onClickData['linkUrl'];
+    this.srcUrl = onClickData['srcUrl'];
+    this.pageUrl = onClickData['pageUrl'];
+    this.frameUrl = onClickData['frameUrl'];
+    this.selectionText = onClickData['selectionText'];
+    this.editable = onClickData.editable;
+    this.wasChecked = onClickData['wasChecked'];
+    this.checked = onClickData['checked'];
   }
 }
 

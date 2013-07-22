@@ -12,6 +12,7 @@ import 'package:js/js.dart' as js;
 import 'package:chrome/chrome_ext.dart';
 
 part 'src/test_browser_action.dart';
+part 'src/test_context_menus.dart';
 part 'src/test_tabs.dart';
 part 'src/test_windows.dart';
 
@@ -44,6 +45,7 @@ main() {
   new TestBrowserAction().main();
   new TestTabs().main();
   new TestWindows().main();
+  new TestContextMenus().main();
 
   Logger.root.info("leaving main");
 }
