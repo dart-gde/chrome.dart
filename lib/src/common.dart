@@ -87,15 +87,15 @@ class ChromeStreamController<T> {
   }
 
   ChromeStreamController.oneArg(this._event, dynamic transformer) {
-    _transformer = (arg1) => _controller.add(transformer(arg1));
+    _transformer = ([arg1]) => _controller.add(transformer(arg1));
   }
 
   ChromeStreamController.twoArgs(this._event, dynamic transformer) {
-    _transformer = (arg1, arg2) => _controller.add(transformer(arg1, arg2));
+    _transformer = ([arg1, arg2]) => _controller.add(transformer(arg1, arg2));
   }
 
   ChromeStreamController.threeArgs(this._event, dynamic transformer) {
-    _transformer = (arg1, arg2, arg3) =>
+    _transformer = ([arg1, arg2, arg3]) =>
         _controller.add(transformer(arg1, arg2, arg3));
   }
 
