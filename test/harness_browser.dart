@@ -48,12 +48,12 @@ main() {
   });
 
   new TestApp().main();
-//  new TestFileSystem().main();
-//  new TestI18N().main();
-//  new TestPower().main();
-//  new TestPushMessaging().main();
-//  new TestRuntime().main();
-//  new TestSerial().main();
-//  new TestSocket().main();
-//  new TestStorage().main();
+  new TestFileSystem().main();
+  new TestI18N().main();
+  new TestPower().main();
+  new TestPushMessaging().main();
+  new TestRuntime().main();
+  new TestSerial().main();
+  new TestSocket().main();
+  new TestStorage().main();
 }
