@@ -4,7 +4,7 @@
 
 ### Description
 
-A team effort to create interop with the [Chrome.* APIs][] used for 
+A team effort to create interop with the [Chrome.* APIs][] used for
 [Chrome Packaged Apps][].
 
 ### Using
@@ -13,20 +13,20 @@ A team effort to create interop with the [Chrome.* APIs][] used for
 import 'package:chrome/chrome.dart';
 ```
 
-The best results will happen when compiling to javascript with the following 
-command. 
+The best results will happen when compiling to javascript with the following
+command.
 
 ```
 dart2js --verbose --disallow-unsafe-eval -o<name>.dart.js <name>.dart
 ```
 
-Check out the [example](example) folder on setup. 
+Check out the [example](example) folder on setup.
 
 ### Using in dartium
 
-It is possible to run a dart chrome app in dartium within the dartvm. Chrome 
-apps do not like having sym links outside of there project folder. One solution 
-is to clone the package dependencies and breaking the symlinks. Something like 
+It is possible to run a dart chrome app in dartium within the dartvm. Chrome
+apps do not like having sym links outside of there project folder. One solution
+is to clone the package dependencies and breaking the symlinks. Something like
 the following might work.
 
 ```
@@ -38,14 +38,14 @@ rm -rf packages
 mv packages_snapshots packages
 ```
 
-Then you can `cp -r` the `packages` to the containing chrome app package 
-directory. 
+Then you can `cp -r` the `packages` to the containing chrome app package
+directory.
 
 ### Building unit tests and loading
 
-* Run `./bin/hop test_dart2js`. 
-* Open chrome to `chrome://extensions/`. 
-* Click `developer mode`  
+* Run `./bin/hop test_dart2js`.
+* Open chrome to `chrome://extensions/`.
+* Click `developer mode`
 * `Load unpacked extension…` to `chrome.dart/test`.
 
 ### Authors
@@ -55,6 +55,7 @@ directory.
  * [Devon Carew](https://github.com/devoncarew)
  * [Amanda Cameron](http://github.com/AmandaCameron)
  * [Ross Smith](http://futureperfect.info)
+ * [Marc Fisher](https://github.com/DrMarcII)
  * _You? File bugs. Fork and Fix bugs. Let's build this community._
 
 ### Versioning
