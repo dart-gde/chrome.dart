@@ -7,11 +7,11 @@ import 'package:js/js.dart' as js;
 import 'common.dart';
 import 'tabs.dart';
 
-typedef void onBrowserActionClickedCallback(Tab tab);
-
-BrowserAction browserAction = new BrowserAction();
+final BrowserAction browserAction = new BrowserAction._();
 
 class BrowserAction {
+
+  BrowserAction._();
 
   js.Proxy get _browserAction => js.context.chrome.browserAction;
 

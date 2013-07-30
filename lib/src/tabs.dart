@@ -7,58 +7,11 @@ import 'package:js/js.dart' as js;
 import 'common.dart';
 import 'windows.dart';
 
-/**
- * @param tab Details of the tab that was created.
- */
-typedef void onTabCreatedCallback(Tab tab);
-
-/**
- * @param tab Gives The state of the tab that was updated.
- * @param status The tab's new status if it has changed.
- * @param url The tab's new URL if it has changed.
- * @param pinned The tab's new pinned state if it has changed.
- * @param favIconUrl The tab's new favicon URL if it has changed.
- */
-typedef void onTabUpdatedCallback(Tab tab, {
-    TabStatus status,
-    String url,
-    bool pinned,
-    String favIconUrl});
-
-typedef void onTabMovedCallback(
-    int tabId,
-    int windowId,
-    int fromIndex,
-    int toIndex);
-
-/**
- * @param tabId The ID of the tab that has become active.
- * @param windowId The ID of the window the active tab changed inside of.
- */
-typedef void onTabActivatedCallback(int tabId, int windowId);
-
-/**
- * @param windowId The window whose tabs changed.
- * @param tabIds All highlighted tabs in the window.
- */
-typedef void onTabsHighlightedCallback(int windowId, List<int> tabIds);
-
-typedef void onTabDetachedCallback(int tabId, int oldWindowId, int oldPosition);
-
-typedef void onTabAttachedCallback(int tabId, int newWindowId, int newPosition);
-
-/**
- * @param windowId The window whose tab is closed.
- * @param isWindowClosing True when the tab is being closed because its window
- *                        is being closed.
- */
-typedef void onRemovedCallback(int tabId, int windowId, bool isWindowClosing);
-
-typedef void onReplacedCallback(int addedTabdId, int removedTabId);
-
-final Tabs tabs = new Tabs();
+final Tabs tabs = new Tabs._();
 
 class Tabs {
+
+  Tabs._();
 
   get _tabs => js.context.chrome.tabs;
 
