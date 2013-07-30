@@ -6,18 +6,10 @@ import 'dart:html';
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
 
+import 'runtime.dart';
+
 
 dynamic get chromeProxy => js.context.chrome;
-
-String get lastError {
-  js.Proxy error = chromeProxy.runtime['lastError'];
-
-  if (error != null) {
-    return error['message'];
-  } else {
-    return null;
-  }
-}
 
 bool isLinux() {
   return _platform().indexOf('linux') != -1;
@@ -43,36 +35,50 @@ String _platform() {
  */
 class ChromeCompleter<T> {
   final Completer<T> _completer = new Completer();
-  Function _transformer = (value) => value;
+  js.Callback _callback;
 
-  ChromeCompleter([Function transformer]) {
-    if (transformer != null) {
-      this._transformer = transformer;
-    }
+  ChromeCompleter.noArgs() {
+    this._callback = new js.Callback.once(() {
+      var le = runtime.lastError;
+      if (le != null) {
+      _completer.completeError(le);
+      } else {
+        _completer.complete();
+      }
+    });
   }
 
-  // TODO(DrMarcII): remove these unnecessary constructors
-  ChromeCompleter.noArgs() : this();
+  ChromeCompleter.oneArg([Function transformer]) {
+    this._callback = new js.Callback.once(([arg1]) {
+      var le = runtime.lastError;
+      if (le != null) {
+      _completer.completeError(le);
+      } else {
+        if (transformer != null) {
+          arg1 = transformer(arg1);
+        }
+        _completer.complete(arg1);
+      }
+    });
+  }
 
-  ChromeCompleter.oneArg() : this();
-
-  ChromeCompleter.transform(Function transformer) : this(transformer);
+  ChromeCompleter.twoArgs(Function transformer) {
+    this._callback = new js.Callback.once(([arg1, arg2]) {
+      var le = runtime.lastError;
+      if (le != null) {
+      _completer.completeError(le);
+      } else {
+        _completer.complete(transformer(arg1, arg2));
+      }
+    });
+  }
 
   Future<T> get future {
     return _completer.future;
   }
 
   js.Callback get callback {
-    return new js.Callback.once(_callback);
-  }
-
-  Function _callback([value]) {
-    var le = lastError;
-    if (le != null) {
-      _completer.completeError(le);
-    } else {
-      _completer.complete(_transformer(value));
-    }
+    return _callback;
   }
 }
 
