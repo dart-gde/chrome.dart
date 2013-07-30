@@ -6,7 +6,7 @@ class TestRuntime {
       test('lastError', () {
         var lastError = runtime.lastError;
         logMessage("lastError = ${lastError}");
-        expect(lastError.message.isEmpty, isTrue);
+        expect(lastError, isNull);
       });
 
       test('id', () {
@@ -60,44 +60,31 @@ class TestRuntime {
         runtime.requestUpdateCheck().then(expectAsync1((update) {
           logMessage("update = ${update}");
 
-          expect(update is Map, isTrue);
-          expect(update.containsKey('status'), isTrue);
-          expect(update.containsKey('details'), isTrue);
-          expect(update['status'], equals('no_update'));
-          expect(update['details'], isNull);
+          expect(update, new isInstanceOf<UpdateDetails>());
+          expect(update.status, 'no_update');
+          expect(update.version, isNull);
         }));
       });
 
-//      test('onStartup(Function listener)', () {
-//        runtime.onStartup(expectAsync0(() {
-//          expect(true, isTrue);
-//        }, 1));
-//      });
-//
-//      test('onInstalled(Function listener)', () {
-//        runtime.onInstalled(expectAsync1((Map m) {
-//          expect(true, isTrue);
-//        }));
-//      });
-//
-//      test('onSuspend(Function listener)', () {
-//        runtime.onStartup(expectAsync0(() {
-//          expect(true, isTrue);
-//        }, 1));
-//      });
-//
-//      test('onSuspendCanceled(Function listener)', () {
-//        runtime.onStartup(expectAsync0(() {
-//          expect(true, isTrue);
-//        }, 1));
-//      });
-//
-//      test('onUpdateAvailable(Function listener)', () {
-//        runtime.onUpdateAvailable(expectAsync1((Map m) {
-//          expect(true, isTrue);
-//        }));
-//      });
+      test('onStartup', () {
+        runtime.onStartup.listen((_) { }).cancel();
+      });
 
+      test('onInstalled', () {
+        runtime.onInstalled.listen((InstalledEvent evt) { }).cancel();
+      });
+
+      test('onSuspend', () {
+        runtime.onSuspend.listen((_) { }).cancel();
+      });
+
+      test('onSuspendCanceled', () {
+        runtime.onSuspendCanceled.listen((_) { }).cancel();
+      });
+
+      test('onUpdateAvailable', () {
+        runtime.onUpdateAvailable.listen((String version) { }).cancel();
+      });
     });
   }
 }

@@ -99,7 +99,7 @@ class Serial {
   /// callbacks need to check lastError
   static _safeExecute(completer, f) {
     var lastError = runtime.lastError;
-    if (!lastError.message.isEmpty) {
+    if (lastError != null) {
       completer.completeException(lastError);
       return;
     } else {
