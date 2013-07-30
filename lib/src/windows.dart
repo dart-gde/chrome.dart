@@ -7,22 +7,11 @@ import 'package:js/js.dart' as js;
 import 'common.dart';
 import 'tabs.dart';
 
-/**
- * @param window Details of the window that was created.
- */
-typedef void onWindowCreatedCallback(Window window);
-
-/**
- * Used for onRemoved and onFocusedChange events.
- *
- * @param windowId id of the removed (onRemoved) or the newly
- *                 focused (onFocusedChanged) window.
- */
-typedef void windowChangedCallback(int windowId);
-
-final Windows windows = new Windows();
+final Windows windows = new Windows._();
 
 class Windows {
+
+  Windows._();
 
   /**
    * The windowId value that represents the absence of a chrome browser window.
