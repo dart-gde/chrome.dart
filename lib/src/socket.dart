@@ -319,22 +319,16 @@ class Socket {
   }
 
   static Future<NetworkInterface> getNetworkList() {
-    Completer completer = new Completer();
+    ChromeCompleter completer = new ChromeCompleter.oneArg((result) {
+      var networkInterfaces = [];
+      for (int i = 0; i < result.length; i++) {
+        networkInterfaces.add(new NetworkInterface(result[i].name, result[i].address));
+      }
+      return networkInterfaces;
+    });
 
     js.scoped(() {
-      js.Callback callback = new js.Callback.once((var result) {
-        if (lastError != null) {
-          completer.completeError(lastError);
-        } else {
-          var networkInterfaces = [];
-          for (int i = 0; i < result.length; i++) {
-            networkInterfaces.add(new NetworkInterface(result[i].name, result[i].address));
-          }
-          completer.complete(networkInterfaces);
-        }
-      });
-      
-      chromeProxy.socket.getNetworkList(callback);
+      chromeProxy.socket.getNetworkList(completer.callback);
     });
 
     return completer.future;

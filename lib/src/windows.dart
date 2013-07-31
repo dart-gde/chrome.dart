@@ -32,7 +32,7 @@ class Windows {
    */
   Future<Window> get(int windowId, {bool populate}) {
     var completer =
-        new ChromeCompleter((window) => new Window(window));
+        new ChromeCompleter.oneArg((window) => new Window(window));
     js.scoped(() {
       js.context.chrome.windows.get(
           windowId,
@@ -51,7 +51,7 @@ class Windows {
    */
   Future<Window> getCurrent({bool populate}) {
     var completer =
-        new ChromeCompleter((window) => new Window(window));
+        new ChromeCompleter.oneArg((window) => new Window(window));
     js.scoped(() {
       js.context.chrome.windows.getCurrent(
           _createGetInfoMap(populate),
@@ -68,7 +68,7 @@ class Windows {
    */
   Future<Window> getLastFocused({bool populate}) {
     var completer =
-        new ChromeCompleter((window) => new Window(window));
+        new ChromeCompleter.oneArg((window) => new Window(window));
     js.scoped(() {
       js.context.chrome.windows.getLastFocused(
           _createGetInfoMap(populate),
@@ -85,7 +85,7 @@ class Windows {
    */
   Future<List<Window>> getAll({bool populate}) {
     var completer =
-        new ChromeCompleter((js.Proxy jsWindows) {
+        new ChromeCompleter.oneArg((js.Proxy jsWindows) {
           List<Window> windows = [];
 
           for (int i = 0; i < jsWindows.length; i++) {
@@ -145,7 +145,7 @@ class Windows {
     }
 
     var completer =
-        new ChromeCompleter((window) => new Window(window));
+        new ChromeCompleter.oneArg((window) => new Window(window));
     js.scoped(() {
       js.context.chrome.windows.create(js.map(createData), completer.callback);
     });
@@ -188,7 +188,7 @@ class Windows {
     }
 
     var completer =
-        new ChromeCompleter((window) => new Window(window));
+        new ChromeCompleter.oneArg((window) => new Window(window));
     js.scoped(() {
       js.context.chrome.windows.update(windowId,
           js.map(updateData),
@@ -201,7 +201,7 @@ class Windows {
    * Removes (closes) a window, and all the tabs inside it.
    */
   Future remove(int windowId) {
-    var completer = new ChromeCompleter();
+    var completer = new ChromeCompleter.noArgs();
     js.scoped(() {
       js.context.chrome.windows.remove(windowId, completer.callback);
     });
