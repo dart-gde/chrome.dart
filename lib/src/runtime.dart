@@ -271,9 +271,8 @@ class Runtime {
   /**
    * Fired when a message is sent from either an extension process or a content
    * script.
-   *
-   * TODO(DrMarcII): Create a Stream-like API for this.
    */
+  // TODO(DrMarcII): Create a Stream-like API for this.
   void onMessage(onMessageCallback listener) {
     var jsCallback = new js.Callback.many((message, sender, sendResponse) {
       if (listener != null) {

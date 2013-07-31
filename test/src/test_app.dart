@@ -94,18 +94,17 @@ class TestApp {
           }));
       });
 
-// TODO(DrMarcII): This test doesn't complete (at least sometimes).
-//      test('Test a successful call to minimize()', () {
-//        final verify = expectAsync1((AppWindow win) {
-//          expect(win.isMinimized, isTrue);
-//          expect(win.isMaximized, isFalse);
-//          expect(win.isFullscreen, isFalse);
-//        });
-//        createWindow().then((AppWindow win) {
-//          win.onMinimized.listen(verify);
-//          win.minimize();
-//        });
-//      });
+      test('Test a successful call to minimize()', () {
+        final verify = expectAsync1((AppWindow win) {
+          expect(win.isMinimized, isTrue);
+          expect(win.isMaximized, isFalse);
+          expect(win.isFullscreen, isFalse);
+        });
+        createWindow().then((AppWindow win) {
+          win.onMinimized.listen(verify);
+          win.minimize();
+        });
+      });
 
       test('Test a successful call to maximize()', () {
         final verify = expectAsync1((AppWindow win) {
