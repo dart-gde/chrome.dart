@@ -20,7 +20,7 @@ class Tabs {
    */
   Future<Tab> get(int tabId) {
     var completer =
-        new ChromeCompleter.transform((tab) => new Tab(tab));
+        new ChromeCompleter.oneArg((tab) => new Tab(tab));
     js.scoped(() {
       _tabs.get(tabId, completer.callback);
     });
@@ -34,7 +34,7 @@ class Tabs {
    */
   Future<Tab> getCurrent() {
     var completer =
-        new ChromeCompleter.transform((tab) => new Tab(tab));
+        new ChromeCompleter. oneArg((tab) => new Tab(tab));
     js.scoped(() {
       _tabs.getCurrent(completer.callback);
     });
@@ -112,7 +112,7 @@ class Tabs {
     if (openerTabId != null) {
       createProperties['openerTabId'] = openerTabId;
     }
-    var completer = new ChromeCompleter.transform((tab) => new Tab(tab));
+    var completer = new ChromeCompleter.oneArg((tab) => new Tab(tab));
     js.scoped(() {
       _tabs.create(js.map(createProperties), completer.callback);
     });
@@ -130,7 +130,7 @@ class Tabs {
    *          requested.
    */
   Future<Tab> duplicate(int tabId) {
-    var completer = new ChromeCompleter.transform((tab) => new Tab(tab));
+    var completer = new ChromeCompleter.oneArg((tab) => new Tab(tab));
     js.scoped(() {
       _tabs.duplicate(tabId, completer.callback);
     });
@@ -201,7 +201,7 @@ class Tabs {
     if (index != null) {
       queryInfo['index'] = index;
     }
-    var completer = new ChromeCompleter.transform((jsTabs) {
+    var completer = new ChromeCompleter.oneArg((jsTabs) {
       List<Tab> tabs = [];
 
       for (int i = 0; i < jsTabs.length; i++ ) {
@@ -229,7 +229,7 @@ class Tabs {
       highlightInfo['windowId'] = windowId;
     }
     var completer =
-        new ChromeCompleter.transform((window) => new Window(window));
+        new ChromeCompleter.oneArg((window) => new Window(window));
     js.scoped(() {
       _tabs.highlight(
           js.map(highlightInfo), completer.callback);
@@ -277,7 +277,7 @@ class Tabs {
       updateProperties['openerTabId'] = openerTabId;
     }
     var completer =
-        new ChromeCompleter.transform((tab) {
+        new ChromeCompleter.oneArg((tab) {
           if (tab != null) {
             return new Tab(tab);
           } else {
@@ -309,7 +309,7 @@ class Tabs {
       moveProperties['windowId'] = windowId;
     }
     var completer =
-        new ChromeCompleter.transform((jsTabs) {
+        new ChromeCompleter.oneArg((jsTabs) {
           List<Tab> tabs = [];
           // jsTabs can either be an array of tabs or a single tab
           if (jsTabs['length'] != null) {

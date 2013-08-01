@@ -48,33 +48,23 @@ class StorageArea {
    * Gets one or more items from storage.
    */
   Future<Map<String, String>> get(List<String> keys) {
-    Completer completer = new Completer();
+    ChromeCompleter completer = new ChromeCompleter.oneArg((items) {
+      Map<String, String> map = null;
+
+      if (keys != null) {
+        map = new Map<String, String>();
+
+        for (String key in keys) {
+          map[key] = items[key];
+        }
+      }
+    });
 
     js.scoped(() {
-      js.Callback callback = new js.Callback.once((js.Proxy items) {
-        String error = lastError;
-
-        if (lastError == null) {
-          Map<String, String> map = null;
-
-          if (keys != null) {
-            map = new Map<String, String>();
-
-            for (String key in keys) {
-              map[key] = items[key];
-            }
-          }
-
-          completer.complete(map);
-        } else {
-          completer.completeError(error);
-        }
-      });
-
       if (keys == null) {
-        chromeProxy.storage[_type].get(null, callback);
+        chromeProxy.storage[_type].get(null, completer.callback);
       } else {
-        chromeProxy.storage[_type].get(js.array(keys), callback);
+        chromeProxy.storage[_type].get(js.array(keys), completer.callback);
       }
     });
 
@@ -84,21 +74,11 @@ class StorageArea {
   /**
    * Sets multiple items.
    */
-  Future<StorageArea> set(Map<String, String> items) {
-    Completer completer = new Completer();
+  Future set(Map<String, String> items) {
+    ChromeCompleter completer = new ChromeCompleter.noArgs();
 
     js.scoped(() {
-      js.Callback callback = new js.Callback.once(() {
-        String error = lastError;
-
-        if (lastError == null) {
-          completer.complete(this);
-        } else {
-          completer.completeError(error);
-        }
-      });
-
-      chromeProxy.storage[_type].set(js.map(items), callback);
+      chromeProxy.storage[_type].set(js.map(items), completer.callback);
     });
 
     return completer.future;
@@ -107,21 +87,11 @@ class StorageArea {
   /**
    * Removes one or more items from storage.
    */
-  Future<StorageArea> remove(List<String> keys) {
-    Completer completer = new Completer();
+  Future remove(List<String> keys) {
+    ChromeCompleter completer = new ChromeCompleter.noArgs();
 
     js.scoped(() {
-      js.Callback callback = new js.Callback.once(() {
-        String error = lastError;
-
-        if (lastError == null) {
-          completer.complete(this);
-        } else {
-          completer.completeError(error);
-        }
-      });
-
-      chromeProxy.storage[_type].remove(js.array(keys), callback);
+      chromeProxy.storage[_type].remove(js.array(keys), completer.callback);
     });
 
     return completer.future;
@@ -130,21 +100,11 @@ class StorageArea {
   /**
    * Removes all items from storage.
    */
-  Future<StorageArea> clear() {
-    Completer completer = new Completer();
+  Future clear() {
+    ChromeCompleter completer = new ChromeCompleter.noArgs();
 
     js.scoped(() {
-      js.Callback callback = new js.Callback.once(() {
-        String error = lastError;
-
-        if (lastError == null) {
-          completer.complete(this);
-        } else {
-          completer.completeError(error);
-        }
-      });
-
-      chromeProxy.storage[_type].clear(callback);
+      chromeProxy.storage[_type].clear(completer.callback);
     });
 
     return completer.future;

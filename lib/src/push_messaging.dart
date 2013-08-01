@@ -17,45 +17,33 @@ final ChromePushMessaging pushMessaging = new ChromePushMessaging();
 class ChromePushMessaging {
   StreamController<PushMessage> _streamController = new StreamController<PushMessage>();
   Stream<PushMessage> _stream;
-  
+
   /**
    * Retrieves the channel ID associated with this app or extension. Typically
    * an app or extension will want to send this value to its application server
    * so the server can use it to trigger push messages back to the app or
    * extension. If the interactive flag is set, we will ask the user to log in
    * when they are not already logged in.
-   * 
+   *
    * Returns the channel ID for this app to use for push messaging.
    */
   Future<String> getChannelId(bool interactive) {
-    Completer completer = new Completer();
+    ChromeCompleter completer = new ChromeCompleter.oneArg();
 
     js.scoped(() {
-      js.Callback callback = new js.Callback.once((var channelId) {
-        String error = lastError;
-        
-        if (error != null) {
-          completer.completeError(error);
-        } else {
-          // TODO: verify that the channelId comes back as a string - the docs
-          // aren't clear
-          completer.complete(channelId);
-        }
-      });
-      
-      chromeProxy.pushMessaging.getChannelId(interactive, callback);
+      chromeProxy.pushMessaging.getChannelId(interactive, completer.callback);
     });
 
     return completer.future;
   }
-  
+
   /**
    * Fired when a push message has been received.
    */
   Stream<PushMessage> get onMessage {
     if (_stream == null) {
       _stream = _streamController.stream.asBroadcastStream();
-      
+
       js.scoped(() {
         js.Callback callback = new js.Callback.many((var message) {
           _streamController.add(
@@ -63,11 +51,11 @@ class ChromePushMessaging {
               // object.
               new PushMessage(message['subchannelId'], message['payload']));
         });
-        
+
         chromeProxy.pushMessaging.onMessage.addListener(callback);
       });
     }
-    
+
     return _stream;
   }
 }
@@ -80,13 +68,13 @@ class PushMessage {
    * The subchannel the message was sent on; only values 0-3 are valid.
    */
   int subchannelId;
-  
+
   /**
    * The payload associated with the message, if any.
    */
   String payload;
-  
+
   PushMessage(this.subchannelId, this.payload);
-  
+
   String toString() => "subchannelId: ${subchannelId}, payload: ${payload}";
 }

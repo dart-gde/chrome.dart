@@ -6,6 +6,7 @@ import 'dart:json' as JSON;
 
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
+import 'package:meta/meta.dart';
 
 import 'common.dart';
 import 'tabs.dart';
@@ -32,7 +33,7 @@ typedef bool onMessageCallback(
     message, MessageSender sender, sendResponseCallback sendResponse);
 typedef void sendResponseCallback();
 
-final Runtime runtime = const Runtime._();
+final Runtime runtime = new Runtime._();
 
 /**
  * Created from [Runtime].lastError checks.
@@ -41,30 +42,23 @@ class RuntimeError {
   /**
    * Details about the error which occurred.
    */
-  String message;
-  RuntimeError([this.message = ""]);
+  final String message;
+  RuntimeError(this.message);
 }
 
 class Runtime {
 
-  const Runtime._();
-  
+  Runtime._();
+
+  js.Proxy get _runtime => js.context.chrome.runtime;
+
   /**
    * This will be defined during an API method callback if there was an error.
    */
   RuntimeError get lastError {
     return js.scoped(() {
-      var chrome = js.context.chrome;
-      var lastError = null;
+      var lastError = _runtime['lastError'];
 
-      try {
-        lastError = chrome.runtime.lastError;
-      } on NoSuchMethodError catch (e, trace) {
-        // No error was in the chrome.runtime context.
-        return new RuntimeError();
-      }
-
-      // This null check might not be needed.
       if (lastError == null) {
         return null;
       } else {
@@ -78,7 +72,7 @@ class Runtime {
    */
   String get id {
     return js.scoped(() {
-      return js.context.chrome.runtime.id;
+      return _runtime.id;
     });
   }
 
@@ -93,27 +87,15 @@ class Runtime {
    * If there is no background page, an error is set.
    */
   Future<js.Proxy> getBackgroundPage() {
-    var completer = new Completer();
+    ChromeCompleter completer = new ChromeCompleter.oneArg((window) {
+      // XXX: This is a hack, remove or dont send the entire window object
+      // as a js.Proxy to the completer.
+      js.retain(window);
+      return window;
+    });
 
     js.scoped(() {
-      /**
-       * callback returns a proxy to the window object.
-       */
-      void callback(js.Proxy window) {
-        var le = lastError;
-        if (le.message.isEmpty) {
-          // XXX: This is a hack, remove or dont send the entire window object
-          // as a js.Proxy to the completer.
-          js.retain(window);
-          completer.complete(window);
-        } else {
-          completer.completeException(le);
-        }
-      };
-
-      js.context.getBackgroundPageCallback = new js.Callback.once(callback);
-      var chrome = js.context.chrome;
-      chrome.runtime.getBackgroundPage(js.context.getBackgroundPageCallback);
+      _runtime.getBackgroundPage(completer.callback);
     });
 
     return completer.future;
@@ -126,8 +108,7 @@ class Runtime {
    */
   Map getManifest() {
     return js.scoped(() {
-      var chrome = js.context.chrome;
-      return JSON.parse(js.context.JSON.stringify(chrome.runtime.getManifest()));
+      return JSON.parse(js.context.JSON.stringify(_runtime.getManifest()));
     });
   }
 
@@ -140,7 +121,7 @@ class Runtime {
    */
   String getURL(String path) {
     return js.scoped(() {
-      return js.context.chrome.runtime.getURL(path);
+      return _runtime.getURL(path);
     });
   }
 
@@ -149,7 +130,7 @@ class Runtime {
    */
   void reload() {
     js.scoped(() {
-      js.context.chrome.runtime.reload();
+      _runtime.reload();
     });
   }
 
@@ -164,22 +145,22 @@ class Runtime {
    * available, a Map with 'version' key, value being the version of the
    * available update.
    */
-  Future<Map> requestUpdateCheck() {
-    var completer = new Completer();
+  Future<UpdateDetails> requestUpdateCheck() {
+    var completer = new ChromeCompleter.twoArgs((status, details) {
+      switch (status) {
+        case 'no_update':
+          return UpdateDetails.NO_UPDATE;
+        case 'throttled':
+          return UpdateDetails.THROTTLED;
+        case 'update_available':
+          return new UpdateDetails.available(details.version);
+        default:
+          throw 'unknown status: $status';
+      }
+    });
 
     js.scoped(() {
-      void callback(status, [details]) {
-        var le = lastError;
-        if (le.message.isEmpty) {
-          var d = JSON.parse(js.context.JSON.stringify(details));
-          completer.complete({"status": status, "details": d});
-        } else {
-          completer.completeException(le);
-        }
-      };
-      js.context.requestUpdateCheckCallback = new js.Callback.once(callback);
-      var chrome = js.context.chrome;
-      chrome.runtime.requestUpdateCheck(js.context.requestUpdateCheckCallback);
+      _runtime.requestUpdateCheck(completer.callback);
     });
 
     return completer.future;
@@ -196,7 +177,8 @@ class Runtime {
    * @returns The JSON response object sent by the handler of the message.
    */
   Future<dynamic> sendMessage(dynamic message) {
-    var completer = new ChromeCompleter.oneArg();
+    var completer = new ChromeCompleter.oneArg((response) =>
+        JSON.parse(js.context.JSON.stringify(response)));
     js.scoped(() {
       var jsMessage;
       if (message is Map) {
@@ -206,61 +188,46 @@ class Runtime {
       } else {
         jsMessage = message;
       }
-      js.context.chrome.runtime.sendMessage(jsMessage, completer.callback);
+      _runtime.sendMessage(jsMessage, completer.callback);
     });
     return completer.future;
   }
 
   /// Events
 
+  final ChromeStreamController _onStartup =
+      new ChromeStreamController.zeroArgs(
+          () => js.context.chrome.runtime.onStartup,
+          () => null);
+
   /**
    * Fired when the browser first starts up.
    */
-  void onStartup(onStartupCallback listener) {
-    // TODO(adam): typedef the listener
-    js.scoped(() {
-      void event() {
-        if (listener!=null) {
-          listener();
-        }
-      };
+  Stream get onStartup => _onStartup.stream;
 
-      js.context.onStartupEvent = new js.Callback.once(event);
-      js.retain(js.context.onStartupEvent);
-      var chrome = js.context.chrome;
-      chrome.runtime.onStartup.addListener(js.context.onStartupEvent);
-    });
-  }
+  final ChromeStreamController<InstalledEvent> _onInstalled =
+      new ChromeStreamController<InstalledEvent>.oneArg(
+          () => js.context.chrome.runtime.onInstalled,
+          (details) => new InstalledEvent(
+              details.reason, details['previousVersion']));
 
   /**
    * Fired when the extension is first installed,
    * when the extension is updated to a new version,
    * and when Chrome is updated to a new version.
    *
-   * details Map passed to the [listener] will contain keys
-   * 'reason' and 'previousVersion'.
-   *
    * 'reason' is an enumerated string of "install", "update", "chrome_update".
    *
-   * 'previousVersion' is optionally passed. Indicates the previous version
+   * 'previousVersion' indicates the previous version
    * of the extension, which has just been updated. This is present only if
    * 'reason' is 'update'.
    */
-  void onInstalled(onInstalledCallback listener) {
-    js.scoped(() {
-      void event(details) {
-        if (listener!=null) {
-          var d = JSON.parse(js.context.JSON.stringify(details));
-          listener({"details": d});
-        }
-      };
+  Stream<InstalledEvent> get onInstalled => _onInstalled.stream;
 
-      js.context.onInstalledEvent = new js.Callback.once(event);
-      js.retain(js.context.onInstalledEvent);
-      var chrome = js.context.chrome;
-      chrome.runtime.onInstalled.addListener(js.context.onInstalledEvent);
-    });
-  }
+  final ChromeStreamController _onSuspend =
+      new ChromeStreamController.zeroArgs(
+          () => js.context.chrome.runtime.onSuspend,
+          () => null);
 
   /**
    * Sent to the event page just before it is unloaded.
@@ -272,38 +239,22 @@ class Runtime {
    * before it gets unloaded the onSuspendCanceled event will be
    * sent and the page won't be unloaded.
    */
-  void onSuspend(onSuspendCallback listener) {
-    js.scoped(() {
-      void event() {
-        if (listener!=null) {
-          listener();
-        }
-      };
+  Stream get onSuspend => _onSuspend.stream;
 
-      js.context.onSuspendEvent = new js.Callback.many(event);
-      js.context.retain(js.context.onSuspendEvent);
-      var chrome = js.context.chrome;
-      chrome.runtime.onSuspend.addListener(js.context.onSuspendEvent);
-    });
-  }
+  final ChromeStreamController _onSuspendCanceled =
+      new ChromeStreamController.zeroArgs(
+          () => js.context.chrome.runtime.onSuspendCanceled,
+          () => null);
 
   /**
    * Sent after onSuspend() to indicate that the app won't be unloaded after all.
    */
-  void onSuspendCanceled(onSuspendCanceledCallback listener) {
-    js.scoped(() {
-      void event() {
-        if (listener!=null) {
-          listener();
-        }
-      };
+  Stream get onSuspendCanceled => _onSuspendCanceled.stream;
 
-      js.context.onSuspendCanceledEvent = new js.Callback.many(event);
-      js.context.retain(js.context.onSuspendCanceledEvent);
-      var chrome = js.context.chrome;
-      chrome.runtime.onSuspendCanceled.addListener(js.context.onSuspendCanceledEvent);
-    });
-  }
+  final ChromeStreamController<String> _onUpdateAvailable =
+      new ChromeStreamController<String>.oneArg(
+          () => js.context.chrome.runtime.onUpdateAvailable,
+          (details) => details.version);
 
   /**
    * Fired when an update is available.
@@ -313,28 +264,15 @@ class Runtime {
    * the background page gets unloaded, if you want it to be installed
    * sooner you can explicitly call chrome.runtime.reload().
    *
-   * details Map passed to the [listener] will contain keys 'version'.
-   * 'version' is the version number of the available update.
+   * Message is the version number of the available update.
    */
-  void onUpdateAvailable(onUpdateAvailableCallback listener) {
-    js.scoped(() {
-      void event(details) {
-        if (listener!=null) {
-          listener({"details": details});
-        }
-      };
-
-      js.context.onUpdateAvailableEvent = new js.Callback.many(event);
-      js.context.retain(js.context.onUpdateAvailableEvent);
-      var chrome = js.context.chrome;
-      chrome.runtime.onUpdateAvailable.addListener(js.context.onUpdateAvailableEvent);
-    });
-  }
+  Stream<String> get onUpdateAvailable => _onUpdateAvailable.stream;
 
   /**
    * Fired when a message is sent from either an extension process or a content
    * script.
    */
+  // TODO(DrMarcII): Create a Stream-like API for this.
   void onMessage(onMessageCallback listener) {
     var jsCallback = new js.Callback.many((message, sender, sendResponse) {
       if (listener != null) {
@@ -364,4 +302,33 @@ class MessageSender {
   String get id => _sender['id'];
 
   String get url => _sender['url'];
+}
+
+class UpdateDetails {
+  final String status;
+  final int version;
+
+  const UpdateDetails._(this.status, this.version);
+
+  const UpdateDetails.available(version) : this._('update_available', version);
+
+  static const UpdateDetails NO_UPDATE =
+      const UpdateDetails._('no_update', null);
+
+  static const UpdateDetails THROTTLED =
+      const UpdateDetails._('throttled', null);
+
+  @override
+  bool operator ==(UpdateDetails other) =>
+      status == other.status && version == other.version;
+
+  @override
+  int get hashCode => status.hashCode + (version != null ? version : 0);
+}
+
+class InstalledEvent {
+  final String reason;
+  final String previousVersion;
+
+  InstalledEvent(this.reason, this.previousVersion);
 }
