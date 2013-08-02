@@ -614,123 +614,54 @@ class Tabs {
   }
 }
 
-// TODO(DrMarcII): copy all tab fields into Dart data structures so we can
-//                 get rid of the js.Proxy
 class Tab {
-  final js.Proxy _tab;
+  final int id;
+  final int index;
+  final int windowId;
+  final int openerTabId;
+  final bool highlighted;
+  final bool active;
+  final bool pinned;
+  final String url;
+  final String title;
+  final String favIconUrl;
+  final TabStatus status;
+  final bool incognito;
 
-  Tab(this._tab) {
-    js.retain(_tab);
-  }
+  const Tab._(
+      this.id,
+      this.index,
+      this.windowId,
+      this.openerTabId,
+      this.highlighted,
+      this.active,
+      this.pinned,
+      this.url,
+      this.title,
+      this.favIconUrl,
+      this.status,
+      this.incognito);
 
-  /**
-   * The ID of the tab. Tab IDs are unique within a browser session.
-   */
-  int get id {
-    return _tab.id as int;
-  }
 
-  /**
-   * The zero-based index of the tab within its window.
-   */
-  int get index {
-    return _tab.index as int;
-  }
-
-  /**
-   * The ID of the window the tab is contained within.
-   */
-  int get windowId {
-    return _tab.windowId as int;
-  }
-
-  /**
-   * The ID of the tab that opened this tab, if any. This will only be present
-   * if the opener tab still exists.
-   */
-  int get openerTabId {
-    return _tab['openerTabId'] as int;
-  }
-
-  /**
-   * Whether the tab is highlighted.
-   */
-  bool get highlighted {
-    return _tab.highlighted as bool;
-  }
-
-  /**
-   * Whether the tab is active in its window.
-   */
-  bool get active {
-    return _tab.active as bool;
-  }
-
-  /**
-   * Whether the tab is pinned.
-   */
-  bool get pinned {
-    return _tab.pinned as bool;
-  }
-
-  /**
-   * The URL the tab is displaying. This will only be present if the extension
-   * has the 'tabs' or 'webNavigation' permission.
-   */
-  String get url {
-    return _tab.url as String;
-  }
-
-  /**
-   * The title of the tab. This will only be present if the extension has the
-   * 'tabs' or 'webNavigation' permission. It may also be an empty string if
-   * the tab is loading.
-   */
-  String get title {
-    return _tab.title as String;
-  }
-
-  /**
-   * The URL of the tab's favicon. This will only be present if the extension
-   * has the 'tabs' or 'webNavigation' permission. It may also be an empty
-   * string if the tab is loading.
-   */
-  String get favIconUrl {
-    return _tab['favIconUrl'] as String;
-  }
-
-  /**
-   * Either loading or complete.
-   */
-  TabStatus get status {
-    var status = _tab.status;
-    if (status != null) {
-      return new TabStatus(status);
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * Whether the tab is in an incognito window.
-   */
-  bool get incognito {
-    return _tab.incognito as bool;
-  }
-
-  /**
-   * Release the {@link js.Proxy} to the underlying javascript tab object.
-   * Ideally this method should be called after last use for any Tab object.
-   */
-  void release() {
-    js.release(_tab);
-  }
+  Tab(js.Proxy tab) : this._(
+      tab.id,
+      tab.index,
+      tab.windowId,
+      tab['openerTabId'],
+      tab.highlighted,
+      tab.active,
+      tab.pinned,
+      tab['url'],
+      tab['title'],
+      tab['favIconUrl'],
+      tab['status'] != null ? new TabStatus(tab['status']) : null,
+      tab.incognito);
 }
 
 class TabStatus {
   final String _status;
 
-  const TabStatus._internal(this._status);
+  const TabStatus._(this._status);
 
   factory TabStatus(String status) {
     switch(status.toLowerCase()) {
@@ -747,14 +678,14 @@ class TabStatus {
     return _status;
   }
 
-  static const TabStatus LOADING = const TabStatus._internal('loading');
-  static const TabStatus COMPLETE = const TabStatus._internal('complete');
+  static const TabStatus LOADING = const TabStatus._('loading');
+  static const TabStatus COMPLETE = const TabStatus._('complete');
 }
 
 class ImageFormat {
   final String _format;
 
-  const ImageFormat._internal(this._format);
+  const ImageFormat._(this._format);
 
   factory ImageFormat(String format) {
     switch(format.toLowerCase()) {
@@ -771,14 +702,14 @@ class ImageFormat {
     return _format;
   }
 
-  static const ImageFormat JPEG = const ImageFormat._internal('jpeg');
-  static const ImageFormat PNG = const ImageFormat._internal('png');
+  static const ImageFormat JPEG = const ImageFormat._('jpeg');
+  static const ImageFormat PNG = const ImageFormat._('png');
 }
 
 class RunAt {
   final String _runAt;
 
-  const RunAt._internal(this._runAt);
+  const RunAt._(this._runAt);
 
   factory RunAt(String runAt) {
     switch(runAt.toLowerCase()) {
@@ -797,9 +728,9 @@ class RunAt {
     return _runAt;
   }
 
-  static const RunAt DOCUMENT_START = const RunAt._internal('document_start');
-  static const RunAt DOCUMENT_END = const RunAt._internal('document_end');
-  static const RunAt DOCUMENT_IDLE = const RunAt._internal('document_idle');
+  static const RunAt DOCUMENT_START = const RunAt._('document_start');
+  static const RunAt DOCUMENT_END = const RunAt._('document_end');
+  static const RunAt DOCUMENT_IDLE = const RunAt._('document_idle');
 }
 
 // TODO(DrMarcII): make event classes immutable.

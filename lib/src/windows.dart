@@ -251,132 +251,57 @@ class Windows {
   }
 }
 
-// TODO(DrMarcII): copy all data out of proxy into dart objects so we don't
-//                 have to worry about proxy lifetime.
 class Window {
-  final js.Proxy _window;
+  final int id;
+  final bool focused;
+  final int top;
+  final int left;
+  final int width;
+  final int height;
+  final List<Tab> tabs;
+  final bool incognito;
+  final WindowType type;
+  final WindowState state;
+  final bool alwaysOnTop;
 
-  Window(this._window) {
-    js.retain(_window);
-  }
+  const Window._(
+      this.id,
+      this.focused,
+      this.top,
+      this.left,
+      this.width,
+      this.height,
+      this.tabs,
+      this.incognito,
+      this.type,
+      this.state,
+      this.alwaysOnTop);
 
-  /**
-   * The ID of the window. Window IDs are unique within a browser session.
-   * Under some circumstances a Window may not be assigned an ID, for example
-   * when querying closed windows from the sessionRestore API.
-   */
-  int get id {
-    return _window.id as int;
-  }
-
-  /**
-   * Whether the window is currently the focused window.
-   */
-  bool get focused {
-    return _window.focused as bool;
-  }
-
-  /**
-   * The offset of the window from the top edge of the screen in pixels. Under
-   * some circumstances a Window may not be assigned top property, for example
-   * when querying closed windows from the sessionRestore API.
-   */
-  int get top {
-    return _window.top as int;
-  }
-
-  /**
-   * The offset of the window from the left edge of the screen in pixels. Under
-   * some circumstances a Window may not be assigned left property, for example
-   * when querying closed windows from the sessionRestore API.
-   */
-  int get left {
-    return _window.left as int;
-  }
-
-  /**
-   * The width of the window, including the frame, in pixels. Under some
-   * circumstances a Window may not be assigned width property, for example
-   * when querying closed windows from the sessionRestore API.
-   */
-  int get width {
-    return _window.width as int;
-  }
-
-  /**
-   * The height of the window, including the frame, in pixels. Under some
-   * circumstances a Window may not be assigned height property, for example
-   * when querying closed windows from the sessionRestore API.
-   */
-  int get height {
-    return _window.height as int;
-  }
+  Window(js.Proxy window) : this._(
+      window['id'],
+      window.focused,
+      window['top'],
+      window['left'],
+      window['width'],
+      window['height'],
+      _createTabs(window['tabs']),
+      window.incognito,
+      window['type'] != null ? new WindowType(window.type) : null,
+      window['state'] != null ? new WindowState(window.state) : null,
+      window.alwaysOnTop);
 
 
-  /**
-   * The current tabs in the window.
-   */
-  List<Tab> get tabs {
-    dynamic jsTabs = _window['tabs'];
+  static List<Tab> _createTabs(js.Proxy jsTabs) {
     if (jsTabs == null) {
       return null;
-    } else {
-      List<Tab> tabs = [];
-      for (var i = 0; i < jsTabs.length; i++) {
-        tabs.add(new Tab(jsTabs[i]));
-      }
-      return tabs;
     }
-  }
+    var tabs = [];
 
-  /**
-   * Whether the window is incognito.
-   */
-  bool get incognito {
-    return _window.incognito as bool;
-  }
-
-  /**
-   * The type of browser window this is. Under some circumstances a Window may
-   * not be assigned type property, for example when querying closed windows
-   * from the sessionRestore API.
-   */
-  WindowType get type {
-    String type = _window.type;
-    if (type != null) {
-      return new WindowType(type);
-    } else {
-      return null;
+    for (int i = 0; i < jsTabs.length; i++) {
+      tabs.add(new Tab(jsTabs[i]));
     }
-  }
 
-  /**
-   * The state of this browser window. Under some circumstances a Window may
-   * not be assigned state property, for example when querying closed windows
-   * from the sessionRestore API.
-   */
-  WindowState get state {
-    String state = _window.state;
-    if (state != null) {
-      return new WindowState(state);
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * Whether the window is set to be always on top.
-   */
-  bool get alwaysOnTop {
-    return _window.alwaysOnTop as bool;
-  }
-
-  /**
-   * Release the {@link js.Proxy} to the underlying javascript window object.
-   * Ideally this method should be called after last use for any Window object.
-   */
-  void release() {
-    js.release(_window);
+    return tabs;
   }
 }
 

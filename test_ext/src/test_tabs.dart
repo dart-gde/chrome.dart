@@ -13,7 +13,6 @@ class TestTabs {
 
       tearDown(() {
         Future closeFuture = windows.remove(window.id);
-        window.release();
         window = null;
         return closeFuture;
       });
@@ -37,14 +36,12 @@ class TestTabs {
       test('get', () {
         tabs.get(window.tabs.first.id).then(expectAsync1((Tab tab) {
           expect(tab.id, window.tabs.first.id);
-          tab.release();
         }));
       });
 
       test('getCurrent', () {
         tabs.getCurrent().then(expectAsync1((Tab tab) {
           expect(tab.url, endsWith('harness_extension.html'));
-          tab.release();
         }));
       });
 
@@ -57,7 +54,6 @@ class TestTabs {
               expect(tab.active, isTrue);
               expect(tab.pinned, isFalse);
               expect(tab.openerTabId, isNull);
-              tab.release();
             }));
       });
 
@@ -75,7 +71,6 @@ class TestTabs {
               expect(tab.active, isFalse);
               expect(tab.pinned, isTrue);
               expect(tab.openerTabId, window.tabs.first.id);
-              tab.release();
             }));
       });
 
@@ -86,7 +81,6 @@ class TestTabs {
           expect(tab.index, 1);
           expect(tab.pinned, original.pinned);
           expect(tab.windowId, original.windowId);
-          tab.release();
         }));
       });
 
@@ -94,7 +88,6 @@ class TestTabs {
         tabs.query(windowId: window.id).then(expectAsync1((List<Tab> foundTabs) {
           expect(foundTabs, hasLength(1));
           expect(foundTabs.first.id, window.tabs.first.id);
-          foundTabs.first.release;
         }));
       });
 
@@ -107,8 +100,6 @@ class TestTabs {
               expect(foundTabs, hasLength(2));
               expect(foundTabs[0].id, anyOf(window.tabs.first.id, newTab.id));
               expect(foundTabs[1].id, anyOf(window.tabs.first.id, newTab.id));
-              foundTabs.map((tab) => tab.release());
-              newTab.release();
             }));
       });
 
@@ -117,7 +108,6 @@ class TestTabs {
           .then(expectAsync1((Window newWindow) {
             expect(newWindow.id, window.id);
             expect(newWindow.tabs.first.highlighted, isTrue);
-            newWindow.release();
           }));
       });
 
@@ -132,7 +122,6 @@ class TestTabs {
               expect(tab.active, isTrue);
               expect(tab.highlighted, isTrue);
               expect(tab.pinned, isTrue);
-              tab.release();
             }));
       });
 
@@ -145,8 +134,6 @@ class TestTabs {
               expect(movedTabs, hasLength(1));
               expect(movedTabs.first.id, newTab.id);
               expect(movedTabs.first.index, 1);
-              movedTabs.first.release();
-              newTab.release();
             }));
       });
 
@@ -164,10 +151,6 @@ class TestTabs {
               expect(movedTabs[1].id, anyOf(newTab1.id, newTab2.id));
               expect(movedTabs[0].index, anyOf(1, 2));
               expect(movedTabs[1].index, anyOf(1, 2));
-              movedTabs[0].release();
-              movedTabs[1].release();
-              newTab1.release();
-              newTab2.release();
             }));
       });
 
@@ -210,7 +193,6 @@ class TestTabs {
         var subscription;
         subscription = tabs.onCreated.listen(expectAsync1((Tab tab) {
           expect(tab.windowId, window.id);
-          tab.release();
           subscription.cancel();
         }));
         tabs.create(windowId: window.id).then(expectAsync1((_) { }));

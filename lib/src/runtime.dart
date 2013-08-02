@@ -2,7 +2,6 @@
 library chrome.runtime;
 
 import 'dart:async';
-import 'dart:json' as JSON;
 
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
@@ -10,28 +9,6 @@ import 'package:meta/meta.dart';
 
 import 'common.dart';
 import 'tabs.dart';
-
-typedef void onStartupCallback();
-typedef void onInstalledCallback(Map details); // TODO(adam): replace map with structured object.
-typedef void onSuspendCallback();
-typedef void onSuspendCanceledCallback();
-typedef void onUpdateAvailableCallback(Map details); // TODO(adam): replace map with structured object.
-
-/**
- * @param message The message sent by the calling script.
- * @param sendResponse Function to call (at most once) when you have a
- *                     response. The argument should be any JSON-ifiable
- *                     object. If you have more than one onMessage listener in
- *                     the same document, then only one may send a response.
- *                     This function becomes invalid when the event listener
- *                     returns, unless you return true from the event listener
- *                     to indicate you wish to send a response asynchronously
- *                     (this will keep the message channel open to the other
- *                     end until sendResponse is called).
- */
-typedef bool onMessageCallback(
-    message, MessageSender sender, sendResponseCallback sendResponse);
-typedef void sendResponseCallback();
 
 final Runtime runtime = new Runtime._();
 
@@ -44,6 +21,8 @@ class RuntimeError {
    */
   final String message;
   RuntimeError(this.message);
+
+  String toString() => 'RuntimeError: $message';
 }
 
 class Runtime {
@@ -108,7 +87,7 @@ class Runtime {
    */
   Map getManifest() {
     return js.scoped(() {
-      return JSON.parse(js.context.JSON.stringify(_runtime.getManifest()));
+      return convertJsonResponse(_runtime.getManifest());
     });
   }
 
@@ -177,8 +156,7 @@ class Runtime {
    * @returns The JSON response object sent by the handler of the message.
    */
   Future<dynamic> sendMessage(dynamic message) {
-    var completer = new ChromeCompleter.oneArg((response) =>
-        JSON.parse(js.context.JSON.stringify(response)));
+    var completer = new ChromeCompleter.oneArg(convertJsonResponse);
     js.scoped(() {
       var jsMessage;
       if (message is Map) {
@@ -268,40 +246,33 @@ class Runtime {
    */
   Stream<String> get onUpdateAvailable => _onUpdateAvailable.stream;
 
+  ChromeStreamController<MessageEvent> _onMessage =
+      new ChromeStreamController<MessageEvent>.threeArgs(
+          () => js.context.chrome.runtime.onMessage,
+          (message, sender, sendResponse) => new MessageEvent(
+                convertJsonResponse(message),
+                new MessageSender(sender),
+                sendResponse),
+          true);
+
   /**
    * Fired when a message is sent from either an extension process or a content
    * script.
    */
-  // TODO(DrMarcII): Create a Stream-like API for this.
-  void onMessage(onMessageCallback listener) {
-    var jsCallback = new js.Callback.many((message, sender, sendResponse) {
-      if (listener != null) {
-        return listener(message, new MessageSender(sender), sendResponse);
-      }
-      return false;
-    });
-    js.scoped(() {
-      js.context.chrome.runtime.onMessage.addListener(jsCallback);
-    });
-  }
+  Stream<MessageEvent> get onMessage => _onMessage.stream;
 }
 
 class MessageSender {
-  final js.Proxy _sender;
+  final String id;
+  final String url;
+  final Tab tab;
 
-  MessageSender(this._sender);
+  MessageSender._(this.id, this.url, this.tab);
 
-  Tab get tab {
-    if (_sender['tab'] != null) {
-      return new Tab(_sender['tab']);
-    } else {
-      return null;
-    }
-  }
-
-  String get id => _sender['id'];
-
-  String get url => _sender['url'];
+  MessageSender(js.Proxy sender) : this._(
+      sender['id'],
+      sender['url'],
+      sender['tab'] != null ? new Tab(sender['tab']) : null);
 }
 
 class UpdateDetails {
@@ -331,4 +302,40 @@ class InstalledEvent {
   final String previousVersion;
 
   InstalledEvent(this.reason, this.previousVersion);
+}
+
+class MessageEvent {
+  final dynamic message;
+  final MessageSender sender;
+  js.Proxy _sendResponse;
+  bool _responseSent = false;
+
+  MessageEvent(this.message, this.sender, this._sendResponse) {
+    js.retain(_sendResponse);
+  }
+
+  /**
+   * Function to call (at most once) when you have a response. The argument
+   * should be any JSON-ifiable object. If you have more than one onMessage
+   * listener in the same document, then only one may send a response.
+   */
+  void sendResponse([dynamic value]) {
+    if (!_responseSent) {
+      _responseSent = true;
+      if (value is Map) {
+        value = js.map(value);
+      } else if (value is List) {
+        value = js.array(value);
+      }
+      js.scoped(() {
+        _sendResponse.call([value]);
+      });
+      js.release(_sendResponse);
+      _sendResponse = null;
+    } else {
+      throw 'Response already sent.';
+    }
+  }
+
+  bool get responseSent => _responseSent;
 }
