@@ -5,6 +5,11 @@ import 'dart:io';
 import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
 
+final List<String> allTasks = new List<String>();
+final List<String> allUpdateTasks = new List<String>();
+final List<String> allAnalyzeTasks = new List<String>();
+final List<String> allBuildTasks = new List<String>();
+
 void copy(String fileName, String sourceDirectory, String destinationDirectory) {
   var srcFile = new File('$sourceDirectory/$fileName').readAsStringSync();
   new File('$destinationDirectory/$fileName').writeAsStringSync(srcFile);
@@ -20,9 +25,18 @@ Task createUpdateJSTask(String directory) =>
 
 void buildTasks(String name, String directory, String filename) {
   final file = ['${directory}/${filename}'];
-  addTask('update_js_$name', createUpdateJSTask(directory));
-  addTask('analyze_$name', createAnalyzerTask(file));
-  addTask('build_$name', createDartCompilerTask(file, allowUnsafeEval: false));
+  final updateTaskName = 'update_js_$name';
+  final analyzeTaskName = 'analyze_$name';
+  final buildTaskName = 'build_$name';
+
+  addTask(updateTaskName, createUpdateJSTask(directory));
+  addTask(analyzeTaskName, createAnalyzerTask(file));
+  addTask(buildTaskName, createDartCompilerTask(file, allowUnsafeEval: false));
+
+  allTasks.addAll([updateTaskName, analyzeTaskName, buildTaskName]);
+  allUpdateTasks.add(updateTaskName);
+  allAnalyzeTasks.add(analyzeTaskName);
+  allBuildTasks.add(buildTaskName);
 }
 
 void main() {
@@ -46,6 +60,18 @@ void main() {
   buildTasks('test_harness', 'test', 'harness_browser.dart');
 
   buildTasks('test_harness_extension', 'test_ext', 'harness_extension.dart');
+
+  addChainedTask("build_and_analyze_all", allTasks,
+      description: "Build and analyze all samples and tests");
+
+  addChainedTask("update_js_all", allUpdateTasks,
+      description: "Update all javascript dependency files");
+
+  addChainedTask("analyze_all", allAnalyzeTasks,
+      description: "Analyze all samples and tests");
+
+  addChainedTask("build_all", allBuildTasks,
+      description: "Build all samples and tests");
 
   final libs = ['lib/chrome.dart', 'lib/chrome_ext.dart'];
   addTask('analyze_libs', createAnalyzerTask(libs));
