@@ -8,6 +8,7 @@ export 'src/file_system.dart';
 export 'src/i18n.dart';
 export 'src/identity.dart';
 export 'src/permissions.dart';
+export 'src/media_galleries.dart';
 export 'src/power.dart';
 export 'src/push_messaging.dart';
 export 'src/runtime.dart';
