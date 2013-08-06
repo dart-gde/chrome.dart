@@ -39,8 +39,8 @@ class TestRuntime {
         expect(manifest["minimum_chrome_version"], equals("23"));
         expect(manifest.containsKey("app"), isTrue);
         expect(manifest["app"].containsKey("background"), isTrue);
-        expect(manifest["app"]["background"].containsKey("scripts"), isTrue);
-        expect(manifest["app"]["background"]["scripts"], equals(["main.js"]));
+        expect(manifest["app"]["background"].containsKey("page"), isTrue);
+        expect(manifest["app"]["background"]["page"], equals("background.html"));
       });
 
       test('getURL(String path)', () {
@@ -84,6 +84,13 @@ class TestRuntime {
 
       test('onUpdateAvailable', () {
         runtime.onUpdateAvailable.listen((String version) { }).cancel();
+      });
+
+      test('sendMessage/onMessage', () {
+        // onMessage handler is added in background page and will respond to
+        // any message with 'respond: $message'
+        expect(runtime.sendMessage('test message'),
+            completion('respond: test message'));
       });
     });
   }
