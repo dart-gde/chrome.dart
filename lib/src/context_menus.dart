@@ -7,11 +7,11 @@ import 'package:js/js.dart' as js;
 import 'common.dart';
 import 'tabs.dart';
 
-const ContextMenus contextMenus = const ContextMenus._();
+final ContextMenus contextMenus = new ContextMenus._();
 
 class ContextMenus {
 
-  const ContextMenus._();
+  ContextMenus._();
 
   js.Proxy get _contextMenus => js.context.chrome.contextMenus;
 
