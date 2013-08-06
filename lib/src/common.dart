@@ -35,6 +35,25 @@ dynamic convertJsonResponse(dynamic response) {
   });
 }
 
+dynamic jsifyMessage(dynamic message) {
+  if (message is Map) {
+    return js.map(message);
+  } else if (message is Iterable) {
+    return js.array(message);
+  } else {
+    return message;
+  }
+}
+
+dynamic listify(js.Proxy jsArray) {
+  var list = [];
+  for (int i = 0; i < jsArray.length; i++) {
+    list.add(jsArray[i]);
+  }
+  // TODO(DrMarcII) consider having this return an unmodifiable list
+  return list;
+}
+
 /**
  * An object for handling completion callbacks that are common in the
  * chrome.* APIs.

@@ -158,15 +158,7 @@ class Runtime {
   Future<dynamic> sendMessage(dynamic message) {
     var completer = new ChromeCompleter.oneArg(convertJsonResponse);
     js.scoped(() {
-      var jsMessage;
-      if (message is Map) {
-        jsMessage = js.map(message);
-      } else if (message is Iterable) {
-        jsMessage = js.array(message);
-      } else {
-        jsMessage = message;
-      }
-      _runtime.sendMessage(jsMessage, completer.callback);
+      _runtime.sendMessage(jsifyMessage(message), completer.callback);
     });
     return completer.future;
   }
@@ -270,9 +262,9 @@ class MessageSender {
   MessageSender._(this.id, this.url, this.tab);
 
   MessageSender(js.Proxy sender) : this._(
-      sender['id'],
+      sender.id,
       sender['url'],
-      sender['tab'] != null ? new Tab(sender['tab']) : null);
+      sender['tab'] != null ? new Tab(sender.tab) : null);
 }
 
 class UpdateDetails {
@@ -308,7 +300,6 @@ class MessageEvent {
   final dynamic message;
   final MessageSender sender;
   js.Proxy _sendResponse;
-  bool _responseSent = false;
 
   MessageEvent(this.message, this.sender, this._sendResponse) {
     js.retain(_sendResponse);
@@ -319,16 +310,10 @@ class MessageEvent {
    * should be any JSON-ifiable object. If you have more than one onMessage
    * listener in the same document, then only one may send a response.
    */
-  void sendResponse([dynamic value]) {
-    if (!_responseSent) {
-      _responseSent = true;
-      if (value is Map) {
-        value = js.map(value);
-      } else if (value is List) {
-        value = js.array(value);
-      }
+  void sendResponse([dynamic message]) {
+    if (!responseSent) {
       js.scoped(() {
-        _sendResponse.call([value]);
+        _sendResponse.call(jsifyMessage(message));
       });
       js.release(_sendResponse);
       _sendResponse = null;
@@ -337,5 +322,5 @@ class MessageEvent {
     }
   }
 
-  bool get responseSent => _responseSent;
+  bool get responseSent => _sendResponse == null;
 }

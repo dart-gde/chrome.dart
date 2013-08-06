@@ -51,15 +51,7 @@ class Tabs {
   Future sendMessage(int tabId, dynamic message) {
     var completer = new ChromeCompleter.oneArg();
     js.scoped(() {
-      var jsMessage;
-      if (message is Map) {
-        jsMessage = js.map(message);
-      } else if (message is Iterable) {
-        jsMessage = js.array(message);
-      } else {
-        jsMessage = message;
-      }
-      _tabs.sendMessage(tabId, jsMessage, completer.callback);
+      _tabs.sendMessage(tabId, jsifyMessage(message), completer.callback);
     });
     return completer.future;
   }
@@ -733,85 +725,75 @@ class RunAt {
   static const RunAt DOCUMENT_IDLE = const RunAt._('document_idle');
 }
 
-// TODO(DrMarcII): make event classes immutable.
-
 class TabUpdatedEvent {
   final Tab tab;
-  TabStatus status;
-  String url;
-  bool pinned;
-  String favIconUrl;
+  final TabStatus status;
+  final String url;
+  final bool pinned;
+  final String favIconUrl;
 
-  TabUpdatedEvent(this.tab, js.Proxy changeInfo) {
-    var status = changeInfo['status'];
-    if (status == null) {
-      this.status = null;
-    } else {
-      this.status = new TabStatus(status);
-    }
-    this.url = changeInfo['url'];
-    this.pinned = changeInfo['pinned'];
-    this.favIconUrl = changeInfo['favIconUrl'];
-  }
+  const TabUpdatedEvent._(
+      this.tab, this.status, this.url, this.pinned, this.favIconUrl);
+
+  TabUpdatedEvent(tab, js.Proxy changeInfo) : this._(
+      tab,
+      changeInfo['status'] != null ? new TabStatus(changeInfo.status) : null,
+      changeInfo['url'],
+      changeInfo['pinned'],
+      changeInfo['favIconUrl']);
 }
 
 class TabMovedEvent {
   final String type;
   final int tabId;
-  int windowId;
-  int fromIndex;
-  int toIndex;
+  final int windowId;
+  final int fromIndex;
+  final int toIndex;
 
-  TabMovedEvent.moved(this.tabId, js.Proxy moveInfo) : this.type = 'moved' {
-    this.windowId = moveInfo['windowId'];
-    this.fromIndex = moveInfo['fromIndex'];
-    this.toIndex = moveInfo['toIndex'];
-  }
+  const TabMovedEvent._(
+      this.type, this.tabId, this.windowId, this.fromIndex, this.toIndex);
 
-  TabMovedEvent.detached(this.tabId, js.Proxy detachInfo) :
-      this.type = 'detached' {
-    this.windowId = detachInfo.oldWindowId;
-    this.fromIndex = detachInfo.oldPosition;
-  }
+  TabMovedEvent.moved(tabId, js.Proxy moveInfo) : this._(
+      'moved', tabId, moveInfo.windowId, moveInfo.fromIndex, moveInfo.toIndex);
 
-  TabMovedEvent.attached(this.tabId, js.Proxy attachInfo) :
-      this.type = 'attached' {
-    this.windowId = attachInfo.newWindowId;
-    this.toIndex = attachInfo.newPosition;
-  }
+
+  TabMovedEvent.detached(tabId, js.Proxy detachInfo) : this._(
+      'detached', tabId, detachInfo.oldWindowId, detachInfo.oldPosition, null);
+
+
+  TabMovedEvent.attached(tabId, js.Proxy attachInfo) : this._(
+      'attached', tabId, attachInfo.newWindowId, null, attachInfo.newPosition);
 }
 
 class TabActivatedEvent {
-  int tabId;
-  int windowId;
+  final int tabId;
+  final int windowId;
 
-  TabActivatedEvent(js.Proxy activeInfo) {
-    this.tabId = activeInfo.tabId;
-    this.windowId = activeInfo.windowId;
-  }
+  const TabActivatedEvent._(this.tabId, this.windowId);
+
+  TabActivatedEvent(js.Proxy activeInfo)
+      : this._(activeInfo.tabId, activeInfo.windowId);
 }
 
 class TabHighlightedEvent {
-  List<int> tabIds = [];
-  int windowId;
+  final List<int> tabIds;
+  final int windowId;
 
-  TabHighlightedEvent(js.Proxy highlightInfo) {
-    this.windowId = highlightInfo.windowId;
-    for(int i = 0; i < highlightInfo.tabIds.length; i++) {
-      tabIds.add(highlightInfo.tabIds[i]);
-    }
-  }
+  const TabHighlightedEvent._(this.tabIds, this.windowId);
+
+  TabHighlightedEvent(js.Proxy highlightInfo)
+      : this._(listify(highlightInfo.tabIds), highlightInfo.windowId);
 }
 
 class TabRemovedEvent {
   final int tabId;
-  int windowId;
-  bool isWindowClosing;
+  final int windowId;
+  final bool isWindowClosing;
 
-  TabRemovedEvent(this.tabId, js.Proxy removeInfo) {
-    this.windowId = removeInfo.windowId;
-    this.isWindowClosing = removeInfo.isWindowClosing;
-  }
+  const TabRemovedEvent._(this.tabId, this.windowId, this.isWindowClosing);
+
+  TabRemovedEvent(tabId, js.Proxy removeInfo)
+      : this._(tabId, removeInfo.windowId, removeInfo.isWindowClosing);
 }
 
 class TabReplacedEvent {
