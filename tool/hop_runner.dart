@@ -76,7 +76,7 @@ void main() {
   addChainedTask("build_all", allBuildTasks,
       description: "Build all samples and tests");
 
-  final libs = ['lib/chrome.dart', 'lib/chrome_ext.dart'];
+  final libs = ['lib/app.dart', 'lib/ext.dart'];
   addTask('analyze_libs', createAnalyzerTask(libs));
 
   runHop();
