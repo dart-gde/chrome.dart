@@ -1,6 +1,6 @@
 /// A library to interop with the
 /// [chrome.* extension APIs](https://developer.chrome.com/extensions/api_index.html).
-library chrome;
+library chrome_ext;
 
 export 'src/browser_action.dart';
 export 'src/context_menus.dart';
