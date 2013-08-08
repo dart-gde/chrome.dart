@@ -5,7 +5,6 @@ import 'dart:html';
 import 'dart:json' as JSON;
 
 import 'package:js/js.dart' as js;
-import 'package:logging/logging.dart';
 
 import 'runtime.dart';
 

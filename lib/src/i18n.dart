@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:js/js.dart' as js;
 import 'package:js/js_wrapping.dart' as js_wrapping;
-import 'package:logging/logging.dart';
 
 import 'common.dart';
 

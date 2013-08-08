@@ -12,7 +12,6 @@ import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
 
 import 'common.dart';
-import 'runtime.dart';
 
 class SocketType {
   String type;

@@ -2,12 +2,10 @@ library harness_extension;
 
 import 'dart:async';
 import 'dart:html' as html;
-import 'dart:typed_data' as typed_data;
 
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
 import 'package:logging/logging.dart';
-import 'package:js/js.dart' as js;
 
 import 'package:chrome/ext.dart';
 

@@ -3,7 +3,6 @@ library chrome.storage;
 import 'dart:async';
 
 import 'package:js/js.dart' as js;
-import 'package:logging/logging.dart';
 
 import 'common.dart';
 
