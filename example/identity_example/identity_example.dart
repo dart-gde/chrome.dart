@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:html';
 import 'dart:json';
-import 'package:logging/logging.dart';
-import 'package:chrome/chrome.dart';
+import 'package:chrome/app.dart';
 
 final plusUrl = "https://www.googleapis.com/plus/v1/people/me";
 
