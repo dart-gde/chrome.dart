@@ -19,7 +19,7 @@ class ChromeStorage {
 //         function(object changes, string areaName) {...});
 
 class StorageArea {
-  String _type;
+  final String _type;
 
   StorageArea(this._type);
 
@@ -39,9 +39,7 @@ class StorageArea {
   /**
    * Gets one or more items from storage.
    */
-  Future<Map<String, String>> getAll() {
-    return get(null);
-  }
+  Future<Map<String, String>> getAll() => get(null);
 
   /**
    * Gets one or more items from storage.
