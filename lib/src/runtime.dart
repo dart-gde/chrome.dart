@@ -4,7 +4,6 @@ library chrome.runtime;
 import 'dart:async';
 
 import 'package:js/js.dart' as js;
-import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
 import 'common.dart';

@@ -1,5 +1,5 @@
 name: chrome
-version: 0.2.0
+version: 0.2.1-dev
 authors:
 - Adam Singer <financeCoding@gmail.com>
 - Kevin Moore <kevin@thinkpixellab.com>
@@ -9,9 +9,10 @@ homepage: https://github.com/dart-gde/chrome.dart
 environment:
   sdk: '>=0.6.15'
 dependencies:
-  js: any
-  logging: any
+  bot_io: '>=0.23.1'
+  js: '>=0.0.24'
+  logging: '>=0.6.15'
 dev_dependencies:
-  browser: any
-  hop: any
-  unittest: any
+  browser: '>=0.6.15'
+  hop: '>=0.24.1+1'
+  unittest: '>=0.6.15'

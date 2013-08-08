@@ -2,7 +2,6 @@ library chrome.usb;
 
 import 'dart:async';
 import 'dart:html' as html;
-import 'dart:json' as JSON;
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
 
@@ -39,7 +38,7 @@ class Device {
   int vendorId;
   int handle;
   int productId;
-  
+
   Device(this.vendorId, this.handle, this.productId);
 
   Map toMap() => { 'vendorId': this.vendorId, 'productId': this.productId, 'handle': this.handle };
@@ -135,8 +134,8 @@ class GenericTransferInfo {
 
   Map toMap() {
     Map ret = {
-     "direction": this.direction, 
-     "endpoint": this.endpoint 
+     "direction": this.direction,
+     "endpoint": this.endpoint
     };
 
     if(this.data != null) {
@@ -244,7 +243,7 @@ class Usb {
       }
 
       var chrome = js.context.chrome;
-      chrome.usb.findDevices(js.map(options.toMap()), 
+      chrome.usb.findDevices(js.map(options.toMap()),
         new js.Callback.once(findDevicesCallback));
     }
 
