@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
+import 'package:chrome/src/chrome.dart' as chrome;
 
 void main() {
   _buildExample('serial_example');
@@ -58,12 +59,18 @@ void _buildTasks(String name, String directory, List<String> filenames) {
   addTask(updateTaskName, _createUpdateJSTask(directory));
   addTask(analyzeTaskName, createAnalyzerTask(file));
   addTask(buildTaskName, createDartCompilerTask(file, allowUnsafeEval: false));
+  addTask('run_$name', _createLaunchApp(directory));
 
   allTasks.addAll([updateTaskName, analyzeTaskName, buildTaskName]);
   allUpdateTasks.add(updateTaskName);
   allAnalyzeTasks.add(analyzeTaskName);
   allBuildTasks.add(buildTaskName);
 }
+
+Task _createLaunchApp(String manifestDir) =>
+  new Task.async((ctx) => chrome
+    .launchChrome(manifestDir)
+    .then((int exitCode) => exitCode == 0));
 
 Task _createUpdateJSTask(String directory) =>
     new Task.async((TaskContext context) {

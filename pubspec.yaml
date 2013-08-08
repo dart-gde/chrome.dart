@@ -9,6 +9,7 @@ homepage: https://github.com/dart-gde/chrome.dart
 environment:
   sdk: '>=0.6.15'
 dependencies:
+  bot_io: '>=0.23.1'
   js: '>=0.0.24'
   logging: '>=0.6.15'
 dev_dependencies:
