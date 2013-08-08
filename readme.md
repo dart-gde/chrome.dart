@@ -9,8 +9,16 @@ A team effort to create interop with the [Chrome.* APIs][] used for
 
 ### Using
 
+## Chrome Packaged Apps
+
+```dart
+import 'package:chrome/app.dart';
 ```
-import 'package:chrome/chrome.dart';
+
+## Chrome Extensions
+
+```dart
+import 'package:chrome/ext.dart';
 ```
 
 The best results will happen when compiling to javascript with the following

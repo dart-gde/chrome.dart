@@ -1,6 +1,6 @@
 import 'dart:html';
 import 'package:logging/logging.dart';
-import 'package:chrome/chrome.dart';
+import 'package:chrome/app.dart';
 
 void main() {
   Logger.root.level = Level.ALL;

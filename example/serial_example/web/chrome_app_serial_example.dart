@@ -1,6 +1,6 @@
 import 'dart:html';
 import 'package:logging/logging.dart';
-import 'package:chrome/chrome.dart';
+import 'package:chrome/app.dart';
 // JS: for (var i =0; i < 100; i++) chrome.serial.close(i, function (f) { console.log(f); });
 void main() {
   Logger.root.level = Level.ALL;
