@@ -7,7 +7,7 @@ library clock;
 import 'dart:html';
 import 'dart:math';
 
-import 'package:chrome/chrome.dart';
+import 'package:chrome/app.dart';
 
 part 'balls.dart';
 part 'numbers.dart';
