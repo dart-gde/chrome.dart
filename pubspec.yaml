@@ -6,10 +6,10 @@ authors:
 - Devon Carew <devoncarew@gmail.com>
 description: A library for accessing the chrome.* apis in a Chrome packaged app or extension.
 homepage: https://github.com/dart-gde/chrome.dart
-dependencies:
-  browser: any
+dependencies:  
   js: any
   logging: any
 dev_dependencies:
+  browser: any
   hop: any
   unittest: any
