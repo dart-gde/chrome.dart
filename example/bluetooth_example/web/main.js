@@ -5,6 +5,6 @@
  * @see http://developer.chrome.com/trunk/apps/app.window.html
  */
 chrome.app.runtime.onLaunched.addListener(function() {
-  chrome.app.window.create('chrome_app_usb_example.html',
-    {id: 'usbexample', width: 800, height: 800});
+  chrome.app.window.create('bluetooth_example.html',
+    {id: 'bluetoothgetadapterstate', width: 800, height: 800});
 });

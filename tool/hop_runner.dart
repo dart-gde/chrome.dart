@@ -6,25 +6,13 @@ import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
 
 void main() {
-  _buildTasks('serial_example', 'example/serial_example/web',
-      ['chrome_app_serial_example.dart']);
-
-  _buildTasks('serial_clock', 'example/serial_clock/web', ['clock.dart']);
-
-  _buildTasks('tcp_echo_server', 'example/tcp_echo_server/web',
-      ['tcp_echo_server_example.dart']);
-
-  _buildTasks('udp_echo_client', 'example/udp_echo_client/web',
-      ['udp_echo_client_example.dart']);
-
-  _buildTasks('usb_example', 'example/usb_example',
-      ['chrome_app_usb_example.dart']);
-
-  _buildTasks('bluetooth_example', 'example/bluetooth_getdevices',
-      ['bluetooth_getdevices.dart']);
-
-  _buildTasks('identity_example', 'example/identity_example',
-  ['identity_example.dart']);
+  _buildExample('serial_example');
+  _buildExample('serial_clock');
+  _buildExample('tcp_echo_server');
+  _buildExample('udp_echo_client');
+  _buildExample('usb_example');
+  _buildExample('bluetooth_example');
+  _buildExample('identity_example');
 
   _buildTasks('test_harness', 'test/app',
       ['harness_browser.dart', 'background.dart']);
@@ -53,6 +41,10 @@ final List<String> allTasks = new List<String>();
 final List<String> allUpdateTasks = new List<String>();
 final List<String> allAnalyzeTasks = new List<String>();
 final List<String> allBuildTasks = new List<String>();
+
+void _buildExample(String name) {
+  _buildTasks(name, 'example/$name/web', ['$name.dart']);
+}
 
 void _buildTasks(String name, String directory, List<String> filenames) {
   final file = filenames
