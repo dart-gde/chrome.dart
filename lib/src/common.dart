@@ -65,7 +65,7 @@ class ChromeCompleter<T> {
     this._callback = new js.Callback.once(() {
       var le = runtime.lastError;
       if (le != null) {
-      _completer.completeError(le);
+        _completer.completeError(le);
       } else {
         _completer.complete();
       }
@@ -76,7 +76,7 @@ class ChromeCompleter<T> {
     this._callback = new js.Callback.once(([arg1]) {
       var le = runtime.lastError;
       if (le != null) {
-      _completer.completeError(le);
+        _completer.completeError(le);
       } else {
         if (transformer != null) {
           arg1 = transformer(arg1);
@@ -90,20 +90,16 @@ class ChromeCompleter<T> {
     this._callback = new js.Callback.once(([arg1, arg2]) {
       var le = runtime.lastError;
       if (le != null) {
-      _completer.completeError(le);
+        _completer.completeError(le);
       } else {
         _completer.complete(transformer(arg1, arg2));
       }
     });
   }
 
-  Future<T> get future {
-    return _completer.future;
-  }
+  Future<T> get future => _completer.future;
 
-  js.Callback get callback {
-    return _callback;
-  }
+  js.Callback get callback => _callback;
 }
 
 class ChromeStreamController<T> {
