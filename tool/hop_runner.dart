@@ -59,10 +59,10 @@ void main() {
   buildTasks('bluetooth_example', 'example/bluetooth_getdevices',
       ['bluetooth_getdevices.dart']);
 
-  buildTasks('test_harness', 'test',
+  buildTasks('test_harness', 'test/app',
       ['harness_browser.dart', 'background.dart']);
 
-  buildTasks('test_harness_extension', 'test_ext', ['harness_extension.dart']);
+  buildTasks('test_harness_extension', 'test/ext', ['harness_extension.dart']);
 
   addChainedTask("build_and_analyze_all", allTasks,
       description: "Build and analyze all samples and tests");

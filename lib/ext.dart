@@ -2,7 +2,6 @@
 /// [chrome.* extension APIs](https://developer.chrome.com/extensions/api_index.html).
 library chrome_ext;
 
-//export 'src/debugger.dart';
 export 'src/browser_action.dart';
 export 'src/context_menus.dart';
 export 'src/i18n.dart';

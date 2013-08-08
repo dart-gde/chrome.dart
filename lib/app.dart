@@ -1,7 +1,7 @@
 /// A library to interop with the 
 /// [chrome.* APIs](http://developer.chrome.com/trunk/apps/api_index.html) used
 /// for [Chrome Packaged Apps](http://developer.chrome.com/trunk/apps/about_apps.html).
-library chrome;
+library chrome_app;
 
 export 'src/app.dart';
 export 'src/file_system.dart';

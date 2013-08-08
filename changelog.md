@@ -2,6 +2,10 @@
 
 ## 0.2.0-dev
 
+- Support for Chrome extension APIs was added.  You should now import one of the
+following libraries, as appropriate:
+	- Packaged apps: `import 'package:chrome/app.dart';`
+	- Extensions: `import 'package:chrome/ext.dart';`	
 - Work on the `chrome.app.window` API including several breaking changes, please
 refer to the dartdoc for usage.
 

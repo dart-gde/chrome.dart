@@ -1,4 +1,4 @@
-library harness_extension;
+library harness_browser;
 
 import 'dart:async';
 import 'dart:html' as html;
@@ -9,12 +9,17 @@ import 'package:unittest/unittest.dart';
 import 'package:logging/logging.dart';
 import 'package:js/js.dart' as js;
 
-import 'package:chrome/chrome_ext.dart';
+import 'package:chrome/app.dart';
 
-part 'src/test_browser_action.dart';
-part 'src/test_context_menus.dart';
-part 'src/test_tabs.dart';
-part 'src/test_windows.dart';
+part 'src/test_app.dart';
+part 'src/test_file_system.dart';
+part 'src/test_i18n.dart';
+part 'src/test_power.dart';
+part 'src/test_push_messaging.dart';
+part 'src/test_runtime.dart';
+part 'src/test_serial.dart';
+part 'src/test_socket.dart';
+part 'src/test_storage.dart';
 
 main() {
   Logger.root.level = Level.ALL;
@@ -30,7 +35,7 @@ main() {
     ..write(r.sequenceNumber)
     ..write(": ")
     ..write(r.message.toString());
-    print(sb.toString());
+    logMessage(sb.toString());
   });
 
   groupSep = '.';
@@ -42,10 +47,13 @@ main() {
     }
   });
 
-  new TestBrowserAction().main();
-  new TestTabs().main();
-  new TestWindows().main();
-  new TestContextMenus().main();
-
-  Logger.root.info("leaving main");
+  new TestApp().main();
+  new TestFileSystem().main();
+  new TestI18N().main();
+  new TestPower().main();
+  new TestPushMessaging().main();
+  new TestRuntime().main();
+  new TestSerial().main();
+  new TestSocket().main();
+  new TestStorage().main();
 }

@@ -2,7 +2,7 @@ import 'dart:html';
 import 'dart:async';
 
 import 'package:logging/logging.dart';
-import 'package:chrome/chrome.dart';
+import 'package:chrome/app.dart';
 import 'package:chrome/src/usb.dart';
 import 'package:chrome/src/permissions.dart';
 import 'package:js/js.dart' as js;
