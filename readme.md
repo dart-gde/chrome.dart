@@ -9,13 +9,13 @@ A team effort to create interop with the [Chrome.* APIs][] used for
 
 ### Using
 
-## Chrome Packaged Apps
+#### Chrome Packaged Apps
 
 ```dart
 import 'package:chrome/app.dart';
 ```
 
-## Chrome Extensions
+#### Chrome Extensions
 
 ```dart
 import 'package:chrome/ext.dart';
