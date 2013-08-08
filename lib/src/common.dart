@@ -2,12 +2,12 @@ library chrome.common;
 
 import 'dart:async';
 import 'dart:html';
+import 'dart:json' as JSON;
 
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
 
 import 'runtime.dart';
-
 
 dynamic get chromeProxy => js.context.chrome;
 
@@ -27,6 +27,31 @@ String _platform() {
   String str = window.navigator.platform;
 
   return (str != null) ? str.toLowerCase() : '';
+}
+
+dynamic convertJsonResponse(dynamic response) {
+  return js.scoped(() {
+    return JSON.parse(js.context.JSON.stringify(response));
+  });
+}
+
+dynamic jsifyMessage(dynamic message) {
+  if (message is Map) {
+    return js.map(message);
+  } else if (message is Iterable) {
+    return js.array(message);
+  } else {
+    return message;
+  }
+}
+
+dynamic listify(js.Proxy jsArray) {
+  var list = [];
+  for (int i = 0; i < jsArray.length; i++) {
+    list.add(jsArray[i]);
+  }
+  // TODO(DrMarcII) consider having this return an unmodifiable list
+  return list;
 }
 
 /**
@@ -83,39 +108,68 @@ class ChromeCompleter<T> {
 }
 
 class ChromeStreamController<T> {
-  final _event;
-  dynamic _transformer;
+  final Function _event;
   StreamController<T> _controller = new StreamController<T>.broadcast();
   bool _handlerAdded = false;
+  js.Callback _listener;
 
-  ChromeStreamController.zeroArgs(this._event, dynamic transformer) {
-    _transformer = () => _controller.add(transformer());
+  ChromeStreamController.zeroArgs(this._event, Function transformer, [returnVal]) {
+    _controller = new StreamController<T>.broadcast(
+        onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+    _listener = new js.Callback.many(() {
+      _controller.add(transformer());
+      return returnVal;
+    });
   }
 
-  ChromeStreamController.oneArg(this._event, dynamic transformer) {
-    _transformer = ([arg1]) => _controller.add(transformer(arg1));
+  ChromeStreamController.oneArg(this._event, Function transformer, [returnVal])  {
+    _controller = new StreamController<T>.broadcast(
+        onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+    _listener = new js.Callback.many(([arg1]) {
+      _controller.add(transformer(arg1));
+      return returnVal;
+    });
   }
 
-  ChromeStreamController.twoArgs(this._event, dynamic transformer) {
-    _transformer = ([arg1, arg2]) => _controller.add(transformer(arg1, arg2));
+  ChromeStreamController.twoArgs(this._event, Function transformer, [returnVal]) {
+    _controller = new StreamController<T>.broadcast(
+        onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+    _listener = new js.Callback.many(([arg1, arg2]) {
+      _controller.add(transformer(arg1, arg2));
+      return returnVal;
+    });
   }
 
-  ChromeStreamController.threeArgs(this._event, dynamic transformer) {
-    _transformer = ([arg1, arg2, arg3]) =>
+  ChromeStreamController.threeArgs(this._event, Function transformer, [returnVal]) {
+    _controller = new StreamController<T>.broadcast(
+        onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+    _listener = new js.Callback.many(([arg1, arg2, arg3]) {
         _controller.add(transformer(arg1, arg2, arg3));
+        return returnVal;
+    });
   }
+
+  bool get hasListener => _controller.hasListener;
 
   Stream<T> get stream {
-    _ensureHandlerAdded();
     return _controller.stream;
   }
 
   void _ensureHandlerAdded() {
     if (!_handlerAdded) {
       js.scoped(() {
-        _event().addListener(new js.Callback.many(_transformer));
+        _event().addListener(_listener);
       });
       _handlerAdded = true;
+    }
+  }
+
+  void _removeHandler() {
+    if (_handlerAdded) {
+      js.scoped(() {
+        _event().removeListener(_listener);
+      });
+      _handlerAdded = false;
     }
   }
 }

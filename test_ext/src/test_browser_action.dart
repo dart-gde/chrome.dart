@@ -28,7 +28,6 @@ class TestBrowserAction {
           browserAction.getTitle(tabId: tab.id).then(expectAsync1((actual) {
             expect(actual, equals(originalTitle));
           }));
-          tab.release();
         }));
       });
 
@@ -55,7 +54,6 @@ class TestBrowserAction {
           browserAction.getBadgeText(tabId: tab.id).then(expectAsync1((actual) {
             expect(actual, equals(''));
           }));
-          tab.release();
         }));
       });
 
@@ -86,7 +84,6 @@ class TestBrowserAction {
               .then(expectAsync1((actual) {
                 expect(actual, equals(originalColor));
               }));
-          tab.release();
         }));
       });
 
@@ -113,7 +110,6 @@ class TestBrowserAction {
           browserAction.getPopup(tabId: tab.id).then(expectAsync1((actual) {
             expect(actual, equals(""));
           }));
-          tab.release();
         }));
       });
 
@@ -127,7 +123,6 @@ class TestBrowserAction {
         tabs.getCurrent().then(expectAsync1((Tab tab) {
           browserAction.disable(tabId: tab.id);
           browserAction.enable(tabId: tab.id);
-          tab.release();
         }));
         // TODO(DrMarcII): need to figure out a way to check if this is working.
       });

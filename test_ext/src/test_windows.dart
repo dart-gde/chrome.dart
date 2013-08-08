@@ -13,7 +13,6 @@ class TestWindows {
 
       tearDown(() {
         Future closeFuture = windows.remove(window.id);
-        window.release();
         window = null;
         return closeFuture;
       });

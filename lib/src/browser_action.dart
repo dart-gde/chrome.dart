@@ -157,7 +157,7 @@ class BrowserAction {
     if (tabId != null) {
       details['tabId'] = tabId;
     }
-    var completer = new ChromeCompleter.transform((color) =>
+    var completer = new ChromeCompleter.oneArg((color) =>
         new Color(color[0], color[1], color[2], color[3]));
     js.scoped(() {
       _browserAction.getBadgeBackgroundColor(js.map(details), completer.callback);
