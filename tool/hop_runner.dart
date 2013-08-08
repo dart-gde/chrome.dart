@@ -1,6 +1,5 @@
 library hop_runner;
 
-import 'dart:async';
 import 'dart:io';
 import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
@@ -58,6 +57,9 @@ void main() {
 
   buildTasks('bluetooth_example', 'example/bluetooth_getdevices',
       ['bluetooth_getdevices.dart']);
+
+  buildTasks('identity_example', 'example/identity_example',
+  ['identity_example.dart']);
 
   buildTasks('test_harness', 'test/app',
       ['harness_browser.dart', 'background.dart']);
