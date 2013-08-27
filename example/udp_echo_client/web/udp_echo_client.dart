@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'package:logging/logging.dart';
 import 'package:chrome/app.dart';
 

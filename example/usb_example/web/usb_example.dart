@@ -2,10 +2,8 @@ import 'dart:html';
 import 'dart:async';
 
 import 'package:logging/logging.dart';
-import 'package:chrome/app.dart';
 import 'package:chrome/src/usb.dart';
 import 'package:chrome/src/permissions.dart';
-import 'package:js/js.dart' as js;
 
 class Soldier {
   int vendorId;
@@ -112,7 +110,7 @@ void main() {
       var chrome = js.context.chrome;
 
       var jsPerms = [];
-    
+
       army.forEach((soldier) {
         jsPerms.add({
           "vendorId": soldier.vendorId,
