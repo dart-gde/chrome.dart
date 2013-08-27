@@ -54,8 +54,8 @@ dynamic listify(js.Proxy jsArray) {
 }
 
 /**
- * An object for handling completion callbacks that are common in the
- * chrome.* APIs.
+ * An object for handling completion callbacks that are common in the chrome.*
+ * APIs.
  */
 class ChromeCompleter<T> {
   final Completer<T> _completer = new Completer();
