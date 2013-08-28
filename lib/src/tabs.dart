@@ -34,7 +34,7 @@ class Tabs {
    */
   Future<Tab> getCurrent() {
     var completer =
-        new ChromeCompleter. oneArg((tab) => new Tab(tab));
+        new ChromeCompleter.oneArg((tab) => new Tab(tab));
     js.scoped(() {
       _tabs.getCurrent(completer.callback);
     });

@@ -5,7 +5,6 @@ cmd="dart
 --warning_as_error
 --enable_type_checks
 --enable_asserts
---error_on_malformed_type
 --package-root=$PACK_DIR
 ./tool/hop_runner.dart $@"
 exec $cmd
