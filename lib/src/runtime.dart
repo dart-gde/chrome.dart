@@ -28,7 +28,7 @@ class Runtime {
 
   Runtime._();
 
-  js.Proxy get _runtime => js.context.chrome.runtime;
+  dynamic get _runtime => js.context.chrome.runtime;
 
   /**
    * This will be defined during an API method callback if there was an error.
@@ -159,6 +159,18 @@ class Runtime {
     js.scoped(() {
       _runtime.sendMessage(jsifyMessage(message), completer.callback);
     });
+    return completer.future;
+  }
+
+  /**
+   * Returns a DirectoryEntry for the package directory.
+   *
+   * This will return a dom DirectoryEntry. js.retain() has been called on it;
+   * it is the caller's responsibility to call js.release();
+   */
+  Future<js.Proxy> getPackageDirectoryEntry() {
+    ChromeCompleter<js.Proxy> completer = new ChromeCompleter.oneArg(js.retain);
+    _runtime.getPackageDirectoryEntry(completer.callback);
     return completer.future;
   }
 

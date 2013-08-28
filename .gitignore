@@ -1,4 +1,5 @@
 .project
+.buildlog
 *.dart.js.deps
 *.dart.js.map
 *.dart.js
