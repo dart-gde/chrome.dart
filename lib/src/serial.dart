@@ -1,11 +1,11 @@
 library chrome.serial;
 
 import 'dart:async';
-import 'dart:json' as JSON;
 
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
 
+import 'common.dart';
 import 'runtime.dart';
 
 typedef void SerialReadCallback(String data);
@@ -81,7 +81,8 @@ class ControlSignalOptions {
     this.dtr = map.containsKey('cts') ? map['cts'] : false;
   }
 
-  Map toMap() => { 'dtr': this.dtr, 'dcd': this.dcd, 'rts': this.rts, 'cts': this.cts };
+  Map toMap() =>
+      { 'dtr': this.dtr, 'dcd': this.dcd, 'rts': this.rts, 'cts': this.cts };
 }
 
 class Serial {
@@ -122,9 +123,9 @@ class Serial {
         });
       };
 
-      js.context.getPortsCallback = new js.Callback.once(getPortsCallback);
-      var chrome = js.context.chrome;
-      chrome.serial.getPorts(js.context.getPortsCallback);
+      jsContext.getPortsCallback = new js.Callback.once(getPortsCallback);
+      var chrome = chromeProxy;
+      chrome.serial.getPorts(jsContext.getPortsCallback);
     };
 
     js.scoped(_jsGetPorts);
@@ -140,13 +141,16 @@ class Serial {
     _jsGetControlSignalOptions() {
       void getControlSignalOptionsCallback(var result) {
         _safeExecute(completer, () {
-          var controlSignalOptions = new ControlSignalOptions.fromMap(JSON.parse(js.context.JSON.stringify(result)));
+          var controlSignalOptions =
+              new ControlSignalOptions.fromMap(convertJsonResponse(result));
           completer.complete(controlSignalOptions);
         });
       };
 
-      js.context.getControlSignalOptionsCallback = new js.Callback.once(getControlSignalOptionsCallback);
-      js.context.chrome.serial.getControlSignals(openInfo.connectionId, js.context.getControlSignalOptionsCallback);
+      jsContext.getControlSignalOptionsCallback =
+          new js.Callback.once(getControlSignalOptionsCallback);
+      chromeProxy.serial.getControlSignals(
+          openInfo.connectionId, jsContext.getControlSignalOptionsCallback);
     };
 
     js.scoped(_jsGetControlSignalOptions);
@@ -161,8 +165,12 @@ class Serial {
       void setControlSignalOptionsCallback(var result) {
         _safeExecute(completer, () => completer.complete(result));
       };
-      js.context.setControlSignalOptionsCallback = new js.Callback.once(setControlSignalOptionsCallback);
-      js.context.chrome.serial.setControlSignals(openInfo.connectionId, js.map(options.toMap()), js.context.setControlSignalOptionsCallback);
+      jsContext.setControlSignalOptionsCallback =
+          new js.Callback.once(setControlSignalOptionsCallback);
+      chromeProxy.serial.setControlSignals(
+          openInfo.connectionId,
+          js.map(options.toMap()),
+          jsContext.setControlSignalOptionsCallback);
     };
 
     js.scoped(_jsSetControlSignalOptions);
@@ -186,12 +194,12 @@ class Serial {
         });
       };
 
-      js.context.openCallback = new js.Callback.once(openCallback);
+      jsContext.openCallback = new js.Callback.once(openCallback);
       openOptions = new OpenOptions(bitrate: speed);
       var jsOpenOptions = js.map(openOptions.toMap());
       // TODO(adam): set control options before opening, control options should
       // an optioanl parameter.
-      js.context.chrome.serial.open(port, jsOpenOptions, js.context.openCallback);
+      chromeProxy.serial.open(port, jsOpenOptions, jsContext.openCallback);
     };
 
     js.scoped(_jsOpen);
@@ -214,8 +222,11 @@ class Serial {
     if (isConnected) {
       _jsRead() {
         void readCallback(var readInfo) {
-          if (readInfo != null && readInfo.bytesRead > 0 && readInfo.data != null) {
-            var bufView = new js.Proxy(js.context.Uint8Array, readInfo.data);
+          if (readInfo != null &&
+              readInfo.bytesRead > 0 &&
+              readInfo.data != null) {
+
+            var bufView = new js.Proxy(jsContext.Uint8Array, readInfo.data);
             List chars = [];
             for (var i = 0; i < bufView.length; i++) {
               chars.add(bufView[i]);
@@ -235,11 +246,13 @@ class Serial {
             }
           }
 
-          js.context.chrome.serial.read(openInfo.connectionId, 1, js.context.readCallback);
+          chromeProxy.serial.read(
+              openInfo.connectionId, 1, jsContext.readCallback);
         };
 
-        js.context.readCallback = new js.Callback.many(readCallback);
-        js.context.chrome.serial.read(openInfo.connectionId, 1, js.context.readCallback);
+        jsContext.readCallback = new js.Callback.many(readCallback);
+        chromeProxy.serial.read(
+            openInfo.connectionId, 1, jsContext.readCallback);
       };
 
       js.scoped(_jsRead);
@@ -261,8 +274,8 @@ class Serial {
         });
       };
 
-      js.context.closeCallback = new js.Callback.once(closeCallback);
-      js.context.chrome.serial.close(openInfo.connectionId, js.context.closeCallback);
+      jsContext.closeCallback = new js.Callback.once(closeCallback);
+      chromeProxy.serial.close(openInfo.connectionId, jsContext.closeCallback);
     };
 
     js.scoped(_jsClose);
@@ -291,18 +304,20 @@ class Serial {
           });
         };
 
-        js.context.writeCallback = new js.Callback.once(writeCallback);
+        jsContext.writeCallback = new js.Callback.once(writeCallback);
 
-        var buf = new js.Proxy(js.context.ArrayBuffer, data.codeUnits.length);
-        var bufView = new js.Proxy(js.context.Uint8Array, buf)
-        ..set(js.array(data.codeUnits));
+        var buf = new js.Proxy(jsContext.ArrayBuffer, data.codeUnits.length);
+        var bufView = (new js.Proxy(jsContext.Uint8Array, buf) as dynamic)
+            ..set(js.array(data.codeUnits));
 
-        js.context.chrome.serial.write(openInfo.connectionId, buf, js.context.writeCallback);
+        chromeProxy.serial.write(
+            openInfo.connectionId, buf, jsContext.writeCallback);
       };
 
       js.scoped(_jsWrite);
     } else {
-      completer.completeException(new StateError("Serial port not connected $port $speed"));
+      completer.completeException(
+          new StateError("Serial port not connected $port $speed"));
     }
 
     return completer.future;
@@ -316,8 +331,8 @@ class Serial {
         _safeExecute(completer, () => completer.complete(result));
       };
 
-      js.context.flushCallback = new js.Callback.once(flushCallback);
-      js.context.chrome.serial.flush(openInfo.connectionId, js.context.flushCallback);
+      jsContext.flushCallback = new js.Callback.once(flushCallback);
+      chromeProxy.serial.flush(openInfo.connectionId, jsContext.flushCallback);
     };
 
     js.scoped(_jsFlush);
