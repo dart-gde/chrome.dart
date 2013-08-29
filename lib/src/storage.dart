@@ -6,13 +6,15 @@ import 'package:js/js.dart' as js;
 
 import 'common.dart';
 
-final ChromeStorage storage = new ChromeStorage();
+final ChromeStorage storage = new ChromeStorage._();
 
 // chrome.storage
 
 class ChromeStorage {
-  final StorageArea local = new StorageArea('local');
-  final SyncStorageArea sync = new SyncStorageArea('sync');
+  ChromeStorage._();
+
+  final StorageArea local = new StorageArea._('local');
+  final SyncStorageArea sync = new SyncStorageArea._('sync');
 }
 
 // TODO: implement chrome.storage.onChanged.addListener(
@@ -21,7 +23,7 @@ class ChromeStorage {
 class StorageArea {
   final String _type;
 
-  StorageArea(this._type);
+  StorageArea._(this._type);
 
   /**
    * The maximum amount (in bytes) of data that can be stored in local storage,
@@ -114,7 +116,7 @@ class StorageArea {
 
 class SyncStorageArea extends StorageArea {
 
-  SyncStorageArea(String type) : super(type);
+  SyncStorageArea._(String type) : super._(type);
 
   num get MAX_ITEMS {
     return js.scoped(() {
