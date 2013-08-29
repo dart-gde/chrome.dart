@@ -25,7 +25,8 @@ void main() {
       return Future
           .forEach(windows, (AppWindow win) {
             win.close();
-            return win.onClosed.first.then((_) => win.dispose());
+            return win.onClosed.first.then((_) => 
+                new Future(() => win.dispose()));
           })
           .then((_) => windows.clear());
     });
