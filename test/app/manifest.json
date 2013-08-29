@@ -8,9 +8,8 @@
   "default_locale": "en",
 
   "permissions": [
-    "serial", {
-      "fileSystem": ["write"]
-    },
+    "serial",
+    { "fileSystem": ["write"] },
     { "socket" : ["tcp-connect", "tcp-listen", "udp-bind", "udp-send-to"] },
     "storage",
     "power",
@@ -19,8 +18,7 @@
 
   "app": {
     "background": {
-      "page": "background.html",
-      "persistent": true
+      "scripts": ["main.js"]
     }
   }
 }
