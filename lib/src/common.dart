@@ -2,13 +2,14 @@ library chrome.common;
 
 import 'dart:async';
 import 'dart:html';
-import 'dart:json' as JSON;
+import 'dart:convert' show JSON;
 
 import 'package:js/js.dart' as js;
 
 import 'runtime.dart';
 
-dynamic get chromeProxy => js.context.chrome;
+dynamic get jsContext => js.context as dynamic;
+dynamic get chromeProxy => jsContext.chrome;
 
 bool isLinux() {
   return _platform().indexOf('linux') != -1;
@@ -30,7 +31,7 @@ String _platform() {
 
 dynamic convertJsonResponse(dynamic response) {
   return js.scoped(() {
-    return JSON.parse(js.context.JSON.stringify(response));
+    return JSON.decode(jsContext.JSON.stringify(response));
   });
 }
 
@@ -44,7 +45,7 @@ dynamic jsifyMessage(dynamic message) {
   }
 }
 
-dynamic listify(js.Proxy jsArray) {
+dynamic listify(dynamic jsArray) {
   var list = [];
   for (int i = 0; i < jsArray.length; i++) {
     list.add(jsArray[i]);
