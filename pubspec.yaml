@@ -14,5 +14,5 @@ dependencies:
   logging: '>=0.6.15'
 dev_dependencies:
   browser: '>=0.6.15'
-  hop: '>=0.24.1+1'
+  hop: '>=0.24.3+2'
   unittest: '>=0.6.15'

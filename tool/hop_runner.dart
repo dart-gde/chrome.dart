@@ -7,16 +7,16 @@ import 'package:hop/hop_tasks.dart';
 import 'package:chrome/src/chrome.dart' as chrome;
 
 void main() {
-  _buildExample('serial_example');
+  _buildExample('app_test');
+  _buildExample('bluetooth_example');
+  _buildExample('identity_example');
   _buildExample('serial_clock');
+  _buildExample('serial_example');
   _buildExample('tcp_echo_server');
   _buildExample('udp_echo_client');
   _buildExample('usb_example');
-  _buildExample('bluetooth_example');
-  _buildExample('identity_example');
 
-  _buildTasks('test_harness', 'test/app',
-      ['harness_browser.dart', 'background.dart']);
+  _buildTasks('test_harness', 'test/app', ['harness_browser.dart']);
 
   _buildTasks('test_harness_extension', 'test/ext', ['harness_extension.dart']);
 
@@ -58,7 +58,8 @@ void _buildTasks(String name, String directory, List<String> filenames) {
 
   addTask(updateTaskName, _createUpdateJSTask(directory));
   addTask(analyzeTaskName, createAnalyzerTask(file));
-  addTask(buildTaskName, createDartCompilerTask(file, allowUnsafeEval: false));
+  addTask(buildTaskName, createDartCompilerTask(file,
+      allowUnsafeEval: false, verbose: false, suppressWarnings: true));
   addTask('run_$name', _createLaunchApp(directory));
 
   allTasks.addAll([updateTaskName, analyzeTaskName, buildTaskName]);
