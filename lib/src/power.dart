@@ -7,7 +7,7 @@ library chrome.power;
 
 import 'common.dart';
 
-final ChromePower power = new ChromePower();
+final ChromePower power = new ChromePower._();
 
 // chrome.power
 
@@ -31,6 +31,9 @@ final ChromePower power = new ChromePower();
  * then used.
  */
 class ChromePower {
+
+  ChromePower._();
+
   /**
    * The "system" level keeps the system active, but allows the screen to be
    * dimmed or turned off.

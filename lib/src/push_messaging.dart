@@ -7,7 +7,7 @@ import 'package:js/js.dart' as js;
 
 import 'common.dart';
 
-final ChromePushMessaging pushMessaging = new ChromePushMessaging();
+final ChromePushMessaging pushMessaging = new ChromePushMessaging._();
 
 // chrome.pushMessaging
 
@@ -17,6 +17,8 @@ final ChromePushMessaging pushMessaging = new ChromePushMessaging();
 class ChromePushMessaging {
   StreamController<PushMessage> _streamController = new StreamController<PushMessage>();
   Stream<PushMessage> _stream;
+
+  ChromePushMessaging._();
 
   /**
    * Retrieves the channel ID associated with this app or extension. Typically
