@@ -3,7 +3,6 @@ library chrome.sync_file_system;
 import 'dart:async';
 
 import 'package:js/js.dart' as js;
-import 'package:js/js_wrapping.dart' as jsw;
 
 import 'common.dart';
 
@@ -27,8 +26,6 @@ final SyncFileSystem syncFileSystem  = new SyncFileSystem._();
 class SyncFileSystem {
   SyncFileSystem._();
 
-  dynamic get _syncFileSystem => (js.context as dynamic).chrome.syncFileSystem;
-
   /**
    * Returns a syncable filesystem backed by Google Drive. The returned
    * DOMFileSystem instance can be operated on in the same way as the Temporary
@@ -40,7 +37,7 @@ class SyncFileSystem {
    */
   Future<js.Proxy> requestFileSystem() {
     ChromeCompleter<js.Proxy> completer = new ChromeCompleter.oneArg(js.retain);
-    _syncFileSystem.requestFileSystem(completer.callback);
+    chromeProxy.syncFileSystem.requestFileSystem(completer.callback);
     return completer.future;
   }
 
@@ -55,7 +52,7 @@ class SyncFileSystem {
     // TODO: support the optional success callback
     // the callback indicated has no parameters - how to tell whether a call
     // means success or failure?
-    _syncFileSystem.setConflictResolutionPolicy(policy);
+    chromeProxy.syncFileSystem.setConflictResolutionPolicy(policy);
   }
 
   /**
@@ -63,7 +60,7 @@ class SyncFileSystem {
    */
   Future<String> getConflictResolutionPolicy() {
     ChromeCompleter<String> completer = new ChromeCompleter.oneArg();
-    _syncFileSystem.getConflictResolutionPolicy(completer.callback);
+    chromeProxy.syncFileSystem.getConflictResolutionPolicy(completer.callback);
     return completer.future;
   }
 
@@ -75,7 +72,7 @@ class SyncFileSystem {
     ChromeCompleter<UsageAndQuota> completer = new ChromeCompleter.oneArg((var quota) {
       return new UsageAndQuota._(quota);
     });
-    _syncFileSystem.getUsageAndQuota(domFileSystem, completer.callback);
+    chromeProxy.syncFileSystem.getUsageAndQuota(domFileSystem, completer.callback);
     return completer.future;
   }
 
@@ -86,7 +83,7 @@ class SyncFileSystem {
    */
   Future<String> getFileStatus(js.Proxy fileEntry) {
     ChromeCompleter<String> completer = new ChromeCompleter.oneArg();
-    _syncFileSystem.getFileStatus(fileEntry, completer.callback);
+    chromeProxy.syncFileSystem.getFileStatus(fileEntry, completer.callback);
     return completer.future;
   }
 
@@ -97,12 +94,11 @@ class SyncFileSystem {
   Future<List<FileEntryStatus>> getFileStatuses(List<js.Proxy> fileEntries) {
     ChromeCompleter<List<FileEntryStatus>> completer =
         new ChromeCompleter.oneArg((var proxy) {
-          List<FileEntryStatus> result = new List<FileEntryStatus>();
-          List<js.Proxy> jsList = jsw.JsArrayToListAdapter.cast(proxy);
-          jsList.forEach((var p) => result.add(new FileEntryStatus._(p)));
-          return result;
+          Iterable<FileEntryStatus> iter = listify(proxy).map(
+              (proxy) => new FileEntryStatus._(proxy));
+          return iter.toList();
         });
-    _syncFileSystem.getFileStatuses(fileEntries, completer.callback);
+    chromeProxy.syncFileSystem.getFileStatuses(fileEntries, completer.callback);
     return completer.future;
   }
 

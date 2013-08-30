@@ -23,8 +23,6 @@ class ChromeFileSystem {
 
   ChromeFileSystem._();
 
-  dynamic get _fileSystem => (js.context as dynamic).chrome.fileSystem;
-
   /**
    * Get the display path of a FileEntry object. The display path is based on
    * the full path of the file on the local file system, but may be made more
@@ -34,7 +32,7 @@ class ChromeFileSystem {
    */
   Future<String> getDisplayPath(js.Proxy fileEntry) {
     ChromeCompleter<String> completer = new ChromeCompleter.oneArg();
-    _fileSystem.getDisplayPath(fileEntry, completer.callback);
+    chromeProxy.fileSystem.getDisplayPath(fileEntry, completer.callback);
     return completer.future;
   }
 
@@ -49,7 +47,7 @@ class ChromeFileSystem {
   @deprecated
   Future<js.Proxy> getWritableEntry(js.Proxy fileEntry) {
     ChromeCompleter<js.Proxy> completer = new ChromeCompleter.oneArg(js.retain);
-    _fileSystem.getWritableEntry(fileEntry, completer.callback);
+    chromeProxy.fileSystem.getWritableEntry(fileEntry, completer.callback);
     return completer.future;
   }
 
@@ -63,7 +61,7 @@ class ChromeFileSystem {
   @deprecated
   Future<bool> isWritableEntry(js.Proxy fileEntry) {
     ChromeCompleter<bool> completer = new ChromeCompleter.oneArg();
-    _fileSystem.isWritableEntry(fileEntry, completer.callback);
+    chromeProxy.fileSystem.isWritableEntry(fileEntry, completer.callback);
     return completer.future;
   }
 
@@ -90,7 +88,7 @@ class ChromeFileSystem {
 
     ChromeCompleter<js.Proxy> completer = new ChromeCompleter.twoArgs(
         (fileEntry, fileEntries) => js.retain(fileEntry));
-    _fileSystem.chooseEntry(js.map(options), completer.callback);
+    chromeProxy.fileSystem.chooseEntry(js.map(options), completer.callback);
     return completer.future;
   }
 
@@ -114,7 +112,7 @@ class ChromeFileSystem {
 
     ChromeCompleter<js.Proxy> completer = new ChromeCompleter.twoArgs(
         (fileEntry, fileEntries) => js.retain(fileEntry));
-    _fileSystem.chooseEntry(js.map(options), completer.callback);
+    chromeProxy.fileSystem.chooseEntry(js.map(options), completer.callback);
     return completer.future;
   }
 
@@ -148,7 +146,7 @@ class ChromeFileSystem {
         return null;
       }
     });
-    _fileSystem.chooseEntry(js.map(options), completer.callback);
+    chromeProxy.fileSystem.chooseEntry(js.map(options), completer.callback);
     return completer.future;
   }
 
@@ -161,7 +159,7 @@ class ChromeFileSystem {
    */
   Future<js.Proxy> restoreEntry(String id) {
     ChromeCompleter<js.Proxy> completer = new ChromeCompleter.oneArg(js.retain);
-    _fileSystem.restoreEntry(id, completer.callback);
+    chromeProxy.fileSystem.restoreEntry(id, completer.callback);
     return completer.future;
   }
 
@@ -172,7 +170,7 @@ class ChromeFileSystem {
    */
   Future<bool> isRestorable(String id) {
     ChromeCompleter<bool> completer = new ChromeCompleter.oneArg();
-    _fileSystem.isRestorable(id, completer.callback);
+    chromeProxy.fileSystem.isRestorable(id, completer.callback);
     return completer.future;
   }
 
@@ -188,7 +186,7 @@ class ChromeFileSystem {
    * [fileEntry] should be a dom FileEntry
    */
   String retainEntry(js.Proxy fileEntry) {
-    return _fileSystem.retainEntry(fileEntry);
+    return chromeProxy.fileSystem.retainEntry(fileEntry);
   }
 }
 
