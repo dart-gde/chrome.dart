@@ -27,6 +27,19 @@ void main() {
   b.text = 'Choose Directory...';
   b.onClick.listen((_) => runTests(chooseDirectory));
   buttonArea.children.add(b);
+
+  b = new ButtonElement();
+  b.text = 'Open syncFS';
+  b.onClick.listen((_) => runTests(openSyncFileSystem));
+  buttonArea.children.add(b);
+
+  chrome.syncFileSystem.onServiceStatusChanged.listen((chrome.ServiceStatusEvent event) {
+    log(event.toString());
+  });
+
+  chrome.syncFileSystem.onFileStatusChanged.listen((chrome.FileStatusEvent event) {
+    log(event.toString());
+  });
 }
 
 Future<DirectoryEntry> testPackageDir() {
@@ -68,6 +81,15 @@ Future<FileEntry> chooseDirectory() {
     chrome.DirectoryEntry entry = new chrome.DirectoryEntry(dir);
 
     log("You choose ${entry.name}, ${entry.fullPath}!");
+  });
+}
+
+Future<FileEntry> openSyncFileSystem() {
+  return chrome.syncFileSystem.requestFileSystem().then((js.Proxy proxy) {
+    chrome.FileSystem fs = new chrome.FileSystem(proxy);
+
+    log("You choose ${fs.name}");
+    log("root dir = ${fs.root.name}");
   });
 }
 
