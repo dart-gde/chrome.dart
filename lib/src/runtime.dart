@@ -28,7 +28,7 @@ class Runtime {
 
   Runtime._();
 
-  dynamic get _runtime => js.context.chrome.runtime;
+  dynamic get _runtime => chromeProxy.runtime;
 
   /**
    * This will be defined during an API method callback if there was an error.
@@ -178,7 +178,7 @@ class Runtime {
 
   final ChromeStreamController _onStartup =
       new ChromeStreamController.zeroArgs(
-          () => js.context.chrome.runtime.onStartup,
+          () => chromeProxy.runtime.onStartup,
           () => null);
 
   /**
@@ -188,7 +188,7 @@ class Runtime {
 
   final ChromeStreamController<InstalledEvent> _onInstalled =
       new ChromeStreamController<InstalledEvent>.oneArg(
-          () => js.context.chrome.runtime.onInstalled,
+          () => chromeProxy.runtime.onInstalled,
           (details) => new InstalledEvent(
               details.reason, details['previousVersion']));
 
@@ -207,7 +207,7 @@ class Runtime {
 
   final ChromeStreamController _onSuspend =
       new ChromeStreamController.zeroArgs(
-          () => js.context.chrome.runtime.onSuspend,
+          () => chromeProxy.runtime.onSuspend,
           () => null);
 
   /**
@@ -224,7 +224,7 @@ class Runtime {
 
   final ChromeStreamController _onSuspendCanceled =
       new ChromeStreamController.zeroArgs(
-          () => js.context.chrome.runtime.onSuspendCanceled,
+          () => chromeProxy.runtime.onSuspendCanceled,
           () => null);
 
   /**
@@ -234,7 +234,7 @@ class Runtime {
 
   final ChromeStreamController<String> _onUpdateAvailable =
       new ChromeStreamController<String>.oneArg(
-          () => js.context.chrome.runtime.onUpdateAvailable,
+          () => chromeProxy.runtime.onUpdateAvailable,
           (details) => details.version);
 
   /**
@@ -251,7 +251,7 @@ class Runtime {
 
   ChromeStreamController<MessageEvent> _onMessage =
       new ChromeStreamController<MessageEvent>.threeArgs(
-          () => js.context.chrome.runtime.onMessage,
+          () => chromeProxy.runtime.onMessage,
           (message, sender, sendResponse) => new MessageEvent(
                 convertJsonResponse(message),
                 new MessageSender(sender),
@@ -272,7 +272,7 @@ class MessageSender {
 
   MessageSender._(this.id, this.url, this.tab);
 
-  MessageSender(js.Proxy sender) : this._(
+  MessageSender(sender) : this._(
       sender.id,
       sender['url'],
       sender['tab'] != null ? new Tab(sender.tab) : null);
@@ -310,7 +310,7 @@ class InstalledEvent {
 class MessageEvent {
   final dynamic message;
   final MessageSender sender;
-  js.Proxy _sendResponse;
+  var _sendResponse;
 
   MessageEvent(this.message, this.sender, this._sendResponse) {
     js.retain(_sendResponse);

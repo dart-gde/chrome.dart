@@ -17,12 +17,12 @@ class Windows {
    * The windowId value that represents the absence of a chrome browser window.
    */
   int get WINDOW_ID_NONE =>
-      js.context.chrome.windows.WINDOW_ID_NONE as int;
+      chromeProxy.windows.WINDOW_ID_NONE as int;
   /**
    * The windowId value that represents the current window.
    */
   int get WINDOW_ID_CURRENT =>
-      js.context.chrome.windows.WINDOW_ID_CURRENT as int;
+      chromeProxy.windows.WINDOW_ID_CURRENT as int;
 
   /**
    * Gets details about a window.
@@ -34,7 +34,7 @@ class Windows {
     var completer =
         new ChromeCompleter.oneArg((window) => new Window(window));
     js.scoped(() {
-      js.context.chrome.windows.get(
+      chromeProxy.windows.get(
           windowId,
           _createGetInfoMap(populate),
           completer.callback);
@@ -53,7 +53,7 @@ class Windows {
     var completer =
         new ChromeCompleter.oneArg((window) => new Window(window));
     js.scoped(() {
-      js.context.chrome.windows.getCurrent(
+      chromeProxy.windows.getCurrent(
           _createGetInfoMap(populate),
           completer.callback);
     });
@@ -70,7 +70,7 @@ class Windows {
     var completer =
         new ChromeCompleter.oneArg((window) => new Window(window));
     js.scoped(() {
-      js.context.chrome.windows.getLastFocused(
+      chromeProxy.windows.getLastFocused(
           _createGetInfoMap(populate),
           completer.callback);
     });
@@ -85,7 +85,7 @@ class Windows {
    */
   Future<List<Window>> getAll({bool populate}) {
     var completer =
-        new ChromeCompleter.oneArg((js.Proxy jsWindows) {
+        new ChromeCompleter.oneArg((jsWindows) {
           List<Window> windows = [];
 
           for (int i = 0; i < jsWindows.length; i++) {
@@ -94,7 +94,7 @@ class Windows {
           return windows;
         });
     js.scoped(() {
-      js.context.chrome.windows.getAll(
+      chromeProxy.windows.getAll(
           _createGetInfoMap(populate),
           completer.callback);
     });
@@ -147,7 +147,7 @@ class Windows {
     var completer =
         new ChromeCompleter.oneArg((window) => new Window(window));
     js.scoped(() {
-      js.context.chrome.windows.create(js.map(createData), completer.callback);
+      chromeProxy.windows.create(js.map(createData), completer.callback);
     });
     return completer.future;
   }
@@ -190,7 +190,7 @@ class Windows {
     var completer =
         new ChromeCompleter.oneArg((window) => new Window(window));
     js.scoped(() {
-      js.context.chrome.windows.update(windowId,
+      chromeProxy.windows.update(windowId,
           js.map(updateData),
           completer.callback);
     });
@@ -203,14 +203,14 @@ class Windows {
   Future remove(int windowId) {
     var completer = new ChromeCompleter.noArgs();
     js.scoped(() {
-      js.context.chrome.windows.remove(windowId, completer.callback);
+      chromeProxy.windows.remove(windowId, completer.callback);
     });
     return completer.future;
   }
 
   final ChromeStreamController<Window> _onCreated =
       new ChromeStreamController<Window>.oneArg(
-          () => js.context.chrome.windows.onCreated,
+          () => chromeProxy.windows.onCreated,
           (window) => new Window(window));
 
   /**
@@ -220,7 +220,7 @@ class Windows {
 
   final ChromeStreamController<int> _onRemoved =
       new ChromeStreamController<int>.oneArg(
-          () => js.context.chrome.windows.onRemoved,
+          () => chromeProxy.windows.onRemoved,
           (windowId) => windowId);
 
   /**
@@ -230,7 +230,7 @@ class Windows {
 
   final ChromeStreamController<int> _onFocusChanged =
       new ChromeStreamController<int>.oneArg(
-          () => js.context.chrome.windows.onFocusChanged,
+          () => chromeProxy.windows.onFocusChanged,
           (windowId) => windowId);
 
   /**
@@ -277,7 +277,7 @@ class Window {
       this.state,
       this.alwaysOnTop);
 
-  Window(js.Proxy window) : this._(
+  Window(window) : this._(
       window['id'],
       window.focused,
       window['top'],
@@ -291,7 +291,7 @@ class Window {
       window.alwaysOnTop);
 
 
-  static List<Tab> _createTabs(js.Proxy jsTabs) {
+  static List<Tab> _createTabs(jsTabs) {
     if (jsTabs == null) {
       return null;
     }

@@ -5,6 +5,7 @@ import "dart:async";
 import "package:logging/logging.dart";
 import "package:js/js.dart" as js;
 import "package:js/js_wrapping.dart" as jsw;
+import 'common.dart';
 
 class Permissions {
 	List permissions;
@@ -54,8 +55,7 @@ class Permissions {
 				compl.complete(result);
 			}
 
-			var chrome = js.context.chrome;
-			chrome.permissions.request(js.map(perms.toMap()),
+			chromeProxy.permissions.request(js.map(perms.toMap()),
 				new js.Callback.once(requestCallback));
 		}
 
@@ -75,8 +75,7 @@ class Permissions {
 				compl.complete(result);
 			}
 
-			var chrome = js.context.chrome;
-			chrome.permissions.release(js.map(perms.toMap()),
+			chromeProxy.permissions.release(js.map(perms.toMap()),
 				new js.Callback.once(releaseCallback));
 		}
 
@@ -96,8 +95,7 @@ class Permissions {
 				compl.complete(new Permissions.fromJs(result));
 			}
 
-			var chrome = js.context.chrome;
-			chrome.permissions.getAll(
+			chromeProxy.permissions.getAll(
 				new js.Callback.once(getAllCallback));
 		}
 
@@ -117,8 +115,7 @@ class Permissions {
 				compl.complete(result == js._true);
 			}
 
-			var chrome = js.context.chrome;
-			chrome.permissions.contains(
+			chromeProxy.permissions.contains(
 				js.map(perms.toMap()),
 				new js.Callback.once(containsCallback));
 		}
