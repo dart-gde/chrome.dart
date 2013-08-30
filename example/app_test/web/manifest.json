@@ -6,7 +6,8 @@
   "icons": {"128": "dart_icon.png"},
 
   "permissions": [
-    { "fileSystem": ["write", "retainEntries"] }
+    { "fileSystem": ["write", "retainEntries"] },
+    "syncFileSystem"
   ],
 
   "app": {

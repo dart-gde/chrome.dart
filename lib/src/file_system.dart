@@ -275,6 +275,18 @@ abstract class Entry {
   String get fullPath => _proxy.fullPath;
 
   /**
+   * Entry is a directory.
+   */
+  bool get isDirectory => _proxy.isDirectory;
+
+  /**
+   * Entry is a file.
+   */
+  bool get isFile => _proxy.isFile;
+
+  String toString() => name;
+
+  /**
    * Call [js.release] on the retained proxy.
    */
   void release() {
@@ -418,6 +430,43 @@ class DirectoryEntry extends Entry {
    */
   DirectoryEntry.retain(js.Proxy proxy): super.retain(proxy);
 
+}
+
+/**
+ * A class to make working with js.Proxy instances that represent a dom
+ * FileSystem.
+ *
+ * see: http://www.w3.org/TR/file-system-api/
+ */
+class FileSystem {
+  var _proxy;
+
+  FileSystem(this._proxy);
+
+  FileSystem.retain(this._proxy) {
+    js.retain(_proxy);
+  }
+
+  /**
+   * The name of the entry, excluding the path leading to it.
+   */
+  String get name => _proxy.name;
+
+  /**
+   * The root directory of the file system.
+   */
+  DirectoryEntry get root => new DirectoryEntry.retain(_proxy.root);
+
+  String toString() => name;
+
+  /**
+   * Call [js.release] on the retained proxy.
+   */
+  void release() {
+    js.release(_proxy);
+  }
+
+  js.Proxy get proxy => _proxy;
 }
 
 ///**
