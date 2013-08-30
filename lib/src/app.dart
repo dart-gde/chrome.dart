@@ -3,6 +3,7 @@ library chrome.app;
 import 'dart:async';
 import 'dart:html' as html;
 import 'package:js/js.dart' as js;
+import 'common.dart';
 
 /// Accessor for the `chrome.app` namespace.
 final ChromeApp app = const ChromeApp._();
@@ -26,7 +27,7 @@ class ChromeWindow {
   /// An [AppWindow] object for the current script context.
   AppWindow get current {
     if (_current == null) {
-      _current = new AppWindow._(js.context.chrome.app.window.current());
+      _current = new AppWindow._(chromeProxy.app.window.current());
     }
     return _current;
   }
@@ -108,7 +109,7 @@ class ChromeWindow {
     if (state != null) options['state'] = state;
 
     final completer = new Completer<AppWindow>();
-    js.context.chrome.app.window.create(
+    chromeProxy.app.window.create(
         url,
         js.map(options),
         new js.Callback.once((proxy) =>
@@ -143,7 +144,7 @@ class Bounds {
 /// Windows have an optional frame with title bar and size controls. They are
 /// not associated with any Chrome browser windows.
 class AppWindow {
-  js.Proxy _proxy;
+  var _proxy;
   js.Callback _jsOnBoundsChanged;
   js.Callback _jsOnClosed;
   js.Callback _jsOnFullscreened;
@@ -283,7 +284,7 @@ class HtmlWindow implements html.WindowBase {
   html.WindowBase get parent => throw new UnimplementedError();
   html.WindowBase get top => throw new UnimplementedError();
 
-  js.Proxy _proxy;
+  var _proxy;
   js.Callback _jsOnContentLoaded;
 
   final _onContentLoaded = new StreamController.broadcast();

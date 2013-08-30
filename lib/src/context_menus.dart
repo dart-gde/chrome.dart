@@ -13,7 +13,7 @@ class ContextMenus {
 
   ContextMenus._();
 
-  js.Proxy get _contextMenus => js.context.chrome.contextMenus;
+  get _contextMenus => chromeProxy.contextMenus;
 
   /**
    * Creates a new context menu item.
@@ -211,7 +211,7 @@ class ContextMenus {
 
   final ChromeStreamController<ContextMenuClickEvent> _onClicked =
       new ChromeStreamController<ContextMenuClickEvent>.twoArgs(
-          () => js.context.chrome.contextMenus.onClicked,
+          () => chromeProxy.contextMenus.onClicked,
           (clickData, jsTab) {
             Tab tab;
             if (jsTab != null) {
@@ -287,7 +287,7 @@ class ContextMenuClickEvent {
    */
   bool checked;
 
-  ContextMenuClickEvent(js.Proxy onClickData, this.tab) {
+  ContextMenuClickEvent(onClickData, this.tab) {
     this.menuItemId = onClickData.menuItemId;
     this.parentMenuItemId = onClickData['parentMenuItemId'];
     if (onClickData['mediaType'] != null) {

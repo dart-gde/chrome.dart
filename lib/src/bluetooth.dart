@@ -123,13 +123,14 @@ class OutOfBandPairingData {
 
   Map toJsDataMap() {
     var hashData = new Int32List.view(hash);
-    var hashBuf = new js.Proxy(js.context.ArrayBuffer, hash.lengthInBytes);
-    var hashBufView = new js.Proxy(js.context.Int32Array, hashBuf)
+    var hashBuf = new js.Proxy(jsContext.ArrayBuffer, hash.lengthInBytes);
+    var hashBufView = new js.Proxy(jsContext.Int32Array, hashBuf)
     ..set(js.array(hashData));
 
     var randomizerData = new Int32List.view(randomizer);
-    var randomizerBuf = new js.Proxy(js.context.ArrayBuffer, randomizer.lengthInBytes);
-    var randomizerBufView = new js.Proxy(js.context.Int32Array, randomizerBuf)
+    var randomizerBuf = 
+        new js.Proxy(jsContext.ArrayBuffer, randomizer.lengthInBytes);
+    var randomizerBufView = new js.Proxy(jsContext.Int32Array, randomizerBuf)
     ..set(js.array(randomizerData));
 
     return { 'hash': hashBuf, 'randomizer': randomizerBuf };
@@ -279,13 +280,15 @@ class ChromeBluetooth {
       js.Callback callback = new js.Callback.once((var result) {
         List<ServiceRecord> serviceRecords = new List<ServiceRecord>();
         for (int i = 0; i < result.length; i++) {
-          var serviceRecord = new ServiceRecord(result[i].name, uuid: result[i].uuid);
+          var serviceRecord = 
+              new ServiceRecord(result[i].name, uuid: result[i].uuid);
           serviceRecords.add(serviceRecord);
         }
         completer.complete(serviceRecords);
       });
 
-      chromeProxy.bluetooth.getServices(js.map({'deviceAddress': deviceAddress}), callback);
+      chromeProxy.bluetooth.getServices(
+          js.map({'deviceAddress': deviceAddress}), callback);
     });
 
     return completer.future;
@@ -321,7 +324,8 @@ class ChromeBluetooth {
         completer.complete();
       });
 
-      chromeProxy.bluetooth.disconnect(js.map({'socket': socket.toMap()}), callback);
+      chromeProxy.bluetooth.disconnect(js.map({'socket': socket.toMap()}), 
+          callback);
     });
     return completer.future;
   }
@@ -331,7 +335,7 @@ class ChromeBluetooth {
 
     js.scoped(() {
       js.Callback callback = new js.Callback.once((var result) {
-        var bufView = new js.Proxy(js.context.Int32Array, result);
+        var bufView = new js.Proxy(jsContext.Int32Array, result);
         Int32List data = new Int32List(bufView.length);
         for (var i = 0; i < bufView.length; i++) {
           data[i] = bufView[i];
@@ -355,8 +359,8 @@ class ChromeBluetooth {
       });
 
       var data = new Int8List.view(buffer);
-      var buf = new js.Proxy(js.context.ArrayBuffer, buffer.lengthInBytes);
-      var bufView = new js.Proxy(js.context.Int8Array, buf)
+      var buf = new js.Proxy(jsContext.ArrayBuffer, buffer.lengthInBytes);
+      var bufView = new js.Proxy(jsContext.Int8Array, buf)
       ..set(js.array(data));
 
       chromeProxy.bluetooth.write(js.map({'socket': socket.toMap(),
@@ -367,8 +371,9 @@ class ChromeBluetooth {
   }
 
   _safeNewOutOfBandPairingData(oobpd) {
-    var hashJsBufView = new js.Proxy(js.context.Int32Array, oobpd.hash);
-    var randomizerJsBufView = new js.Proxy(js.context.Int32Array, oobpd.randomizer);
+    var hashJsBufView = new js.Proxy(jsContext.Int32Array, oobpd.hash);
+    var randomizerJsBufView = new js.Proxy(jsContext.Int32Array, 
+        oobpd.randomizer);
 
     Int32List hashData = new Int32List(hashJsBufView.length);
     for (var i = 0; i < hashJsBufView.length; i++) {
@@ -416,7 +421,8 @@ class ChromeBluetooth {
           deviceCallback(new Device(device.address, name: device.name,
               paired: device.paired, connected: device.connected));
         } catch (ex) {
-          _logger.fine("startDiscovery: _deviceCallback has thrown exception = $ex");
+          _logger.fine(
+              "startDiscovery: _deviceCallback has thrown exception = $ex");
         }
       });
 

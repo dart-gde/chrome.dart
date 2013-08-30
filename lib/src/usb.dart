@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:html' as html;
 import 'package:js/js.dart' as js;
 import 'package:logging/logging.dart';
-
+import 'common.dart';
 import 'runtime.dart';
 
 class Direction {
@@ -41,7 +41,10 @@ class Device {
 
   Device(this.vendorId, this.handle, this.productId);
 
-  Map toMap() => { 'vendorId': this.vendorId, 'productId': this.productId, 'handle': this.handle };
+  Map toMap() => { 
+    'vendorId': this.vendorId, 
+    'productId': this.productId, 
+    'handle': this.handle };
 }
 
 class ControlTransferInfo {
@@ -82,7 +85,8 @@ class ControlTransferInfo {
    */
   html.ArrayBuffer data;
 
-  ControlTransferInfo(this.index, this.direction, this.requestType, this.recipient, this.request, this.value, {this.length, this.data});
+  ControlTransferInfo(this.index, this.direction, this.requestType, 
+      this.recipient, this.request, this.value, {this.length, this.data});
 
 
   Map toMap() {
@@ -242,8 +246,7 @@ class Usb {
         completer.complete(devices);
       }
 
-      var chrome = js.context.chrome;
-      chrome.usb.findDevices(js.map(options.toMap()),
+      chromeProxy.usb.findDevices(js.map(options.toMap()),
         new js.Callback.once(findDevicesCallback));
     }
 
@@ -261,8 +264,7 @@ class Usb {
         _safeExecute(completer, () => completer.complete());
       }
 
-      var chrome = js.context.chrome;
-      chrome.usb.closeDevice(js.map(device.toMap()),
+      chromeProxy.usb.closeDevice(js.map(device.toMap()),
         new js.Callback.once(closeDeviceCallback));
     }
 
@@ -279,8 +281,7 @@ class Usb {
         _safeExecute(completer, () => completer.complete());
       }
 
-      var chrome = js.context.chrome;
-      chrome.usb.claimInterface(
+      chromeProxy.usb.claimInterface(
         js.map(device.toMap()),
         interfaceNumber,
         new js.Callback.once(claimInterfaceCallback));
@@ -299,8 +300,7 @@ class Usb {
         _safeExecute(completer, () => completer.complete());
       }
 
-      var chrome = js.context.chrome;
-      chrome.usb.releaseInterface(
+      chromeProxy.usb.releaseInterface(
         js.map(device.toMap()),
         interfaceNumber,
         new js.Callback.once(releaseInterfaceCallback));
@@ -320,8 +320,7 @@ class Usb {
         _safeExecute(completer, () => completer.complete());
       }
 
-      var chrome = js.context.chrome;
-      chrome.usb.setInterfaceAlternateSetting(
+      chromeProxy.usb.setInterfaceAlternateSetting(
         js.map(device.toMap()),
         interfaceNumber,
         alternateSetting,
@@ -353,8 +352,7 @@ class Usb {
         });
       }
 
-      var chrome = js.context.chrome;
-      chrome.usb.controlTransfer(
+      chromeProxy.usb.controlTransfer(
         js.map(device.toMap()),
         js.map(transferInfo.toMap()),
         new js.Callback.once(controlTransferCallback));
@@ -386,8 +384,7 @@ class Usb {
         });
       }
 
-      var chrome = js.context.chrome;
-      chrome.usb.bulkTransfer(
+      chromeProxy.usb.bulkTransfer(
         js.map(device.toMap()),
         js.map(transferInfo.toMap()),
         new js.Callback.once(bulkTransferCallback));
@@ -418,8 +415,7 @@ class Usb {
         });
       }
 
-      var chrome = js.context.chrome;
-      chrome.usb.interuptTransfer(
+      chromeProxy.usb.interuptTransfer(
         js.map(device.toMap()),
         js.map(transferInfo.toMap()),
         new js.Callback.once(interuptTransferCallback));
@@ -451,8 +447,7 @@ class Usb {
         });
       }
 
-      var chrome = js.context.chrome;
-      chrome.usb.isochronousTransfer(
+      chromeProxy.usb.isochronousTransfer(
         js.map(device.toMap()),
         js.map(transferInfo.toMap()),
         new js.Callback.once(isochronousTransferCallback));
