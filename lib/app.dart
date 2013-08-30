@@ -14,3 +14,4 @@ export 'src/runtime.dart';
 export 'src/serial.dart';
 export 'src/socket.dart';
 export 'src/storage.dart';
+export 'src/sync_file_system.dart';

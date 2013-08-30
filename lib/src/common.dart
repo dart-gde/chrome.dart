@@ -45,7 +45,7 @@ dynamic jsifyMessage(dynamic message) {
   }
 }
 
-dynamic listify(dynamic jsArray) {
+List listify(dynamic jsArray) {
   var list = [];
   for (int i = 0; i < jsArray.length; i++) {
     list.add(jsArray[i]);
