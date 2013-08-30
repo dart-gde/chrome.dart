@@ -13,7 +13,7 @@ class Tabs {
 
   Tabs._();
 
-  get _tabs => js.context.chrome.tabs;
+  get _tabs => chromeProxy.tabs;
 
   /**
    * Retrieves details about the specified tab.
@@ -479,7 +479,7 @@ class Tabs {
 
   final ChromeStreamController<Tab> _onCreated =
       new ChromeStreamController<Tab>.oneArg(
-          () => js.context.chrome.tabs.onCreated,
+          () => chromeProxy.tabs.onCreated,
           (tab) => new Tab(tab));
 
   /**
@@ -491,7 +491,7 @@ class Tabs {
 
   final ChromeStreamController<TabUpdatedEvent> _onUpdated =
       new ChromeStreamController<TabUpdatedEvent>.threeArgs(
-          () => js.context.chrome.tabs.onUpdated,
+          () => chromeProxy.tabs.onUpdated,
           (tabId, changeInfo, tab) =>
               new TabUpdatedEvent(new Tab(tab), changeInfo));
 
@@ -502,7 +502,7 @@ class Tabs {
 
   final ChromeStreamController<TabMovedEvent> _onMoved =
       new ChromeStreamController<TabMovedEvent>.twoArgs(
-          () => js.context.chrome.tabs.onMoved,
+          () => chromeProxy.tabs.onMoved,
           (tabId, moveInfo) =>
               new TabMovedEvent.moved(tabId, moveInfo));
 
@@ -516,7 +516,7 @@ class Tabs {
 
   final ChromeStreamController<TabActivatedEvent> _onActivated =
       new ChromeStreamController<TabActivatedEvent>.oneArg(
-          () => js.context.chrome.tabs.onActivated,
+          () => chromeProxy.tabs.onActivated,
           (activeInfo) =>
               new TabActivatedEvent(activeInfo));
 
@@ -529,7 +529,7 @@ class Tabs {
 
   final ChromeStreamController<TabHighlightedEvent> _onHighlighted =
       new ChromeStreamController<TabHighlightedEvent>.oneArg(
-          () => js.context.chrome.tabs.onHighlighted,
+          () => chromeProxy.tabs.onHighlighted,
           (highlightInfo) =>
               new TabHighlightedEvent(highlightInfo));
   /**
@@ -539,7 +539,7 @@ class Tabs {
 
   final ChromeStreamController<TabMovedEvent> _onDetached =
       new ChromeStreamController<TabMovedEvent>.twoArgs(
-          () => js.context.chrome.tabs.onDetached,
+          () => chromeProxy.tabs.onDetached,
           (tabId, detachInfo) =>
               new TabMovedEvent.detached(tabId, detachInfo));
 
@@ -551,7 +551,7 @@ class Tabs {
 
   final ChromeStreamController<TabMovedEvent> _onAttached =
       new ChromeStreamController<TabMovedEvent>.twoArgs(
-          () => js.context.chrome.tabs.onAttached,
+          () => chromeProxy.tabs.onAttached,
           (tabId, attachInfo) =>
               new TabMovedEvent.attached(tabId, attachInfo));
   /**
@@ -562,7 +562,7 @@ class Tabs {
 
   final ChromeStreamController<TabRemovedEvent> _onRemoved =
       new ChromeStreamController<TabRemovedEvent>.twoArgs(
-          () => js.context.chrome.tabs.onRemoved,
+          () => chromeProxy.tabs.onRemoved,
           (tabId, removeInfo) =>
               new TabRemovedEvent(tabId, removeInfo));
 
@@ -574,7 +574,7 @@ class Tabs {
 
   final ChromeStreamController<TabReplacedEvent> _onReplaced =
       new ChromeStreamController<TabReplacedEvent>.twoArgs(
-          () => js.context.chrome.tabs.onReplaced,
+          () => chromeProxy.tabs.onReplaced,
           (addedTabId, removedTabId) =>
               new TabReplacedEvent(addedTabId, addedTabId));
 
@@ -635,7 +635,7 @@ class Tab {
       this.incognito);
 
 
-  Tab(js.Proxy tab) : this._(
+  Tab(tab) : this._(
       tab.id,
       tab.index,
       tab.windowId,
@@ -735,7 +735,7 @@ class TabUpdatedEvent {
   const TabUpdatedEvent._(
       this.tab, this.status, this.url, this.pinned, this.favIconUrl);
 
-  TabUpdatedEvent(tab, js.Proxy changeInfo) : this._(
+  TabUpdatedEvent(tab, changeInfo) : this._(
       tab,
       changeInfo['status'] != null ? new TabStatus(changeInfo.status) : null,
       changeInfo['url'],
@@ -753,15 +753,15 @@ class TabMovedEvent {
   const TabMovedEvent._(
       this.type, this.tabId, this.windowId, this.fromIndex, this.toIndex);
 
-  TabMovedEvent.moved(tabId, js.Proxy moveInfo) : this._(
+  TabMovedEvent.moved(tabId, moveInfo) : this._(
       'moved', tabId, moveInfo.windowId, moveInfo.fromIndex, moveInfo.toIndex);
 
 
-  TabMovedEvent.detached(tabId, js.Proxy detachInfo) : this._(
+  TabMovedEvent.detached(tabId, detachInfo) : this._(
       'detached', tabId, detachInfo.oldWindowId, detachInfo.oldPosition, null);
 
 
-  TabMovedEvent.attached(tabId, js.Proxy attachInfo) : this._(
+  TabMovedEvent.attached(tabId, attachInfo) : this._(
       'attached', tabId, attachInfo.newWindowId, null, attachInfo.newPosition);
 }
 
@@ -771,7 +771,7 @@ class TabActivatedEvent {
 
   const TabActivatedEvent._(this.tabId, this.windowId);
 
-  TabActivatedEvent(js.Proxy activeInfo)
+  TabActivatedEvent(activeInfo)
       : this._(activeInfo.tabId, activeInfo.windowId);
 }
 
@@ -781,7 +781,7 @@ class TabHighlightedEvent {
 
   const TabHighlightedEvent._(this.tabIds, this.windowId);
 
-  TabHighlightedEvent(js.Proxy highlightInfo)
+  TabHighlightedEvent(highlightInfo)
       : this._(listify(highlightInfo.tabIds), highlightInfo.windowId);
 }
 
@@ -792,7 +792,7 @@ class TabRemovedEvent {
 
   const TabRemovedEvent._(this.tabId, this.windowId, this.isWindowClosing);
 
-  TabRemovedEvent(tabId, js.Proxy removeInfo)
+  TabRemovedEvent(tabId, removeInfo)
       : this._(tabId, removeInfo.windowId, removeInfo.isWindowClosing);
 }
 

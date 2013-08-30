@@ -13,7 +13,7 @@ class BrowserAction {
 
   BrowserAction._();
 
-  js.Proxy get _browserAction => js.context.chrome.browserAction;
+  get _browserAction => chromeProxy.browserAction;
 
   /**
    * Sets the title of the browser action. This shows up in the tooltip.
@@ -200,7 +200,7 @@ class BrowserAction {
 
   final ChromeStreamController<Tab> _onClicked =
       new ChromeStreamController<Tab>.oneArg(
-          () => js.context.chrome.browserAction.onClicked,
+          () => chromeProxy.browserAction.onClicked,
           (tab) =>
               new Tab(tab));
 
