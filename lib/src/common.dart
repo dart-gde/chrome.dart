@@ -1,7 +1,6 @@
 library chrome.common;
 
 import 'dart:async';
-import 'dart:html';
 import 'dart:convert' show JSON;
 
 import 'package:js/js.dart' as js;
@@ -10,24 +9,6 @@ import 'runtime.dart';
 
 dynamic get jsContext => js.context as dynamic;
 dynamic get chromeProxy => jsContext.chrome;
-
-bool isLinux() {
-  return _platform().indexOf('linux') != -1;
-}
-
-bool isMac() {
-  return _platform().indexOf('mac') != -1;
-}
-
-bool isWin() {
-  return _platform().indexOf('win') != -1;
-}
-
-String _platform() {
-  String str = window.navigator.platform;
-
-  return (str != null) ? str.toLowerCase() : '';
-}
 
 dynamic convertJsonResponse(dynamic response) {
   return js.scoped(() {

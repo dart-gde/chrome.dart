@@ -1,7 +1,6 @@
 library chrome.app;
 
 import 'dart:async';
-import 'dart:html' as html;
 import 'package:js/js.dart' as js;
 import 'common.dart';
 
@@ -276,17 +275,12 @@ class AppWindow {
 }
 
 /// The top-level context object for web scripting.
-class HtmlWindow implements html.WindowBase {
-  bool get closed => _proxy.closed;
-  html.HistoryBase get history => throw new UnimplementedError();
-  html.LocationBase get location => throw new UnimplementedError();
-  html.WindowBase get opener => throw new UnimplementedError();
-  html.WindowBase get parent => throw new UnimplementedError();
-  html.WindowBase get top => throw new UnimplementedError();
-
+class HtmlWindow {  
   var _proxy;
   js.Callback _jsOnContentLoaded;
 
+  bool get closed => _proxy.closed;
+  
   final _onContentLoaded = new StreamController.broadcast();
   Stream get onContentLoaded => _onContentLoaded.stream;
 

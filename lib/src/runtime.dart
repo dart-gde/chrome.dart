@@ -173,6 +173,14 @@ class Runtime {
     _runtime.getPackageDirectoryEntry(completer.callback);
     return completer.future;
   }
+  
+  /// Returns information about the current platform.
+  Future<PlatformInfo> getPlatformInfo() {
+    final completer = new ChromeCompleter.oneArg((platformInfo) => 
+        new PlatformInfo._(platformInfo));
+    _runtime.getPlatformInfo(completer.callback);
+    return completer.future;
+  }
 
   /// Events
 
@@ -334,4 +342,28 @@ class MessageEvent {
   }
 
   bool get responseSent => _sendResponse == null;
+}
+
+/// Information about the current platform.
+class PlatformInfo {
+  /// The operating system chrome is running on.
+  /// 
+  /// One of "mac", "win", "android", "cros", "linux", or "openbsd".
+  final String os;
+  
+  /// The machine's processor architecture.
+  /// 
+  /// One of "arm", "x86-32", or "x86-64".
+  final String arch;
+  
+  /// The native client architecture. This may be different from arch on some 
+  /// platforms.
+  ///
+  /// One of "arm", "x86-32", or "x86-64".
+  final String nacl_arch;
+  
+  PlatformInfo._(proxy)
+      : os = proxy.os
+      , arch = proxy.arch
+      , nacl_arch = proxy.arch;
 }
