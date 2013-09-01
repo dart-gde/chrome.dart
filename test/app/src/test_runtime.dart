@@ -92,6 +92,14 @@ class TestRuntime {
         expect(runtime.sendMessage('test message'),
             completion('respond: test message'));
       });
+      
+      test('Test that a call to getPlatformInfo succeeds', () {
+        runtime.getPlatformInfo().then(expectAsync1((PlatformInfo info) {          
+          String htmlPlatformInfo = 
+              html.window.navigator.platform.toLowerCase();
+          expect(htmlPlatformInfo, contains(info.os));
+        }));
+      });
     });
   }
 }
