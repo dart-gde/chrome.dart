@@ -365,5 +365,5 @@ class PlatformInfo {
   PlatformInfo._(proxy)
       : os = proxy.os
       , arch = proxy.arch
-      , nacl_arch = proxy.arch;
+      , nacl_arch = proxy.nacl_arch;
 }
