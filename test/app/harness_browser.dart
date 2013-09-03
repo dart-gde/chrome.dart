@@ -21,6 +21,7 @@ part 'src/test_push_messaging.dart';
 part 'src/test_runtime.dart';
 part 'src/test_serial.dart';
 part 'src/test_socket.dart';
+part 'src/test_sync_file_system.dart';
 
 void main() {
   Logger.root.level = Level.ALL;
@@ -58,4 +59,5 @@ void main() {
   new TestRuntime().main();
   new TestSerial().main();
   new TestSocket().main();
+  new TestSyncFileSystem().main();
 }

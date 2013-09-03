@@ -66,6 +66,15 @@ class TestRuntime {
         }));
       });
 
+      test('getPackageDirectoryEntry()', () {
+        runtime.getPackageDirectoryEntry().then(expectAsync1((DirectoryEntry dir) {
+          expect(dir, isNotNull);
+          expect(dir.name.length, greaterThanOrEqualTo(1));
+
+          logMessage("packages dir = ${dir}");
+        }));
+      });
+
       test('onStartup', () {
         runtime.onStartup.listen((_) { }).cancel();
       });
@@ -92,10 +101,10 @@ class TestRuntime {
         expect(runtime.sendMessage('test message'),
             completion('respond: test message'));
       });
-      
+
       test('Test that a call to getPlatformInfo succeeds', () {
-        runtime.getPlatformInfo().then(expectAsync1((PlatformInfo info) {          
-          String htmlPlatformInfo = 
+        runtime.getPlatformInfo().then(expectAsync1((PlatformInfo info) {
+          String htmlPlatformInfo =
               html.window.navigator.platform.toLowerCase();
           expect(htmlPlatformInfo, contains(info.os));
         }));
