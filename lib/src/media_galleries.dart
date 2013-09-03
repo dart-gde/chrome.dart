@@ -1,9 +1,11 @@
 library chrome.media_galleries;
 
 import 'dart:async';
+
 import 'package:js/js.dart' as js;
-import 'package:js/js_wrapping.dart' as js_wrapping;
+
 import 'common.dart';
+import 'files.dart';
 
 /**
  * Description:  Use the chrome.mediaGalleries API to access media files
@@ -117,18 +119,14 @@ class ChromeMediaGalleries {
    * function(array of domfilesystem mediaFileSystems) {...};
    * mediaFileSystems ( optional array of domfilesystem )
    */
-  Future<List> getMediaFileSystems({ChromeMediaGalleriesInteractiveEnum interactive: ChromeMediaGalleriesInteractiveEnum.NO}) {
-    List transform(arg) {
-      List l = new js_wrapping.JsArrayToListAdapter.fromProxy(arg).toList();
-      l.forEach((e) => js.retain(e));
-      return l;
-    };
-
-    ChromeCompleter completer = new ChromeCompleter.oneArg(transform);
+  Future<List<FileSystem>> getMediaFileSystems({ChromeMediaGalleriesInteractiveEnum interactive: ChromeMediaGalleriesInteractiveEnum.NO}) {
+    ChromeCompleter<List<FileSystem>> completer = new ChromeCompleter.oneArg((proxy) {
+      return listify(proxy).map((fs) => new FileSystem.retain(fs));
+    });
 
     js.scoped(() {
-      chromeProxy.mediaGalleries
-      .getMediaFileSystems(js.map({'interactive': interactive.value}), completer.callback);
+      chromeProxy.mediaGalleries.getMediaFileSystems(
+          js.map({'interactive': interactive.value}), completer.callback);
     });
 
     return completer.future;
@@ -142,10 +140,10 @@ class ChromeMediaGalleries {
    *
    * return type MediaFileSystemMetadata
    */
-  MediaFileSystemMetadata getMediaFileSystemMetadata(mediaFileSystem) {
+  MediaFileSystemMetadata getMediaFileSystemMetadata(FileSystem mediaFileSystem) {
     return js.scoped(() {
-      var jsMetadataResult = chromeProxy.mediaGalleries
-      .getMediaFileSystemMetadata(mediaFileSystem);
+      var jsMetadataResult = chromeProxy.mediaGalleries.getMediaFileSystemMetadata(
+          mediaFileSystem.proxy);
       MediaFileSystemMetadata mediaFileSystemMetadata =
           new MediaFileSystemMetadata(jsMetadataResult['name'],
           jsMetadataResult['galleryId'],

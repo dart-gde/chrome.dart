@@ -7,8 +7,10 @@ import 'package:js/js.dart' as js;
 import 'package:meta/meta.dart';
 
 import 'common.dart';
+import 'files.dart';
 import 'tabs.dart';
 
+/// Accessor for the `chrome.runtime` namespace.
 final Runtime runtime = new Runtime._();
 
 /**
@@ -164,19 +166,17 @@ class Runtime {
 
   /**
    * Returns a DirectoryEntry for the package directory.
-   *
-   * This will return a dom DirectoryEntry. js.retain() has been called on it;
-   * it is the caller's responsibility to call js.release();
    */
-  Future<js.Proxy> getPackageDirectoryEntry() {
-    ChromeCompleter<js.Proxy> completer = new ChromeCompleter.oneArg(js.retain);
+  Future<DirectoryEntry> getPackageDirectoryEntry() {
+    ChromeCompleter<DirectoryEntry> completer =
+        new ChromeCompleter.oneArg(Entry.createFrom);
     _runtime.getPackageDirectoryEntry(completer.callback);
     return completer.future;
   }
-  
+
   /// Returns information about the current platform.
   Future<PlatformInfo> getPlatformInfo() {
-    final completer = new ChromeCompleter.oneArg((platformInfo) => 
+    final completer = new ChromeCompleter.oneArg((platformInfo) =>
         new PlatformInfo._(platformInfo));
     _runtime.getPlatformInfo(completer.callback);
     return completer.future;
@@ -347,21 +347,21 @@ class MessageEvent {
 /// Information about the current platform.
 class PlatformInfo {
   /// The operating system chrome is running on.
-  /// 
+  ///
   /// One of "mac", "win", "android", "cros", "linux", or "openbsd".
   final String os;
-  
+
   /// The machine's processor architecture.
-  /// 
+  ///
   /// One of "arm", "x86-32", or "x86-64".
   final String arch;
-  
-  /// The native client architecture. This may be different from arch on some 
+
+  /// The native client architecture. This may be different from arch on some
   /// platforms.
   ///
   /// One of "arm", "x86-32", or "x86-64".
   final String nacl_arch;
-  
+
   PlatformInfo._(proxy)
       : os = proxy.os
       , arch = proxy.arch

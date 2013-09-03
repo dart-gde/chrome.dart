@@ -5,6 +5,7 @@ library chrome_app;
 
 export 'src/app.dart';
 export 'src/file_system.dart';
+export 'src/files.dart';
 export 'src/i18n.dart';
 export 'src/identity.dart';
 export 'src/media_galleries.dart';
