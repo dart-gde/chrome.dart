@@ -2,8 +2,6 @@ library chrome.sync_file_system;
 
 import 'dart:async';
 
-import 'package:js/js.dart' as js;
-
 import 'common.dart';
 import 'files.dart';
 
@@ -11,7 +9,7 @@ import 'files.dart';
 ///
 /// Additional documentation is available here:
 ///   http://developer.chrome.com/apps/syncFileSystem.html
-final SyncFileSystem syncFileSystem  = new SyncFileSystem._();
+final SyncFileSystem syncFileSystem = new SyncFileSystem._();
 
 /**
  * Use the chrome.syncFileSystem API to save and synchronize data on Google

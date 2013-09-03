@@ -3,7 +3,6 @@ import 'dart:html';
 import 'dart:async';
 
 import 'package:chrome/app.dart' as chrome;
-import 'package:js/js.dart' as js;
 
 void main() {
   Element buttonArea = query('#summary');
