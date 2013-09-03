@@ -5,6 +5,7 @@ import "dart:async";
 import "package:logging/logging.dart";
 import "package:js/js.dart" as js;
 import "package:js/js_wrapping.dart" as jsw;
+
 import 'common.dart';
 
 class Permissions {
@@ -112,7 +113,7 @@ class Permissions {
 
 		_jsContains() {
 			void containsCallback(var result) {
-				compl.complete(result == js._true);
+				compl.complete(result);
 			}
 
 			chromeProxy.permissions.contains(
