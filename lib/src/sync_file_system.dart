@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:js/js.dart' as js;
 
 import 'common.dart';
+import 'files.dart';
 
 /// Accessor for the `chrome.syncFileSystem` namespace.
 ///
@@ -35,8 +36,8 @@ class SyncFileSystem {
    *
    * see [chrome.FileSystem]
    */
-  Future<js.Proxy> requestFileSystem() {
-    ChromeCompleter<js.Proxy> completer = new ChromeCompleter.oneArg(js.retain);
+  Future<FileSystem> requestFileSystem() {
+    ChromeCompleter<FileSystem> completer = new ChromeCompleter.oneArg(FileSystem.createFrom);
     chromeProxy.syncFileSystem.requestFileSystem(completer.callback);
     return completer.future;
   }
@@ -68,11 +69,11 @@ class SyncFileSystem {
    * Returns the current usage and quota in bytes for the 'syncable' file
    * storage for the app.
    */
-  Future<UsageAndQuota> getUsageAndQuota(js.Proxy domFileSystem) {
+  Future<UsageAndQuota> getUsageAndQuota(FileSystem fileSystem) {
     ChromeCompleter<UsageAndQuota> completer = new ChromeCompleter.oneArg((var quota) {
       return new UsageAndQuota._(quota);
     });
-    chromeProxy.syncFileSystem.getUsageAndQuota(domFileSystem, completer.callback);
+    chromeProxy.syncFileSystem.getUsageAndQuota(fileSystem.proxy, completer.callback);
     return completer.future;
   }
 
@@ -81,9 +82,9 @@ class SyncFileSystem {
    * 'synced', 'pending' or 'conflicting'. Note that 'conflicting' state only
    * happens when the service's conflict resolution policy is set to 'manual'.
    */
-  Future<String> getFileStatus(js.Proxy fileEntry) {
+  Future<String> getFileStatus(FileEntry fileEntry) {
     ChromeCompleter<String> completer = new ChromeCompleter.oneArg();
-    chromeProxy.syncFileSystem.getFileStatus(fileEntry, completer.callback);
+    chromeProxy.syncFileSystem.getFileStatus(fileEntry.proxy, completer.callback);
     return completer.future;
   }
 
@@ -91,14 +92,15 @@ class SyncFileSystem {
    * Returns each FileStatus for the given fileEntry array. Typically called
    * with the result from dirReader.readEntries().
    */
-  Future<List<FileEntryStatus>> getFileStatuses(List<js.Proxy> fileEntries) {
+  Future<List<FileEntryStatus>> getFileStatuses(List<FileEntry> fileEntries) {
     ChromeCompleter<List<FileEntryStatus>> completer =
         new ChromeCompleter.oneArg((var proxy) {
           Iterable<FileEntryStatus> iter = listify(proxy).map(
               (proxy) => new FileEntryStatus._(proxy));
           return iter.toList();
         });
-    chromeProxy.syncFileSystem.getFileStatuses(fileEntries, completer.callback);
+    List proxies = fileEntries.map((entry) => entry.proxy);
+    chromeProxy.syncFileSystem.getFileStatuses(proxies, completer.callback);
     return completer.future;
   }
 
@@ -139,7 +141,7 @@ class FileEntryStatus {
   /**
    * One of the Entry's originally given to getFileStatuses.
    */
-  js.Proxy fileEntry;
+  FileEntry fileEntry;
 
   /**
    * The status value can be 'synced', 'pending' or 'conflicting'.
@@ -153,10 +155,14 @@ class FileEntryStatus {
   String error;
 
   FileEntryStatus._(var proxy) {
-    fileEntry = proxy.fileEntry;
+    fileEntry = Entry.createFrom(proxy.fileEntry);
     status = proxy.status;
     try { error = proxy.error; } catch (e) { }
   }
+
+  void dispose() => fileEntry.release();
+
+  String toString() => "file status: ${fileEntry.name}, ${status}";
 }
 
 /**
@@ -188,7 +194,7 @@ class FileStatusEvent {
    * path information of synchronized file. On file deletion, fileEntry
    * information will still be available but file will no longer exist.
    */
-  js.Proxy fileEntry;
+  FileEntry fileEntry;
 
   /**
    * Resulting file status after onFileStatusChanged event. The status value can
@@ -209,12 +215,16 @@ class FileStatusEvent {
   String direction;
 
   FileStatusEvent._(var proxy) {
-    fileEntry = proxy.fileEntry;
+    // TODO: I am a tad worried about these leaking. Perhaps we should dispose
+    // of the event after the stream controller has notified all listeners?
+    fileEntry = Entry.createFrom(proxy.fileEntry);
     status = proxy.status;
     try { action = proxy.action; } catch (e) { }
     try { direction = proxy.direction; } catch (e) { }
   }
 
-  String toString() => "file status: ${fileEntry['name']}, ${status}"
+  void dispose() => fileEntry.release();
+
+  String toString() => "file status: ${fileEntry.name}, ${status}"
     ", ${action}, ${direction}";
 }
