@@ -8,10 +8,14 @@ class TestSyncFileSystem {
       });
 
       test('requestFileSystem', () {
-        syncFileSystem.requestFileSystem().then(expectAsync1((FileSystem fs) {
+        syncFileSystem.requestFileSystem().then((FileSystem fs) {
           expect(fs, isNotNull);
           expect(fs is FileSystem, isTrue);
-        }));
+        }).catchError((error) {
+          // this is ok - the user may not be signed in
+          expect(error, isNotNull);
+          expect(error.toString(), stringContainsInOrder(['authentication failed']));
+        });
       });
     });
   }

@@ -36,11 +36,11 @@ class TestRuntime {
         expect(manifest["manifest_version"], equals(2));
         expect(manifest["name"], equals("chrome.dart - test"));
         expect(manifest["version"], equals("1"));
-        expect(manifest["minimum_chrome_version"], equals("23"));
+        expect(manifest["minimum_chrome_version"], equals("28"));
         expect(manifest.containsKey("app"), isTrue);
         expect(manifest["app"].containsKey("background"), isTrue);
-        expect(manifest["app"]["background"].containsKey("page"), isTrue);
-        expect(manifest["app"]["background"]["page"], equals("background.html"));
+        expect(manifest["app"]["background"].containsKey("scripts"), isTrue);
+        expect(manifest["app"]["background"]["scripts"][0], equals("main.js"));
       });
 
       test('getURL(String path)', () {

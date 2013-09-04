@@ -33,7 +33,7 @@ Check out the [example](example) folder on setup.
 ### Using in dartium
 
 It is possible to run a dart chrome app in dartium within the dartvm. Chrome
-apps do not like having sym links outside of there project folder. One solution
+apps do not like having sym links outside of their project folder. One solution
 is to clone the package dependencies and breaking the symlinks. Something like
 the following might work.
 
