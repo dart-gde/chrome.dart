@@ -1,0 +1,159 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>RunAt class / chrome.tabs Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.tabs" data-type="RunAt">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.tabs.html">chrome.tabs</a> &rsaquo; <a href="../chrome.tabs/RunAt.html">RunAt</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>RunAt</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class RunAt {
+ final String _runAt;
+
+ const RunAt._(this._runAt);
+
+ factory RunAt(String runAt) {
+   switch(runAt.toLowerCase()) {
+     case 'document_start':
+       return DOCUMENT_START;
+     case 'document_end':
+       return DOCUMENT_END;
+     case 'document_idle':
+       return DOCUMENT_IDLE;
+     default:
+       throw 'Unknown RunAt: $runAt';
+   }
+ }
+
+ String toString() {
+   return _runAt;
+ }
+
+ static const RunAt DOCUMENT_START = const RunAt._('document_start');
+ static const RunAt DOCUMENT_END = const RunAt._('document_end');
+ static const RunAt DOCUMENT_IDLE = const RunAt._('document_idle');
+}
+</pre>
+</div>
+<div>
+<h3>Static Properties</h3>
+<div class="field"><h4 id="DOCUMENT_END">
+<button class="show-code">Code</button>
+const <a href="../chrome.tabs/RunAt.html">RunAt</a>         <strong>DOCUMENT_END</strong> <a class="anchor-link"
+            href="#DOCUMENT_END"
+            title="Permalink to RunAt.DOCUMENT_END">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const RunAt DOCUMENT_END = const RunAt._('document_end')
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="DOCUMENT_IDLE">
+<button class="show-code">Code</button>
+const <a href="../chrome.tabs/RunAt.html">RunAt</a>         <strong>DOCUMENT_IDLE</strong> <a class="anchor-link"
+            href="#DOCUMENT_IDLE"
+            title="Permalink to RunAt.DOCUMENT_IDLE">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const RunAt DOCUMENT_IDLE = const RunAt._('document_idle')
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="DOCUMENT_START">
+<button class="show-code">Code</button>
+const <a href="../chrome.tabs/RunAt.html">RunAt</a>         <strong>DOCUMENT_START</strong> <a class="anchor-link"
+            href="#DOCUMENT_START"
+            title="Permalink to RunAt.DOCUMENT_START">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const RunAt DOCUMENT_START = const RunAt._('document_start')
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+factory <strong>RunAt</strong>(String runAt) <a class="anchor-link" href="#"
+              title="Permalink to RunAt.RunAt">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+factory RunAt(String runAt) {
+ switch(runAt.toLowerCase()) {
+   case 'document_start':
+     return DOCUMENT_START;
+   case 'document_end':
+     return DOCUMENT_END;
+   case 'document_idle':
+     return DOCUMENT_IDLE;
+   default:
+     throw 'Unknown RunAt: $runAt';
+ }
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to RunAt.toString">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() {
+ return _runAt;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.763</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

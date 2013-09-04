@@ -1,0 +1,324 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ContextMenuClickEvent class / chrome.context_menus Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.context_menus" data-type="ContextMenuClickEvent">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.context_menus.html">chrome.context_menus</a> &rsaquo; <a href="../chrome.context_menus/ContextMenuClickEvent.html">ContextMenuClickEvent</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ContextMenuClickEvent</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ContextMenuClickEvent {
+ /**
+  * The details of the tab where the click took place. If the click did not
+  * take place in a tab, this property will not be set.
+  */
+ final Tab tab;
+ /**
+  * The ID of the menu item that was clicked.
+  * int or String
+  */
+ dynamic menuItemId;
+ /**
+  * The parent ID, if any, for the item clicked.
+  * int or String
+  */
+ dynamic parentMenuItemId;
+ /**
+  * One of 'image', 'video', or 'audio' if the context menu was activated on
+  * one of these types of elements.
+  */
+ ContextMenuContext mediaType;
+ /**
+  * If the element is a link, the URL it points to.
+  */
+ String linkUrl;
+ /**
+  * Will be present for elements with a 'src' URL.
+  */
+ String srcUrl;
+ /**
+  * The URL of the page where the menu item was clicked. This property is not
+  * set if the click occured in a context where there is no current page, such
+  * as in a launcher context menu.
+  */
+ String pageUrl;
+ /**
+  * The URL of the frame of the element where the context menu was clicked, if
+  * it was in a frame.
+  */
+ String frameUrl;
+ /**
+  * The text for the context selection, if any.
+  */
+ String selectionText;
+ /**
+  * A flag indicating whether the element is editable (text input, textarea,
+  * etc.).
+  */
+ bool editable;
+ /**
+  * A flag indicating the state of a checkbox or radio item before it was
+  * clicked.
+  */
+ bool wasChecked;
+ /**
+  * A flag indicating the state of a checkbox or radio item after it is
+  * clicked.
+  */
+ bool checked;
+
+ ContextMenuClickEvent(onClickData, this.tab) {
+   this.menuItemId = onClickData.menuItemId;
+   this.parentMenuItemId = onClickData['parentMenuItemId'];
+   if (onClickData['mediaType'] != null) {
+     this.mediaType = new ContextMenuContext(onClickData['mediaType']);
+   }
+   this.linkUrl = onClickData['linkUrl'];
+   this.srcUrl = onClickData['srcUrl'];
+   this.pageUrl = onClickData['pageUrl'];
+   this.frameUrl = onClickData['frameUrl'];
+   this.selectionText = onClickData['selectionText'];
+   this.editable = onClickData.editable;
+   this.wasChecked = onClickData['wasChecked'];
+   this.checked = onClickData['checked'];
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>ContextMenuClickEvent</strong>(onClickData, <a href="../chrome.tabs/Tab.html">Tab</a> tab) <a class="anchor-link" href="#"
+              title="Permalink to ContextMenuClickEvent.ContextMenuClickEvent">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+ContextMenuClickEvent(onClickData, this.tab) {
+ this.menuItemId = onClickData.menuItemId;
+ this.parentMenuItemId = onClickData['parentMenuItemId'];
+ if (onClickData['mediaType'] != null) {
+   this.mediaType = new ContextMenuContext(onClickData['mediaType']);
+ }
+ this.linkUrl = onClickData['linkUrl'];
+ this.srcUrl = onClickData['srcUrl'];
+ this.pageUrl = onClickData['pageUrl'];
+ this.frameUrl = onClickData['frameUrl'];
+ this.selectionText = onClickData['selectionText'];
+ this.editable = onClickData.editable;
+ this.wasChecked = onClickData['wasChecked'];
+ this.checked = onClickData['checked'];
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="checked">
+<button class="show-code">Code</button>
+bool         <strong>checked</strong> <a class="anchor-link"
+            href="#checked"
+            title="Permalink to ContextMenuClickEvent.checked">#</a>
+        </h4>
+        <div class="doc">
+<p>A flag indicating the state of a checkbox or radio item after it is
+clicked.</p>
+<pre class="source">
+bool checked
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="editable">
+<button class="show-code">Code</button>
+bool         <strong>editable</strong> <a class="anchor-link"
+            href="#editable"
+            title="Permalink to ContextMenuClickEvent.editable">#</a>
+        </h4>
+        <div class="doc">
+<p>A flag indicating whether the element is editable (text input, textarea,
+etc.).</p>
+<pre class="source">
+bool editable
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="frameUrl">
+<button class="show-code">Code</button>
+String         <strong>frameUrl</strong> <a class="anchor-link"
+            href="#frameUrl"
+            title="Permalink to ContextMenuClickEvent.frameUrl">#</a>
+        </h4>
+        <div class="doc">
+<p>The URL of the frame of the element where the context menu was clicked, if
+it was in a frame.</p>
+<pre class="source">
+String frameUrl
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="linkUrl">
+<button class="show-code">Code</button>
+String         <strong>linkUrl</strong> <a class="anchor-link"
+            href="#linkUrl"
+            title="Permalink to ContextMenuClickEvent.linkUrl">#</a>
+        </h4>
+        <div class="doc">
+<p>If the element is a link, the URL it points to.</p>
+<pre class="source">
+String linkUrl
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="mediaType">
+<button class="show-code">Code</button>
+<a href="../chrome.context_menus/ContextMenuContext.html">ContextMenuContext</a>         <strong>mediaType</strong> <a class="anchor-link"
+            href="#mediaType"
+            title="Permalink to ContextMenuClickEvent.mediaType">#</a>
+        </h4>
+        <div class="doc">
+<p>One of 'image', 'video', or 'audio' if the context menu was activated on
+one of these types of elements.</p>
+<pre class="source">
+ContextMenuContext mediaType
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="menuItemId">
+<button class="show-code">Code</button>
+var         <strong>menuItemId</strong> <a class="anchor-link"
+            href="#menuItemId"
+            title="Permalink to ContextMenuClickEvent.menuItemId">#</a>
+        </h4>
+        <div class="doc">
+<p>The ID of the menu item that was clicked.
+int or String</p>
+<pre class="source">
+dynamic menuItemId
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="pageUrl">
+<button class="show-code">Code</button>
+String         <strong>pageUrl</strong> <a class="anchor-link"
+            href="#pageUrl"
+            title="Permalink to ContextMenuClickEvent.pageUrl">#</a>
+        </h4>
+        <div class="doc">
+<p>The URL of the page where the menu item was clicked. This property is not
+set if the click occured in a context where there is no current page, such
+as in a launcher context menu.</p>
+<pre class="source">
+String pageUrl
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="parentMenuItemId">
+<button class="show-code">Code</button>
+var         <strong>parentMenuItemId</strong> <a class="anchor-link"
+            href="#parentMenuItemId"
+            title="Permalink to ContextMenuClickEvent.parentMenuItemId">#</a>
+        </h4>
+        <div class="doc">
+<p>The parent ID, if any, for the item clicked.
+int or String</p>
+<pre class="source">
+dynamic parentMenuItemId
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="selectionText">
+<button class="show-code">Code</button>
+String         <strong>selectionText</strong> <a class="anchor-link"
+            href="#selectionText"
+            title="Permalink to ContextMenuClickEvent.selectionText">#</a>
+        </h4>
+        <div class="doc">
+<p>The text for the context selection, if any.</p>
+<pre class="source">
+String selectionText
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="srcUrl">
+<button class="show-code">Code</button>
+String         <strong>srcUrl</strong> <a class="anchor-link"
+            href="#srcUrl"
+            title="Permalink to ContextMenuClickEvent.srcUrl">#</a>
+        </h4>
+        <div class="doc">
+<p>Will be present for elements with a 'src' URL.</p>
+<pre class="source">
+String srcUrl
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="tab">
+<button class="show-code">Code</button>
+final <a href="../chrome.tabs/Tab.html">Tab</a>         <strong>tab</strong> <a class="anchor-link"
+            href="#tab"
+            title="Permalink to ContextMenuClickEvent.tab">#</a>
+        </h4>
+        <div class="doc">
+<p>The details of the tab where the click took place. If the click did not
+take place in a tab, this property will not be set.</p>
+<pre class="source">
+final Tab tab
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="wasChecked">
+<button class="show-code">Code</button>
+bool         <strong>wasChecked</strong> <a class="anchor-link"
+            href="#wasChecked"
+            title="Permalink to ContextMenuClickEvent.wasChecked">#</a>
+        </h4>
+        <div class="doc">
+<p>A flag indicating the state of a checkbox or radio item before it was
+clicked.</p>
+<pre class="source">
+bool wasChecked
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.342</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

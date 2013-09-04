@@ -1,0 +1,589 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Windows class / chrome.windows Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.windows" data-type="Windows">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.windows.html">chrome.windows</a> &rsaquo; <a href="../chrome.windows/Windows.html">Windows</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Windows</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class Windows {
+
+ Windows._();
+
+ /**
+  * The windowId value that represents the absence of a chrome browser window.
+  */
+ int get WINDOW_ID_NONE =&gt;
+     chromeProxy.windows.WINDOW_ID_NONE as int;
+ /**
+  * The windowId value that represents the current window.
+  */
+ int get WINDOW_ID_CURRENT =&gt;
+     chromeProxy.windows.WINDOW_ID_CURRENT as int;
+
+ /**
+  * Gets details about a window.
+  *
+  * @param populate If true, the window object will have a tabs property that
+  *                 contains a list of the tabs.Tab objects
+  */
+ Future&lt;Window&gt; get(int windowId, {bool populate}) {
+   var completer =
+       new ChromeCompleter.oneArg((window) =&gt; new Window(window));
+   js.scoped(() {
+     chromeProxy.windows.get(
+         windowId,
+         _createGetInfoMap(populate),
+         completer.callback);
+   });
+   return completer.future;
+ }
+
+ /**
+  * Gets the window that was most recently focused — typically the window
+  * 'on top'.
+  *
+  * @param populate If true, the window object will have a tabs property that
+  *                 contains a list of the tabs.Tab objects
+  */
+ Future&lt;Window&gt; getCurrent({bool populate}) {
+   var completer =
+       new ChromeCompleter.oneArg((window) =&gt; new Window(window));
+   js.scoped(() {
+     chromeProxy.windows.getCurrent(
+         _createGetInfoMap(populate),
+         completer.callback);
+   });
+   return completer.future;
+ }
+
+ /**
+  * Gets the current window.
+  *
+  * @param populate If true, the window object will have a tabs property that
+  *                 contains a list of the tabs.Tab objects
+  */
+ Future&lt;Window&gt; getLastFocused({bool populate}) {
+   var completer =
+       new ChromeCompleter.oneArg((window) =&gt; new Window(window));
+   js.scoped(() {
+     chromeProxy.windows.getLastFocused(
+         _createGetInfoMap(populate),
+         completer.callback);
+   });
+   return completer.future;
+ }
+
+ /**
+  * Gets the current window.
+  *
+  * @param populate If true, the window objects will have a tabs property that
+  *                 contains a list of the tabs.Tab objects
+  */
+ Future&lt;List&lt;Window&gt;&gt; getAll({bool populate}) {
+   var completer =
+       new ChromeCompleter.oneArg((jsWindows) {
+         List&lt;Window&gt; windows = [];
+
+         for (int i = 0; i &lt; jsWindows.length; i++) {
+           windows.add(new Window(jsWindows[i]));
+         }
+         return windows;
+       });
+   js.scoped(() {
+     chromeProxy.windows.getAll(
+         _createGetInfoMap(populate),
+         completer.callback);
+   });
+   return completer.future;
+ }
+
+ /**
+  * Creates (opens) a new browser with any optional sizing, position or
+  * default URL provided.
+  */
+ Future&lt;Window&gt; create({
+     String url,
+     int tabId,
+     int left,
+     int top,
+     int width,
+     int height,
+     bool focused,
+     bool incognito,
+     WindowType type}) {
+   Map&lt;String, dynamic&gt; createData = {};
+   if (url != null) {
+     createData['url'] = url;
+   }
+   if (tabId != null) {
+     createData['tabId'] = tabId;
+   }
+   if (left != null) {
+     createData['left'] = left;
+   }
+   if (top != null) {
+     createData['top'] = top;
+   }
+   if (width != null) {
+     createData['width'] = width;
+   }
+   if (height != null) {
+     createData['height'] = height;
+   }
+   if (focused != null) {
+     createData['focused'] = focused;
+   }
+   if (incognito != null) {
+     createData['incognito'] = incognito;
+   }
+   if (type != null) {
+     createData['type'] = type.toString();
+   }
+
+   var completer =
+       new ChromeCompleter.oneArg((window) =&gt; new Window(window));
+   js.scoped(() {
+     chromeProxy.windows.create(js.map(createData), completer.callback);
+   });
+   return completer.future;
+ }
+
+ /**
+  * Updates the properties of a window. Specify only the properties that you
+  * want to change; unspecified properties will be left unchanged.
+  */
+ Future&lt;Window&gt; update(int windowId, {
+     int left,
+     int top,
+     int width,
+     int height,
+     bool focused,
+     bool drawAttention,
+     WindowState state}) {
+   Map&lt;String, dynamic&gt; updateData = {};
+   if (left != null) {
+     updateData['left'] = left;
+   }
+   if (top != null) {
+     updateData['top'] = top;
+   }
+   if (width != null) {
+     updateData['width'] = width;
+   }
+   if (height != null) {
+     updateData['height'] = height;
+   }
+   if (focused != null) {
+     updateData['focused'] = focused;
+   }
+   if (drawAttention != null) {
+     updateData['drawAttention'] = drawAttention;
+   }
+   if (state != null) {
+     updateData['state'] = state.toString();
+   }
+
+   var completer =
+       new ChromeCompleter.oneArg((window) =&gt; new Window(window));
+   js.scoped(() {
+     chromeProxy.windows.update(windowId,
+         js.map(updateData),
+         completer.callback);
+   });
+   return completer.future;
+ }
+
+ /**
+  * Removes (closes) a window, and all the tabs inside it.
+  */
+ Future remove(int windowId) {
+   var completer = new ChromeCompleter.noArgs();
+   js.scoped(() {
+     chromeProxy.windows.remove(windowId, completer.callback);
+   });
+   return completer.future;
+ }
+
+ final ChromeStreamController&lt;Window&gt; _onCreated =
+     new ChromeStreamController&lt;Window&gt;.oneArg(
+         () =&gt; chromeProxy.windows.onCreated,
+         (window) =&gt; new Window(window));
+
+ /**
+  * Fired when a window is created.
+  */
+ Stream&lt;Window&gt; get onCreated =&gt; _onCreated.stream;
+
+ final ChromeStreamController&lt;int&gt; _onRemoved =
+     new ChromeStreamController&lt;int&gt;.oneArg(
+         () =&gt; chromeProxy.windows.onRemoved,
+         (windowId) =&gt; windowId);
+
+ /**
+  * Fired when a window is removed (closed).
+  */
+ Stream&lt;int&gt; get onRemoved =&gt; _onRemoved.stream;
+
+ final ChromeStreamController&lt;int&gt; _onFocusChanged =
+     new ChromeStreamController&lt;int&gt;.oneArg(
+         () =&gt; chromeProxy.windows.onFocusChanged,
+         (windowId) =&gt; windowId);
+
+ /**
+  * Fired when the currently focused window changes. Will be
+  * {@link WINDOW_ID_NONE} if all chrome windows have lost focus.
+  *
+  * Note: On some Linux window managers, {@link WINDOW_ID_NONE} will always be
+  * sent immediately preceding a switch from one chrome window to another.
+  */
+ Stream&lt;int&gt; get onFocusChanged =&gt; _onFocusChanged.stream;
+
+ js.Proxy _createGetInfoMap(bool populate) {
+   Map&lt;String, dynamic&gt; getInfo = {};
+   if (populate != null) {
+     getInfo['populate'] = populate;
+   }
+   return js.map(getInfo);
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="onCreated">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.windows/Window.html">Window</a>&gt;         <strong>onCreated</strong> <a class="anchor-link"
+            href="#onCreated"
+            title="Permalink to Windows.onCreated">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a window is created.</p>
+<pre class="source">
+Stream&lt;Window&gt; get onCreated =&gt; _onCreated.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onFocusChanged">
+<button class="show-code">Code</button>
+final Stream&lt;int&gt;         <strong>onFocusChanged</strong> <a class="anchor-link"
+            href="#onFocusChanged"
+            title="Permalink to Windows.onFocusChanged">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when the currently focused window changes. Will be
+{@link WINDOW<em>ID</em>NONE} if all chrome windows have lost focus.</p>
+<p>Note: On some Linux window managers, {@link WINDOW<em>ID</em>NONE} will always be
+sent immediately preceding a switch from one chrome window to another.</p>
+<pre class="source">
+Stream&lt;int&gt; get onFocusChanged =&gt; _onFocusChanged.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onRemoved">
+<button class="show-code">Code</button>
+final Stream&lt;int&gt;         <strong>onRemoved</strong> <a class="anchor-link"
+            href="#onRemoved"
+            title="Permalink to Windows.onRemoved">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a window is removed (closed).</p>
+<pre class="source">
+Stream&lt;int&gt; get onRemoved =&gt; _onRemoved.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="WINDOW_ID_CURRENT">
+<button class="show-code">Code</button>
+final int         <strong>WINDOW_ID_CURRENT</strong> <a class="anchor-link"
+            href="#WINDOW_ID_CURRENT"
+            title="Permalink to Windows.WINDOW_ID_CURRENT">#</a>
+        </h4>
+        <div class="doc">
+<p>The windowId value that represents the current window.</p>
+<pre class="source">
+int get WINDOW_ID_CURRENT =&gt;
+   chromeProxy.windows.WINDOW_ID_CURRENT as int;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="WINDOW_ID_NONE">
+<button class="show-code">Code</button>
+final int         <strong>WINDOW_ID_NONE</strong> <a class="anchor-link"
+            href="#WINDOW_ID_NONE"
+            title="Permalink to Windows.WINDOW_ID_NONE">#</a>
+        </h4>
+        <div class="doc">
+<p>The windowId value that represents the absence of a chrome browser window.</p>
+<pre class="source">
+int get WINDOW_ID_NONE =&gt;
+   chromeProxy.windows.WINDOW_ID_NONE as int;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="create">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.windows/Window.html">Window</a>&gt; <strong>create</strong>({String url, int tabId, int left, int top, int width, int height, bool focused, bool incognito, <a href="../chrome.windows/WindowType.html">WindowType</a> type}) <a class="anchor-link" href="#create"
+              title="Permalink to Windows.create">#</a></h4>
+<div class="doc">
+<p>Creates (opens) a new browser with any optional sizing, position or
+default URL provided.</p>
+<pre class="source">
+Future&lt;Window&gt; create({
+   String url,
+   int tabId,
+   int left,
+   int top,
+   int width,
+   int height,
+   bool focused,
+   bool incognito,
+   WindowType type}) {
+ Map&lt;String, dynamic&gt; createData = {};
+ if (url != null) {
+   createData['url'] = url;
+ }
+ if (tabId != null) {
+   createData['tabId'] = tabId;
+ }
+ if (left != null) {
+   createData['left'] = left;
+ }
+ if (top != null) {
+   createData['top'] = top;
+ }
+ if (width != null) {
+   createData['width'] = width;
+ }
+ if (height != null) {
+   createData['height'] = height;
+ }
+ if (focused != null) {
+   createData['focused'] = focused;
+ }
+ if (incognito != null) {
+   createData['incognito'] = incognito;
+ }
+ if (type != null) {
+   createData['type'] = type.toString();
+ }
+
+ var completer =
+     new ChromeCompleter.oneArg((window) =&gt; new Window(window));
+ js.scoped(() {
+   chromeProxy.windows.create(js.map(createData), completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="get">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.windows/Window.html">Window</a>&gt; <strong>get</strong>(int windowId, {bool populate}) <a class="anchor-link" href="#get"
+              title="Permalink to Windows.get">#</a></h4>
+<div class="doc">
+<p>Gets details about a window.</p>
+<p>@param populate If true, the window object will have a tabs property that</p>
+<pre><code>            contains a list of the tabs.Tab objects
+</code></pre>
+<pre class="source">
+Future&lt;Window&gt; get(int windowId, {bool populate}) {
+ var completer =
+     new ChromeCompleter.oneArg((window) =&gt; new Window(window));
+ js.scoped(() {
+   chromeProxy.windows.get(
+       windowId,
+       _createGetInfoMap(populate),
+       completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getAll">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.windows/Window.html">Window</a>&gt;&gt; <strong>getAll</strong>({bool populate}) <a class="anchor-link" href="#getAll"
+              title="Permalink to Windows.getAll">#</a></h4>
+<div class="doc">
+<p>Gets the current window.</p>
+<p>@param populate If true, the window objects will have a tabs property that</p>
+<pre><code>            contains a list of the tabs.Tab objects
+</code></pre>
+<pre class="source">
+Future&lt;List&lt;Window&gt;&gt; getAll({bool populate}) {
+ var completer =
+     new ChromeCompleter.oneArg((jsWindows) {
+       List&lt;Window&gt; windows = [];
+
+       for (int i = 0; i &lt; jsWindows.length; i++) {
+         windows.add(new Window(jsWindows[i]));
+       }
+       return windows;
+     });
+ js.scoped(() {
+   chromeProxy.windows.getAll(
+       _createGetInfoMap(populate),
+       completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getCurrent">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.windows/Window.html">Window</a>&gt; <strong>getCurrent</strong>({bool populate}) <a class="anchor-link" href="#getCurrent"
+              title="Permalink to Windows.getCurrent">#</a></h4>
+<div class="doc">
+<p>Gets the window that was most recently focused — typically the window
+'on top'.</p>
+<p>@param populate If true, the window object will have a tabs property that</p>
+<pre><code>            contains a list of the tabs.Tab objects
+</code></pre>
+<pre class="source">
+Future&lt;Window&gt; getCurrent({bool populate}) {
+ var completer =
+     new ChromeCompleter.oneArg((window) =&gt; new Window(window));
+ js.scoped(() {
+   chromeProxy.windows.getCurrent(
+       _createGetInfoMap(populate),
+       completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getLastFocused">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.windows/Window.html">Window</a>&gt; <strong>getLastFocused</strong>({bool populate}) <a class="anchor-link" href="#getLastFocused"
+              title="Permalink to Windows.getLastFocused">#</a></h4>
+<div class="doc">
+<p>Gets the current window.</p>
+<p>@param populate If true, the window object will have a tabs property that</p>
+<pre><code>            contains a list of the tabs.Tab objects
+</code></pre>
+<pre class="source">
+Future&lt;Window&gt; getLastFocused({bool populate}) {
+ var completer =
+     new ChromeCompleter.oneArg((window) =&gt; new Window(window));
+ js.scoped(() {
+   chromeProxy.windows.getLastFocused(
+       _createGetInfoMap(populate),
+       completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="remove">
+<button class="show-code">Code</button>
+Future <strong>remove</strong>(int windowId) <a class="anchor-link" href="#remove"
+              title="Permalink to Windows.remove">#</a></h4>
+<div class="doc">
+<p>Removes (closes) a window, and all the tabs inside it.</p>
+<pre class="source">
+Future remove(int windowId) {
+ var completer = new ChromeCompleter.noArgs();
+ js.scoped(() {
+   chromeProxy.windows.remove(windowId, completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="update">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.windows/Window.html">Window</a>&gt; <strong>update</strong>(int windowId, {int left, int top, int width, int height, bool focused, bool drawAttention, <a href="../chrome.windows/WindowState.html">WindowState</a> state}) <a class="anchor-link" href="#update"
+              title="Permalink to Windows.update">#</a></h4>
+<div class="doc">
+<p>Updates the properties of a window. Specify only the properties that you
+want to change; unspecified properties will be left unchanged.</p>
+<pre class="source">
+Future&lt;Window&gt; update(int windowId, {
+   int left,
+   int top,
+   int width,
+   int height,
+   bool focused,
+   bool drawAttention,
+   WindowState state}) {
+ Map&lt;String, dynamic&gt; updateData = {};
+ if (left != null) {
+   updateData['left'] = left;
+ }
+ if (top != null) {
+   updateData['top'] = top;
+ }
+ if (width != null) {
+   updateData['width'] = width;
+ }
+ if (height != null) {
+   updateData['height'] = height;
+ }
+ if (focused != null) {
+   updateData['focused'] = focused;
+ }
+ if (drawAttention != null) {
+   updateData['drawAttention'] = drawAttention;
+ }
+ if (state != null) {
+   updateData['state'] = state.toString();
+ }
+
+ var completer =
+     new ChromeCompleter.oneArg((window) =&gt; new Window(window));
+ js.scoped(() {
+   chromeProxy.windows.update(windowId,
+       js.map(updateData),
+       completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.826</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

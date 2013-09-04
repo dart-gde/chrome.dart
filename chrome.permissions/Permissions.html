@@ -1,0 +1,380 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Permissions class / chrome.permissions Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.permissions" data-type="Permissions">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.permissions.html">chrome.permissions</a> &rsaquo; <a href="../chrome.permissions/Permissions.html">Permissions</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Permissions</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class Permissions {
+	List permissions;
+	List origins;
+
+	Permissions({this.permissions: null, this.origins: null});
+
+	Permissions.fromJs(js.Proxy prox) {
+		if(prox["permissions"] != null) {
+			this.permissions = jsw.JsArrayToListAdapter.cast(prox["permissions"]);
+		}
+
+		if(prox["origins"] != null) {
+			this.origins = jsw.JsArrayToListAdapter.cast(prox["origins"]);
+		}
+	}
+
+	Map toMap() {
+		Map ret = new Map();
+
+		if(this.permissions != null) {
+			ret["permissions"] = this.permissions;
+		}
+
+		if(this.origins != null) {
+			ret["origins"] = this.origins;
+		}
+
+		return ret;
+	}
+
+	// Methods!
+	static Logger logger = new Logger("chrome.permissions");
+
+	// TODO: Events?
+
+	/** Request Permission requests additional permissions
+	  * From the Chrome runtime. These additional permissions
+	  * must be declared in the extension's manifest.json
+	  * under the "optional_permissions" tag.
+	  */
+	static Future&lt;bool&gt; request(Permissions perms) {
+		Completer compl = new Completer&lt;bool&gt;();
+
+		_jsRequest() {
+			void requestCallback(var result) {
+				compl.complete(result);
+			}
+
+			chromeProxy.permissions.request(js.map(perms.toMap()),
+				new js.Callback.once(requestCallback));
+		}
+
+		js.scoped(_jsRequest);
+
+		return compl.future;
+	}
+
+
+	/** Release releases the previously granted permissions.
+	  */
+	static Future&lt;bool&gt; release(Permissions perms) {
+		Completer compl = new Completer&lt;bool&gt;();
+
+		_jsRelease() {
+			void releaseCallback(var result) {
+				compl.complete(result);
+			}
+
+			chromeProxy.permissions.release(js.map(perms.toMap()),
+				new js.Callback.once(releaseCallback));
+		}
+
+		js.scoped(_jsRelease);
+
+		return compl.future;
+	}
+
+	/** getAll retreives all the permissions currently granted to
+	  * your application or extension.
+	  */
+	static Future&lt;Permissions&gt; getAll() {
+		Completer compl =  new Completer&lt;Permissions&gt;();
+
+		_jsGetAll() {
+			void getAllCallback(var result) {
+				compl.complete(new Permissions.fromJs(result));
+			}
+
+			chromeProxy.permissions.getAll(
+				new js.Callback.once(getAllCallback));
+		}
+
+		js.scoped(_jsGetAll);
+
+		return compl.future;
+	}
+
+	/** contains Checks if you currently have the given permissions.
+	  */
+
+	static Future&lt;bool&gt; contains(Permissions perms) {
+		Completer compl = new Completer&lt;bool&gt;();
+
+		_jsContains() {
+			void containsCallback(var result) {
+				compl.complete(result);
+			}
+
+			chromeProxy.permissions.contains(
+				js.map(perms.toMap()),
+				new js.Callback.once(containsCallback));
+		}
+
+		js.scoped(_jsContains);
+
+		return compl.future;
+	}
+}
+</pre>
+</div>
+<div>
+<h3>Static Properties</h3>
+<div class="field"><h4 id="logger">
+<button class="show-code">Code</button>
+<a href="../logging/Logger.html">Logger</a>         <strong>logger</strong> <a class="anchor-link"
+            href="#logger"
+            title="Permalink to Permissions.logger">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static Logger logger = new Logger("chrome.permissions")
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Static Methods</h3>
+<div class="method"><h4 id="request">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>request</strong>(<a href="../chrome.permissions/Permissions.html">Permissions</a> perms) <a class="anchor-link" href="#request"
+              title="Permalink to Permissions.request">#</a></h4>
+<div class="doc">
+<p>Request Permission requests additional permissions
+From the Chrome runtime. These additional permissions
+must be declared in the extension's manifest.json
+under the "optional_permissions" tag.</p>
+<pre class="source">
+static Future&lt;bool&gt; request(Permissions perms) {
+		Completer compl = new Completer&lt;bool&gt;();
+
+		_jsRequest() {
+			void requestCallback(var result) {
+				compl.complete(result);
+			}
+
+			chromeProxy.permissions.request(js.map(perms.toMap()),
+				new js.Callback.once(requestCallback));
+		}
+
+		js.scoped(_jsRequest);
+
+		return compl.future;
+	}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="release">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>release</strong>(<a href="../chrome.permissions/Permissions.html">Permissions</a> perms) <a class="anchor-link" href="#release"
+              title="Permalink to Permissions.release">#</a></h4>
+<div class="doc">
+<p>Release releases the previously granted permissions.</p>
+<pre class="source">
+static Future&lt;bool&gt; release(Permissions perms) {
+		Completer compl = new Completer&lt;bool&gt;();
+
+		_jsRelease() {
+			void releaseCallback(var result) {
+				compl.complete(result);
+			}
+
+			chromeProxy.permissions.release(js.map(perms.toMap()),
+				new js.Callback.once(releaseCallback));
+		}
+
+		js.scoped(_jsRelease);
+
+		return compl.future;
+	}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getAll">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.permissions/Permissions.html">Permissions</a>&gt; <strong>getAll</strong>() <a class="anchor-link" href="#getAll"
+              title="Permalink to Permissions.getAll">#</a></h4>
+<div class="doc">
+<p>getAll retreives all the permissions currently granted to
+your application or extension.</p>
+<pre class="source">
+static Future&lt;Permissions&gt; getAll() {
+		Completer compl =  new Completer&lt;Permissions&gt;();
+
+		_jsGetAll() {
+			void getAllCallback(var result) {
+				compl.complete(new Permissions.fromJs(result));
+			}
+
+			chromeProxy.permissions.getAll(
+				new js.Callback.once(getAllCallback));
+		}
+
+		js.scoped(_jsGetAll);
+
+		return compl.future;
+	}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="contains">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>contains</strong>(<a href="../chrome.permissions/Permissions.html">Permissions</a> perms) <a class="anchor-link" href="#contains"
+              title="Permalink to Permissions.contains">#</a></h4>
+<div class="doc">
+<p>contains Checks if you currently have the given permissions.</p>
+<pre class="source">
+static Future&lt;bool&gt; contains(Permissions perms) {
+		Completer compl = new Completer&lt;bool&gt;();
+
+		_jsContains() {
+			void containsCallback(var result) {
+				compl.complete(result);
+			}
+
+			chromeProxy.permissions.contains(
+				js.map(perms.toMap()),
+				new js.Callback.once(containsCallback));
+		}
+
+		js.scoped(_jsContains);
+
+		return compl.future;
+	}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>Permissions</strong>({List permissions: null, List origins: null}) <a class="anchor-link" href="#"
+              title="Permalink to Permissions.Permissions">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+Permissions({this.permissions: null, this.origins: null});
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromJs">
+<button class="show-code">Code</button>
+new <strong>Permissions.fromJs</strong>(<a href="../js/Proxy.html">Proxy</a> prox) <a class="anchor-link" href="#fromJs"
+              title="Permalink to Permissions.Permissions.fromJs">#</a></h4>
+<div class="doc">
+<pre class="source">
+Permissions.fromJs(js.Proxy prox) {
+		if(prox["permissions"] != null) {
+			this.permissions = jsw.JsArrayToListAdapter.cast(prox["permissions"]);
+		}
+
+		if(prox["origins"] != null) {
+			this.origins = jsw.JsArrayToListAdapter.cast(prox["origins"]);
+		}
+	}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="origins">
+<button class="show-code">Code</button>
+List         <strong>origins</strong> <a class="anchor-link"
+            href="#origins"
+            title="Permalink to Permissions.origins">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+List origins
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="permissions">
+<button class="show-code">Code</button>
+List         <strong>permissions</strong> <a class="anchor-link"
+            href="#permissions"
+            title="Permalink to Permissions.permissions">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+List permissions
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="toMap">
+<button class="show-code">Code</button>
+Map <strong>toMap</strong>() <a class="anchor-link" href="#toMap"
+              title="Permalink to Permissions.toMap">#</a></h4>
+<div class="doc">
+<pre class="source">
+Map toMap() {
+		Map ret = new Map();
+
+		if(this.permissions != null) {
+			ret["permissions"] = this.permissions;
+		}
+
+		if(this.origins != null) {
+			ret["origins"] = this.origins;
+		}
+
+		return ret;
+	}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.537</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

@@ -1,0 +1,271 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeWindow class / chrome.app Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.app" data-type="ChromeWindow">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.app.html">chrome.app</a> &rsaquo; <a href="../chrome.app/ChromeWindow.html">ChromeWindow</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeWindow</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Encapsulation of the <code>chrome.app.window</code> namespace.</p>
+<p>The single instance of this class is accessed from the <code>app.window</code> getter.</p>
+<pre class="source">
+class ChromeWindow {
+ const ChromeWindow._();
+
+ static AppWindow _current;
+ /// An [AppWindow] object for the current script context.
+ AppWindow get current {
+   if (_current == null) {
+     _current = new AppWindow._(chromeProxy.app.window.current());
+   }
+   return _current;
+ }
+
+ /// Create an [AppWindow].
+ ///
+ /// The size and position of a window can be specified in a number of
+ /// different ways. The most simple option is not specifying anything at all,
+ /// in which case a default size and platform dependent position will be used.
+ ///
+ /// Another option is to specify a [bounds], which will always put the window
+ /// at the specified coordinates with the specified size.
+ ///
+ /// Yet another option is to give the window a (unique) [id]. This id is then
+ /// used to remember the bounds of the window whenever it is moved or resized.
+ /// This bounds is then used instead of the specified bounds on subsequent
+ /// opening of a window with the same id. If you need to open a window with an
+ /// id at a location other than the remembered default, you can create it
+ /// [hidden], move it to the desired location, then [AppWindow.show] it.
+ ///
+ /// You can also combine these various options, explicitly specifying for
+ /// example the size while having the position be remembered or other
+ /// combinations like that. Size and position are dealt with seperately, but
+ /// individual coordinates are not. So if you specify a top (or left)
+ /// coordinate, you should also specify a left (or top) coordinate, and
+ /// similar for size.
+ ///
+ /// The following optional parameters may be specified:
+ ///
+ /// [id] : An identifier for the window. This will be used to remember the
+ /// size and position of the window and restore that geometry when a window
+ /// with the same id (and no explicit size or position) is later opened.
+ /// [minWidth]: Minimum width for the lifetime of the window.
+ /// [minHeight]: Minimum height for the lifetime of the window.
+ /// [maxWidth]: Maximum width for the lifetime of the window.
+ /// [maxHeight]: Maximum height for the lifetime of the window.
+ /// [frame]: Frame type: 'none' or 'chrome' (defaults to 'chrome').
+ /// [bounds]: Position and size of the content in the window (excluding the
+ /// titlebar).
+ /// [transparentBackground]: Enable window background transparency. Only
+ /// supported in ash. Requires experimental API permission.
+ /// [hidden]: If true, the window will be created in a hidden state. Call
+ /// [AppWindow.show] to show it once it has been created. Defaults to false.
+ /// [resizable]: If true, the window will be resizable by the user. Defaults
+ /// to true.
+ /// [singleton]: By default if you specify an id for the window, the window
+ /// will only be created if another window with the same id doesn't already
+ /// exist. If a window with the same id already exists that window is
+ /// activated instead. If you do want to create multiple windows with the same
+ /// id, you can set this property to false.
+ /// [state]: The initial state of the window, allowing it to be created
+ /// already fullscreen, maximized, or minimized. Defaults to 'normal'.
+ Future&lt;AppWindow&gt; create(String url,
+                          {String id,
+                          int minWidth,
+                          int minHeight,
+                          int maxWidth,
+                          int maxHeight,
+                          String frame,
+                          Bounds bounds,
+                          bool transparentBackground,
+                          bool hidden,
+                          bool resizable,
+                          bool singleton,
+                          String state}) {
+   final options = {};
+   if (id != null) options['id'] = id;
+   if (minWidth != null) options['minWidth'] = minWidth;
+   if (minHeight != null) options['minHeight'] = minHeight;
+   if (maxWidth != null) options['maxWidth'] = maxWidth;
+   if (maxHeight != null) options['maxHeight'] = maxHeight;
+   if (frame != null) options['frame'] = frame;
+   if (bounds != null) options['bounds'] = js.map(bounds._map);
+   if (transparentBackground != null)
+     options['transparentBackground'] = transparentBackground;
+   if (hidden != null) options['hidden'] = hidden;
+   if (resizable != null) options['resizable'] = resizable;
+   if (singleton != null) options['singleton'] = singleton;
+   if (state != null) options['state'] = state;
+
+   final completer = new Completer&lt;AppWindow&gt;();
+   chromeProxy.app.window.create(
+       url,
+       js.map(options),
+       new js.Callback.once((proxy) =&gt;
+           completer.complete(new AppWindow._(proxy))));
+   return completer.future;
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="current">
+<button class="show-code">Code</button>
+final <a href="../chrome.app/AppWindow.html">AppWindow</a>         <strong>current</strong> <a class="anchor-link"
+            href="#current"
+            title="Permalink to ChromeWindow.current">#</a>
+        </h4>
+        <div class="doc">
+<p>An <a class="crossref" href="../chrome.app/AppWindow.html">AppWindow</a> object for the current script context.</p>
+<pre class="source">
+AppWindow get current {
+ if (_current == null) {
+   _current = new AppWindow._(chromeProxy.app.window.current());
+ }
+ return _current;
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="create">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.app/AppWindow.html">AppWindow</a>&gt; <strong>create</strong>(String url, {String id, int minWidth, int minHeight, int maxWidth, int maxHeight, String frame, <a href="../chrome.app/Bounds.html">Bounds</a> bounds, bool transparentBackground, bool hidden, bool resizable, bool singleton, String state}) <a class="anchor-link" href="#create"
+              title="Permalink to ChromeWindow.create">#</a></h4>
+<div class="doc">
+<p>Create an <a class="crossref" href="../chrome.app/AppWindow.html">AppWindow</a>.</p>
+<p>The size and position of a window can be specified in a number of
+different ways. The most simple option is not specifying anything at all,
+in which case a default size and platform dependent position will be used.</p>
+<p>Another option is to specify a 
+<span class="param">bounds</span>, which will always put the window
+at the specified coordinates with the specified size.</p>
+<p>Yet another option is to give the window a (unique) 
+<span class="param">id</span>. This id is then
+used to remember the bounds of the window whenever it is moved or resized.
+This bounds is then used instead of the specified bounds on subsequent
+opening of a window with the same id. If you need to open a window with an
+id at a location other than the remembered default, you can create it
+
+<span class="param">hidden</span>, move it to the desired location, then <a class="crossref" href="../chrome.app/AppWindow.html#show">AppWindow.show</a> it.</p>
+<p>You can also combine these various options, explicitly specifying for
+example the size while having the position be remembered or other
+combinations like that. Size and position are dealt with seperately, but
+individual coordinates are not. So if you specify a top (or left)
+coordinate, you should also specify a left (or top) coordinate, and
+similar for size.</p>
+<p>The following optional parameters may be specified:</p>
+<p>
+<span class="param">id</span> : An identifier for the window. This will be used to remember the
+size and position of the window and restore that geometry when a window
+with the same id (and no explicit size or position) is later opened.
+
+<span class="param">minWidth</span>: Minimum width for the lifetime of the window.
+
+<span class="param">minHeight</span>: Minimum height for the lifetime of the window.
+
+<span class="param">maxWidth</span>: Maximum width for the lifetime of the window.
+
+<span class="param">maxHeight</span>: Maximum height for the lifetime of the window.
+
+<span class="param">frame</span>: Frame type: 'none' or 'chrome' (defaults to 'chrome').
+
+<span class="param">bounds</span>: Position and size of the content in the window (excluding the
+titlebar).
+
+<span class="param">transparentBackground</span>: Enable window background transparency. Only
+supported in ash. Requires experimental API permission.
+
+<span class="param">hidden</span>: If true, the window will be created in a hidden state. Call
+<a class="crossref" href="../chrome.app/AppWindow.html#show">AppWindow.show</a> to show it once it has been created. Defaults to false.
+
+<span class="param">resizable</span>: If true, the window will be resizable by the user. Defaults
+to true.
+
+<span class="param">singleton</span>: By default if you specify an id for the window, the window
+will only be created if another window with the same id doesn't already
+exist. If a window with the same id already exists that window is
+activated instead. If you do want to create multiple windows with the same
+id, you can set this property to false.
+
+<span class="param">state</span>: The initial state of the window, allowing it to be created
+already fullscreen, maximized, or minimized. Defaults to 'normal'.</p>
+<pre class="source">
+Future&lt;AppWindow&gt; create(String url,
+                        {String id,
+                        int minWidth,
+                        int minHeight,
+                        int maxWidth,
+                        int maxHeight,
+                        String frame,
+                        Bounds bounds,
+                        bool transparentBackground,
+                        bool hidden,
+                        bool resizable,
+                        bool singleton,
+                        String state}) {
+ final options = {};
+ if (id != null) options['id'] = id;
+ if (minWidth != null) options['minWidth'] = minWidth;
+ if (minHeight != null) options['minHeight'] = minHeight;
+ if (maxWidth != null) options['maxWidth'] = maxWidth;
+ if (maxHeight != null) options['maxHeight'] = maxHeight;
+ if (frame != null) options['frame'] = frame;
+ if (bounds != null) options['bounds'] = js.map(bounds._map);
+ if (transparentBackground != null)
+   options['transparentBackground'] = transparentBackground;
+ if (hidden != null) options['hidden'] = hidden;
+ if (resizable != null) options['resizable'] = resizable;
+ if (singleton != null) options['singleton'] = singleton;
+ if (state != null) options['state'] = state;
+
+ final completer = new Completer&lt;AppWindow&gt;();
+ chromeProxy.app.window.create(
+     url,
+     js.map(options),
+     new js.Callback.once((proxy) =&gt;
+         completer.complete(new AppWindow._(proxy))));
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.244</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

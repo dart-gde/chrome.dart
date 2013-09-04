@@ -1,0 +1,195 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>WindowType class / chrome.windows Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.windows" data-type="WindowType">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.windows.html">chrome.windows</a> &rsaquo; <a href="../chrome.windows/WindowType.html">WindowType</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>WindowType</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class WindowType {
+ final String _type;
+
+ const WindowType._internal(this._type);
+
+ factory WindowType(String type) {
+   switch (type.toLowerCase()) {
+     case 'normal':
+       return NORMAL;
+     case 'popup':
+       return POPUP;
+     case 'panel':
+       return PANEL;
+     case 'detached_panel':
+       return DETACHED_PANEL;
+     case 'app':
+       return APP;
+     default:
+       throw 'Unknown WindowType: $type';
+   }
+ }
+
+ String toString() {
+   return _type;
+ }
+
+ static const WindowType NORMAL = const WindowType._internal('normal');
+ static const WindowType POPUP = const WindowType._internal('popup');
+ static const WindowType PANEL = const WindowType._internal('panel');
+ static const WindowType DETACHED_PANEL =
+     const WindowType._internal('detached_panel');
+ static const WindowType APP = const WindowType._internal('app');
+}
+</pre>
+</div>
+<div>
+<h3>Static Properties</h3>
+<div class="field"><h4 id="APP">
+<button class="show-code">Code</button>
+const <a href="../chrome.windows/WindowType.html">WindowType</a>         <strong>APP</strong> <a class="anchor-link"
+            href="#APP"
+            title="Permalink to WindowType.APP">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const WindowType APP = const WindowType._internal('app')
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="DETACHED_PANEL">
+<button class="show-code">Code</button>
+const <a href="../chrome.windows/WindowType.html">WindowType</a>         <strong>DETACHED_PANEL</strong> <a class="anchor-link"
+            href="#DETACHED_PANEL"
+            title="Permalink to WindowType.DETACHED_PANEL">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const WindowType DETACHED_PANEL =
+   const WindowType._internal('detached_panel')
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="NORMAL">
+<button class="show-code">Code</button>
+const <a href="../chrome.windows/WindowType.html">WindowType</a>         <strong>NORMAL</strong> <a class="anchor-link"
+            href="#NORMAL"
+            title="Permalink to WindowType.NORMAL">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const WindowType NORMAL = const WindowType._internal('normal')
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="PANEL">
+<button class="show-code">Code</button>
+const <a href="../chrome.windows/WindowType.html">WindowType</a>         <strong>PANEL</strong> <a class="anchor-link"
+            href="#PANEL"
+            title="Permalink to WindowType.PANEL">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const WindowType PANEL = const WindowType._internal('panel')
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="POPUP">
+<button class="show-code">Code</button>
+const <a href="../chrome.windows/WindowType.html">WindowType</a>         <strong>POPUP</strong> <a class="anchor-link"
+            href="#POPUP"
+            title="Permalink to WindowType.POPUP">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const WindowType POPUP = const WindowType._internal('popup')
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+factory <strong>WindowType</strong>(String type) <a class="anchor-link" href="#"
+              title="Permalink to WindowType.WindowType">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+factory WindowType(String type) {
+ switch (type.toLowerCase()) {
+   case 'normal':
+     return NORMAL;
+   case 'popup':
+     return POPUP;
+   case 'panel':
+     return PANEL;
+   case 'detached_panel':
+     return DETACHED_PANEL;
+   case 'app':
+     return APP;
+   default:
+     throw 'Unknown WindowType: $type';
+ }
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to WindowType.toString">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() {
+ return _type;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.808</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

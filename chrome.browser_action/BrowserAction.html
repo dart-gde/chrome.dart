@@ -1,0 +1,512 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>BrowserAction class / chrome.browser_action Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.browser_action" data-type="BrowserAction">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.browser_action.html">chrome.browser_action</a> &rsaquo; <a href="../chrome.browser_action/BrowserAction.html">BrowserAction</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>BrowserAction</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class BrowserAction {
+
+ BrowserAction._();
+
+ get _browserAction =&gt; chromeProxy.browserAction;
+
+ /**
+  * Sets the title of the browser action. This shows up in the tooltip.
+  *
+  * @param title The string the browser action should display when moused over.
+  * @param tabId Limits the change to when a particular tab is selected.
+  *              Automatically resets when the tab is closed.
+  */
+ void setTitle(String title, {int tabId}) {
+   var details = { 'title': title };
+   if (tabId != null) {
+     details['tabId'] = tabId;
+   }
+   js.scoped(() {
+     _browserAction.setTitle(js.map(details));
+   });
+ }
+
+ /**
+  * Gets the title of the browser action.
+  *
+  * @param tabId Specify the tab to get the title from. If no tab is specified,
+  *              the non-tab-specific title is returned.
+  */
+ Future&lt;String&gt; getTitle({int tabId}) {
+   var details = { };
+   if (tabId != null) {
+     details['tabId'] = tabId;
+   }
+   var completer =
+       new ChromeCompleter.oneArg();
+   js.scoped(() {
+     _browserAction.getTitle(js.map(details), completer.callback);
+   });
+   return completer.future;
+ }
+
+ /**
+  * Sets the html document to be opened as a popup when the user clicks on the
+  * browser action's icon.
+  *
+  * @param popup The html file to show in a popup. If set to the empty string
+  *              (''), no popup is shown.
+  * @param tabId Limits the change to when a particular tab is selected.
+  *              Automatically resets when the tab is closed.
+  */
+ void setPopup(String popup, {int tabId}) {
+   var details = { 'popup': popup };
+   if (tabId != null) {
+     details['tabId'] = tabId;
+   }
+   js.scoped(() {
+     _browserAction.setPopup(js.map(details));
+   });
+ }
+
+ /**
+  * Gets the html document set as the popup for this browser action.
+  *
+  * @param tabId Specify the tab to get the popup from. If no tab is specified,
+  *              the non-tab-specific popup is returned.
+  */
+ Future&lt;String&gt; getPopup({int tabId}) {
+   var details = { };
+   if (tabId != null) {
+     details['tabId'] = tabId;
+   }
+   var completer =
+       new ChromeCompleter.oneArg();
+   js.scoped(() {
+     _browserAction.getPopup(js.map(details), completer.callback);
+   });
+   return completer.future;
+ }
+
+ /**
+  * Sets the badge text for the browser action. The badge is displayed on top
+  * of the icon.
+  *
+  * @param text Any number of characters can be passed, but only about four
+  *             can fit in the space.
+  * @param tabId Limits the change to when a particular tab is selected.
+  *              Automatically resets when the tab is closed.
+  */
+ void setBadgeText(String text, {int tabId}) {
+   var details = { 'text': text };
+   if (tabId != null) {
+     details['tabId'] = tabId;
+   }
+   js.scoped(() {
+     _browserAction.setBadgeText(js.map(details));
+   });
+ }
+
+ /**
+  * Gets the badge text of the browser action. If no tab is specified, the
+  * non-tab-specific badge text is returned.
+  *
+  * @param tabId Specify the tab to get the badge text from. If no tab is
+  *              specified, the non-tab-specific badge text is returned.
+  */
+ Future&lt;String&gt; getBadgeText({int tabId}) {
+   var details = { };
+   if (tabId != null) {
+     details['tabId'] = tabId;
+   }
+   var completer =
+       new ChromeCompleter.oneArg();
+   js.scoped(() {
+     _browserAction.getBadgeText(js.map(details), completer.callback);
+   });
+   return completer.future;
+ }
+
+ /**
+  * Sets the background color for the badge.
+  *
+  * @param color The RGBA color of the badge.
+  * @param tabId Limits the change to when a particular tab is selected.
+  *              Automatically resets when the tab is closed.
+  */
+ void setBadgeBackgroundColor(Color color, {int tabId}) {
+   var details = { 'color': color.toArray() };
+   if (tabId != null) {
+     details['tabId'] = tabId;
+   }
+   js.scoped(() {
+     _browserAction.setBadgeBackgroundColor(js.map(details));
+   });
+ }
+
+ /**
+  * Gets the background color of the browser action.
+  *
+  * @param tabId Specify the tab to get the badge background color from. If no
+  *               tab is specified, the non-tab-specific badge background
+  *               color is returned.
+  */
+ Future&lt;Color&gt; getBadgeBackgroundColor({int tabId}) {
+   var details = { };
+   if (tabId != null) {
+     details['tabId'] = tabId;
+   }
+   var completer = new ChromeCompleter.oneArg((color) =&gt;
+       new Color(color[0], color[1], color[2], color[3]));
+   js.scoped(() {
+     _browserAction.getBadgeBackgroundColor(js.map(details), completer.callback);
+   });
+   return completer.future;
+ }
+
+ /**
+  * Enables the browser action for a tab. By default, browser actions are
+  * enabled.
+  *
+  * @param tabId The id of the tab for which you want to modify the browser
+  *              action.
+  */
+ void enable({int tabId}) {
+   js.scoped(() {
+     if (tabId == null) {
+       _browserAction.enable();
+     } else {
+       _browserAction.enable(tabId);
+     }
+   });
+ }
+
+ /**
+  * Disables the browser action for a tab.
+  *
+  * @param tabId The id of the tab for which you want to modify the browser
+  *              action.
+  */
+ void disable({int tabId}) {
+   js.scoped(() {
+     if (tabId == null) {
+       _browserAction.disable();
+     } else {
+       _browserAction.disable(tabId);
+     }
+   });
+ }
+
+ final ChromeStreamController&lt;Tab&gt; _onClicked =
+     new ChromeStreamController&lt;Tab&gt;.oneArg(
+         () =&gt; chromeProxy.browserAction.onClicked,
+         (tab) =&gt;
+             new Tab(tab));
+
+ /**
+  * Fired when a browser action icon is clicked. This event will not fire if
+  * the browser action has a popup.
+  */
+ Stream&lt;Tab&gt; get onClicked =&gt; _onClicked.stream;
+}
+</pre>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="onClicked">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt;         <strong>onClicked</strong> <a class="anchor-link"
+            href="#onClicked"
+            title="Permalink to BrowserAction.onClicked">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a browser action icon is clicked. This event will not fire if
+the browser action has a popup.</p>
+<pre class="source">
+Stream&lt;Tab&gt; get onClicked =&gt; _onClicked.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="disable">
+<button class="show-code">Code</button>
+void <strong>disable</strong>({int tabId}) <a class="anchor-link" href="#disable"
+              title="Permalink to BrowserAction.disable">#</a></h4>
+<div class="doc">
+<p>Disables the browser action for a tab.</p>
+<p>@param tabId The id of the tab for which you want to modify the browser</p>
+<pre><code>         action.
+</code></pre>
+<pre class="source">
+void disable({int tabId}) {
+ js.scoped(() {
+   if (tabId == null) {
+     _browserAction.disable();
+   } else {
+     _browserAction.disable(tabId);
+   }
+ });
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="enable">
+<button class="show-code">Code</button>
+void <strong>enable</strong>({int tabId}) <a class="anchor-link" href="#enable"
+              title="Permalink to BrowserAction.enable">#</a></h4>
+<div class="doc">
+<p>Enables the browser action for a tab. By default, browser actions are
+enabled.</p>
+<p>@param tabId The id of the tab for which you want to modify the browser</p>
+<pre><code>         action.
+</code></pre>
+<pre class="source">
+void enable({int tabId}) {
+ js.scoped(() {
+   if (tabId == null) {
+     _browserAction.enable();
+   } else {
+     _browserAction.enable(tabId);
+   }
+ });
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getBadgeBackgroundColor">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.browser_action/Color.html">Color</a>&gt; <strong>getBadgeBackgroundColor</strong>({int tabId}) <a class="anchor-link" href="#getBadgeBackgroundColor"
+              title="Permalink to BrowserAction.getBadgeBackgroundColor">#</a></h4>
+<div class="doc">
+<p>Gets the background color of the browser action.</p>
+<p>@param tabId Specify the tab to get the badge background color from. If no</p>
+<pre><code>          tab is specified, the non-tab-specific badge background
+          color is returned.
+</code></pre>
+<pre class="source">
+Future&lt;Color&gt; getBadgeBackgroundColor({int tabId}) {
+ var details = { };
+ if (tabId != null) {
+   details['tabId'] = tabId;
+ }
+ var completer = new ChromeCompleter.oneArg((color) =&gt;
+     new Color(color[0], color[1], color[2], color[3]));
+ js.scoped(() {
+   _browserAction.getBadgeBackgroundColor(js.map(details), completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getBadgeText">
+<button class="show-code">Code</button>
+Future&lt;String&gt; <strong>getBadgeText</strong>({int tabId}) <a class="anchor-link" href="#getBadgeText"
+              title="Permalink to BrowserAction.getBadgeText">#</a></h4>
+<div class="doc">
+<p>Gets the badge text of the browser action. If no tab is specified, the
+non-tab-specific badge text is returned.</p>
+<p>@param tabId Specify the tab to get the badge text from. If no tab is</p>
+<pre><code>         specified, the non-tab-specific badge text is returned.
+</code></pre>
+<pre class="source">
+Future&lt;String&gt; getBadgeText({int tabId}) {
+ var details = { };
+ if (tabId != null) {
+   details['tabId'] = tabId;
+ }
+ var completer =
+     new ChromeCompleter.oneArg();
+ js.scoped(() {
+   _browserAction.getBadgeText(js.map(details), completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getPopup">
+<button class="show-code">Code</button>
+Future&lt;String&gt; <strong>getPopup</strong>({int tabId}) <a class="anchor-link" href="#getPopup"
+              title="Permalink to BrowserAction.getPopup">#</a></h4>
+<div class="doc">
+<p>Gets the html document set as the popup for this browser action.</p>
+<p>@param tabId Specify the tab to get the popup from. If no tab is specified,</p>
+<pre><code>         the non-tab-specific popup is returned.
+</code></pre>
+<pre class="source">
+Future&lt;String&gt; getPopup({int tabId}) {
+ var details = { };
+ if (tabId != null) {
+   details['tabId'] = tabId;
+ }
+ var completer =
+     new ChromeCompleter.oneArg();
+ js.scoped(() {
+   _browserAction.getPopup(js.map(details), completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getTitle">
+<button class="show-code">Code</button>
+Future&lt;String&gt; <strong>getTitle</strong>({int tabId}) <a class="anchor-link" href="#getTitle"
+              title="Permalink to BrowserAction.getTitle">#</a></h4>
+<div class="doc">
+<p>Gets the title of the browser action.</p>
+<p>@param tabId Specify the tab to get the title from. If no tab is specified,</p>
+<pre><code>         the non-tab-specific title is returned.
+</code></pre>
+<pre class="source">
+Future&lt;String&gt; getTitle({int tabId}) {
+ var details = { };
+ if (tabId != null) {
+   details['tabId'] = tabId;
+ }
+ var completer =
+     new ChromeCompleter.oneArg();
+ js.scoped(() {
+   _browserAction.getTitle(js.map(details), completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setBadgeBackgroundColor">
+<button class="show-code">Code</button>
+void <strong>setBadgeBackgroundColor</strong>(<a href="../chrome.browser_action/Color.html">Color</a> color, {int tabId}) <a class="anchor-link" href="#setBadgeBackgroundColor"
+              title="Permalink to BrowserAction.setBadgeBackgroundColor">#</a></h4>
+<div class="doc">
+<p>Sets the background color for the badge.</p>
+<p>@param color The RGBA color of the badge.
+@param tabId Limits the change to when a particular tab is selected.</p>
+<pre><code>         Automatically resets when the tab is closed.
+</code></pre>
+<pre class="source">
+void setBadgeBackgroundColor(Color color, {int tabId}) {
+ var details = { 'color': color.toArray() };
+ if (tabId != null) {
+   details['tabId'] = tabId;
+ }
+ js.scoped(() {
+   _browserAction.setBadgeBackgroundColor(js.map(details));
+ });
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setBadgeText">
+<button class="show-code">Code</button>
+void <strong>setBadgeText</strong>(String text, {int tabId}) <a class="anchor-link" href="#setBadgeText"
+              title="Permalink to BrowserAction.setBadgeText">#</a></h4>
+<div class="doc">
+<p>Sets the badge text for the browser action. The badge is displayed on top
+of the icon.</p>
+<p>@param text Any number of characters can be passed, but only about four</p>
+<pre><code>        can fit in the space.
+</code></pre>
+<p>@param tabId Limits the change to when a particular tab is selected.</p>
+<pre><code>         Automatically resets when the tab is closed.
+</code></pre>
+<pre class="source">
+void setBadgeText(String text, {int tabId}) {
+ var details = { 'text': text };
+ if (tabId != null) {
+   details['tabId'] = tabId;
+ }
+ js.scoped(() {
+   _browserAction.setBadgeText(js.map(details));
+ });
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setPopup">
+<button class="show-code">Code</button>
+void <strong>setPopup</strong>(String popup, {int tabId}) <a class="anchor-link" href="#setPopup"
+              title="Permalink to BrowserAction.setPopup">#</a></h4>
+<div class="doc">
+<p>Sets the html document to be opened as a popup when the user clicks on the
+browser action's icon.</p>
+<p>@param popup The html file to show in a popup. If set to the empty string</p>
+<pre><code>         (''), no popup is shown.
+</code></pre>
+<p>@param tabId Limits the change to when a particular tab is selected.</p>
+<pre><code>         Automatically resets when the tab is closed.
+</code></pre>
+<pre class="source">
+void setPopup(String popup, {int tabId}) {
+ var details = { 'popup': popup };
+ if (tabId != null) {
+   details['tabId'] = tabId;
+ }
+ js.scoped(() {
+   _browserAction.setPopup(js.map(details));
+ });
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setTitle">
+<button class="show-code">Code</button>
+void <strong>setTitle</strong>(String title, {int tabId}) <a class="anchor-link" href="#setTitle"
+              title="Permalink to BrowserAction.setTitle">#</a></h4>
+<div class="doc">
+<p>Sets the title of the browser action. This shows up in the tooltip.</p>
+<p>@param title The string the browser action should display when moused over.
+@param tabId Limits the change to when a particular tab is selected.</p>
+<pre><code>         Automatically resets when the tab is closed.
+</code></pre>
+<pre class="source">
+void setTitle(String title, {int tabId}) {
+ var details = { 'title': title };
+ if (tabId != null) {
+   details['tabId'] = tabId;
+ }
+ js.scoped(() {
+   _browserAction.setTitle(js.map(details));
+ });
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.298</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

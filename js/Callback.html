@@ -1,0 +1,177 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Callback class / js Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="js" data-type="Callback">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../js.html">js</a> &rsaquo; <a href="../js/Callback.html">Callback</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Callback</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Converts a local Dart function to a callback that can be passed to
+JavaScript.</p>
+<p>A callback can either be:</p><ul><li>
+<p>single-fire, in which case it is automatically invalidated after the first
+  invocation, or</p></li><li>multi-fire, in which case it must be explicitly disposed.</li></ul>
+<pre class="source">
+class Callback implements Serializable&lt;FunctionProxy&gt; {
+ var _manualDispose;
+ var _id;
+ var _callback;
+
+ _initialize(manualDispose) {
+   _manualDispose = manualDispose;
+   _id = _proxiedObjectTable.add(_callback);
+   _proxiedObjectTable.globalize(_id);
+ }
+
+ _dispose() {
+   var c = _proxiedObjectTable.invalidate(_id);
+ }
+
+ FunctionProxy toJs() =&gt;
+     new FunctionProxy._internal(_proxiedObjectTable.sendPort, _id);
+
+ /**
+  * Disposes this [Callback] so that it may be collected.
+  * Once a [Callback] is disposed, it is an error to invoke it from JavaScript.
+  */
+ dispose() {
+   assert(_manualDispose);
+   _dispose();
+ }
+
+ /**
+  * Creates a single-fire [Callback] that invokes [f].  The callback is
+  * automatically disposed after the first invocation.
+  */
+ Callback.once(Function f, {bool withThis: false}) {
+   _callback = (List args) {
+     try {
+       return Function.apply(f, withThis ? args : args.skip(1).toList());
+     } finally {
+       _dispose();
+     }
+   };
+   _initialize(false);
+ }
+
+ /**
+  * Creates a multi-fire [Callback] that invokes [f].  The callback must be
+  * explicitly disposed to avoid memory leaks.
+  */
+ Callback.many(Function f, {bool withThis: false}) {
+   _callback = (List args) =&gt;
+       Function.apply(f, withThis ? args : args.skip(1).toList());
+   _initialize(true);
+ }
+}
+</pre>
+</div>
+<h3>Implements</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../js/Serializable.html">Serializable&lt;FunctionProxy&gt;</a></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="many">
+<button class="show-code">Code</button>
+new <strong>Callback.many</strong>(Function f, {bool withThis: false}) <a class="anchor-link" href="#many"
+              title="Permalink to Callback.Callback.many">#</a></h4>
+<div class="doc">
+<p>Creates a multi-fire <a class="crossref" href="../js/Callback.html">Callback</a> that invokes 
+<span class="param">f</span>.  The callback must be
+explicitly disposed to avoid memory leaks.</p>
+<pre class="source">
+Callback.many(Function f, {bool withThis: false}) {
+ _callback = (List args) =&gt;
+     Function.apply(f, withThis ? args : args.skip(1).toList());
+ _initialize(true);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="once">
+<button class="show-code">Code</button>
+new <strong>Callback.once</strong>(Function f, {bool withThis: false}) <a class="anchor-link" href="#once"
+              title="Permalink to Callback.Callback.once">#</a></h4>
+<div class="doc">
+<p>Creates a single-fire <a class="crossref" href="../js/Callback.html">Callback</a> that invokes 
+<span class="param">f</span>.  The callback is
+automatically disposed after the first invocation.</p>
+<pre class="source">
+Callback.once(Function f, {bool withThis: false}) {
+ _callback = (List args) {
+   try {
+     return Function.apply(f, withThis ? args : args.skip(1).toList());
+   } finally {
+     _dispose();
+   }
+ };
+ _initialize(false);
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="dispose">
+<button class="show-code">Code</button>
+dynamic <strong>dispose</strong>() <a class="anchor-link" href="#dispose"
+              title="Permalink to Callback.dispose">#</a></h4>
+<div class="doc">
+<p>Disposes this <a class="crossref" href="../js/Callback.html">Callback</a> so that it may be collected.
+Once a <a class="crossref" href="../js/Callback.html">Callback</a> is disposed, it is an error to invoke it from JavaScript.</p>
+<pre class="source">
+dispose() {
+ assert(_manualDispose);
+ _dispose();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toJs">
+<button class="show-code">Code</button>
+<a href="../js/FunctionProxy.html">FunctionProxy</a> <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to Callback.toJs">#</a></h4>
+<div class="doc">
+<pre class="source">
+FunctionProxy toJs() =&gt;
+   new FunctionProxy._internal(_proxiedObjectTable.sendPort, _id);
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.902</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

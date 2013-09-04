@@ -1,0 +1,174 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>FileStatusEvent class / chrome.sync_file_system Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.sync_file_system" data-type="FileStatusEvent">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.sync_file_system.html">chrome.sync_file_system</a> &rsaquo; <a href="../chrome.sync_file_system/FileStatusEvent.html">FileStatusEvent</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>FileStatusEvent</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>An event for the onFileStatusChanged event.</p>
+<pre class="source">
+class FileStatusEvent {
+ /**
+  * fileEntry for the target file whose status has changed. Contains name and
+  * path information of synchronized file. On file deletion, fileEntry
+  * information will still be available but file will no longer exist.
+  */
+ FileEntry fileEntry;
+
+ /**
+  * Resulting file status after onFileStatusChanged event. The status value can
+  * be 'synced', 'pending' or 'conflicting'.
+  */
+ String status;
+
+ /**
+  * Sync action taken to fire onFileStatusChanged event. The action value can
+  * be 'added', 'updated' or 'deleted'. Only applies if status is 'synced'.
+  */
+ String action;
+
+ /**
+  * Sync direction for the onFileStatusChanged event. Sync direction value can
+  * be 'local_to_remote' or 'remote_to_local'. Only applies if status is 'synced'.
+  */
+ String direction;
+
+ FileStatusEvent._(var proxy) {
+   // TODO: I am a tad worried about these leaking. Perhaps we should dispose
+   // of the event after the stream controller has notified all listeners?
+   fileEntry = Entry.createFrom(proxy.fileEntry);
+   status = proxy.status;
+   try { action = proxy.action; } catch (e) { }
+   try { direction = proxy.direction; } catch (e) { }
+ }
+
+ void dispose() =&gt; fileEntry.release();
+
+ String toString() =&gt; "file status: ${fileEntry.name}, ${status}"
+   ", ${action}, ${direction}";
+}
+</pre>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="action">
+<button class="show-code">Code</button>
+String         <strong>action</strong> <a class="anchor-link"
+            href="#action"
+            title="Permalink to FileStatusEvent.action">#</a>
+        </h4>
+        <div class="doc">
+<p>Sync action taken to fire onFileStatusChanged event. The action value can
+be 'added', 'updated' or 'deleted'. Only applies if status is 'synced'.</p>
+<pre class="source">
+String action
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="direction">
+<button class="show-code">Code</button>
+String         <strong>direction</strong> <a class="anchor-link"
+            href="#direction"
+            title="Permalink to FileStatusEvent.direction">#</a>
+        </h4>
+        <div class="doc">
+<p>Sync direction for the onFileStatusChanged event. Sync direction value can
+be 'local<em>to</em>remote' or 'remote<em>to</em>local'. Only applies if status is 'synced'.</p>
+<pre class="source">
+String direction
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="fileEntry">
+<button class="show-code">Code</button>
+<a href="../chrome.files/FileEntry.html">FileEntry</a>         <strong>fileEntry</strong> <a class="anchor-link"
+            href="#fileEntry"
+            title="Permalink to FileStatusEvent.fileEntry">#</a>
+        </h4>
+        <div class="doc">
+<p>fileEntry for the target file whose status has changed. Contains name and
+path information of synchronized file. On file deletion, fileEntry
+information will still be available but file will no longer exist.</p>
+<pre class="source">
+FileEntry fileEntry
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="status">
+<button class="show-code">Code</button>
+String         <strong>status</strong> <a class="anchor-link"
+            href="#status"
+            title="Permalink to FileStatusEvent.status">#</a>
+        </h4>
+        <div class="doc">
+<p>Resulting file status after onFileStatusChanged event. The status value can
+be 'synced', 'pending' or 'conflicting'.</p>
+<pre class="source">
+String status
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="dispose">
+<button class="show-code">Code</button>
+void <strong>dispose</strong>() <a class="anchor-link" href="#dispose"
+              title="Permalink to FileStatusEvent.dispose">#</a></h4>
+<div class="doc">
+<pre class="source">
+void dispose() =&gt; fileEntry.release();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to FileStatusEvent.toString">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; "file status: ${fileEntry.name}, ${status}"
+ ", ${action}, ${direction}";
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.722</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

@@ -1,0 +1,142 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TabStatus class / chrome.tabs Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.tabs" data-type="TabStatus">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.tabs.html">chrome.tabs</a> &rsaquo; <a href="../chrome.tabs/TabStatus.html">TabStatus</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TabStatus</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class TabStatus {
+ final String _status;
+
+ const TabStatus._(this._status);
+
+ factory TabStatus(String status) {
+   switch(status.toLowerCase()) {
+     case 'loading':
+       return LOADING;
+     case 'complete':
+       return COMPLETE;
+     default:
+       throw 'Unknown TabStatus: $status';
+   }
+ }
+
+ String toString() {
+   return _status;
+ }
+
+ static const TabStatus LOADING = const TabStatus._('loading');
+ static const TabStatus COMPLETE = const TabStatus._('complete');
+}
+</pre>
+</div>
+<div>
+<h3>Static Properties</h3>
+<div class="field"><h4 id="COMPLETE">
+<button class="show-code">Code</button>
+const <a href="../chrome.tabs/TabStatus.html">TabStatus</a>         <strong>COMPLETE</strong> <a class="anchor-link"
+            href="#COMPLETE"
+            title="Permalink to TabStatus.COMPLETE">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const TabStatus COMPLETE = const TabStatus._('complete')
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="LOADING">
+<button class="show-code">Code</button>
+const <a href="../chrome.tabs/TabStatus.html">TabStatus</a>         <strong>LOADING</strong> <a class="anchor-link"
+            href="#LOADING"
+            title="Permalink to TabStatus.LOADING">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const TabStatus LOADING = const TabStatus._('loading')
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+factory <strong>TabStatus</strong>(String status) <a class="anchor-link" href="#"
+              title="Permalink to TabStatus.TabStatus">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+factory TabStatus(String status) {
+ switch(status.toLowerCase()) {
+   case 'loading':
+     return LOADING;
+   case 'complete':
+     return COMPLETE;
+   default:
+     throw 'Unknown TabStatus: $status';
+ }
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to TabStatus.toString">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() {
+ return _status;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.769</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

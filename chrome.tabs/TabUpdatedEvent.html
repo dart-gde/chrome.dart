@@ -1,0 +1,150 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TabUpdatedEvent class / chrome.tabs Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.tabs" data-type="TabUpdatedEvent">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.tabs.html">chrome.tabs</a> &rsaquo; <a href="../chrome.tabs/TabUpdatedEvent.html">TabUpdatedEvent</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TabUpdatedEvent</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class TabUpdatedEvent {
+ final Tab tab;
+ final TabStatus status;
+ final String url;
+ final bool pinned;
+ final String favIconUrl;
+
+ const TabUpdatedEvent._(
+     this.tab, this.status, this.url, this.pinned, this.favIconUrl);
+
+ TabUpdatedEvent(tab, changeInfo) : this._(
+     tab,
+     changeInfo['status'] != null ? new TabStatus(changeInfo.status) : null,
+     changeInfo['url'],
+     changeInfo['pinned'],
+     changeInfo['favIconUrl']);
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>TabUpdatedEvent</strong>(tab, changeInfo) <a class="anchor-link" href="#"
+              title="Permalink to TabUpdatedEvent.TabUpdatedEvent">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+TabUpdatedEvent(tab, changeInfo) : this._(
+   tab,
+   changeInfo['status'] != null ? new TabStatus(changeInfo.status) : null,
+   changeInfo['url'],
+   changeInfo['pinned'],
+   changeInfo['favIconUrl']);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="favIconUrl">
+<button class="show-code">Code</button>
+final String         <strong>favIconUrl</strong> <a class="anchor-link"
+            href="#favIconUrl"
+            title="Permalink to TabUpdatedEvent.favIconUrl">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final String favIconUrl
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="pinned">
+<button class="show-code">Code</button>
+final bool         <strong>pinned</strong> <a class="anchor-link"
+            href="#pinned"
+            title="Permalink to TabUpdatedEvent.pinned">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final bool pinned
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="status">
+<button class="show-code">Code</button>
+final <a href="../chrome.tabs/TabStatus.html">TabStatus</a>         <strong>status</strong> <a class="anchor-link"
+            href="#status"
+            title="Permalink to TabUpdatedEvent.status">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final TabStatus status
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="tab">
+<button class="show-code">Code</button>
+final <a href="../chrome.tabs/Tab.html">Tab</a>         <strong>tab</strong> <a class="anchor-link"
+            href="#tab"
+            title="Permalink to TabUpdatedEvent.tab">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final Tab tab
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="url">
+<button class="show-code">Code</button>
+final String         <strong>url</strong> <a class="anchor-link"
+            href="#url"
+            title="Permalink to TabUpdatedEvent.url">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final String url
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.760</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

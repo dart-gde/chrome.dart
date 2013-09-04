@@ -1,0 +1,242 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeI18n class / chrome.i18n Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.i18n" data-type="ChromeI18n">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.i18n.html">chrome.i18n</a> &rsaquo; <a href="../chrome.i18n/ChromeI18n.html">ChromeI18n</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeI18n</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>An internationalized extension or app can be easily localized — adapted to
+languages and regions that it didn't originally support.</p>
+<p>You need to put all of its user-visible strings into a file named
+messages.json. Each time you add a new locale, you add a messages file under
+a directory named _locales/localeCode, where localeCode is a code such as en
+for English.</p>
+<pre class="source">
+class ChromeI18n {
+
+ ChromeI18n._();
+
+ /**
+  * Gets the localized string for the specified message. If the message is
+  * missing, this method returns an empty string (''). If the format of the
+  * getMessage() call is wrong — for example, messageName is not a string or
+  * the substitutions array has more than 9 elements — this method returns
+  * undefined.
+  */
+ String getMessage(String key, [List&lt;String&gt; substitutions]) {
+   // TODO: use the substitutions param
+   return chromeProxy.i18n.getMessage(key);
+ }
+
+ /**
+  * Gets the accept-languages of the browser. This is different from the locale
+  * used by the browser; to get the locale, use window.navigator.language.
+  */
+ Future&lt;List&lt;String&gt;&gt; getAcceptLanguages() {
+   return js.scoped(() {
+     Completer completer = new Completer();
+
+     js.Callback callback = new js.Callback.once((var languages) {
+       completer.complete(new js_wrapping.JsArrayToListAdapter.fromProxy(languages).toList());
+     });
+
+     chromeProxy.i18n.getAcceptLanguages(callback);
+
+     return completer.future;
+   });
+ }
+
+ /**
+  * The extension or app ID; you might use this string to construct URLs.
+  */
+ String get extension_id =&gt; getMessage('@@extension_id');
+
+ /**
+  * The current locale; you might use this string to construct locale-specific URLs.
+  */
+ String get ui_locale =&gt; getMessage('@@ui_locale');
+
+ /**
+  * The text direction for the current locale, either "ltr" for left-to-right languages such as English or "rtl" for right-to-left languages such as Japanese.
+  */
+ String get bidi_dir =&gt; getMessage('@@bidi_dir');
+
+ /**
+  * If the @@bidi_dir is "ltr", then this is "rtl"; otherwise, it's "ltr".
+  */
+ String get bidi_reversed_dir =&gt; getMessage('@@bidi_reversed_dir');
+
+ /**
+  * If the @@bidi_dir is "ltr", then this is "left"; otherwise, it's "right".
+  */
+ String get bidi_start_edge =&gt; getMessage('@@bidi_start_edge');
+
+ /**
+  * If the @@bidi_dir is "ltr", then this is "right"; otherwise, it's "left".
+  */
+ String get bidi_end_edge =&gt; getMessage('@@bidi_end_edge');
+}
+</pre>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="bidi_dir">
+<button class="show-code">Code</button>
+final String         <strong>bidi_dir</strong> <a class="anchor-link"
+            href="#bidi_dir"
+            title="Permalink to ChromeI18n.bidi_dir">#</a>
+        </h4>
+        <div class="doc">
+<p>The text direction for the current locale, either "ltr" for left-to-right languages such as English or "rtl" for right-to-left languages such as Japanese.</p>
+<pre class="source">
+String get bidi_dir =&gt; getMessage('@@bidi_dir');
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="bidi_end_edge">
+<button class="show-code">Code</button>
+final String         <strong>bidi_end_edge</strong> <a class="anchor-link"
+            href="#bidi_end_edge"
+            title="Permalink to ChromeI18n.bidi_end_edge">#</a>
+        </h4>
+        <div class="doc">
+<p>If the @@bidi_dir is "ltr", then this is "right"; otherwise, it's "left".</p>
+<pre class="source">
+String get bidi_end_edge =&gt; getMessage('@@bidi_end_edge');
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="bidi_reversed_dir">
+<button class="show-code">Code</button>
+final String         <strong>bidi_reversed_dir</strong> <a class="anchor-link"
+            href="#bidi_reversed_dir"
+            title="Permalink to ChromeI18n.bidi_reversed_dir">#</a>
+        </h4>
+        <div class="doc">
+<p>If the @@bidi_dir is "ltr", then this is "rtl"; otherwise, it's "ltr".</p>
+<pre class="source">
+String get bidi_reversed_dir =&gt; getMessage('@@bidi_reversed_dir');
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="bidi_start_edge">
+<button class="show-code">Code</button>
+final String         <strong>bidi_start_edge</strong> <a class="anchor-link"
+            href="#bidi_start_edge"
+            title="Permalink to ChromeI18n.bidi_start_edge">#</a>
+        </h4>
+        <div class="doc">
+<p>If the @@bidi_dir is "ltr", then this is "left"; otherwise, it's "right".</p>
+<pre class="source">
+String get bidi_start_edge =&gt; getMessage('@@bidi_start_edge');
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="extension_id">
+<button class="show-code">Code</button>
+final String         <strong>extension_id</strong> <a class="anchor-link"
+            href="#extension_id"
+            title="Permalink to ChromeI18n.extension_id">#</a>
+        </h4>
+        <div class="doc">
+<p>The extension or app ID; you might use this string to construct URLs.</p>
+<pre class="source">
+String get extension_id =&gt; getMessage('@@extension_id');
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="ui_locale">
+<button class="show-code">Code</button>
+final String         <strong>ui_locale</strong> <a class="anchor-link"
+            href="#ui_locale"
+            title="Permalink to ChromeI18n.ui_locale">#</a>
+        </h4>
+        <div class="doc">
+<p>The current locale; you might use this string to construct locale-specific URLs.</p>
+<pre class="source">
+String get ui_locale =&gt; getMessage('@@ui_locale');
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="getAcceptLanguages">
+<button class="show-code">Code</button>
+Future&lt;List&lt;String&gt;&gt; <strong>getAcceptLanguages</strong>() <a class="anchor-link" href="#getAcceptLanguages"
+              title="Permalink to ChromeI18n.getAcceptLanguages">#</a></h4>
+<div class="doc">
+<p>Gets the accept-languages of the browser. This is different from the locale
+used by the browser; to get the locale, use window.navigator.language.</p>
+<pre class="source">
+Future&lt;List&lt;String&gt;&gt; getAcceptLanguages() {
+ return js.scoped(() {
+   Completer completer = new Completer();
+
+   js.Callback callback = new js.Callback.once((var languages) {
+     completer.complete(new js_wrapping.JsArrayToListAdapter.fromProxy(languages).toList());
+   });
+
+   chromeProxy.i18n.getAcceptLanguages(callback);
+
+   return completer.future;
+ });
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getMessage">
+<button class="show-code">Code</button>
+String <strong>getMessage</strong>(String key, [List&lt;String&gt; substitutions]) <a class="anchor-link" href="#getMessage"
+              title="Permalink to ChromeI18n.getMessage">#</a></h4>
+<div class="doc">
+<p>Gets the localized string for the specified message. If the message is
+missing, this method returns an empty string (''). If the format of the
+getMessage() call is wrong — for example, messageName is not a string or
+the substitutions array has more than 9 elements — this method returns
+undefined.</p>
+<pre class="source">
+String getMessage(String key, [List&lt;String&gt; substitutions]) {
+ // TODO: use the substitutions param
+ return chromeProxy.i18n.getMessage(key);
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.473</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

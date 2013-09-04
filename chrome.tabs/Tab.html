@@ -1,0 +1,267 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Tab class / chrome.tabs Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.tabs" data-type="Tab">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.tabs.html">chrome.tabs</a> &rsaquo; <a href="../chrome.tabs/Tab.html">Tab</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Tab</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class Tab {
+ final int id;
+ final int index;
+ final int windowId;
+ final int openerTabId;
+ final bool highlighted;
+ final bool active;
+ final bool pinned;
+ final String url;
+ final String title;
+ final String favIconUrl;
+ final TabStatus status;
+ final bool incognito;
+
+ const Tab._(
+     this.id,
+     this.index,
+     this.windowId,
+     this.openerTabId,
+     this.highlighted,
+     this.active,
+     this.pinned,
+     this.url,
+     this.title,
+     this.favIconUrl,
+     this.status,
+     this.incognito);
+
+
+ Tab(tab) : this._(
+     tab.id,
+     tab.index,
+     tab.windowId,
+     tab['openerTabId'],
+     tab.highlighted,
+     tab.active,
+     tab.pinned,
+     tab['url'],
+     tab['title'],
+     tab['favIconUrl'],
+     tab['status'] != null ? new TabStatus(tab['status']) : null,
+     tab.incognito);
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>Tab</strong>(tab) <a class="anchor-link" href="#"
+              title="Permalink to Tab.Tab">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+Tab(tab) : this._(
+   tab.id,
+   tab.index,
+   tab.windowId,
+   tab['openerTabId'],
+   tab.highlighted,
+   tab.active,
+   tab.pinned,
+   tab['url'],
+   tab['title'],
+   tab['favIconUrl'],
+   tab['status'] != null ? new TabStatus(tab['status']) : null,
+   tab.incognito);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="active">
+<button class="show-code">Code</button>
+final bool         <strong>active</strong> <a class="anchor-link"
+            href="#active"
+            title="Permalink to Tab.active">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final bool active
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="favIconUrl">
+<button class="show-code">Code</button>
+final String         <strong>favIconUrl</strong> <a class="anchor-link"
+            href="#favIconUrl"
+            title="Permalink to Tab.favIconUrl">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final String favIconUrl
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="highlighted">
+<button class="show-code">Code</button>
+final bool         <strong>highlighted</strong> <a class="anchor-link"
+            href="#highlighted"
+            title="Permalink to Tab.highlighted">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final bool highlighted
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="id">
+<button class="show-code">Code</button>
+final int         <strong>id</strong> <a class="anchor-link"
+            href="#id"
+            title="Permalink to Tab.id">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final int id
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="incognito">
+<button class="show-code">Code</button>
+final bool         <strong>incognito</strong> <a class="anchor-link"
+            href="#incognito"
+            title="Permalink to Tab.incognito">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final bool incognito
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="index">
+<button class="show-code">Code</button>
+final int         <strong>index</strong> <a class="anchor-link"
+            href="#index"
+            title="Permalink to Tab.index">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final int index
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="openerTabId">
+<button class="show-code">Code</button>
+final int         <strong>openerTabId</strong> <a class="anchor-link"
+            href="#openerTabId"
+            title="Permalink to Tab.openerTabId">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final int openerTabId
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="pinned">
+<button class="show-code">Code</button>
+final bool         <strong>pinned</strong> <a class="anchor-link"
+            href="#pinned"
+            title="Permalink to Tab.pinned">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final bool pinned
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="status">
+<button class="show-code">Code</button>
+final <a href="../chrome.tabs/TabStatus.html">TabStatus</a>         <strong>status</strong> <a class="anchor-link"
+            href="#status"
+            title="Permalink to Tab.status">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final TabStatus status
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="title">
+<button class="show-code">Code</button>
+final String         <strong>title</strong> <a class="anchor-link"
+            href="#title"
+            title="Permalink to Tab.title">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final String title
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="url">
+<button class="show-code">Code</button>
+final String         <strong>url</strong> <a class="anchor-link"
+            href="#url"
+            title="Permalink to Tab.url">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final String url
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="windowId">
+<button class="show-code">Code</button>
+final int         <strong>windowId</strong> <a class="anchor-link"
+            href="#windowId"
+            title="Permalink to Tab.windowId">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final int windowId
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.772</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

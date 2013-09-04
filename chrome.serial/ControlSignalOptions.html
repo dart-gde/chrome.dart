@@ -1,0 +1,208 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ControlSignalOptions class / chrome.serial Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.serial" data-type="ControlSignalOptions">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.serial.html">chrome.serial</a> &rsaquo; <a href="../chrome.serial/ControlSignalOptions.html">ControlSignalOptions</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ControlSignalOptions</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ControlSignalOptions {
+
+ /**
+  * Serial control signals that your machine can send.
+  * Missing fields will be set to false.
+  */
+ bool dtr;
+
+ /**
+  * Serial control signals that your machine can receive.
+  * If a get operation fails, success will be false,
+  * and these fields will be absent.
+  *
+  * DCD (Data Carrier Detect) is equivalent to
+  * RLSD (Receive Line Signal Detect) on some platforms.
+  */
+ bool dcd;
+
+ /**
+  * Request to Send (RTS) signal is enabled during serial communication.
+  *
+  * The Request to Transmit (RTS) signal is typically used in
+  * Request to Send/Clear to Send (RTS/CTS) hardware handshaking.
+  */
+ bool rts;
+
+ /**
+  * Clear-to-Send line.
+  *
+  * The Clear-to-Send (CTS) line is used in Request to Send/Clear to
+  * Send (RTS/CTS) hardware handshaking. The CTS line is queried
+  * by a port before data is sent.
+  */
+ bool cts;
+ ControlSignalOptions({this.dtr: false, this.dcd: false,
+   this.rts: false, this.cts: false});
+
+ ControlSignalOptions.fromMap(Map map) {
+   _parseMap(map);
+ }
+
+ _parseMap(Map map) {
+   this.dtr = map.containsKey('dtr') ? map['dtr'] : false;
+   this.dtr = map.containsKey('dcd') ? map['dcd'] : false;
+   this.dtr = map.containsKey('rts') ? map['rts'] : false;
+   this.dtr = map.containsKey('cts') ? map['cts'] : false;
+ }
+
+ Map toMap() =&gt;
+     { 'dtr': this.dtr, 'dcd': this.dcd, 'rts': this.rts, 'cts': this.cts };
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>ControlSignalOptions</strong>({bool dtr: false, bool dcd: false, bool rts: false, bool cts: false}) <a class="anchor-link" href="#"
+              title="Permalink to ControlSignalOptions.ControlSignalOptions">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+ControlSignalOptions({this.dtr: false, this.dcd: false,
+ this.rts: false, this.cts: false});
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromMap">
+<button class="show-code">Code</button>
+new <strong>ControlSignalOptions.fromMap</strong>(Map map) <a class="anchor-link" href="#fromMap"
+              title="Permalink to ControlSignalOptions.ControlSignalOptions.fromMap">#</a></h4>
+<div class="doc">
+<pre class="source">
+ControlSignalOptions.fromMap(Map map) {
+ _parseMap(map);
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="cts">
+<button class="show-code">Code</button>
+bool         <strong>cts</strong> <a class="anchor-link"
+            href="#cts"
+            title="Permalink to ControlSignalOptions.cts">#</a>
+        </h4>
+        <div class="doc">
+<p>Clear-to-Send line.</p>
+<p>The Clear-to-Send (CTS) line is used in Request to Send/Clear to
+Send (RTS/CTS) hardware handshaking. The CTS line is queried
+by a port before data is sent.</p>
+<pre class="source">
+bool cts
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="dcd">
+<button class="show-code">Code</button>
+bool         <strong>dcd</strong> <a class="anchor-link"
+            href="#dcd"
+            title="Permalink to ControlSignalOptions.dcd">#</a>
+        </h4>
+        <div class="doc">
+<p>Serial control signals that your machine can receive.
+If a get operation fails, success will be false,
+and these fields will be absent.</p>
+<p>DCD (Data Carrier Detect) is equivalent to
+RLSD (Receive Line Signal Detect) on some platforms.</p>
+<pre class="source">
+bool dcd
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="dtr">
+<button class="show-code">Code</button>
+bool         <strong>dtr</strong> <a class="anchor-link"
+            href="#dtr"
+            title="Permalink to ControlSignalOptions.dtr">#</a>
+        </h4>
+        <div class="doc">
+<p>Serial control signals that your machine can send.
+Missing fields will be set to false.</p>
+<pre class="source">
+bool dtr
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="rts">
+<button class="show-code">Code</button>
+bool         <strong>rts</strong> <a class="anchor-link"
+            href="#rts"
+            title="Permalink to ControlSignalOptions.rts">#</a>
+        </h4>
+        <div class="doc">
+<p>Request to Send (RTS) signal is enabled during serial communication.</p>
+<p>The Request to Transmit (RTS) signal is typically used in
+Request to Send/Clear to Send (RTS/CTS) hardware handshaking.</p>
+<pre class="source">
+bool rts
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="toMap">
+<button class="show-code">Code</button>
+Map <strong>toMap</strong>() <a class="anchor-link" href="#toMap"
+              title="Permalink to ControlSignalOptions.toMap">#</a></h4>
+<div class="doc">
+<pre class="source">
+Map toMap() =&gt;
+   { 'dtr': this.dtr, 'dcd': this.dcd, 'rts': this.rts, 'cts': this.cts };
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.617</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

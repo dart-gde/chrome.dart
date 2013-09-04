@@ -1,0 +1,160 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>MessageEvent class / chrome.runtime Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.runtime" data-type="MessageEvent">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.runtime.html">chrome.runtime</a> &rsaquo; <a href="../chrome.runtime/MessageEvent.html">MessageEvent</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>MessageEvent</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class MessageEvent {
+ final dynamic message;
+ final MessageSender sender;
+ var _sendResponse;
+
+ MessageEvent(this.message, this.sender, this._sendResponse) {
+   js.retain(_sendResponse);
+ }
+
+ /**
+  * Function to call (at most once) when you have a response. The argument
+  * should be any JSON-ifiable object. If you have more than one onMessage
+  * listener in the same document, then only one may send a response.
+  */
+ void sendResponse([dynamic message]) {
+   if (!responseSent) {
+     js.scoped(() {
+       _sendResponse.call(jsifyMessage(message));
+     });
+     js.release(_sendResponse);
+     _sendResponse = null;
+   } else {
+     throw 'Response already sent.';
+   }
+ }
+
+ bool get responseSent =&gt; _sendResponse == null;
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>MessageEvent</strong>(message, <a href="../chrome.runtime/MessageSender.html">MessageSender</a> sender, _sendResponse) <a class="anchor-link" href="#"
+              title="Permalink to MessageEvent.MessageEvent">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+MessageEvent(this.message, this.sender, this._sendResponse) {
+ js.retain(_sendResponse);
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="message">
+<button class="show-code">Code</button>
+final         <strong>message</strong> <a class="anchor-link"
+            href="#message"
+            title="Permalink to MessageEvent.message">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final dynamic message
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="responseSent">
+<button class="show-code">Code</button>
+final bool         <strong>responseSent</strong> <a class="anchor-link"
+            href="#responseSent"
+            title="Permalink to MessageEvent.responseSent">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+bool get responseSent =&gt; _sendResponse == null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="sender">
+<button class="show-code">Code</button>
+final <a href="../chrome.runtime/MessageSender.html">MessageSender</a>         <strong>sender</strong> <a class="anchor-link"
+            href="#sender"
+            title="Permalink to MessageEvent.sender">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final MessageSender sender
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="sendResponse">
+<button class="show-code">Code</button>
+void <strong>sendResponse</strong>([message]) <a class="anchor-link" href="#sendResponse"
+              title="Permalink to MessageEvent.sendResponse">#</a></h4>
+<div class="doc">
+<p>Function to call (at most once) when you have a response. The argument
+should be any JSON-ifiable object. If you have more than one onMessage
+listener in the same document, then only one may send a response.</p>
+<pre class="source">
+void sendResponse([dynamic message]) {
+ if (!responseSent) {
+   js.scoped(() {
+     _sendResponse.call(jsifyMessage(message));
+   });
+   js.release(_sendResponse);
+   _sendResponse = null;
+ } else {
+   throw 'Response already sent.';
+ }
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.564</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

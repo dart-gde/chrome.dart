@@ -1,0 +1,1849 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>JsArrayToListAdapter&lt;E&gt; class / js.wrapping Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="js.wrapping" data-type="JsArrayToListAdapter&amp;lt;E&amp;gt;">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../js.wrapping.html">js.wrapping</a> &rsaquo; <a href="../js.wrapping/JsArrayToListAdapter.html">JsArrayToListAdapter&lt;E&gt;</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>JsArrayToListAdapter&lt;E&gt;</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Adapter to handle a js array as a dart <a class="crossref" href="../dart_core/List.html">List</a>.
+You can provide a translator to automatically wrap contained Proxy to some
+TypedProxy or something else.</p>
+<pre class="source">
+class JsArrayToListAdapter&lt;E&gt; extends TypedProxy /*with ListMixin&lt;E&gt;*/ implements List&lt;E&gt; {
+
+ /// Like [JsArrayToListAdapter.fromProxy] but with `null` handling for
+ /// [proxy].
+ static JsArrayToListAdapter cast(Proxy proxy, [Translator translator]) =&gt;
+     proxy == null ? null :
+         new JsArrayToListAdapter.fromProxy(proxy, translator);
+
+ /// Same as [cast] but for array containing [Serializable] elements.
+ static JsArrayToListAdapter castListOfSerializables(Proxy proxy,
+     Mapper&lt;dynamic, Serializable&gt; fromJs, {mapOnlyNotNull: false}) =&gt;
+         proxy == null ? null : new JsArrayToListAdapter.fromProxy(proxy,
+             new TranslatorForSerializable(fromJs,
+                 mapOnlyNotNull: mapOnlyNotNull));
+
+ final Translator&lt;E&gt; _translator;
+
+ /// Create a new adapter from a proxy of a Js list.
+ JsArrayToListAdapter.fromProxy(Proxy proxy, [Translator&lt;E&gt; translator])
+     : this._translator = translator,
+       super.fromProxy(proxy);
+
+ // Iterable
+ @override Iterator&lt;E&gt; get iterator =&gt; new _JsIterator&lt;E&gt;(this);
+ @override int get length =&gt; $unsafe.length;
+
+ // Collection
+ @override void add(E value) { $unsafe.push(_toJs(value)); }
+ @override void clear() { this.length = 0; }
+ @override bool remove(Object element) =&gt; removeAt(indexOf(element)) != null;
+
+ // List
+ @override E operator [](int index) {
+   if (index &lt; 0 || index &gt;= this.length) throw new RangeError.value(index);
+   return _fromJs($unsafe[index]);
+ }
+ @override void operator []=(int index, E value) {
+   if (index &lt; 0 || index &gt;= this.length) throw new RangeError.value(index);
+   $unsafe[index] = _toJs(value);
+ }
+ @override void set length(int length) { $unsafe.length = length; }
+ @override void sort([int compare(E a, E b)]) {
+   final sortedList = _asList()..sort(compare);
+   setRange(0, sortedList.length, sortedList);
+ }
+ @override void insert(int index, E element) {
+   $unsafe.splice(index, 0, _toJs(element));
+ }
+ @override E removeAt(int index) {
+   if (index &lt; 0 || index &gt;= this.length) throw new RangeError.value(index);
+   return _fromJs($unsafe.splice(index, 1)[0]);
+ }
+ @override E removeLast() =&gt; _fromJs($unsafe.pop());
+ @override List&lt;E&gt; sublist(int start, [int end]) =&gt;
+     _asList().sublist(start, end);
+ @deprecated @override List&lt;E&gt; getRange(int start, int length) =&gt;
+     _asList().getRange(start, length);
+ @override void setRange(int start, int length, List&lt;E&gt; from,
+                         [int startFrom = 0]) {
+   final args = [start, length];
+   for(int i = startFrom; i &lt; startFrom + length; i++) {
+     args.add(_toJs(from[i]));
+   }
+   $unsafe["splice"].apply($unsafe, array(args));
+ }
+ @override void removeRange(int start, int end) {
+   $unsafe.splice(start, end - start);
+ }
+
+ // private methods
+ dynamic _toJs(E e) =&gt; _translator == null ? e : _translator.toJs(e);
+ E _fromJs(dynamic value) =&gt; _translator == null ? value :
+     _translator.fromJs(value);
+
+ List&lt;E&gt; _asList() {
+   final list = new List&lt;E&gt;();
+   for (int i = 0; i &lt; length; i++) {
+     list.add(this[i]);
+   }
+   return list;
+ }
+
+ // ListMixin duplication until http://dartbug.com/9339 is fixed
+
+
+ // Iterable interface.
+//  Iterator&lt;E&gt; get iterator =&gt; new ListIterator&lt;E&gt;(this);
+
+ E elementAt(int index) =&gt; this[index];
+
+ void forEach(void action(E element)) {
+   int length = this.length;
+   for (int i = 0; i &lt; length; i++) {
+     action(this[i]);
+     if (length != this.length) {
+       throw new ConcurrentModificationError(this);
+     }
+   }
+ }
+
+ bool get isEmpty =&gt; length == 0;
+
+ bool get isNotEmpty =&gt; !isEmpty;
+
+ E get first {
+   if (length == 0) throw new StateError("No elements");
+   return this[0];
+ }
+
+ E get last {
+   if (length == 0) throw new StateError("No elements");
+   return this[length - 1];
+ }
+
+ E get single {
+   if (length == 0) throw new StateError("No elements");
+   if (length &gt; 1) throw new StateError("Too many elements");
+   return this[0];
+ }
+
+ bool contains(E element) {
+   int length = this.length;
+   for (int i = 0; i &lt; length; i++) {
+     if (this[i] == element) return true;
+     if (length != this.length) {
+       throw new ConcurrentModificationError(this);
+     }
+   }
+   return false;
+ }
+
+ bool every(bool test(E element)) {
+   int length = this.length;
+   for (int i = 0; i &lt; length; i++) {
+     if (!test(this[i])) return false;
+     if (length != this.length) {
+       throw new ConcurrentModificationError(this);
+     }
+   }
+   return true;
+ }
+
+ bool any(bool test(E element)) {
+   int length = this.length;
+   for (int i = 0; i &lt; length; i++) {
+     if (test(this[i])) return true;
+     if (length != this.length) {
+       throw new ConcurrentModificationError(this);
+     }
+   }
+   return false;
+ }
+
+ E firstWhere(bool test(E element), { E orElse() }) {
+   int length = this.length;
+   for (int i = 0; i &lt; length; i++) {
+     E element = this[i];
+     if (test(element)) return element;
+     if (length != this.length) {
+       throw new ConcurrentModificationError(this);
+     }
+   }
+   if (orElse != null) return orElse();
+   throw new StateError("No matching element");
+ }
+
+ E lastWhere(bool test(E element), { E orElse() }) {
+   int length = this.length;
+   for (int i = length - 1; i &gt;= 0; i--) {
+     E element = this[i];
+     if (test(element)) return element;
+     if (length != this.length) {
+       throw new ConcurrentModificationError(this);
+     }
+   }
+   if (orElse != null) return orElse();
+   throw new StateError("No matching element");
+ }
+
+ E singleWhere(bool test(E element)) {
+   int length = this.length;
+   E match = null;
+   bool matchFound = false;
+   for (int i = 0; i &lt; length; i++) {
+     E element = this[i];
+     if (test(element)) {
+       if (matchFound) {
+         throw new StateError("More than one matching element");
+       }
+       matchFound = true;
+       match = element;
+     }
+     if (length != this.length) {
+       throw new ConcurrentModificationError(this);
+     }
+   }
+   if (matchFound) return match;
+   throw new StateError("No matching element");
+ }
+
+ String join([String separator = ""]) {
+   int length = this.length;
+   if (!separator.isEmpty) {
+     if (length == 0) return "";
+     String first = "${this[0]}";
+     if (length != this.length) {
+       throw new ConcurrentModificationError(this);
+     }
+     StringBuffer buffer = new StringBuffer(first);
+     for (int i = 1; i &lt; length; i++) {
+       buffer.write(separator);
+       buffer.write(this[i]);
+       if (length != this.length) {
+         throw new ConcurrentModificationError(this);
+       }
+     }
+     return buffer.toString();
+   } else {
+     StringBuffer buffer = new StringBuffer();
+     for (int i = 0; i &lt; length; i++) {
+       buffer.write(this[i]);
+       if (length != this.length) {
+         throw new ConcurrentModificationError(this);
+       }
+     }
+     return buffer.toString();
+   }
+ }
+
+ Iterable&lt;E&gt; where(bool test(E element)) =&gt; _asList().where(test);
+
+ Iterable map(f(E element)) =&gt; _asList().map(f);
+
+ Iterable expand(Iterable f(E element)) =&gt; _asList().expand(f);
+
+ E reduce(E combine(E previousValue, E element)) {
+   if (length == 0) throw new StateError("No elements");
+   E value = this[0];
+   for (int i = 1; i &lt; length; i++) {
+     value = combine(value, this[i]);
+   }
+   return value;
+ }
+
+ fold(var initialValue, combine(var previousValue, E element)) {
+   var value = initialValue;
+   int length = this.length;
+   for (int i = 0; i &lt; length; i++) {
+     value = combine(value, this[i]);
+     if (length != this.length) {
+       throw new ConcurrentModificationError(this);
+     }
+   }
+   return value;
+ }
+
+ Iterable&lt;E&gt; skip(int count) =&gt; _asList().skip(count);
+
+ Iterable&lt;E&gt; skipWhile(bool test(E element)) =&gt; _asList().skipWhile(test);
+
+ Iterable&lt;E&gt; take(int count) =&gt; _asList().take(count);
+
+ Iterable&lt;E&gt; takeWhile(bool test(E element)) =&gt; _asList().takeWhile(test);
+
+ List&lt;E&gt; toList({ bool growable: true }) {
+   List&lt;E&gt; result;
+   if (growable) {
+     result = new List&lt;E&gt;()..length = length;
+   } else {
+     result = new List&lt;E&gt;(length);
+   }
+   for (int i = 0; i &lt; length; i++) {
+     result[i] = this[i];
+   }
+   return result;
+ }
+
+ Set&lt;E&gt; toSet() {
+   Set&lt;E&gt; result = new Set&lt;E&gt;();
+   for (int i = 0; i &lt; length; i++) {
+     result.add(this[i]);
+   }
+   return result;
+ }
+
+ // Collection interface.
+//  void add(E element) {
+//    this[this.length++] = element;
+//  }
+
+ void addAll(Iterable&lt;E&gt; iterable) {
+   for (E element in iterable) {
+     this[this.length++] = element;
+   }
+ }
+
+//  void remove(Object element) {
+//    for (int i = 0; i &lt; this.length; i++) {
+//      if (this[i] == element) {
+//        this.setRange(i, i + this.length - 1, this, i + 1);
+//        this.length -= 1;
+//        return;
+//      }
+//    }
+//  }
+
+ void removeWhere(bool test(E element)) {
+   _filter(this, test, false);
+ }
+
+ void retainWhere(bool test(E element)) {
+   _filter(this, test, true);
+ }
+
+ static void _filter(List source,
+                     bool test(var element),
+                     bool retainMatching) {
+   List retained = [];
+   int length = source.length;
+   for (int i = 0; i &lt; length; i++) {
+     var element = source[i];
+     if (test(element) == retainMatching) {
+       retained.add(element);
+     }
+     if (length != source.length) {
+       throw new ConcurrentModificationError(source);
+     }
+   }
+   if (retained.length != source.length) {
+     source.setRange(0, retained.length, retained);
+     source.length = retained.length;
+   }
+ }
+
+//  void clear() { this.length = 0; }
+
+ // List interface.
+
+//  E removeLast() {
+//    if (length == 0) {
+//      throw new StateError("No elements");
+//    }
+//    E result = this[length - 1];
+//    length--;
+//    return result;
+//  }
+
+//  void sort([Comparator&lt;E&gt; compare]) {
+//    Sort.sort(this, compare);
+//  }
+
+ Map&lt;int, E&gt; asMap() =&gt; _asList().asMap();
+
+ void _rangeCheck(int start, int end) {
+   if (start &lt; 0 || start &gt; this.length) {
+     throw new RangeError.range(start, 0, this.length);
+   }
+   if (end &lt; start || end &gt; this.length) {
+     throw new RangeError.range(end, start, this.length);
+   }
+ }
+
+//  List&lt;E&gt; sublist(int start, [int end]) {
+//    if (end == null) end = length;
+//    _rangeCheck(start, end);
+//    int length = end - start;
+//    List&lt;E&gt; result = new List&lt;E&gt;()..length = length;
+//    for (int i = 0; i &lt; length; i++) {
+//      result[i] = this[start + i];
+//    }
+//    return result;
+//  }
+
+//  Iterable&lt;E&gt; getRange(int start, int end) {
+//    _rangeCheck(start, end);
+//    return new SubListIterable(this, start, end);
+//  }
+
+//  void removeRange(int start, int end) {
+//    _rangeCheck(start, end);
+//    int length = end - start;
+//    setRange(start, this.length - length, this, end);
+//    this.length -= length;
+//  }
+
+ void fillRange(int start, int end, [E fill]) {
+   _rangeCheck(start, end);
+   for (int i = start; i &lt; end; i++) {
+     this[i] = fill;
+   }
+ }
+
+//  void setRange(int start, int end, Iterable&lt;E&gt; iterable, [int skipCount = 0]) {
+//    _rangeCheck(start, end);
+//    int length = end - start;
+//    if (length == 0) return;
+//
+//    if (skipCount &lt; 0) throw new ArgumentError(skipCount);
+//
+//    List otherList;
+//    int otherStart;
+//    // TODO(floitsch): Make this accept more.
+//    if (iterable is List) {
+//      otherList = iterable;
+//      otherStart = skipCount;
+//    } else {
+//      otherList = iterable.skip(skipCount).toList(growable: false);
+//      otherStart = 0;
+//    }
+//    if (otherStart + length &gt; otherList.length) {
+//      throw new StateError("Not enough elements");
+//    }
+//    if (otherStart &lt; start) {
+//      // Copy backwards to ensure correct copy if [from] is this.
+//      for (int i = length - 1; i &gt;= 0; i--) {
+//        this[start + i] = otherList[otherStart + i];
+//      }
+//    } else {
+//      for (int i = 0; i &lt; length; i++) {
+//        this[start + i] = otherList[otherStart + i];
+//      }
+//    }
+//  }
+
+ void replaceRange(int start, int end, Iterable&lt;E&gt; newContents) {
+   // TODO(floitsch): Optimize this.
+   removeRange(start, end);
+   insertAll(start, newContents);
+ }
+
+ int indexOf(E element, [int startIndex = 0]) {
+   if (startIndex &gt;= this.length) {
+     return -1;
+   }
+   if (startIndex &lt; 0) {
+     startIndex = 0;
+   }
+   for (int i = startIndex; i &lt; this.length; i++) {
+     if (this[i] == element) {
+       return i;
+     }
+   }
+   return -1;
+ }
+
+ /**
+  * Returns the last index in the list [a] of the given [element], starting
+  * the search at index [startIndex] to 0.
+  * Returns -1 if [element] is not found.
+  */
+ int lastIndexOf(E element, [int startIndex]) {
+   if (startIndex == null) {
+     startIndex = this.length - 1;
+   } else {
+     if (startIndex &lt; 0) {
+       return -1;
+     }
+     if (startIndex &gt;= this.length) {
+       startIndex = this.length - 1;
+     }
+   }
+   for (int i = startIndex; i &gt;= 0; i--) {
+     if (this[i] == element) {
+       return i;
+     }
+   }
+   return -1;
+ }
+
+//  void insert(int index, E element) {
+//    if (index &lt; 0 || index &gt; length) {
+//      throw new RangeError.range(index, 0, length);
+//    }
+//    if (index == this.length) {
+//      add(element);
+//      return;
+//    }
+//    // We are modifying the length just below the is-check. Without the check
+//    // Array.copy could throw an exception, leaving the list in a bad state
+//    // (with a length that has been increased, but without a new element).
+//    if (index is! int) throw new ArgumentError(index);
+//    this.length++;
+//    setRange(index + 1, this.length, this, index);
+//    this[index] = element;
+//  }
+
+//  E removeAt(int index) {
+//    E result = this[index];
+//    setRange(index, this.length - 1, this, index + 1);
+//    length--;
+//    return result;
+//  }
+
+ void insertAll(int index, Iterable&lt;E&gt; iterable) {
+   if (index &lt; 0 || index &gt; length) {
+     throw new RangeError.range(index, 0, length);
+   }
+   // TODO(floitsch): we can probably detect more cases.
+   if (iterable is! List &amp;&amp; iterable is! Set /*&amp;&amp; iterable is! SubListIterable*/) {
+     iterable = iterable.toList();
+   }
+   int insertionLength = iterable.length;
+   // There might be errors after the length change, in which case the list
+   // will end up being modified but the operation not complete. Unless we
+   // always go through a "toList" we can't really avoid that.
+   this.length += insertionLength;
+   setRange(index + insertionLength, this.length, this, index);
+   setAll(index, iterable);
+ }
+
+ void setAll(int index, Iterable&lt;E&gt; iterable) {
+   if (iterable is List) {
+     setRange(index, index + iterable.length, iterable);
+   } else {
+     for (E element in iterable) {
+       this[index++] = element;
+     }
+   }
+ }
+
+ Iterable&lt;E&gt; get reversed =&gt; _asList().reversed;
+
+ String toString() =&gt; _asList().toString();
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../js.wrapping/TypedProxy.html">TypedProxy</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>JsArrayToListAdapter&lt;E&gt;</strong></span></p>
+<h3>Implements</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../dart_core/List.html">List&lt;E&gt;</a></span></p>
+<div>
+<h3>Static Methods</h3>
+<div class="method"><h4 id="cast">
+<button class="show-code">Code</button>
+<a href="../js.wrapping/JsArrayToListAdapter.html">JsArrayToListAdapter</a> <strong>cast</strong>(<a href="../js/Proxy.html">Proxy</a> proxy, [<a href="../js.wrapping/Translator.html">Translator</a> translator]) <a class="anchor-link" href="#cast"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.cast">#</a></h4>
+<div class="doc">
+<p>Like <a class="crossref" href="../js.wrapping/JsArrayToListAdapter.html#fromProxy">JsArrayToListAdapter.fromProxy</a> but with <code>null</code> handling for
+
+<span class="param">proxy</span>.</p>
+<pre class="source">
+static JsArrayToListAdapter cast(Proxy proxy, [Translator translator]) =&gt;
+   proxy == null ? null :
+       new JsArrayToListAdapter.fromProxy(proxy, translator);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="castListOfSerializables">
+<button class="show-code">Code</button>
+<a href="../js.wrapping/JsArrayToListAdapter.html">JsArrayToListAdapter</a> <strong>castListOfSerializables</strong>(<a href="../js/Proxy.html">Proxy</a> proxy, <a href="../js.wrapping/Mapper.html">Mapper</a> fromJs, {mapOnlyNotNull: false}) <a class="anchor-link" href="#castListOfSerializables"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.castListOfSerializables">#</a></h4>
+<div class="doc">
+<p>Same as <a class="crossref" href="../js.wrapping/JsArrayToListAdapter.html#cast">cast</a> but for array containing <a class="crossref" href="../js/Serializable.html">Serializable</a> elements.</p>
+<pre class="source">
+static JsArrayToListAdapter castListOfSerializables(Proxy proxy,
+   Mapper&lt;dynamic, Serializable&gt; fromJs, {mapOnlyNotNull: false}) =&gt;
+       proxy == null ? null : new JsArrayToListAdapter.fromProxy(proxy,
+           new TranslatorForSerializable(fromJs,
+               mapOnlyNotNull: mapOnlyNotNull));
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>JsArrayToListAdapter.fromProxy</strong>(<a href="../js/Proxy.html">Proxy</a> proxy, [<a href="../js.wrapping/Translator.html">Translator</a>&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; translator]) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.JsArrayToListAdapter.fromProxy">#</a></h4>
+<div class="doc">
+<p>Create a new adapter from a proxy of a Js list.</p>
+<pre class="source">
+JsArrayToListAdapter.fromProxy(Proxy proxy, [Translator&lt;E&gt; translator])
+   : this._translator = translator,
+     super.fromProxy(proxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="$unsafe">
+<button class="show-code">Code</button>
+final <a href="../js/Proxy.html">Proxy</a>         <strong>$unsafe</strong> <a class="anchor-link"
+            href="#$unsafe"
+            title="Permalink to JsArrayToListAdapter&lt;E&gt;.$unsafe">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../js.wrapping/TypedProxy.html">TypedProxy</a> </div><div class="doc">
+<pre class="source">
+final Proxy $unsafe
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="first">
+<button class="show-code">Code</button>
+final <a href="../js.wrapping/JsArrayToListAdapter.html">E</a>         <strong>first</strong> <a class="anchor-link"
+            href="#first"
+            title="Permalink to JsArrayToListAdapter&lt;E&gt;.first">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns the first element.</p>
+<p>If <code>this</code> is empty throws a <a class="crossref" href="../dart_core/StateError.html">StateError</a>. Otherwise this method is
+equivalent to <code>this.elementAt(0)</code></p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+E get first {
+ if (length == 0) throw new StateError("No elements");
+ return this[0];
+}
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="isEmpty">
+<button class="show-code">Code</button>
+final bool         <strong>isEmpty</strong> <a class="anchor-link"
+            href="#isEmpty"
+            title="Permalink to JsArrayToListAdapter&lt;E&gt;.isEmpty">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if there is no element in this collection.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+bool get isEmpty =&gt; length == 0;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="isNotEmpty">
+<button class="show-code">Code</button>
+final bool         <strong>isNotEmpty</strong> <a class="anchor-link"
+            href="#isNotEmpty"
+            title="Permalink to JsArrayToListAdapter&lt;E&gt;.isNotEmpty">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if there is at least one element in this collection.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+bool get isNotEmpty =&gt; !isEmpty;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="iterator">
+<button class="show-code">Code</button>
+final Iterator&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt;         <strong>iterator</strong> <a class="anchor-link"
+            href="#iterator"
+            title="Permalink to JsArrayToListAdapter&lt;E&gt;.iterator">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns an <a class="crossref" href="../dart_core/Iterator.html">Iterator</a> that iterates over this <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> object.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override Iterator&lt;E&gt; get iterator =&gt; new _JsIterator&lt;E&gt;(this);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="last">
+<button class="show-code">Code</button>
+final <a href="../js.wrapping/JsArrayToListAdapter.html">E</a>         <strong>last</strong> <a class="anchor-link"
+            href="#last"
+            title="Permalink to JsArrayToListAdapter&lt;E&gt;.last">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns the last element.</p>
+<p>If <code>this</code> is empty throws a <a class="crossref" href="../dart_core/StateError.html">StateError</a>.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+E get last {
+ if (length == 0) throw new StateError("No elements");
+ return this[length - 1];
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="length">
+<button class="show-code">Code</button>
+int <strong>get length</strong> <a class="anchor-link" href="#length"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.get length">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the number of objects in this list.</p>
+<p>The valid indices for a list are <code>0</code> through <code>length - 1</code>.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override int get length =&gt; $unsafe.length;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="length=">
+<button class="show-code">Code</button>
+void <strong>set length</strong>(int length) <a class="anchor-link" href="#length="
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.set length">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Changes the length of this list.</p>
+<p>If <code>newLength</code> is greater than
+the current 
+<span class="param">length</span>, entries are initialized to <code>null</code>.</p>
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> if the list is fixed-length.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override void set length(int length) { $unsafe.length = length; }
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="reversed">
+<button class="show-code">Code</button>
+final Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt;         <strong>reversed</strong> <a class="anchor-link"
+            href="#reversed"
+            title="Permalink to JsArrayToListAdapter&lt;E&gt;.reversed">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns an <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> of the objects in this list in reverse order.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+Iterable&lt;E&gt; get reversed =&gt; _asList().reversed;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="single">
+<button class="show-code">Code</button>
+final <a href="../js.wrapping/JsArrayToListAdapter.html">E</a>         <strong>single</strong> <a class="anchor-link"
+            href="#single"
+            title="Permalink to JsArrayToListAdapter&lt;E&gt;.single">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns the single element in <code>this</code>.</p>
+<p>If <code>this</code> is empty or has more than one element throws a <a class="crossref" href="../dart_core/StateError.html">StateError</a>.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+E get single {
+ if (length == 0) throw new StateError("No elements");
+ if (length &gt; 1) throw new StateError("Too many elements");
+ return this[0];
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Operators</h3>
+<div class="method"><h4 id="[]">
+<button class="show-code">Code</button>
+<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> <strong>operator []</strong>(int index) <a class="anchor-link" href="#[]"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.operator []">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the object at the given 
+<span class="param">index</span> in the list
+or throws a <a class="crossref" href="../dart_core/RangeError.html">RangeError</a> if 
+<span class="param">index</span> is out of bounds.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override E operator [](int index) {
+ if (index &lt; 0 || index &gt;= this.length) throw new RangeError.value(index);
+ return _fromJs($unsafe[index]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="[]=">
+<button class="show-code">Code</button>
+void <strong>operator []=</strong>(int index, <a href="../js.wrapping/JsArrayToListAdapter.html">E</a> value) <a class="anchor-link" href="#[]="
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.operator []=">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Sets the value at the given 
+<span class="param">index</span> in the list to 
+<span class="param">value</span>
+or throws a <a class="crossref" href="../dart_core/RangeError.html">RangeError</a> if 
+<span class="param">index</span> is out of bounds.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override void operator []=(int index, E value) {
+ if (index &lt; 0 || index &gt;= this.length) throw new RangeError.value(index);
+ $unsafe[index] = _toJs(value);
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="add">
+<button class="show-code">Code</button>
+void <strong>add</strong>(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> value) <a class="anchor-link" href="#add"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.add">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Adds 
+<span class="param">value</span> to the end of this list,
+extending the length by one.</p>
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> if the list is fixed-length.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override void add(E value) { $unsafe.push(_toJs(value)); }
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="addAll">
+<button class="show-code">Code</button>
+void <strong>addAll</strong>(Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; iterable) <a class="anchor-link" href="#addAll"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.addAll">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Appends all objects of 
+<span class="param">iterable</span> to the end of this list.</p>
+<p>Extends the length of the list by the number of objects in 
+<span class="param">iterable</span>.
+Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> if this list is fixed-length.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+void addAll(Iterable&lt;E&gt; iterable) {
+ for (E element in iterable) {
+   this[this.length++] = element;
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="any">
+<button class="show-code">Code</button>
+bool <strong>any</strong>(bool test(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#any"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.any">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns true if one element of this collection satisfies the
+predicate 
+<span class="param">test</span>. Returns false otherwise.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+bool any(bool test(E element)) {
+ int length = this.length;
+ for (int i = 0; i &lt; length; i++) {
+   if (test(this[i])) return true;
+   if (length != this.length) {
+     throw new ConcurrentModificationError(this);
+   }
+ }
+ return false;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asMap">
+<button class="show-code">Code</button>
+Map&lt;int, <a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>asMap</strong>() <a class="anchor-link" href="#asMap"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.asMap">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns an unmodifiable <a class="crossref" href="../dart_core/Map.html">Map</a> view of <code>this</code>.</p>
+<p>The map uses the indices of this list as keys and the corresponding objects
+as values. The <code>Map.keys</code> <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> iterates the indices of this list
+in numerical order.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+Map&lt;int, E&gt; asMap() =&gt; _asList().asMap();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="clear">
+<button class="show-code">Code</button>
+void <strong>clear</strong>() <a class="anchor-link" href="#clear"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.clear">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Removes all objects from this list;
+the length of the list becomes zero.</p>
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>, and retains all objects, if this 
+is a fixed-length list.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override void clear() { this.length = 0; }
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="contains">
+<button class="show-code">Code</button>
+bool <strong>contains</strong>(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element) <a class="anchor-link" href="#contains"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.contains">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Check whether the collection contains an element equal to 
+<span class="param">element</span>.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+bool contains(E element) {
+ int length = this.length;
+ for (int i = 0; i &lt; length; i++) {
+   if (this[i] == element) return true;
+   if (length != this.length) {
+     throw new ConcurrentModificationError(this);
+   }
+ }
+ return false;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="elementAt">
+<button class="show-code">Code</button>
+<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> <strong>elementAt</strong>(int index) <a class="anchor-link" href="#elementAt"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.elementAt">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the 
+<span class="param">index</span>th element.</p>
+<p>If <code>this</code> has fewer than 
+<span class="param">index</span> elements throws a <a class="crossref" href="../dart_core/RangeError.html">RangeError</a>.</p>
+<p>Note: if <code>this</code> does not have a deterministic iteration order then the
+function may simply return any element without any iteration if there are
+at least 
+<span class="param">index</span> elements in <code>this</code>.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+E elementAt(int index) =&gt; this[index];
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="every">
+<button class="show-code">Code</button>
+bool <strong>every</strong>(bool test(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#every"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.every">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns true if every elements of this collection satisify the
+predicate 
+<span class="param">test</span>. Returns <code>false</code> otherwise.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+bool every(bool test(E element)) {
+ int length = this.length;
+ for (int i = 0; i &lt; length; i++) {
+   if (!test(this[i])) return false;
+   if (length != this.length) {
+     throw new ConcurrentModificationError(this);
+   }
+ }
+ return true;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="expand">
+<button class="show-code">Code</button>
+Iterable <strong>expand</strong>(Iterable f(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#expand"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.expand">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Expand each element of this <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> into zero or more elements.</p>
+<p>The resulting Iterable will run through the elements returned
+by 
+<span class="param">f</span> for each element of this, in order.</p>
+<p>The returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> is lazy, and will call 
+<span class="param">f</span> for each element
+of this every time it's iterated.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+Iterable expand(Iterable f(E element)) =&gt; _asList().expand(f);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fillRange">
+<button class="show-code">Code</button>
+void <strong>fillRange</strong>(int start, int end, [<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> fill]) <a class="anchor-link" href="#fillRange"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.fillRange">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Sets the objects in the range 
+<span class="param">start</span> inclusive to 
+<span class="param">end</span> exclusive
+to the given <code>fillValue</code>.</p>
+<p>An error occurs if 
+<span class="param">start</span>..
+<span class="param">end</span> is not a valid range for <code>this</code>.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+void fillRange(int start, int end, [E fill]) {
+ _rangeCheck(start, end);
+ for (int i = start; i &lt; end; i++) {
+   this[i] = fill;
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="firstWhere">
+<button class="show-code">Code</button>
+<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> <strong>firstWhere</strong>(bool test(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element), {<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> orElse()}) <a class="anchor-link" href="#firstWhere"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.firstWhere">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the first element that satisfies the given predicate 
+<span class="param">test</span>.</p>
+<p>If none matches, the result of invoking the 
+<span class="param">orElse</span> function is
+returned. By default, when 
+<span class="param">orElse</span> is <code>null</code>, a <a class="crossref" href="../dart_core/StateError.html">StateError</a> is
+thrown.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+E firstWhere(bool test(E element), { E orElse() }) {
+ int length = this.length;
+ for (int i = 0; i &lt; length; i++) {
+   E element = this[i];
+   if (test(element)) return element;
+   if (length != this.length) {
+     throw new ConcurrentModificationError(this);
+   }
+ }
+ if (orElse != null) return orElse();
+ throw new StateError("No matching element");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fold">
+<button class="show-code">Code</button>
+dynamic <strong>fold</strong>(initialValue, combine(previousValue, <a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#fold"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.fold">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Reduces a collection to a single value by iteratively combining each
+element of the collection with an existing value using the provided
+function.</p>
+<p>Use 
+<span class="param">initialValue</span> as the initial value, and the function 
+<span class="param">combine</span> to
+create a new value from the previous one and an element.</p>
+<p>Example of calculating the sum of an iterable:</p>
+<pre><code>iterable.fold(0, (prev, element) =&gt; prev + element);
+</code></pre>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+fold(var initialValue, combine(var previousValue, E element)) {
+ var value = initialValue;
+ int length = this.length;
+ for (int i = 0; i &lt; length; i++) {
+   value = combine(value, this[i]);
+   if (length != this.length) {
+     throw new ConcurrentModificationError(this);
+   }
+ }
+ return value;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="forEach">
+<button class="show-code">Code</button>
+void <strong>forEach</strong>(void action(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#forEach"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.forEach">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Applies the function <code>f</code> to each element of this collection.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+void forEach(void action(E element)) {
+ int length = this.length;
+ for (int i = 0; i &lt; length; i++) {
+   action(this[i]);
+   if (length != this.length) {
+     throw new ConcurrentModificationError(this);
+   }
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getRange">
+<button class="show-code">Code</button>
+List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>getRange</strong>(int start, int length) <a class="anchor-link" href="#getRange"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.getRange">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns an <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> that iterates over the objects in the range
+
+<span class="param">start</span> inclusive to <code>end</code> exclusive.</p>
+<p>An error occurs if <code>end</code> is before 
+<span class="param">start</span>.</p>
+<p>An error occurs if the 
+<span class="param">start</span> and <code>end</code> are not valid ranges at the time
+of the call to this method. The returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> behaves like
+<code>skip(start).take(end - start)</code>. That is, it does not throw exceptions
+if <code>this</code> changes size.</p>
+<p>Example:</p>
+<pre><code>var list = [1, 2, 3, 4, 5];
+var range = list.getRange(1, 4);
+print(range.join(', '));  // =&gt; 2, 3, 4
+list.length = 3;
+print(range.join(', '));  // =&gt; 2, 3
+</code></pre>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@deprecated @override List&lt;E&gt; getRange(int start, int length) =&gt;
+   _asList().getRange(start, length);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="indexOf">
+<button class="show-code">Code</button>
+int <strong>indexOf</strong>(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element, [int startIndex = 0]) <a class="anchor-link" href="#indexOf"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.indexOf">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the first index of 
+<span class="param">element</span> in this list.</p>
+<p>Searches the list from index <code>start</code> to the length of the list.
+The first time an object <code>o</code> is encountered so that <code>o == element</code>,
+the index of <code>o</code> is returned.
+Returns -1 if 
+<span class="param">element</span> is not found.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+int indexOf(E element, [int startIndex = 0]) {
+ if (startIndex &gt;= this.length) {
+   return -1;
+ }
+ if (startIndex &lt; 0) {
+   startIndex = 0;
+ }
+ for (int i = startIndex; i &lt; this.length; i++) {
+   if (this[i] == element) {
+     return i;
+   }
+ }
+ return -1;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="insert">
+<button class="show-code">Code</button>
+void <strong>insert</strong>(int index, <a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element) <a class="anchor-link" href="#insert"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.insert">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Inserts the object at position 
+<span class="param">index</span> in this list.</p>
+<p>This increases the length of the list by one and shifts all objects
+at or after the index towards the end of the list.</p>
+<p>An error occurs if the 
+<span class="param">index</span> is less than 0 or greater than length.
+An <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> occurs if the list is fixed-length.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override void insert(int index, E element) {
+ $unsafe.splice(index, 0, _toJs(element));
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="insertAll">
+<button class="show-code">Code</button>
+void <strong>insertAll</strong>(int index, Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; iterable) <a class="anchor-link" href="#insertAll"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.insertAll">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Inserts all objects of 
+<span class="param">iterable</span> at position 
+<span class="param">index</span> in this list.</p>
+<p>This increases the length of the list by the length of 
+<span class="param">iterable</span> and
+shifts all later objects towards the end of the list.</p>
+<p>An error occurs if the 
+<span class="param">index</span> is less than 0 or greater than length.
+An <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> occurs if the list is fixed-length.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+void insertAll(int index, Iterable&lt;E&gt; iterable) {
+ if (index &lt; 0 || index &gt; length) {
+   throw new RangeError.range(index, 0, length);
+ }
+ // TODO(floitsch): we can probably detect more cases.
+ if (iterable is! List &amp;&amp; iterable is! Set /*&amp;&amp; iterable is! SubListIterable*/) {
+   iterable = iterable.toList();
+ }
+ int insertionLength = iterable.length;
+ // There might be errors after the length change, in which case the list
+ // will end up being modified but the operation not complete. Unless we
+ // always go through a "toList" we can't really avoid that.
+ this.length += insertionLength;
+ setRange(index + insertionLength, this.length, this, index);
+ setAll(index, iterable);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="join">
+<button class="show-code">Code</button>
+String <strong>join</strong>([String separator = ""]) <a class="anchor-link" href="#join"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.join">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Converts each element to a <a class="crossref" href="../dart_core/String.html">String</a> and concatenates the strings.</p>
+<p>Converts each element to a <a class="crossref" href="../dart_core/String.html">String</a> by calling <a class="crossref" href="../dart_core/Object.html#toString">Object.toString</a> on it.
+Then concatenates the strings, optionally separated by the 
+<span class="param">separator</span>
+string.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+String join([String separator = ""]) {
+ int length = this.length;
+ if (!separator.isEmpty) {
+   if (length == 0) return "";
+   String first = "${this[0]}";
+   if (length != this.length) {
+     throw new ConcurrentModificationError(this);
+   }
+   StringBuffer buffer = new StringBuffer(first);
+   for (int i = 1; i &lt; length; i++) {
+     buffer.write(separator);
+     buffer.write(this[i]);
+     if (length != this.length) {
+       throw new ConcurrentModificationError(this);
+     }
+   }
+   return buffer.toString();
+ } else {
+   StringBuffer buffer = new StringBuffer();
+   for (int i = 0; i &lt; length; i++) {
+     buffer.write(this[i]);
+     if (length != this.length) {
+       throw new ConcurrentModificationError(this);
+     }
+   }
+   return buffer.toString();
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="lastIndexOf">
+<button class="show-code">Code</button>
+int <strong>lastIndexOf</strong>(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element, [int startIndex]) <a class="anchor-link" href="#lastIndexOf"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.lastIndexOf">#</a></h4>
+<div class="doc">
+<p>Returns the last index in the list <code>a</code> of the given 
+<span class="param">element</span>, starting
+the search at index 
+<span class="param">startIndex</span> to 0.
+Returns -1 if 
+<span class="param">element</span> is not found.</p>
+<pre class="source">
+int lastIndexOf(E element, [int startIndex]) {
+ if (startIndex == null) {
+   startIndex = this.length - 1;
+ } else {
+   if (startIndex &lt; 0) {
+     return -1;
+   }
+   if (startIndex &gt;= this.length) {
+     startIndex = this.length - 1;
+   }
+ }
+ for (int i = startIndex; i &gt;= 0; i--) {
+   if (this[i] == element) {
+     return i;
+   }
+ }
+ return -1;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="lastWhere">
+<button class="show-code">Code</button>
+<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> <strong>lastWhere</strong>(bool test(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element), {<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> orElse()}) <a class="anchor-link" href="#lastWhere"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.lastWhere">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the last element that satisfies the given predicate 
+<span class="param">test</span>.</p>
+<p>If none matches, the result of invoking the 
+<span class="param">orElse</span> function is
+returned. By default, when 
+<span class="param">orElse</span> is <code>null</code>, a <a class="crossref" href="../dart_core/StateError.html">StateError</a> is
+thrown.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+E lastWhere(bool test(E element), { E orElse() }) {
+ int length = this.length;
+ for (int i = length - 1; i &gt;= 0; i--) {
+   E element = this[i];
+   if (test(element)) return element;
+   if (length != this.length) {
+     throw new ConcurrentModificationError(this);
+   }
+ }
+ if (orElse != null) return orElse();
+ throw new StateError("No matching element");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="map">
+<button class="show-code">Code</button>
+Iterable <strong>map</strong>(f(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#map"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.map">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a lazy <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> where each element <code>e</code> of <code>this</code> is replaced
+by the result of <code>f(e)</code>.</p>
+<p>This method returns a view of the mapped elements. As long as the
+returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> is not iterated over, the supplied function 
+<span class="param">f</span> will
+not be invoked. The transformed elements will not be cached. Iterating
+multiple times over the the returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> will invoke the supplied
+function 
+<span class="param">f</span> multiple times on the same element.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+Iterable map(f(E element)) =&gt; _asList().map(f);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="reduce">
+<button class="show-code">Code</button>
+<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> <strong>reduce</strong>(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> combine(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> previousValue, <a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#reduce"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.reduce">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Reduces a collection to a single value by iteratively combining elements
+of the collection using the provided function.</p>
+<p>Example of calculating the sum of an iterable:</p>
+<pre><code>iterable.reduce((value, element) =&gt; value + element);
+</code></pre>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+E reduce(E combine(E previousValue, E element)) {
+ if (length == 0) throw new StateError("No elements");
+ E value = this[0];
+ for (int i = 1; i &lt; length; i++) {
+   value = combine(value, this[i]);
+ }
+ return value;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="remove">
+<button class="show-code">Code</button>
+bool <strong>remove</strong>(Object element) <a class="anchor-link" href="#remove"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.remove">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Removes <code>value</code> from this list.</p>
+<p>Returns true if <code>value</code> was in the list.
+Returns false otherwise.
+The method has no effect if <code>value</code> was not in the list.</p>
+<p>An <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> occurs if the list is fixed-length.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override bool remove(Object element) =&gt; removeAt(indexOf(element)) != null;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeAt">
+<button class="show-code">Code</button>
+<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> <strong>removeAt</strong>(int index) <a class="anchor-link" href="#removeAt"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.removeAt">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Removes the object at position 
+<span class="param">index</span> from this list.</p>
+<p>This method reduces the length of <code>this</code> by one and moves all later objects
+down by one position.</p>
+<p>Returns the removed object.</p><ul><li>Throws an <a class="crossref" href="../dart_core/ArgumentError.html">ArgumentError</a> if 
+<span class="param">index</span> is not an <a class="crossref" href="../dart_core/int.html">int</a>.</li><li>Throws a <a class="crossref" href="../dart_core/RangeError.html">RangeError</a> if the 
+<span class="param">index</span> is out of range for this list.</li><li>
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>, and doesn't remove the object,
+if this is a fixed-length list.</p></li></ul>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override E removeAt(int index) {
+ if (index &lt; 0 || index &gt;= this.length) throw new RangeError.value(index);
+ return _fromJs($unsafe.splice(index, 1)[0]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeLast">
+<button class="show-code">Code</button>
+<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> <strong>removeLast</strong>() <a class="anchor-link" href="#removeLast"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.removeLast">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Pops and returns the last object in this list.</p>
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> if this is a fixed-length list.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override E removeLast() =&gt; _fromJs($unsafe.pop());
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeRange">
+<button class="show-code">Code</button>
+void <strong>removeRange</strong>(int start, int end) <a class="anchor-link" href="#removeRange"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.removeRange">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Removes the objects in the range 
+<span class="param">start</span> inclusive to 
+<span class="param">end</span> exclusive.</p>
+<p>An error occurs if 
+<span class="param">start</span>..
+<span class="param">end</span> is not a valid range for <code>this</code>.
+Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> if this is a fixed-length list.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override void removeRange(int start, int end) {
+ $unsafe.splice(start, end - start);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeWhere">
+<button class="show-code">Code</button>
+void <strong>removeWhere</strong>(bool test(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#removeWhere"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.removeWhere">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Removes all objects from this list that satisfy 
+<span class="param">test</span>.</p>
+<p>An object <code>o</code> satisfies 
+<span class="param">test</span> if <code>test(o)</code> is true.</p>
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> if this is a fixed-length list.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+void removeWhere(bool test(E element)) {
+ _filter(this, test, false);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="replaceRange">
+<button class="show-code">Code</button>
+void <strong>replaceRange</strong>(int start, int end, Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; newContents) <a class="anchor-link" href="#replaceRange"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.replaceRange">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Removes the objects in the range 
+<span class="param">start</span> inclusive to 
+<span class="param">end</span> exclusive
+and replaces them with the contents of the <code>iterable</code>.</p>
+<p>An error occurs if 
+<span class="param">start</span>..
+<span class="param">end</span> is not a valid range for <code>this</code>.</p>
+<p>Example:</p>
+<pre><code>var list = [1, 2, 3, 4, 5];
+list.replaceRange(1, 3, [6, 7, 8, 9]);
+print(list);  // [1, 6, 7, 8, 9, 4, 5]
+</code></pre>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+void replaceRange(int start, int end, Iterable&lt;E&gt; newContents) {
+ // TODO(floitsch): Optimize this.
+ removeRange(start, end);
+ insertAll(start, newContents);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="retainWhere">
+<button class="show-code">Code</button>
+void <strong>retainWhere</strong>(bool test(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#retainWhere"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.retainWhere">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Removes all objects from this list that fail to satisfy 
+<span class="param">test</span>.</p>
+<p>An object <code>o</code> satisfies 
+<span class="param">test</span> if <code>test(o)</code> is true.</p>
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> if this is a fixed-length list.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+void retainWhere(bool test(E element)) {
+ _filter(this, test, true);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setAll">
+<button class="show-code">Code</button>
+void <strong>setAll</strong>(int index, Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; iterable) <a class="anchor-link" href="#setAll"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.setAll">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Overwrites objects of <code>this</code> with the objects of 
+<span class="param">iterable</span>, starting
+at position 
+<span class="param">index</span> in this list.</p>
+<p>This operation does not increase the length of <code>this</code>.</p>
+<p>An error occurs if the 
+<span class="param">index</span> is less than 0 or greater than length.
+An error occurs if the 
+<span class="param">iterable</span> is longer than <a class="crossref" href="../js.wrapping/JsArrayToListAdapter.html#length">length</a> - 
+<span class="param">index</span>.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+void setAll(int index, Iterable&lt;E&gt; iterable) {
+ if (iterable is List) {
+   setRange(index, index + iterable.length, iterable);
+ } else {
+   for (E element in iterable) {
+     this[index++] = element;
+   }
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setRange">
+<button class="show-code">Code</button>
+void <strong>setRange</strong>(int start, int length, List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; from, [int startFrom = 0]) <a class="anchor-link" href="#setRange"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.setRange">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Copies the objects of <code>iterable</code>, skipping <code>skipCount</code> objects first,
+into the range 
+<span class="param">start</span> inclusive to <code>end</code> exclusive of <code>this</code>.</p>
+<p>If 
+<span class="param">start</span> equals <code>end</code> and 
+<span class="param">start</span>..<code>end</code> represents a legal range, this
+method has no effect.</p>
+<p>An error occurs if 
+<span class="param">start</span>..<code>end</code> is not a valid range for <code>this</code>.
+An error occurs if the <code>iterable</code> does not have enough objects after
+skipping <code>skipCount</code> objects.</p>
+<p>Example:</p>
+<pre><code>var list = [1, 2, 3, 4];
+var list2 = [5, 6, 7, 8, 9];
+list.setRange(1, 3, list2, 3);
+print(list);  // =&gt; [1, 8, 9, 4]
+</code></pre>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override void setRange(int start, int length, List&lt;E&gt; from,
+                       [int startFrom = 0]) {
+ final args = [start, length];
+ for(int i = startFrom; i &lt; startFrom + length; i++) {
+   args.add(_toJs(from[i]));
+ }
+ $unsafe["splice"].apply($unsafe, array(args));
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="singleWhere">
+<button class="show-code">Code</button>
+<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> <strong>singleWhere</strong>(bool test(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#singleWhere"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.singleWhere">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the single element that satisfies 
+<span class="param">test</span>. If no or more than one
+element match then a <a class="crossref" href="../dart_core/StateError.html">StateError</a> is thrown.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+E singleWhere(bool test(E element)) {
+ int length = this.length;
+ E match = null;
+ bool matchFound = false;
+ for (int i = 0; i &lt; length; i++) {
+   E element = this[i];
+   if (test(element)) {
+     if (matchFound) {
+       throw new StateError("More than one matching element");
+     }
+     matchFound = true;
+     match = element;
+   }
+   if (length != this.length) {
+     throw new ConcurrentModificationError(this);
+   }
+ }
+ if (matchFound) return match;
+ throw new StateError("No matching element");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="skip">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>skip</strong>(int count) <a class="anchor-link" href="#skip"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.skip">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns an <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> that skips the first <code>n</code> elements.</p>
+<p>If <code>this</code> has fewer than <code>n</code> elements, then the resulting <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> will
+be empty.</p>
+<p>It is an error if <code>n</code> is negative.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+Iterable&lt;E&gt; skip(int count) =&gt; _asList().skip(count);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="skipWhile">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>skipWhile</strong>(bool test(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#skipWhile"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.skipWhile">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns an <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> that skips elements while 
+<span class="param">test</span> is satisfied.</p>
+<p>The filtering happens lazily. Every new <a class="crossref" href="../dart_core/Iterator.html">Iterator</a> of the returned
+<a class="crossref" href="../dart_core/Iterable.html">Iterable</a> iterates over all elements of <code>this</code>.</p>
+<p>As long as the iterator's elements satisfy 
+<span class="param">test</span> they are
+discarded. Once an element does not satisfy the 
+<span class="param">test</span> the iterator stops
+testing and uses every later element unconditionally. That is, the elements
+of the returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> are the elements of <code>this</code> starting from the
+first element that does not satisfy 
+<span class="param">test</span>.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+Iterable&lt;E&gt; skipWhile(bool test(E element)) =&gt; _asList().skipWhile(test);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="sort">
+<button class="show-code">Code</button>
+void <strong>sort</strong>([int compare(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> a, <a href="../js.wrapping/JsArrayToListAdapter.html">E</a> b)]) <a class="anchor-link" href="#sort"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.sort">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Sorts this list according to the order specified by the 
+<span class="param">compare</span> function.</p>
+<p>The 
+<span class="param">compare</span> function must act as a <a class="crossref" href="../dart_core/Comparator.html">Comparator</a>.</p>
+<p>The default List implementations use <a class="crossref" href="../dart_core/Comparable.html#compare">Comparable.compare</a> if
+
+<span class="param">compare</span> is omitted.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override void sort([int compare(E a, E b)]) {
+ final sortedList = _asList()..sort(compare);
+ setRange(0, sortedList.length, sortedList);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="sublist">
+<button class="show-code">Code</button>
+List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>sublist</strong>(int start, [int end]) <a class="anchor-link" href="#sublist"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.sublist">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a new list containing the objects
+from 
+<span class="param">start</span> inclusive to 
+<span class="param">end</span> exclusive.</p>
+<p>If 
+<span class="param">end</span> is omitted, the <a class="crossref" href="../js.wrapping/JsArrayToListAdapter.html#length">length</a> of <code>this</code> is used.</p>
+<p>An error occurs if 
+<span class="param">start</span> is outside the range <code>0</code> .. <code>length</code> or if
+
+<span class="param">end</span> is outside the range <code>start</code> .. <code>length</code>.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override List&lt;E&gt; sublist(int start, [int end]) =&gt;
+   _asList().sublist(start, end);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="take">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>take</strong>(int count) <a class="anchor-link" href="#take"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.take">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns an <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> with at most <code>n</code> elements.</p>
+<p>The returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> may contain fewer than <code>n</code> elements, if <code>this</code>
+contains fewer than <code>n</code> elements.</p>
+<p>It is an error if <code>n</code> is negative.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+Iterable&lt;E&gt; take(int count) =&gt; _asList().take(count);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="takeWhile">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>takeWhile</strong>(bool test(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#takeWhile"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.takeWhile">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns an <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> that stops once 
+<span class="param">test</span> is not satisfied anymore.</p>
+<p>The filtering happens lazily. Every new <a class="crossref" href="../dart_core/Iterator.html">Iterator</a> of the returned
+<a class="crossref" href="../dart_core/Iterable.html">Iterable</a> will start iterating over the elements of <code>this</code>.</p>
+<p>When the iterator encounters an element <code>e</code> that does not satisfy 
+<span class="param">test</span>,
+it discards <code>e</code> and moves into the finished state. That is, it will not
+ask or provide any more elements.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+Iterable&lt;E&gt; takeWhile(bool test(E element)) =&gt; _asList().takeWhile(test);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+dynamic <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../js.wrapping/TypedProxy.html">TypedProxy</a> </div><div class="doc">
+<pre class="source">
+@override dynamic toJs() =&gt; $unsafe;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toList">
+<button class="show-code">Code</button>
+List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>toList</strong>({bool growable: true}) <a class="anchor-link" href="#toList"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.toList">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a <a class="crossref" href="../dart_core/List.html">List</a> containing the elements of this <a class="crossref" href="../dart_core/Iterable.html">Iterable</a>.</p>
+<p>The elements will be in iteration order. The list is fixed-length
+if 
+<span class="param">growable</span> is false.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+List&lt;E&gt; toList({ bool growable: true }) {
+ List&lt;E&gt; result;
+ if (growable) {
+   result = new List&lt;E&gt;()..length = length;
+ } else {
+   result = new List&lt;E&gt;(length);
+ }
+ for (int i = 0; i &lt; length; i++) {
+   result[i] = this[i];
+ }
+ return result;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toSet">
+<button class="show-code">Code</button>
+Set&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>toSet</strong>() <a class="anchor-link" href="#toSet"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.toSet">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a <a class="crossref" href="../dart_core/Set.html">Set</a> containing the elements of this <a class="crossref" href="../dart_core/Iterable.html">Iterable</a>.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+Set&lt;E&gt; toSet() {
+ Set&lt;E&gt; result = new Set&lt;E&gt;();
+ for (int i = 0; i &lt; length; i++) {
+   result.add(this[i]);
+ }
+ return result;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.toString">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; _asList().toString();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="where">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>where</strong>(bool test(<a href="../js.wrapping/JsArrayToListAdapter.html">E</a> element)) <a class="anchor-link" href="#where"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.where">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a lazy <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> with all elements that satisfy the
+predicate 
+<span class="param">test</span>.</p>
+<p>This method returns a view of the mapped elements. As long as the
+returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> is not iterated over, the supplied function 
+<span class="param">test</span> will
+not be invoked. Iterating will not cache results, and thus iterating
+multiple times over the the returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> will invoke the supplied
+function 
+<span class="param">test</span> multiple times on the same element.</p>
+<div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+Iterable&lt;E&gt; where(bool test(E element)) =&gt; _asList().where(test);
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:29.057</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

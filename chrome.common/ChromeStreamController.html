@@ -1,0 +1,212 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeStreamController&lt;T&gt; class / chrome.common Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.common" data-type="ChromeStreamController&amp;lt;T&amp;gt;">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.common.html">chrome.common</a> &rsaquo; <a href="../chrome.common/ChromeStreamController.html">ChromeStreamController&lt;T&gt;</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeStreamController&lt;T&gt;</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeStreamController&lt;T&gt; {
+ final Function _event;
+ StreamController&lt;T&gt; _controller = new StreamController&lt;T&gt;.broadcast();
+ bool _handlerAdded = false;
+ js.Callback _listener;
+
+ ChromeStreamController.zeroArgs(this._event, Function transformer, [returnVal]) {
+   _controller = new StreamController&lt;T&gt;.broadcast(
+       onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+   _listener = new js.Callback.many(() {
+     _controller.add(transformer());
+     return returnVal;
+   });
+ }
+
+ ChromeStreamController.oneArg(this._event, Function transformer, [returnVal])  {
+   _controller = new StreamController&lt;T&gt;.broadcast(
+       onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+   _listener = new js.Callback.many(([arg1]) {
+     _controller.add(transformer(arg1));
+     return returnVal;
+   });
+ }
+
+ ChromeStreamController.twoArgs(this._event, Function transformer, [returnVal]) {
+   _controller = new StreamController&lt;T&gt;.broadcast(
+       onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+   _listener = new js.Callback.many(([arg1, arg2]) {
+     _controller.add(transformer(arg1, arg2));
+     return returnVal;
+   });
+ }
+
+ ChromeStreamController.threeArgs(this._event, Function transformer, [returnVal]) {
+   _controller = new StreamController&lt;T&gt;.broadcast(
+       onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+   _listener = new js.Callback.many(([arg1, arg2, arg3]) {
+       _controller.add(transformer(arg1, arg2, arg3));
+       return returnVal;
+   });
+ }
+
+ bool get hasListener =&gt; _controller.hasListener;
+
+ Stream&lt;T&gt; get stream {
+   return _controller.stream;
+ }
+
+ void _ensureHandlerAdded() {
+   if (!_handlerAdded) {
+     js.scoped(() {
+       _event().addListener(_listener);
+     });
+     _handlerAdded = true;
+   }
+ }
+
+ void _removeHandler() {
+   if (_handlerAdded) {
+     js.scoped(() {
+       _event().removeListener(_listener);
+     });
+     _handlerAdded = false;
+   }
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="oneArg">
+<button class="show-code">Code</button>
+new <strong>ChromeStreamController.oneArg</strong>(Function _event, Function transformer, [returnVal]) <a class="anchor-link" href="#oneArg"
+              title="Permalink to ChromeStreamController&lt;T&gt;.ChromeStreamController.oneArg">#</a></h4>
+<div class="doc">
+<pre class="source">
+ChromeStreamController.oneArg(this._event, Function transformer, [returnVal])  {
+ _controller = new StreamController&lt;T&gt;.broadcast(
+     onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+ _listener = new js.Callback.many(([arg1]) {
+   _controller.add(transformer(arg1));
+   return returnVal;
+ });
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="threeArgs">
+<button class="show-code">Code</button>
+new <strong>ChromeStreamController.threeArgs</strong>(Function _event, Function transformer, [returnVal]) <a class="anchor-link" href="#threeArgs"
+              title="Permalink to ChromeStreamController&lt;T&gt;.ChromeStreamController.threeArgs">#</a></h4>
+<div class="doc">
+<pre class="source">
+ChromeStreamController.threeArgs(this._event, Function transformer, [returnVal]) {
+ _controller = new StreamController&lt;T&gt;.broadcast(
+     onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+ _listener = new js.Callback.many(([arg1, arg2, arg3]) {
+     _controller.add(transformer(arg1, arg2, arg3));
+     return returnVal;
+ });
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="twoArgs">
+<button class="show-code">Code</button>
+new <strong>ChromeStreamController.twoArgs</strong>(Function _event, Function transformer, [returnVal]) <a class="anchor-link" href="#twoArgs"
+              title="Permalink to ChromeStreamController&lt;T&gt;.ChromeStreamController.twoArgs">#</a></h4>
+<div class="doc">
+<pre class="source">
+ChromeStreamController.twoArgs(this._event, Function transformer, [returnVal]) {
+ _controller = new StreamController&lt;T&gt;.broadcast(
+     onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+ _listener = new js.Callback.many(([arg1, arg2]) {
+   _controller.add(transformer(arg1, arg2));
+   return returnVal;
+ });
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="zeroArgs">
+<button class="show-code">Code</button>
+new <strong>ChromeStreamController.zeroArgs</strong>(Function _event, Function transformer, [returnVal]) <a class="anchor-link" href="#zeroArgs"
+              title="Permalink to ChromeStreamController&lt;T&gt;.ChromeStreamController.zeroArgs">#</a></h4>
+<div class="doc">
+<pre class="source">
+ChromeStreamController.zeroArgs(this._event, Function transformer, [returnVal]) {
+ _controller = new StreamController&lt;T&gt;.broadcast(
+     onListen: _ensureHandlerAdded, onCancel: _removeHandler);
+ _listener = new js.Callback.many(() {
+   _controller.add(transformer());
+   return returnVal;
+ });
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="hasListener">
+<button class="show-code">Code</button>
+final bool         <strong>hasListener</strong> <a class="anchor-link"
+            href="#hasListener"
+            title="Permalink to ChromeStreamController&lt;T&gt;.hasListener">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+bool get hasListener =&gt; _controller.hasListener;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="stream">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.common/ChromeStreamController.html">T</a>&gt;         <strong>stream</strong> <a class="anchor-link"
+            href="#stream"
+            title="Permalink to ChromeStreamController&lt;T&gt;.stream">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Stream&lt;T&gt; get stream {
+ return _controller.stream;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.309</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

@@ -1,0 +1,264 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Window class / chrome.windows Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.windows" data-type="Window">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.windows.html">chrome.windows</a> &rsaquo; <a href="../chrome.windows/Window.html">Window</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Window</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class Window {
+ final int id;
+ final bool focused;
+ final int top;
+ final int left;
+ final int width;
+ final int height;
+ final List&lt;Tab&gt; tabs;
+ final bool incognito;
+ final WindowType type;
+ final WindowState state;
+ final bool alwaysOnTop;
+
+ const Window._(
+     this.id,
+     this.focused,
+     this.top,
+     this.left,
+     this.width,
+     this.height,
+     this.tabs,
+     this.incognito,
+     this.type,
+     this.state,
+     this.alwaysOnTop);
+
+ Window(window) : this._(
+     window['id'],
+     window.focused,
+     window['top'],
+     window['left'],
+     window['width'],
+     window['height'],
+     _createTabs(window['tabs']),
+     window.incognito,
+     window['type'] != null ? new WindowType(window.type) : null,
+     window['state'] != null ? new WindowState(window.state) : null,
+     window.alwaysOnTop);
+
+
+ static List&lt;Tab&gt; _createTabs(jsTabs) {
+   if (jsTabs == null) {
+     return null;
+   }
+   var tabs = [];
+
+   for (int i = 0; i &lt; jsTabs.length; i++) {
+     tabs.add(new Tab(jsTabs[i]));
+   }
+
+   return tabs;
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>Window</strong>(window) <a class="anchor-link" href="#"
+              title="Permalink to Window.Window">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+Window(window) : this._(
+   window['id'],
+   window.focused,
+   window['top'],
+   window['left'],
+   window['width'],
+   window['height'],
+   _createTabs(window['tabs']),
+   window.incognito,
+   window['type'] != null ? new WindowType(window.type) : null,
+   window['state'] != null ? new WindowState(window.state) : null,
+   window.alwaysOnTop);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="alwaysOnTop">
+<button class="show-code">Code</button>
+final bool         <strong>alwaysOnTop</strong> <a class="anchor-link"
+            href="#alwaysOnTop"
+            title="Permalink to Window.alwaysOnTop">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final bool alwaysOnTop
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="focused">
+<button class="show-code">Code</button>
+final bool         <strong>focused</strong> <a class="anchor-link"
+            href="#focused"
+            title="Permalink to Window.focused">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final bool focused
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="height">
+<button class="show-code">Code</button>
+final int         <strong>height</strong> <a class="anchor-link"
+            href="#height"
+            title="Permalink to Window.height">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final int height
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="id">
+<button class="show-code">Code</button>
+final int         <strong>id</strong> <a class="anchor-link"
+            href="#id"
+            title="Permalink to Window.id">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final int id
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="incognito">
+<button class="show-code">Code</button>
+final bool         <strong>incognito</strong> <a class="anchor-link"
+            href="#incognito"
+            title="Permalink to Window.incognito">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final bool incognito
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="left">
+<button class="show-code">Code</button>
+final int         <strong>left</strong> <a class="anchor-link"
+            href="#left"
+            title="Permalink to Window.left">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final int left
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="state">
+<button class="show-code">Code</button>
+final <a href="../chrome.windows/WindowState.html">WindowState</a>         <strong>state</strong> <a class="anchor-link"
+            href="#state"
+            title="Permalink to Window.state">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final WindowState state
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="tabs">
+<button class="show-code">Code</button>
+final List&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt;         <strong>tabs</strong> <a class="anchor-link"
+            href="#tabs"
+            title="Permalink to Window.tabs">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final List&lt;Tab&gt; tabs
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="top">
+<button class="show-code">Code</button>
+final int         <strong>top</strong> <a class="anchor-link"
+            href="#top"
+            title="Permalink to Window.top">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final int top
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="type">
+<button class="show-code">Code</button>
+final <a href="../chrome.windows/WindowType.html">WindowType</a>         <strong>type</strong> <a class="anchor-link"
+            href="#type"
+            title="Permalink to Window.type">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final WindowType type
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="width">
+<button class="show-code">Code</button>
+final int         <strong>width</strong> <a class="anchor-link"
+            href="#width"
+            title="Permalink to Window.width">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final int width
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.815</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

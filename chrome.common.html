@@ -1,0 +1,132 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>chrome.common Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="favicon.ico">
+        
+        </head>
+        <body data-library="chrome.common">
+        <div class="page">
+        <div class="header">
+          <a href="index.html"><div class="logo"></div></a>
+          <a href="index.html">Dart Documentation</a>
+         &rsaquo; <a href="chrome.common.html">chrome.common</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+<h2><strong>chrome.common</strong> library</h2>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="chromeProxy">
+<button class="show-code">Code</button>
+final         <strong>chromeProxy</strong> <a class="anchor-link"
+            href="#chromeProxy"
+            title="Permalink to chromeProxy">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+dynamic get chromeProxy =&gt; jsContext.chrome;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="jsContext">
+<button class="show-code">Code</button>
+final         <strong>jsContext</strong> <a class="anchor-link"
+            href="#jsContext"
+            title="Permalink to jsContext">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+dynamic get jsContext =&gt; js.context as dynamic;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Functions</h3>
+<div class="method"><h4 id="listify">
+<button class="show-code">Code</button>
+List <strong>listify</strong>(jsArray) <a class="anchor-link" href="#listify"
+              title="Permalink to listify">#</a></h4>
+<div class="doc">
+<pre class="source">
+List listify(dynamic jsArray) {
+ var list = [];
+ for (int i = 0; i &lt; jsArray.length; i++) {
+   list.add(jsArray[i]);
+ }
+ // TODO(DrMarcII) consider having this return an unmodifiable list
+ return list;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="jsifyMessage">
+<button class="show-code">Code</button>
+dynamic <strong>jsifyMessage</strong>(message) <a class="anchor-link" href="#jsifyMessage"
+              title="Permalink to jsifyMessage">#</a></h4>
+<div class="doc">
+<pre class="source">
+dynamic jsifyMessage(dynamic message) {
+ if (message is Map) {
+   return js.map(message);
+ } else if (message is Iterable) {
+   return js.array(message);
+ } else {
+   return message;
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="convertJsonResponse">
+<button class="show-code">Code</button>
+dynamic <strong>convertJsonResponse</strong>(response) <a class="anchor-link" href="#convertJsonResponse"
+              title="Permalink to convertJsonResponse">#</a></h4>
+<div class="doc">
+<pre class="source">
+dynamic convertJsonResponse(dynamic response) {
+ return js.scoped(() {
+   return JSON.decode(jsContext.JSON.stringify(response));
+ });
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Classes</h3>
+          <div class="type">
+          <h4>
+            <a href="chrome.common/ChromeCompleter.html"><strong>ChromeCompleter&lt;T&gt;</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
+            <a href="chrome.common/ChromeStreamController.html"><strong>ChromeStreamController&lt;T&gt;</strong></a>
+          </h4>
+          </div>
+          
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.300</div>
+        </div>
+        <script async src="client-live-nav.js"></script>
+        </body></html>
+        

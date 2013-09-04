@@ -1,0 +1,197 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeMediaGalleries class / chrome.media_galleries Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.media_galleries" data-type="ChromeMediaGalleries">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.media_galleries.html">chrome.media_galleries</a> &rsaquo; <a href="../chrome.media_galleries/ChromeMediaGalleries.html">ChromeMediaGalleries</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeMediaGalleries</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Usage</p>
+<p>Using the API, you can prompt the user for permission to access the media
+galleries. The permission dialog will contain common media locations for the
+platform and will allow the user to add additional locations. From those
+locations, only media files will be present in the file system objects.</p>
+<p>Manifest</p>
+<p>The media galleries API has two axes of permission parameters; the locations
+that can be accessed, and the type of access (read-only, read-write, add-files).</p>
+<p>On the location axis, specifying no location-type permission parameters means
+that no media galleries are accessible until the user grants permission to
+specific media galleries at runtime using the media gallery configuration
+dialog. This dialog can be programmatically triggered. Alternatively,
+specifying the "allAutoDetected" permission parameter grants access to all
+auto-detected media galleries on the user's computer. However, this
+permission displays an install time prompt indicating that the app will have
+access to all of the user's media files.</p>
+<p>On the access type axis, the "read" permission parameter grants the app the
+right to read files. This permission does not trigger an install time
+permission prompt because the user must still grant access to particular
+galleries, either with the "allAutoDetected" permission parameter or at
+runtime by using the media gallery management dialog. For example:</p>
+<p>{
+ "name": "My app",
+  ...
+  "permissions": [
+  { "mediaGalleries": ["read", "allAutoDetected"] }
+  ],
+  ...
+}</p>
+<p>This permission will trigger an install time permission prompt and let the
+app read from all auto-detected media galleries on the user's computer. The
+user may add or remove galleries using the media gallery management dialog,
+after which the app will be able to read all the media files from galleries
+that the user has selected.</p>
+<p>Currently "read" is the only access type supported by this API. Read-write
+and add-file access with be implemented soon.</p>
+<pre class="source">
+class ChromeMediaGalleries {
+ const ChromeMediaGalleries._();
+
+ /**
+  * Get the media galleries configured in this user agent. If none are
+  * configured or available, the callback will receive an empty array.
+  *
+  * [interactive] ( optional enum of "no", "yes", or "if_needed" )
+  * Whether to prompt the user for permission to additional media galleries
+  * before returning the permitted set. Default is silent. If the value 'yes'
+  * is passed, or if the application has not been granted access to any media
+  * galleries and the value 'if_needed' is passed, then the media gallery
+  * configuration dialog will be displayed.
+  *
+  * The future parameter should specify a function that looks like this:
+  * function(array of domfilesystem mediaFileSystems) {...};
+  * mediaFileSystems ( optional array of domfilesystem )
+  */
+ Future&lt;List&lt;FileSystem&gt;&gt; getMediaFileSystems({ChromeMediaGalleriesInteractiveEnum interactive: ChromeMediaGalleriesInteractiveEnum.NO}) {
+   ChromeCompleter&lt;List&lt;FileSystem&gt;&gt; completer = new ChromeCompleter.oneArg((proxy) {
+     return listify(proxy).map((fs) =&gt; new FileSystem.retain(fs));
+   });
+
+   js.scoped(() {
+     chromeProxy.mediaGalleries.getMediaFileSystems(
+         js.map({'interactive': interactive.value}), completer.callback);
+   });
+
+   return completer.future;
+ }
+
+ /**
+  * Get metadata about a specific media file system.
+  *
+  * Parameters
+  * mediaFileSystem ( domfilesystem )
+  *
+  * return type MediaFileSystemMetadata
+  */
+ MediaFileSystemMetadata getMediaFileSystemMetadata(FileSystem mediaFileSystem) {
+   return js.scoped(() {
+     var jsMetadataResult = chromeProxy.mediaGalleries.getMediaFileSystemMetadata(
+         mediaFileSystem.proxy);
+     MediaFileSystemMetadata mediaFileSystemMetadata =
+         new MediaFileSystemMetadata(jsMetadataResult['name'],
+         jsMetadataResult['galleryId'],
+         jsMetadataResult['isRemovable'],
+         jsMetadataResult['isMediaDevice'],
+         jsMetadataResult['deviceId']);
+     return mediaFileSystemMetadata;
+   });
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="getMediaFileSystemMetadata">
+<button class="show-code">Code</button>
+<a href="../chrome.media_galleries/MediaFileSystemMetadata.html">MediaFileSystemMetadata</a> <strong>getMediaFileSystemMetadata</strong>(<a href="../chrome.files/FileSystem.html">FileSystem</a> mediaFileSystem) <a class="anchor-link" href="#getMediaFileSystemMetadata"
+              title="Permalink to ChromeMediaGalleries.getMediaFileSystemMetadata">#</a></h4>
+<div class="doc">
+<p>Get metadata about a specific media file system.</p>
+<p>Parameters
+mediaFileSystem ( domfilesystem )</p>
+<p>return type MediaFileSystemMetadata</p>
+<pre class="source">
+MediaFileSystemMetadata getMediaFileSystemMetadata(FileSystem mediaFileSystem) {
+ return js.scoped(() {
+   var jsMetadataResult = chromeProxy.mediaGalleries.getMediaFileSystemMetadata(
+       mediaFileSystem.proxy);
+   MediaFileSystemMetadata mediaFileSystemMetadata =
+       new MediaFileSystemMetadata(jsMetadataResult['name'],
+       jsMetadataResult['galleryId'],
+       jsMetadataResult['isRemovable'],
+       jsMetadataResult['isMediaDevice'],
+       jsMetadataResult['deviceId']);
+   return mediaFileSystemMetadata;
+ });
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getMediaFileSystems">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.files/FileSystem.html">FileSystem</a>&gt;&gt; <strong>getMediaFileSystems</strong>({<a href="../chrome.media_galleries/ChromeMediaGalleriesInteractiveEnum.html">ChromeMediaGalleriesInteractiveEnum</a> interactive: ChromeMediaGalleriesInteractiveEnum.NO}) <a class="anchor-link" href="#getMediaFileSystems"
+              title="Permalink to ChromeMediaGalleries.getMediaFileSystems">#</a></h4>
+<div class="doc">
+<p>Get the media galleries configured in this user agent. If none are
+configured or available, the callback will receive an empty array.</p>
+<p>
+<span class="param">interactive</span> ( optional enum of "no", "yes", or "if<em>needed" )
+Whether to prompt the user for permission to additional media galleries
+before returning the permitted set. Default is silent. If the value 'yes'
+is passed, or if the application has not been granted access to any media
+galleries and the value 'if</em>needed' is passed, then the media gallery
+configuration dialog will be displayed.</p>
+<p>The future parameter should specify a function that looks like this:
+function(array of domfilesystem mediaFileSystems) {...};
+mediaFileSystems ( optional array of domfilesystem )</p>
+<pre class="source">
+Future&lt;List&lt;FileSystem&gt;&gt; getMediaFileSystems({ChromeMediaGalleriesInteractiveEnum interactive: ChromeMediaGalleriesInteractiveEnum.NO}) {
+ ChromeCompleter&lt;List&lt;FileSystem&gt;&gt; completer = new ChromeCompleter.oneArg((proxy) {
+   return listify(proxy).map((fs) =&gt; new FileSystem.retain(fs));
+ });
+
+ js.scoped(() {
+   chromeProxy.mediaGalleries.getMediaFileSystems(
+       js.map({'interactive': interactive.value}), completer.callback);
+ });
+
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.519</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

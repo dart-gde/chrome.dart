@@ -1,0 +1,491 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ContextMenus class / chrome.context_menus Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.context_menus" data-type="ContextMenus">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.context_menus.html">chrome.context_menus</a> &rsaquo; <a href="../chrome.context_menus/ContextMenus.html">ContextMenus</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ContextMenus</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ContextMenus {
+
+ ContextMenus._();
+
+ get _contextMenus =&gt; chromeProxy.contextMenus;
+
+ /**
+  * Creates a new context menu item.
+  *
+  * @param type The type of menu item. Defaults to 'normal' if not specified.
+  * @param id The unique ID to assign to this item. Mandatory for event pages.
+  *           Cannot be the same as another ID for this extension.
+  * @param title The text to be displayed in the item; this is required unless
+  *              type is 'separator'. When the context is 'selection', you can
+  *              use %s within the string to show the selected text. For
+  *              example, if this parameter's value is "Translate '%s' to
+  *              Pig Latin" and the user selects the word "cool", the context
+  *              menu item for the selection is "Translate 'cool' to
+  *              Pig Latin".
+  * @param checked The initial state of a checkbox or radio item: true for
+  *                selected and false for unselected. Only one radio item can
+  *                be selected at a time in a given group of radio items.
+  * @param contexts List of contexts this menu item will appear in. Defaults
+  *                 to ['page'] if not specified. Specifying ['all'] is
+  *                 equivalent to the combination of all other contexts except
+  *                 for 'launcher'. The 'launcher' context is only supported
+  *                 by apps and is used to add menu items to the context menu
+  *                 that appears when clicking on the app icon in the
+  *                 launcher/taskbar/dock/etc. Different platforms might put
+  *                 limitations on what is actually supported in a launcher
+  *                 context menu.
+  * @param onClick A function that will be called back when the menu item is
+  *                clicked. Event pages cannot use this; instead, they should
+  *                register a listener for chrome.contextMenus.onClicked.
+  * @param parentId The ID of a parent menu item; this makes the item a child
+  *                 of a previously added item.
+  * @param documentUrlPatterns Lets you restrict the item to apply only to
+  *                            documents whose URL matches one of the given
+  *                            patterns. (This applies to frames as well.) For
+  *                            details on the format of a pattern, see Match
+  *                            Patterns.
+  * @param targetUrlPatterns Similar to documentUrlPatterns, but lets you
+  *                          filter based on the src attribute of
+  *                          img/audio/video tags and the href of anchor tags.
+  * @param enabled Whether this context menu item is enabled or disabled.
+  *                Defaults to true.
+  *
+  * @returns if onClick is provided, then returns a StreamSubscription object
+  *          for that event, otherwise returns null.
+  */
+ Future&lt;StreamSubscription&lt;ContextMenuClickEvent&gt;&gt; create({
+     ContextMenuType type,
+     String id,
+     String title,
+     bool checked,
+     List&lt;ContextMenuContext&gt; contexts,
+     void onClick(ContextMenuClickEvent event),
+     String parentId,
+     List&lt;String&gt; documentUrlPatterns,
+     List&lt;String&gt; targetUrlPatterns,
+     bool enabled}) {
+   var subscription;
+   Map&lt;String, dynamic&gt; createProperties = { };
+   if (type != null) {
+     createProperties['type'] = type.toString();
+   }
+   if (id != null) {
+     createProperties['id'] = id;
+   }
+   if (title != null) {
+     createProperties['title'] = title;
+   }
+   if (checked != null) {
+     createProperties['checked'] = checked;
+   }
+   if (contexts != null) {
+     createProperties['contexts'] = contexts.map((context) =&gt;
+         context.toString());
+   }
+   if (onClick != null) {
+     subscription = _createController(createProperties, onClick);
+   }
+   if (parentId != null) {
+     createProperties['parentId'] = parentId;
+   }
+   if (documentUrlPatterns != null) {
+     createProperties['documentUrlPatterns'] = documentUrlPatterns;
+   }
+   if (targetUrlPatterns != null) {
+     createProperties['targetUrlPatterns'] = targetUrlPatterns;
+   }
+   if (enabled != null) {
+     createProperties['enabled'] = enabled;
+   }
+
+   ChromeCompleter completer = new ChromeCompleter.noArgs();
+   js.scoped(() {
+     _contextMenus.create(js.map(createProperties), completer.callback);
+   });
+   return completer.future.then((_) =&gt; subscription);
+ }
+
+ /**
+  * Updates a previously created context menu item.
+  *
+  * Accepts the same values as the create function.
+  *
+  * @param id The ID of the item to update.
+  * @param parentId Note: You cannot change an item to be a child of one of
+  *                 its own descendants.
+  *
+  * @returns if onClick is provided, then returns a StreamSubscription object
+  *          for that event, otherwise returns null
+  */
+ Future&lt;StreamSubscription&lt;ContextMenuClickEvent&gt;&gt; update(String id, {
+     ContextMenuType type,
+     String title,
+     bool checked,
+     List&lt;ContextMenuContext&gt; contexts,
+     void onClick(ContextMenuClickEvent event),
+     String parentId,
+     List&lt;String&gt; documentUrlPatterns,
+     List&lt;String&gt; targetUrlPatterns,
+     bool enabled}) {
+   var subscription;
+   Map&lt;String, dynamic&gt; updateProperties = { };
+   if (type != null) {
+     updateProperties['type'] = type.toString();
+   }
+   if (title != null) {
+     updateProperties['title'] = title;
+   }
+   if (checked != null) {
+     updateProperties['checked'] = checked;
+   }
+   if (contexts != null) {
+     updateProperties['contexts'] = contexts.map((context) =&gt;
+         context.toString());
+   }
+   if (onClick != null) {
+     subscription = _createController(updateProperties, onClick);
+   }
+   if (parentId != null) {
+     updateProperties['parentId'] = parentId;
+   }
+   if (documentUrlPatterns != null) {
+     updateProperties['documentUrlPatterns'] = documentUrlPatterns;
+   }
+   if (targetUrlPatterns != null) {
+     updateProperties['targetUrlPatterns'] = targetUrlPatterns;
+   }
+   if (enabled != null) {
+     updateProperties['enabled'] = enabled;
+   }
+
+   ChromeCompleter completer = new ChromeCompleter.noArgs();
+   js.scoped(() {
+     _contextMenus.update(id, js.map(updateProperties), completer.callback);
+   });
+   return completer.future.then((_) =&gt; subscription);
+ }
+
+ StreamSubscription&lt;ContextMenuClickEvent&gt; _createController(
+     Map&lt;String, dynamic&gt; properties, Function callback) {
+   var controller = new StreamController.broadcast();
+   properties['onclick'] =
+       new js.Callback.many((dynamic clickData, [dynamic jsTab]) {
+         Tab tab;
+         if (jsTab != null) {
+           tab = new Tab(jsTab);
+         }
+         controller.add(new ContextMenuClickEvent(clickData, tab));
+       });
+   return controller.stream.listen(callback);
+ }
+
+ /**
+  * Removes a context menu item.
+  *
+  * @param id The ID of the context menu item to remove.
+  */
+ Future remove(String id) {
+   ChromeCompleter completer = new ChromeCompleter.noArgs();
+   js.scoped(() {
+     _contextMenus.remove(id, completer.callback);
+   });
+   return completer.future;
+ }
+
+ /**
+  * Removes all context menu items added by this extension.
+  */
+ Future removeAll() {
+   ChromeCompleter completer = new ChromeCompleter.noArgs();
+   js.scoped(() {
+     _contextMenus.removeAll(completer.callback);
+   });
+   return completer.future;
+ }
+
+ final ChromeStreamController&lt;ContextMenuClickEvent&gt; _onClicked =
+     new ChromeStreamController&lt;ContextMenuClickEvent&gt;.twoArgs(
+         () =&gt; chromeProxy.contextMenus.onClicked,
+         (clickData, jsTab) {
+           Tab tab;
+           if (jsTab != null) {
+             tab = new Tab(jsTab);
+           }
+           return new ContextMenuClickEvent(clickData, tab);
+         });
+
+ /**
+  * Fired when a context menu item is clicked.
+  */
+ Stream&lt;ContextMenuClickEvent&gt; get onClicked =&gt; _onClicked.stream;
+}
+</pre>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="onClicked">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.context_menus/ContextMenuClickEvent.html">ContextMenuClickEvent</a>&gt;         <strong>onClicked</strong> <a class="anchor-link"
+            href="#onClicked"
+            title="Permalink to ContextMenus.onClicked">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a context menu item is clicked.</p>
+<pre class="source">
+Stream&lt;ContextMenuClickEvent&gt; get onClicked =&gt; _onClicked.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="create">
+<button class="show-code">Code</button>
+Future&lt;StreamSubscription&lt;<a href="../chrome.context_menus/ContextMenuClickEvent.html">ContextMenuClickEvent</a>&gt;&gt; <strong>create</strong>({<a href="../chrome.context_menus/ContextMenuType.html">ContextMenuType</a> type, String id, String title, bool checked, List&lt;<a href="../chrome.context_menus/ContextMenuContext.html">ContextMenuContext</a>&gt; contexts, void onClick(<a href="../chrome.context_menus/ContextMenuClickEvent.html">ContextMenuClickEvent</a> event), String parentId, List&lt;String&gt; documentUrlPatterns, List&lt;String&gt; targetUrlPatterns, bool enabled}) <a class="anchor-link" href="#create"
+              title="Permalink to ContextMenus.create">#</a></h4>
+<div class="doc">
+<p>Creates a new context menu item.</p>
+<p>@param type The type of menu item. Defaults to 'normal' if not specified.
+@param id The unique ID to assign to this item. Mandatory for event pages.</p>
+<pre><code>      Cannot be the same as another ID for this extension.
+</code></pre>
+<p>@param title The text to be displayed in the item; this is required unless</p>
+<pre><code>         type is 'separator'. When the context is 'selection', you can
+         use %s within the string to show the selected text. For
+         example, if this parameter's value is "Translate '%s' to
+         Pig Latin" and the user selects the word "cool", the context
+         menu item for the selection is "Translate 'cool' to
+         Pig Latin".
+</code></pre>
+<p>@param checked The initial state of a checkbox or radio item: true for</p>
+<pre><code>           selected and false for unselected. Only one radio item can
+           be selected at a time in a given group of radio items.
+</code></pre>
+<p>@param contexts List of contexts this menu item will appear in. Defaults</p>
+<pre><code>            to ['page'] if not specified. Specifying ['all'] is
+            equivalent to the combination of all other contexts except
+            for 'launcher'. The 'launcher' context is only supported
+            by apps and is used to add menu items to the context menu
+            that appears when clicking on the app icon in the
+            launcher/taskbar/dock/etc. Different platforms might put
+            limitations on what is actually supported in a launcher
+            context menu.
+</code></pre>
+<p>@param onClick A function that will be called back when the menu item is</p>
+<pre><code>           clicked. Event pages cannot use this; instead, they should
+           register a listener for chrome.contextMenus.onClicked.
+</code></pre>
+<p>@param parentId The ID of a parent menu item; this makes the item a child</p>
+<pre><code>            of a previously added item.
+</code></pre>
+<p>@param documentUrlPatterns Lets you restrict the item to apply only to</p>
+<pre><code>                       documents whose URL matches one of the given
+                       patterns. (This applies to frames as well.) For
+                       details on the format of a pattern, see Match
+                       Patterns.
+</code></pre>
+<p>@param targetUrlPatterns Similar to documentUrlPatterns, but lets you</p>
+<pre><code>                     filter based on the src attribute of
+                     img/audio/video tags and the href of anchor tags.
+</code></pre>
+<p>@param enabled Whether this context menu item is enabled or disabled.</p>
+<pre><code>           Defaults to true.
+</code></pre>
+<p>@returns if onClick is provided, then returns a StreamSubscription object</p>
+<pre><code>     for that event, otherwise returns null.
+</code></pre>
+<pre class="source">
+Future&lt;StreamSubscription&lt;ContextMenuClickEvent&gt;&gt; create({
+   ContextMenuType type,
+   String id,
+   String title,
+   bool checked,
+   List&lt;ContextMenuContext&gt; contexts,
+   void onClick(ContextMenuClickEvent event),
+   String parentId,
+   List&lt;String&gt; documentUrlPatterns,
+   List&lt;String&gt; targetUrlPatterns,
+   bool enabled}) {
+ var subscription;
+ Map&lt;String, dynamic&gt; createProperties = { };
+ if (type != null) {
+   createProperties['type'] = type.toString();
+ }
+ if (id != null) {
+   createProperties['id'] = id;
+ }
+ if (title != null) {
+   createProperties['title'] = title;
+ }
+ if (checked != null) {
+   createProperties['checked'] = checked;
+ }
+ if (contexts != null) {
+   createProperties['contexts'] = contexts.map((context) =&gt;
+       context.toString());
+ }
+ if (onClick != null) {
+   subscription = _createController(createProperties, onClick);
+ }
+ if (parentId != null) {
+   createProperties['parentId'] = parentId;
+ }
+ if (documentUrlPatterns != null) {
+   createProperties['documentUrlPatterns'] = documentUrlPatterns;
+ }
+ if (targetUrlPatterns != null) {
+   createProperties['targetUrlPatterns'] = targetUrlPatterns;
+ }
+ if (enabled != null) {
+   createProperties['enabled'] = enabled;
+ }
+
+ ChromeCompleter completer = new ChromeCompleter.noArgs();
+ js.scoped(() {
+   _contextMenus.create(js.map(createProperties), completer.callback);
+ });
+ return completer.future.then((_) =&gt; subscription);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="remove">
+<button class="show-code">Code</button>
+Future <strong>remove</strong>(String id) <a class="anchor-link" href="#remove"
+              title="Permalink to ContextMenus.remove">#</a></h4>
+<div class="doc">
+<p>Removes a context menu item.</p>
+<p>@param id The ID of the context menu item to remove.</p>
+<pre class="source">
+Future remove(String id) {
+ ChromeCompleter completer = new ChromeCompleter.noArgs();
+ js.scoped(() {
+   _contextMenus.remove(id, completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeAll">
+<button class="show-code">Code</button>
+Future <strong>removeAll</strong>() <a class="anchor-link" href="#removeAll"
+              title="Permalink to ContextMenus.removeAll">#</a></h4>
+<div class="doc">
+<p>Removes all context menu items added by this extension.</p>
+<pre class="source">
+Future removeAll() {
+ ChromeCompleter completer = new ChromeCompleter.noArgs();
+ js.scoped(() {
+   _contextMenus.removeAll(completer.callback);
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="update">
+<button class="show-code">Code</button>
+Future&lt;StreamSubscription&lt;<a href="../chrome.context_menus/ContextMenuClickEvent.html">ContextMenuClickEvent</a>&gt;&gt; <strong>update</strong>(String id, {<a href="../chrome.context_menus/ContextMenuType.html">ContextMenuType</a> type, String title, bool checked, List&lt;<a href="../chrome.context_menus/ContextMenuContext.html">ContextMenuContext</a>&gt; contexts, void onClick(<a href="../chrome.context_menus/ContextMenuClickEvent.html">ContextMenuClickEvent</a> event), String parentId, List&lt;String&gt; documentUrlPatterns, List&lt;String&gt; targetUrlPatterns, bool enabled}) <a class="anchor-link" href="#update"
+              title="Permalink to ContextMenus.update">#</a></h4>
+<div class="doc">
+<p>Updates a previously created context menu item.</p>
+<p>Accepts the same values as the create function.</p>
+<p>@param id The ID of the item to update.
+@param parentId Note: You cannot change an item to be a child of one of</p>
+<pre><code>            its own descendants.
+</code></pre>
+<p>@returns if onClick is provided, then returns a StreamSubscription object</p>
+<pre><code>     for that event, otherwise returns null
+</code></pre>
+<pre class="source">
+Future&lt;StreamSubscription&lt;ContextMenuClickEvent&gt;&gt; update(String id, {
+   ContextMenuType type,
+   String title,
+   bool checked,
+   List&lt;ContextMenuContext&gt; contexts,
+   void onClick(ContextMenuClickEvent event),
+   String parentId,
+   List&lt;String&gt; documentUrlPatterns,
+   List&lt;String&gt; targetUrlPatterns,
+   bool enabled}) {
+ var subscription;
+ Map&lt;String, dynamic&gt; updateProperties = { };
+ if (type != null) {
+   updateProperties['type'] = type.toString();
+ }
+ if (title != null) {
+   updateProperties['title'] = title;
+ }
+ if (checked != null) {
+   updateProperties['checked'] = checked;
+ }
+ if (contexts != null) {
+   updateProperties['contexts'] = contexts.map((context) =&gt;
+       context.toString());
+ }
+ if (onClick != null) {
+   subscription = _createController(updateProperties, onClick);
+ }
+ if (parentId != null) {
+   updateProperties['parentId'] = parentId;
+ }
+ if (documentUrlPatterns != null) {
+   updateProperties['documentUrlPatterns'] = documentUrlPatterns;
+ }
+ if (targetUrlPatterns != null) {
+   updateProperties['targetUrlPatterns'] = targetUrlPatterns;
+ }
+ if (enabled != null) {
+   updateProperties['enabled'] = enabled;
+ }
+
+ ChromeCompleter completer = new ChromeCompleter.noArgs();
+ js.scoped(() {
+   _contextMenus.update(id, js.map(updateProperties), completer.callback);
+ });
+ return completer.future.then((_) =&gt; subscription);
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.351</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

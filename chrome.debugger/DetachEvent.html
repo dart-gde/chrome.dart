@@ -1,0 +1,93 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>DetachEvent class / chrome.debugger Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.debugger" data-type="DetachEvent">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.debugger.html">chrome.debugger</a> &rsaquo; <a href="../chrome.debugger/DetachEvent.html">DetachEvent</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>DetachEvent</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Fired when browser terminates debugging session for the tab. This happens
+when either the tab is being closed or Chrome DevTools is being invoked for
+the attached tab.</p>
+<pre class="source">
+class DetachEvent {
+ Debuggee source;
+
+ /**
+  * One of:
+  * * 'target_closed'
+  * * 'canceled_by_user'
+  * * 'replaced_with_devtools'
+  */
+ String reason;
+
+ DetachEvent._(this.source, this.reason);
+}
+</pre>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="reason">
+<button class="show-code">Code</button>
+String         <strong>reason</strong> <a class="anchor-link"
+            href="#reason"
+            title="Permalink to DetachEvent.reason">#</a>
+        </h4>
+        <div class="doc">
+<p>One of:
+<em> 'target_closed'
+</em> 'canceled<em>by</em>user'
+* 'replaced<em>with</em>devtools'</p>
+<pre class="source">
+String reason
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="source">
+<button class="show-code">Code</button>
+<a href="../chrome.debugger/Debuggee.html">Debuggee</a>         <strong>source</strong> <a class="anchor-link"
+            href="#source"
+            title="Permalink to DetachEvent.source">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Debuggee source
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.363</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

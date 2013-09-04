@@ -1,0 +1,111 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TranslatorForSerializable&lt;E&gt; class / js.wrapping Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="js.wrapping" data-type="TranslatorForSerializable&amp;lt;E&amp;gt;">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../js.wrapping.html">js.wrapping</a> &rsaquo; <a href="../js.wrapping/TranslatorForSerializable.html">TranslatorForSerializable&lt;E&gt;</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TranslatorForSerializable&lt;E extends Serializable&gt;</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class TranslatorForSerializable&lt;E extends Serializable&gt;
+   implements Translator&lt;E&gt; {
+ Mapper&lt;dynamic, E&gt; _fromJs;
+ Mapper&lt;E, dynamic&gt; _toJs;
+
+ TranslatorForSerializable(Mapper&lt;dynamic, E&gt; fromJs, {mapOnlyNotNull: true}) {
+   this._fromJs = (o) =&gt; mapOnlyNotNull ? mapNotNull(o, fromJs) : fromJs(o);
+   this._toJs = (E s) =&gt; s != null ? s.toJs() : null;
+ }
+
+ Mapper&lt;dynamic, E&gt; get fromJs =&gt; this._fromJs;
+ Mapper&lt;E, dynamic&gt; get toJs =&gt; this._toJs;
+}
+</pre>
+</div>
+<h3>Implements</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../js.wrapping/Translator.html">Translator&lt;E&gt;</a></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>TranslatorForSerializable</strong>(<a href="../js.wrapping/Mapper.html">Mapper</a> fromJs, {mapOnlyNotNull: true}) <a class="anchor-link" href="#"
+              title="Permalink to TranslatorForSerializable&lt;E&gt;.TranslatorForSerializable">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+TranslatorForSerializable(Mapper&lt;dynamic, E&gt; fromJs, {mapOnlyNotNull: true}) {
+ this._fromJs = (o) =&gt; mapOnlyNotNull ? mapNotNull(o, fromJs) : fromJs(o);
+ this._toJs = (E s) =&gt; s != null ? s.toJs() : null;
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="fromJs">
+<button class="show-code">Code</button>
+final <a href="../js.wrapping/Mapper.html">Mapper</a>         <strong>fromJs</strong> <a class="anchor-link"
+            href="#fromJs"
+            title="Permalink to TranslatorForSerializable&lt;E&gt;.fromJs">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../js.wrapping/Translator.html">Translator</a> </div><div class="doc">
+<pre class="source">
+final Mapper&lt;dynamic, E&gt; fromJs
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+final <a href="../js.wrapping/Mapper.html">Mapper</a>         <strong>toJs</strong> <a class="anchor-link"
+            href="#toJs"
+            title="Permalink to TranslatorForSerializable&lt;E&gt;.toJs">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../js.wrapping/Translator.html">Translator</a> </div><div class="doc">
+<pre class="source">
+final Mapper&lt;E, dynamic&gt; toJs
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:29.085</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

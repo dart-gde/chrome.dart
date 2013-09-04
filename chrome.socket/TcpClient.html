@@ -1,0 +1,378 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TcpClient class / chrome.socket Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.socket" data-type="TcpClient">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.socket.html">chrome.socket</a> &rsaquo; <a href="../chrome.socket/TcpClient.html">TcpClient</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TcpClient</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class TcpClient {
+ Logger _logger = new Logger("TcpClient");
+
+ String host;
+ int port;
+
+ Timer _intervalHandle;
+
+ bool _isConnected = false;
+ bool get isConnected =&gt; _isConnected;
+
+ SocketType _socketType;
+ CreateInfo _createInfo;
+ int get socketId =&gt; _createInfo.socketId;
+
+ TcpClient(this.host, this.port);
+
+ TcpClient.fromSocketId(
+     int socketId,
+     { OnAcceptedCallback connected: null,
+       OnReadTcpSocket this.onRead: null,
+       OnReceived this.receive: null}) {
+
+   _createInfo = new CreateInfo(socketId);
+   state.then((SocketInfo socketInfo) {
+     port = socketInfo.peerPort;
+     host = socketInfo.peerAddress;
+
+     _isConnected = true;
+     _setupDataPoll();
+
+     if (connected != null) {
+       _logger.fine("connected != null, socketInfo = $socketInfo");
+       connected(this, socketInfo);
+     }
+   });
+ }
+
+ Future&lt;SocketInfo&gt; get state {
+   return Socket.getInfo(socketId);
+ }
+
+ Future&lt;bool&gt; connect() {
+   var completer = new Completer();
+   _socketType = new SocketType('tcp');
+   Socket.create(_socketType).then((CreateInfo createInfo) {
+     _logger.fine("Socket.create.then = ${createInfo}");
+     _createInfo = createInfo;
+     Socket.connect(_createInfo.socketId, host, port).then((int result) {
+       _isConnected = true;
+       _setupDataPoll();
+       completer.complete(_isConnected);
+     });
+   });
+   return completer.future;
+ }
+
+ void disconnect() {
+   if (_createInfo != null) {
+     Socket.disconnect(_createInfo.socketId);
+   }
+
+   if (_intervalHandle != null) {
+     _intervalHandle.cancel();
+   }
+
+   _isConnected = false;
+ }
+
+ Future&lt;SocketWriteInfo&gt; send(String message) {
+   var completer = new Completer();
+   var blob = new html.Blob([message]);
+   var fileReader = new html.FileReader();
+   fileReader.onLoad.listen((html.Event event) {
+     var uint8Array = new typed_data.Uint8List.view(fileReader.result);
+     Socket.write(_createInfo.socketId, uint8Array)
+         .then((SocketWriteInfo writeInfo) {
+           completer.complete(writeInfo);
+         });
+   });
+   fileReader.readAsArrayBuffer(blob);
+   return completer.future;
+ }
+
+ void _setupDataPoll() {
+   _intervalHandle =
+       new Timer.periodic(const Duration(milliseconds: 500), _read);
+ }
+
+ OnReceived receive; // passed a String
+ OnReadTcpSocket onRead; // passed a SocketReadInfo
+ void _read(Timer timer) {
+   _logger.fine("enter: read()");
+   Socket.read(_createInfo.socketId).then((SocketReadInfo readInfo) {
+     if (readInfo == null) {
+       return;
+     }
+
+     _logger.fine("then: read()");
+     if (onRead != null) {
+       onRead(readInfo);
+     }
+
+     if (receive != null) {
+       // Convert back to string and invoke receive
+       // Might want to add this kind of method
+       // onto SocketReadInfo
+       /*
+       var blob =
+           new html.Blob([new html.Uint8Array.fromBuffer(readInfo.data)]);
+       var fileReader = new html.FileReader();
+       fileReader.on.load.add((html.Event event) {
+         _logger.fine("fileReader.result = ${fileReader.result}");
+         receive(fileReader.result);
+       });
+       fileReader.readAsText(blob);
+       */
+       _logger.fine(readInfo.data.toString());
+       var str = new String.fromCharCodes(
+           new typed_data.Uint8List.view(readInfo.data));
+       //_logger.fine("receive(str) = ${str}");
+       receive(str, this);
+     }
+   });
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>TcpClient</strong>(String host, int port) <a class="anchor-link" href="#"
+              title="Permalink to TcpClient.TcpClient">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+TcpClient(this.host, this.port);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromSocketId">
+<button class="show-code">Code</button>
+new <strong>TcpClient.fromSocketId</strong>(int socketId, {<a href="../chrome.socket/OnAcceptedCallback.html">OnAcceptedCallback</a> connected: null, <a href="../chrome.socket/OnReadTcpSocket.html">OnReadTcpSocket</a> onRead: null, <a href="../chrome.socket/OnReceived.html">OnReceived</a> receive: null}) <a class="anchor-link" href="#fromSocketId"
+              title="Permalink to TcpClient.TcpClient.fromSocketId">#</a></h4>
+<div class="doc">
+<pre class="source">
+TcpClient.fromSocketId(
+   int socketId,
+   { OnAcceptedCallback connected: null,
+     OnReadTcpSocket this.onRead: null,
+     OnReceived this.receive: null}) {
+
+ _createInfo = new CreateInfo(socketId);
+ state.then((SocketInfo socketInfo) {
+   port = socketInfo.peerPort;
+   host = socketInfo.peerAddress;
+
+   _isConnected = true;
+   _setupDataPoll();
+
+   if (connected != null) {
+     _logger.fine("connected != null, socketInfo = $socketInfo");
+     connected(this, socketInfo);
+   }
+ });
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="host">
+<button class="show-code">Code</button>
+String         <strong>host</strong> <a class="anchor-link"
+            href="#host"
+            title="Permalink to TcpClient.host">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+String host
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="isConnected">
+<button class="show-code">Code</button>
+final bool         <strong>isConnected</strong> <a class="anchor-link"
+            href="#isConnected"
+            title="Permalink to TcpClient.isConnected">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+bool get isConnected =&gt; _isConnected;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onRead">
+<button class="show-code">Code</button>
+<a href="../chrome.socket/OnReadTcpSocket.html">OnReadTcpSocket</a>         <strong>onRead</strong> <a class="anchor-link"
+            href="#onRead"
+            title="Permalink to TcpClient.onRead">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+OnReadTcpSocket onRead
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="port">
+<button class="show-code">Code</button>
+int         <strong>port</strong> <a class="anchor-link"
+            href="#port"
+            title="Permalink to TcpClient.port">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+int port
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="receive">
+<button class="show-code">Code</button>
+<a href="../chrome.socket/OnReceived.html">OnReceived</a>         <strong>receive</strong> <a class="anchor-link"
+            href="#receive"
+            title="Permalink to TcpClient.receive">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+OnReceived receive
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="socketId">
+<button class="show-code">Code</button>
+final int         <strong>socketId</strong> <a class="anchor-link"
+            href="#socketId"
+            title="Permalink to TcpClient.socketId">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+int get socketId =&gt; _createInfo.socketId;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="state">
+<button class="show-code">Code</button>
+final Future&lt;<a href="../chrome.socket/SocketInfo.html">SocketInfo</a>&gt;         <strong>state</strong> <a class="anchor-link"
+            href="#state"
+            title="Permalink to TcpClient.state">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Future&lt;SocketInfo&gt; get state {
+ return Socket.getInfo(socketId);
+}
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="connect">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>connect</strong>() <a class="anchor-link" href="#connect"
+              title="Permalink to TcpClient.connect">#</a></h4>
+<div class="doc">
+<pre class="source">
+Future&lt;bool&gt; connect() {
+ var completer = new Completer();
+ _socketType = new SocketType('tcp');
+ Socket.create(_socketType).then((CreateInfo createInfo) {
+   _logger.fine("Socket.create.then = ${createInfo}");
+   _createInfo = createInfo;
+   Socket.connect(_createInfo.socketId, host, port).then((int result) {
+     _isConnected = true;
+     _setupDataPoll();
+     completer.complete(_isConnected);
+   });
+ });
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="disconnect">
+<button class="show-code">Code</button>
+void <strong>disconnect</strong>() <a class="anchor-link" href="#disconnect"
+              title="Permalink to TcpClient.disconnect">#</a></h4>
+<div class="doc">
+<pre class="source">
+void disconnect() {
+ if (_createInfo != null) {
+   Socket.disconnect(_createInfo.socketId);
+ }
+
+ if (_intervalHandle != null) {
+   _intervalHandle.cancel();
+ }
+
+ _isConnected = false;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="send">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.socket/SocketWriteInfo.html">SocketWriteInfo</a>&gt; <strong>send</strong>(String message) <a class="anchor-link" href="#send"
+              title="Permalink to TcpClient.send">#</a></h4>
+<div class="doc">
+<pre class="source">
+Future&lt;SocketWriteInfo&gt; send(String message) {
+ var completer = new Completer();
+ var blob = new html.Blob([message]);
+ var fileReader = new html.FileReader();
+ fileReader.onLoad.listen((html.Event event) {
+   var uint8Array = new typed_data.Uint8List.view(fileReader.result);
+   Socket.write(_createInfo.socketId, uint8Array)
+       .then((SocketWriteInfo writeInfo) {
+         completer.complete(writeInfo);
+       });
+ });
+ fileReader.readAsArrayBuffer(blob);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.649</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

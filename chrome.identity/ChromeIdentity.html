@@ -1,0 +1,241 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeIdentity class / chrome.identity Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.identity" data-type="ChromeIdentity">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.identity.html">chrome.identity</a> &rsaquo; <a href="../chrome.identity/ChromeIdentity.html">ChromeIdentity</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeIdentity</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Description:  Use the chrome.identity API to get OAuth2 access tokens.
+Availability: Beta and dev channels only.
+Permissions:   "identity"
+Learn More:  Identify User https://developer.chrome.com/apps/app_identity.html</p>
+<pre class="source">
+class ChromeIdentity {
+ const ChromeIdentity._();
+
+ /**
+  * Gets an OAuth2 access token using the client ID and scopes specified in
+  * the oauth2 section of manifest.json. The Identity API caches access tokens
+  * in memory, so it's ok to call getAuthToken any time a token is required.
+  * The token cache automatically handles expiration.
+  *
+  * [interactive] ( optional boolean )
+  * Fetching a token may require the user to sign-in to Chrome, or approve
+  * the application's requested scopes. If the interactive flag is true,
+  * [getAuthToken] will prompt the user as necessary. When the flag is false
+  * or ommitted, getAuthToken will return failure any time a prompt would be
+  * required.
+  *
+  * Future completes with an OAuth2 access token as specified by the manifest,
+  * or undefined if there was an error.
+  */
+ Future&lt;String&gt; getAuthToken({bool interactive: false}) {
+   ChromeCompleter completer = new ChromeCompleter.oneArg();
+
+   js.scoped(() {
+     chromeProxy.identity
+       .getAuthToken(js.map({'interactive': interactive}), completer.callback);
+   });
+
+   return completer.future;
+ }
+
+ /**
+  * Removes an OAuth2 access token from the Identity API's token cache.
+  *
+  * If an access token is discovered to be invalid, it should be passed to
+  * [removeCachedAuthToken] to remove it from the cache. The app may then
+  * retrieve a fresh token with [getAuthToken].
+  *
+  * [token] ( string ) The specific token that should be removed from the cache.
+  *
+  * Future completes when the token has been removed from the cache.
+  */
+ Future removeCachedAuthToken(String token) {
+   ChromeCompleter completer = new ChromeCompleter.noArgs();
+
+   js.scoped(() {
+     chromeProxy.identity
+       .removeCachedAuthToken(js.map({'token': token}), completer.callback);
+   });
+
+   return completer.future;
+ }
+
+ /**
+  * Starts an auth flow at the specified URL.
+  *
+  * This method enables auth flows with non-Google identity providers by
+  * launching a web view and navigating it to the first URL in the provider's
+  * auth flow. When the provider redirects to a URL matching the pattern
+  * https://&lt;app-id&gt;.chromiumapp.org/\*, the window will close, and the final
+  * redirect URL will be passed to the callback function.
+  *
+  * [url] ( string ) The URL that initiates the auth flow.
+  *
+  * [interactive] ( optional boolean ) Whether to launch auth flow in
+  * interactive mode.
+  *
+  * Since some auth flows may immediately redirect to a result URL,
+  * [launchWebAuthFlow] hides its web view until the first navigation either
+  * redirects to the final URL, or finishes loading a page meant to be
+  * displayed.
+  *
+  * If the [interactive] flag is true, the window will be displayed when a page
+  * load completes. If the flag is false or ommitted, [launchWebAuthFlow] will
+  * return with an error if the initial navigation does not complete the flow.
+  *
+  * Future completes with the URL redirected back to your application.
+  */
+ Future&lt;String&gt; launchWebAuthFlow(String url, {bool interactive: false}) {
+   ChromeCompleter completer = new ChromeCompleter.oneArg();
+
+   js.scoped(() {
+     chromeProxy.identity
+       .launchWebAuthFlow(js.map({'url': url, 'interactive': interactive}),
+           completer.callback);
+   });
+
+   return completer.future;
+ }
+
+}
+</pre>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="getAuthToken">
+<button class="show-code">Code</button>
+Future&lt;String&gt; <strong>getAuthToken</strong>({bool interactive: false}) <a class="anchor-link" href="#getAuthToken"
+              title="Permalink to ChromeIdentity.getAuthToken">#</a></h4>
+<div class="doc">
+<p>Gets an OAuth2 access token using the client ID and scopes specified in
+the oauth2 section of manifest.json. The Identity API caches access tokens
+in memory, so it's ok to call getAuthToken any time a token is required.
+The token cache automatically handles expiration.</p>
+<p>
+<span class="param">interactive</span> ( optional boolean )
+Fetching a token may require the user to sign-in to Chrome, or approve
+the application's requested scopes. If the interactive flag is true,
+<a class="crossref" href="../chrome.identity/ChromeIdentity.html#getAuthToken">getAuthToken</a> will prompt the user as necessary. When the flag is false
+or ommitted, getAuthToken will return failure any time a prompt would be
+required.</p>
+<p>Future completes with an OAuth2 access token as specified by the manifest,
+or undefined if there was an error.</p>
+<pre class="source">
+Future&lt;String&gt; getAuthToken({bool interactive: false}) {
+ ChromeCompleter completer = new ChromeCompleter.oneArg();
+
+ js.scoped(() {
+   chromeProxy.identity
+     .getAuthToken(js.map({'interactive': interactive}), completer.callback);
+ });
+
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="launchWebAuthFlow">
+<button class="show-code">Code</button>
+Future&lt;String&gt; <strong>launchWebAuthFlow</strong>(String url, {bool interactive: false}) <a class="anchor-link" href="#launchWebAuthFlow"
+              title="Permalink to ChromeIdentity.launchWebAuthFlow">#</a></h4>
+<div class="doc">
+<p>Starts an auth flow at the specified URL.</p>
+<p>This method enables auth flows with non-Google identity providers by
+launching a web view and navigating it to the first URL in the provider's
+auth flow. When the provider redirects to a URL matching the pattern
+https://&lt;app-id>.chromiumapp.org/\*, the window will close, and the final
+redirect URL will be passed to the callback function.</p>
+<p>
+<span class="param">url</span> ( string ) The URL that initiates the auth flow.</p>
+<p>
+<span class="param">interactive</span> ( optional boolean ) Whether to launch auth flow in
+interactive mode.</p>
+<p>Since some auth flows may immediately redirect to a result URL,
+<a class="crossref" href="../chrome.identity/ChromeIdentity.html#launchWebAuthFlow">launchWebAuthFlow</a> hides its web view until the first navigation either
+redirects to the final URL, or finishes loading a page meant to be
+displayed.</p>
+<p>If the 
+<span class="param">interactive</span> flag is true, the window will be displayed when a page
+load completes. If the flag is false or ommitted, <a class="crossref" href="../chrome.identity/ChromeIdentity.html#launchWebAuthFlow">launchWebAuthFlow</a> will
+return with an error if the initial navigation does not complete the flow.</p>
+<p>Future completes with the URL redirected back to your application.</p>
+<pre class="source">
+Future&lt;String&gt; launchWebAuthFlow(String url, {bool interactive: false}) {
+ ChromeCompleter completer = new ChromeCompleter.oneArg();
+
+ js.scoped(() {
+   chromeProxy.identity
+     .launchWebAuthFlow(js.map({'url': url, 'interactive': interactive}),
+         completer.callback);
+ });
+
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeCachedAuthToken">
+<button class="show-code">Code</button>
+Future <strong>removeCachedAuthToken</strong>(String token) <a class="anchor-link" href="#removeCachedAuthToken"
+              title="Permalink to ChromeIdentity.removeCachedAuthToken">#</a></h4>
+<div class="doc">
+<p>Removes an OAuth2 access token from the Identity API's token cache.</p>
+<p>If an access token is discovered to be invalid, it should be passed to
+<a class="crossref" href="../chrome.identity/ChromeIdentity.html#removeCachedAuthToken">removeCachedAuthToken</a> to remove it from the cache. The app may then
+retrieve a fresh token with <a class="crossref" href="../chrome.identity/ChromeIdentity.html#getAuthToken">getAuthToken</a>.</p>
+<p>
+<span class="param">token</span> ( string ) The specific token that should be removed from the cache.</p>
+<p>Future completes when the token has been removed from the cache.</p>
+<pre class="source">
+Future removeCachedAuthToken(String token) {
+ ChromeCompleter completer = new ChromeCompleter.noArgs();
+
+ js.scoped(() {
+   chromeProxy.identity
+     .removeCachedAuthToken(js.map({'token': token}), completer.callback);
+ });
+
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.494</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

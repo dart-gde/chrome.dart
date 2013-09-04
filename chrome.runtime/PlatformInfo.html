@@ -1,0 +1,115 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>PlatformInfo class / chrome.runtime Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.runtime" data-type="PlatformInfo">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.runtime.html">chrome.runtime</a> &rsaquo; <a href="../chrome.runtime/PlatformInfo.html">PlatformInfo</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>PlatformInfo</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Information about the current platform.</p>
+<pre class="source">
+class PlatformInfo {
+ /// The operating system chrome is running on.
+ ///
+ /// One of "mac", "win", "android", "cros", "linux", or "openbsd".
+ final String os;
+
+ /// The machine's processor architecture.
+ ///
+ /// One of "arm", "x86-32", or "x86-64".
+ final String arch;
+
+ /// The native client architecture. This may be different from arch on some
+ /// platforms.
+ ///
+ /// One of "arm", "x86-32", or "x86-64".
+ final String nacl_arch;
+
+ PlatformInfo._(proxy)
+     : os = proxy.os
+     , arch = proxy.arch
+     , nacl_arch = proxy.nacl_arch;
+}
+</pre>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="arch">
+<button class="show-code">Code</button>
+final String         <strong>arch</strong> <a class="anchor-link"
+            href="#arch"
+            title="Permalink to PlatformInfo.arch">#</a>
+        </h4>
+        <div class="doc">
+<p>The machine's processor architecture.</p>
+<p>One of "arm", "x86-32", or "x86-64".</p>
+<pre class="source">
+final String arch
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="nacl_arch">
+<button class="show-code">Code</button>
+final String         <strong>nacl_arch</strong> <a class="anchor-link"
+            href="#nacl_arch"
+            title="Permalink to PlatformInfo.nacl_arch">#</a>
+        </h4>
+        <div class="doc">
+<p>The native client architecture. This may be different from arch on some
+platforms.</p>
+<p>One of "arm", "x86-32", or "x86-64".</p>
+<pre class="source">
+final String nacl_arch
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="os">
+<button class="show-code">Code</button>
+final String         <strong>os</strong> <a class="anchor-link"
+            href="#os"
+            title="Permalink to PlatformInfo.os">#</a>
+        </h4>
+        <div class="doc">
+<p>The operating system chrome is running on.</p>
+<p>One of "mac", "win", "android", "cros", "linux", or "openbsd".</p>
+<pre class="source">
+final String os
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.560</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

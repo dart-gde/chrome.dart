@@ -1,0 +1,136 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Debuggee class / chrome.debugger Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.debugger" data-type="Debuggee">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.debugger.html">chrome.debugger</a> &rsaquo; <a href="../chrome.debugger/Debuggee.html">Debuggee</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Debuggee</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class Debuggee {
+ /**
+  * The id of the tab which you intend to debug.
+  */
+ int tabId;
+
+ /**
+  * The id of the extension which you intend to debug. Attaching to an
+  * extension background page is only possible when 'enable-silent-debugging'
+  * flag is enabled on the target browser.
+  */
+ String extensionId;
+
+ Debuggee.fromTabId(this.tabId);
+
+ Debuggee.fromExtensionId(this.extensionId);
+
+ Debuggee._fromProxy(js.Proxy proxy) {
+   try { tabId = (proxy as dynamic).tabId; } catch (_) { }
+   try { extensionId = (proxy as dynamic).extensionId; } catch (_) { }
+ }
+
+ js.Proxy _toJS() {
+   Map m = {};
+
+   if (tabId != null) {
+     m['tabId'] = tabId;
+   }
+
+   if (extensionId != null) {
+     m['extensionId'] = extensionId;
+   }
+
+   return js.map(m);
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="fromExtensionId">
+<button class="show-code">Code</button>
+new <strong>Debuggee.fromExtensionId</strong>(String extensionId) <a class="anchor-link" href="#fromExtensionId"
+              title="Permalink to Debuggee.Debuggee.fromExtensionId">#</a></h4>
+<div class="doc">
+<pre class="source">
+Debuggee.fromExtensionId(this.extensionId);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromTabId">
+<button class="show-code">Code</button>
+new <strong>Debuggee.fromTabId</strong>(int tabId) <a class="anchor-link" href="#fromTabId"
+              title="Permalink to Debuggee.Debuggee.fromTabId">#</a></h4>
+<div class="doc">
+<pre class="source">
+Debuggee.fromTabId(this.tabId);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="extensionId">
+<button class="show-code">Code</button>
+String         <strong>extensionId</strong> <a class="anchor-link"
+            href="#extensionId"
+            title="Permalink to Debuggee.extensionId">#</a>
+        </h4>
+        <div class="doc">
+<p>The id of the extension which you intend to debug. Attaching to an
+extension background page is only possible when 'enable-silent-debugging'
+flag is enabled on the target browser.</p>
+<pre class="source">
+String extensionId
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="tabId">
+<button class="show-code">Code</button>
+int         <strong>tabId</strong> <a class="anchor-link"
+            href="#tabId"
+            title="Permalink to Debuggee.tabId">#</a>
+        </h4>
+        <div class="doc">
+<p>The id of the tab which you intend to debug.</p>
+<pre class="source">
+int tabId
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.365</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

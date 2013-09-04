@@ -1,0 +1,698 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Socket class / chrome.socket Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.socket" data-type="Socket">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.socket.html">chrome.socket</a> &rsaquo; <a href="../chrome.socket/Socket.html">Socket</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Socket</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class Socket {
+ static final Logger _logger = new Logger("chrome.socket");
+
+ static Future&lt;CreateInfo&gt; create(
+     SocketType socketType,
+     {CreateOptions options: null}) {
+
+   var completer = new Completer();
+   _jsCreate() {
+     void createCallback(var result) {
+       var createInfo = new CreateInfo(result.socketId);
+       completer.complete(createInfo);
+     };
+
+     jsContext.createCallback = new js.Callback.once(createCallback);
+     chromeProxy.socket.create(
+         socketType.type, options, jsContext.createCallback);
+   };
+   js.scoped(_jsCreate);
+   return completer.future;
+ }
+
+ static void destroy(int socketId) {
+   _jsDestroy() {
+     chromeProxy.socket.destroy(socketId);
+   };
+   js.scoped(_jsDestroy);
+ }
+
+ static Future&lt;int&gt; connect(int socketId, String hostname, int port) {
+   var completer = new Completer();
+   _jsConnect() {
+     void connectCallback(var result) {
+       completer.complete(result);
+     }
+
+     jsContext.connectCallback = new js.Callback.once(connectCallback);
+     chromeProxy.socket.connect(
+         socketId, hostname, port, jsContext.connectCallback);
+   };
+   js.scoped(_jsConnect);
+   return completer.future;
+ }
+
+ static Future&lt;int&gt; bind(int socketId, String address, int port) {
+   var completer = new Completer();
+   _jsBind() {
+     void bindCallback(var result) {
+       completer.complete(result);
+     };
+     jsContext.bindCallback = new js.Callback.once(bindCallback);
+     chromeProxy.socket.bind(socketId, address, port, jsContext.bindCallback);
+   };
+   js.scoped(_jsBind);
+   return completer.future;
+ }
+
+ static void disconnect(int socketId) {
+   _jsDisconnect() {
+     chromeProxy.socket.disconnect(socketId);
+   };
+   js.scoped(_jsDisconnect);
+ }
+
+ static Future&lt;SocketReadInfo&gt; read(int socketId, {int bufferSize: null}) {
+   // XXX: does it matter if we use uint8 or larger?
+   var completer = new Completer();
+   _jsRead() {
+     void readCallback(var result) {
+       if (result.resultCode &lt; 0) {
+         //completer.completeException("nothing to read");
+         completer.complete(null);
+       } else {
+
+         // result.resultCode returns the count via the C call
+         // to read();
+         // The result.data comes in as ArrayBuffer.
+         // Convert to jsContext.Uint8Array
+         // and copy to native dart Uint8Array.
+//          _logger.fine("result = ${result}");
+//          _logger.fine("result.data = ${result.data}");
+//          _logger.fine("result.resultCode = ${result.resultCode}");
+
+         var jsArrayBufferView =
+             new js.Proxy(jsContext.Uint8Array, result.data);
+         //var arrayBuffer = new typed_data.ByteData(result.resultCode);
+         //var arrayBufferView =
+         //    new typed_data.Uint8List.view(arrayBuffer.buffer);
+
+         var arrayBufferView = new typed_data.Uint8List(result.resultCode);
+
+         for (int i = 0; i &lt; result.resultCode; i++) {
+           arrayBufferView[i] = jsArrayBufferView[i];
+         }
+
+         var readInfo = new SocketReadInfo(result.resultCode, arrayBufferView.buffer, socketId: socketId);
+         completer.complete(readInfo);
+       }
+     };
+
+     jsContext.readCallback = new js.Callback.once(readCallback);
+     chromeProxy.socket.read(socketId, bufferSize, jsContext.readCallback);
+   };
+   js.scoped(_jsRead);
+   return completer.future;
+ }
+
+ static Future&lt;SocketWriteInfo&gt; write(
+     int socketId,
+     typed_data.Uint8List data) {
+
+   // XXX: does it matter if we use uint8 or larger? Prob Should be a generic
+   // ArrayBuffer.
+   var completer = new Completer();
+   _jsWrite() {
+     void writeCallback(var result) {
+       var writeInfo = new SocketWriteInfo(result.bytesWritten);
+       completer.complete(writeInfo);
+     };
+
+     jsContext.writeCallback = new js.Callback.once(writeCallback);
+     var buf = new js.Proxy(jsContext.ArrayBuffer, data.length);
+     var bufView = (new js.Proxy(jsContext.Uint8Array, buf) as dynamic)
+         ..set(js.array(data));
+
+     chromeProxy.socket.write(socketId, buf, jsContext.writeCallback);
+   };
+   js.scoped(_jsWrite);
+   return completer.future;
+ }
+
+ static Future&lt;RecvFromInfo&gt; recvFrom(int socketId, int bufferSize) {
+   var completer = new Completer();
+   _jsRecvFrom() {
+     void recvFromCallback(var result) {
+       var recvFromInfo = new RecvFromInfo(
+           result.resultCode, result.address, result.port, result.data);
+       completer.complete(recvFromInfo);
+     };
+
+     jsContext.recvFromCallback = new js.Callback.once(recvFromCallback);
+     chromeProxy.socket.recvFrom(
+         socketId, bufferSize, jsContext.recvFromCallback);
+   };
+   js.scoped(_jsRecvFrom);
+   return completer.future;
+ }
+
+ static Future&lt;SocketWriteInfo&gt; sendTo(
+     int socketId,
+     /* arraybuffer */ data,
+     String address,
+     int port) {
+
+   var completer = new Completer();
+   _jsSendTo() {
+     void sendToCallback(var result) {
+       var writeInfo = new SocketWriteInfo(result.bytesWritten);
+       completer.complete(writeInfo);
+     };
+
+     jsContext.sendToCallback = new js.Callback.once(sendToCallback);
+     chromeProxy.socket.sendTo(
+         socketId, data, address, port, jsContext.sendToCallback);
+   };
+   js.scoped(_jsSendTo);
+   return completer.future;
+ }
+
+ static Future&lt;int&gt; listen(
+     int socketId,
+     String address,
+     int port,
+     int backlog) {
+
+   var completer = new Completer();
+   _jsListen() {
+     void listenCallback(var result) {
+       _logger.fine("listen: result = ${0}");
+       completer.complete(result);
+     };
+
+     jsContext.listenCallback = new js.Callback.once(listenCallback);
+     chromeProxy.socket.listen(
+         socketId, address, port, backlog, jsContext.listenCallback);
+   };
+   js.scoped(_jsListen);
+   return completer.future;
+ }
+
+ static Future&lt;AcceptInfo&gt; accept(int socketId) {
+   var completer = new Completer();
+   _jsAccept() {
+     void acceptCallback(var result) {
+       var acceptInfo = new AcceptInfo(result.resultCode, result.socketId);
+       completer.complete(acceptInfo);
+     };
+
+     jsContext.acceptCallback = new js.Callback.once(acceptCallback);
+     chromeProxy.socket.accept(socketId, jsContext.acceptCallback);
+   };
+   js.scoped(_jsAccept);
+   return completer.future;
+ }
+
+ static Future&lt;bool&gt; setKeepAlive(int socketId, bool enable, int delay) {
+   var completer = new Completer();
+   _jsSetKeepAlive() {
+     void setKeepAliveCallback(var result) {
+       completer.complete(result);
+     };
+
+     jsContext.setKeepAliveCallback = new js.Callback.once(setKeepAliveCallback);
+     chromeProxy.socket.setKeepAlive(
+         socketId, enable, delay, jsContext.setKeepAliveCallback);
+   };
+   js.scoped(_jsSetKeepAlive);
+   return completer.future;
+ }
+
+ static Future&lt;bool&gt; setNoDelay(int socketId, bool noDelay) {
+   var completer = new Completer();
+   _jsSetNoDelay() {
+     void setNoDelayCallback(var result) {
+       completer.complete(result);
+     };
+
+     jsContext.setNoDelay = new js.Callback.once(setNoDelayCallback);
+     chromeProxy.socket.setNoDelay(socketId, noDelay, jsContext.setNoDelay);
+   };
+   js.scoped(_jsSetNoDelay);
+   return completer.future;
+ }
+
+ static Future&lt;SocketInfo&gt; getInfo(int socketId) {
+   var completer = new Completer();
+   _jsGetInfo() {
+     void getInfoCallback(var result) {
+       var socketInfo = new SocketInfo.fromMap(convertJsonResponse(result));
+       completer.complete(socketInfo);
+     };
+
+     jsContext.getInfoCallback = new js.Callback.once(getInfoCallback);
+     chromeProxy.socket.getInfo(socketId, jsContext.getInfoCallback);
+   };
+   js.scoped(_jsGetInfo);
+   return completer.future;
+ }
+
+ static Future&lt;NetworkInterface&gt; getNetworkList() {
+   ChromeCompleter completer = new ChromeCompleter.oneArg((result) {
+     var networkInterfaces = [];
+     for (int i = 0; i &lt; result.length; i++) {
+       networkInterfaces.add(
+           new NetworkInterface(result[i].name, result[i].address));
+     }
+     return networkInterfaces;
+   });
+
+   js.scoped(() {
+     chromeProxy.socket.getNetworkList(completer.callback);
+   });
+
+   return completer.future;
+ }
+}
+</pre>
+</div>
+<div>
+<h3>Static Methods</h3>
+<div class="method"><h4 id="create">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.socket/CreateInfo.html">CreateInfo</a>&gt; <strong>create</strong>(<a href="../chrome.socket/SocketType.html">SocketType</a> socketType, {<a href="../chrome.socket/CreateOptions.html">CreateOptions</a> options: null}) <a class="anchor-link" href="#create"
+              title="Permalink to Socket.create">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;CreateInfo&gt; create(
+   SocketType socketType,
+   {CreateOptions options: null}) {
+
+ var completer = new Completer();
+ _jsCreate() {
+   void createCallback(var result) {
+     var createInfo = new CreateInfo(result.socketId);
+     completer.complete(createInfo);
+   };
+
+   jsContext.createCallback = new js.Callback.once(createCallback);
+   chromeProxy.socket.create(
+       socketType.type, options, jsContext.createCallback);
+ };
+ js.scoped(_jsCreate);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="destroy">
+<button class="show-code">Code</button>
+void <strong>destroy</strong>(int socketId) <a class="anchor-link" href="#destroy"
+              title="Permalink to Socket.destroy">#</a></h4>
+<div class="doc">
+<pre class="source">
+static void destroy(int socketId) {
+ _jsDestroy() {
+   chromeProxy.socket.destroy(socketId);
+ };
+ js.scoped(_jsDestroy);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="connect">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>connect</strong>(int socketId, String hostname, int port) <a class="anchor-link" href="#connect"
+              title="Permalink to Socket.connect">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;int&gt; connect(int socketId, String hostname, int port) {
+ var completer = new Completer();
+ _jsConnect() {
+   void connectCallback(var result) {
+     completer.complete(result);
+   }
+
+   jsContext.connectCallback = new js.Callback.once(connectCallback);
+   chromeProxy.socket.connect(
+       socketId, hostname, port, jsContext.connectCallback);
+ };
+ js.scoped(_jsConnect);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="bind">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>bind</strong>(int socketId, String address, int port) <a class="anchor-link" href="#bind"
+              title="Permalink to Socket.bind">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;int&gt; bind(int socketId, String address, int port) {
+ var completer = new Completer();
+ _jsBind() {
+   void bindCallback(var result) {
+     completer.complete(result);
+   };
+   jsContext.bindCallback = new js.Callback.once(bindCallback);
+   chromeProxy.socket.bind(socketId, address, port, jsContext.bindCallback);
+ };
+ js.scoped(_jsBind);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="disconnect">
+<button class="show-code">Code</button>
+void <strong>disconnect</strong>(int socketId) <a class="anchor-link" href="#disconnect"
+              title="Permalink to Socket.disconnect">#</a></h4>
+<div class="doc">
+<pre class="source">
+static void disconnect(int socketId) {
+ _jsDisconnect() {
+   chromeProxy.socket.disconnect(socketId);
+ };
+ js.scoped(_jsDisconnect);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="read">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.socket/SocketReadInfo.html">SocketReadInfo</a>&gt; <strong>read</strong>(int socketId, {int bufferSize: null}) <a class="anchor-link" href="#read"
+              title="Permalink to Socket.read">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;SocketReadInfo&gt; read(int socketId, {int bufferSize: null}) {
+ // XXX: does it matter if we use uint8 or larger?
+ var completer = new Completer();
+ _jsRead() {
+   void readCallback(var result) {
+     if (result.resultCode &lt; 0) {
+       //completer.completeException("nothing to read");
+       completer.complete(null);
+     } else {
+
+       // result.resultCode returns the count via the C call
+       // to read();
+       // The result.data comes in as ArrayBuffer.
+       // Convert to jsContext.Uint8Array
+       // and copy to native dart Uint8Array.
+//          _logger.fine("result = ${result}");
+//          _logger.fine("result.data = ${result.data}");
+//          _logger.fine("result.resultCode = ${result.resultCode}");
+
+       var jsArrayBufferView =
+           new js.Proxy(jsContext.Uint8Array, result.data);
+       //var arrayBuffer = new typed_data.ByteData(result.resultCode);
+       //var arrayBufferView =
+       //    new typed_data.Uint8List.view(arrayBuffer.buffer);
+
+       var arrayBufferView = new typed_data.Uint8List(result.resultCode);
+
+       for (int i = 0; i &lt; result.resultCode; i++) {
+         arrayBufferView[i] = jsArrayBufferView[i];
+       }
+
+       var readInfo = new SocketReadInfo(result.resultCode, arrayBufferView.buffer, socketId: socketId);
+       completer.complete(readInfo);
+     }
+   };
+
+   jsContext.readCallback = new js.Callback.once(readCallback);
+   chromeProxy.socket.read(socketId, bufferSize, jsContext.readCallback);
+ };
+ js.scoped(_jsRead);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="write">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.socket/SocketWriteInfo.html">SocketWriteInfo</a>&gt; <strong>write</strong>(int socketId, Uint8List data) <a class="anchor-link" href="#write"
+              title="Permalink to Socket.write">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;SocketWriteInfo&gt; write(
+   int socketId,
+   typed_data.Uint8List data) {
+
+ // XXX: does it matter if we use uint8 or larger? Prob Should be a generic
+ // ArrayBuffer.
+ var completer = new Completer();
+ _jsWrite() {
+   void writeCallback(var result) {
+     var writeInfo = new SocketWriteInfo(result.bytesWritten);
+     completer.complete(writeInfo);
+   };
+
+   jsContext.writeCallback = new js.Callback.once(writeCallback);
+   var buf = new js.Proxy(jsContext.ArrayBuffer, data.length);
+   var bufView = (new js.Proxy(jsContext.Uint8Array, buf) as dynamic)
+       ..set(js.array(data));
+
+   chromeProxy.socket.write(socketId, buf, jsContext.writeCallback);
+ };
+ js.scoped(_jsWrite);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="recvFrom">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.socket/RecvFromInfo.html">RecvFromInfo</a>&gt; <strong>recvFrom</strong>(int socketId, int bufferSize) <a class="anchor-link" href="#recvFrom"
+              title="Permalink to Socket.recvFrom">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;RecvFromInfo&gt; recvFrom(int socketId, int bufferSize) {
+ var completer = new Completer();
+ _jsRecvFrom() {
+   void recvFromCallback(var result) {
+     var recvFromInfo = new RecvFromInfo(
+         result.resultCode, result.address, result.port, result.data);
+     completer.complete(recvFromInfo);
+   };
+
+   jsContext.recvFromCallback = new js.Callback.once(recvFromCallback);
+   chromeProxy.socket.recvFrom(
+       socketId, bufferSize, jsContext.recvFromCallback);
+ };
+ js.scoped(_jsRecvFrom);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="sendTo">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.socket/SocketWriteInfo.html">SocketWriteInfo</a>&gt; <strong>sendTo</strong>(int socketId, data, String address, int port) <a class="anchor-link" href="#sendTo"
+              title="Permalink to Socket.sendTo">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;SocketWriteInfo&gt; sendTo(
+   int socketId,
+   /* arraybuffer */ data,
+   String address,
+   int port) {
+
+ var completer = new Completer();
+ _jsSendTo() {
+   void sendToCallback(var result) {
+     var writeInfo = new SocketWriteInfo(result.bytesWritten);
+     completer.complete(writeInfo);
+   };
+
+   jsContext.sendToCallback = new js.Callback.once(sendToCallback);
+   chromeProxy.socket.sendTo(
+       socketId, data, address, port, jsContext.sendToCallback);
+ };
+ js.scoped(_jsSendTo);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="listen">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>listen</strong>(int socketId, String address, int port, int backlog) <a class="anchor-link" href="#listen"
+              title="Permalink to Socket.listen">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;int&gt; listen(
+   int socketId,
+   String address,
+   int port,
+   int backlog) {
+
+ var completer = new Completer();
+ _jsListen() {
+   void listenCallback(var result) {
+     _logger.fine("listen: result = ${0}");
+     completer.complete(result);
+   };
+
+   jsContext.listenCallback = new js.Callback.once(listenCallback);
+   chromeProxy.socket.listen(
+       socketId, address, port, backlog, jsContext.listenCallback);
+ };
+ js.scoped(_jsListen);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="accept">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.socket/AcceptInfo.html">AcceptInfo</a>&gt; <strong>accept</strong>(int socketId) <a class="anchor-link" href="#accept"
+              title="Permalink to Socket.accept">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;AcceptInfo&gt; accept(int socketId) {
+ var completer = new Completer();
+ _jsAccept() {
+   void acceptCallback(var result) {
+     var acceptInfo = new AcceptInfo(result.resultCode, result.socketId);
+     completer.complete(acceptInfo);
+   };
+
+   jsContext.acceptCallback = new js.Callback.once(acceptCallback);
+   chromeProxy.socket.accept(socketId, jsContext.acceptCallback);
+ };
+ js.scoped(_jsAccept);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setKeepAlive">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>setKeepAlive</strong>(int socketId, bool enable, int delay) <a class="anchor-link" href="#setKeepAlive"
+              title="Permalink to Socket.setKeepAlive">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;bool&gt; setKeepAlive(int socketId, bool enable, int delay) {
+ var completer = new Completer();
+ _jsSetKeepAlive() {
+   void setKeepAliveCallback(var result) {
+     completer.complete(result);
+   };
+
+   jsContext.setKeepAliveCallback = new js.Callback.once(setKeepAliveCallback);
+   chromeProxy.socket.setKeepAlive(
+       socketId, enable, delay, jsContext.setKeepAliveCallback);
+ };
+ js.scoped(_jsSetKeepAlive);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setNoDelay">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>setNoDelay</strong>(int socketId, bool noDelay) <a class="anchor-link" href="#setNoDelay"
+              title="Permalink to Socket.setNoDelay">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;bool&gt; setNoDelay(int socketId, bool noDelay) {
+ var completer = new Completer();
+ _jsSetNoDelay() {
+   void setNoDelayCallback(var result) {
+     completer.complete(result);
+   };
+
+   jsContext.setNoDelay = new js.Callback.once(setNoDelayCallback);
+   chromeProxy.socket.setNoDelay(socketId, noDelay, jsContext.setNoDelay);
+ };
+ js.scoped(_jsSetNoDelay);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getInfo">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.socket/SocketInfo.html">SocketInfo</a>&gt; <strong>getInfo</strong>(int socketId) <a class="anchor-link" href="#getInfo"
+              title="Permalink to Socket.getInfo">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;SocketInfo&gt; getInfo(int socketId) {
+ var completer = new Completer();
+ _jsGetInfo() {
+   void getInfoCallback(var result) {
+     var socketInfo = new SocketInfo.fromMap(convertJsonResponse(result));
+     completer.complete(socketInfo);
+   };
+
+   jsContext.getInfoCallback = new js.Callback.once(getInfoCallback);
+   chromeProxy.socket.getInfo(socketId, jsContext.getInfoCallback);
+ };
+ js.scoped(_jsGetInfo);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getNetworkList">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.socket/NetworkInterface.html">NetworkInterface</a>&gt; <strong>getNetworkList</strong>() <a class="anchor-link" href="#getNetworkList"
+              title="Permalink to Socket.getNetworkList">#</a></h4>
+<div class="doc">
+<pre class="source">
+static Future&lt;NetworkInterface&gt; getNetworkList() {
+ ChromeCompleter completer = new ChromeCompleter.oneArg((result) {
+   var networkInterfaces = [];
+   for (int i = 0; i &lt; result.length; i++) {
+     networkInterfaces.add(
+         new NetworkInterface(result[i].name, result[i].address));
+   }
+   return networkInterfaces;
+ });
+
+ js.scoped(() {
+   chromeProxy.socket.getNetworkList(completer.callback);
+ });
+
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-09-04 18:31:28.661</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        
