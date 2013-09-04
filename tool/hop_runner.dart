@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
-import 'package:chrome/src/chrome_launch.dart' as chrome;
+import 'chrome_launch.dart' as chrome_launch;
 
 void main() {
   _buildExample('app_test');
@@ -69,7 +69,7 @@ void _buildTasks(String name, String directory, List<String> filenames) {
 }
 
 Task _createLaunchApp(String manifestDir) =>
-  new Task.async((ctx) => chrome
+  new Task.async((ctx) => chrome_launch
     .launchChrome(manifestDir)
     .then((int exitCode) => exitCode == 0));
 
