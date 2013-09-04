@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
-import 'package:chrome/src/chrome.dart' as chrome;
+import 'package:chrome/src/chrome_launch.dart' as chrome;
 
 void main() {
   _buildExample('app_test');
