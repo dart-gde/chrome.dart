@@ -57,6 +57,8 @@ class StorageArea {
           map[key] = items[key];
         }
       }
+
+      return map;
     });
 
     js.scoped(() {

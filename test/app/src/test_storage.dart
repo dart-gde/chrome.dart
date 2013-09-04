@@ -28,6 +28,7 @@ void main() {
             return storage.local.get(["foo"]);
           })
           .then((Map<String, String> result) {
+            expect(result, isNotNull);
             expect(result["foo"], equals("bar"));
           });
     });
