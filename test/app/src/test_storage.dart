@@ -27,7 +27,7 @@ void main() {
           .then((_) {
             return storage.local.get(["foo"]);
           })
-          .then((Map<String, String> result) {
+          .then((Map<String, dynamic> result) {
             expect(result, isNotNull);
             expect(result["foo"], equals("bar"));
           });
@@ -36,7 +36,7 @@ void main() {
       return storage.local.set({"baz": "123"})
           .then((_) {
             return storage.local.get(null);
-          }).then((Map<String, String> result) {
+          }).then((Map<String, dynamic> result) {
             expect(result, isNotNull);
             print('local.get contains ${result.length} items');
             expect(result.length, greaterThanOrEqualTo(1));

@@ -47,7 +47,7 @@ class StorageArea {
   /**
    * Gets one or more items from storage.
    */
-  Future<Map<String, String>> get(List<String> keys) {
+  Future<Map<String, dynamic>> get(List<String> keys) {
     ChromeCompleter completer = new ChromeCompleter.oneArg((items) {
       Map<String, String> map = new Map<String, String>();;
 
@@ -76,7 +76,7 @@ class StorageArea {
   /**
    * Sets multiple items.
    */
-  Future set(Map<String, String> items) {
+  Future set(Map<String, dynamic> items) {
     ChromeCompleter completer = new ChromeCompleter.noArgs();
 
     js.scoped(() {
