@@ -57,6 +57,5 @@ void main() {
   new TestPushMessaging().main();
   new TestRuntime().main();
   new TestSerial().main();
-// TODO: Refactor sockets before enabling.
-//  new TestSocket().main();
+  new TestSocket().main();
 }
