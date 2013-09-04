@@ -52,7 +52,7 @@ void main() {
             expect(win.isFullscreen, isFalse);
             return true;
           });
-      }).then(expectAsync1((v)=> print(v)));
+      }).then(expectAsync1((v) => expect(v, isTrue)));
     });
 
     test('Test a call to create() with options: { bounds }', () {
@@ -76,7 +76,7 @@ void main() {
             expect(win.bounds.height, equals(40));
             return true;
           });
-      }).then(expectAsync1((v)=> print(v)));
+      }).then(expectAsync1((v) => expect(v, isTrue)));
     });
 
     test('Test a call to create() with options: { state : minimized }', () {
@@ -90,7 +90,7 @@ void main() {
           expect(win.isMaximized, isFalse);
           return true;
         });
-      }).then(expectAsync1((v)=> print(v)));
+      }).then(expectAsync1((v) => expect(v, isTrue)));
     });
 
     test('Test a call to create() with options: { state : maximized }', () {
@@ -104,7 +104,7 @@ void main() {
           expect(win.isFullscreen, isFalse);
           return true;
         });
-      }).then(expectAsync1((v)=> print(v)));
+      }).then(expectAsync1((v) => expect(v, isTrue)));
     });
 
 //    test('Test a call to create() with options: { state : fullscreen }', () {
@@ -134,7 +134,7 @@ void main() {
           win.minimize();
           return true;
         });
-      }).then(expectAsync1((v)=> print(v)));
+      }).then(expectAsync1((v) => expect(v, isTrue)));
     });
 
     test('Test a successful call to maximize()', () {
@@ -150,7 +150,7 @@ void main() {
           win.maximize();
           return true;
         });
-      }).then(expectAsync1((v)=> print(v)));
+      }).then(expectAsync1((v) => expect(v, isTrue)));
     });
 
 //    test('Test a successful call to fullscreen()', () {
@@ -181,9 +181,12 @@ void main() {
           windows.add(win);
           win.onRestored.listen(verify);
           win.maximize();
-          return win.onMaximized.first.then((win) => win.restore());
+          return win.onMaximized.first.then((win) {
+            win.restore();
+            return true;
+          });
         });
-      }).then(expectAsync1((v)=> print(v)));
+      }).then(expectAsync1((v) => expect(v, isTrue)));
     });
 
     test('Test getting the contentWindow of an AppWindow', () {
@@ -197,7 +200,7 @@ void main() {
           contentWindow.onContentLoaded.listen(verify);
           return true;
         });
-      }).then(expectAsync1((v)=> print(v)));
+      }).then(expectAsync1((v) => expect(v, isTrue)));
     });
 
     test('Test postMessage to the contentWindow of an AppWindow', () {
@@ -216,7 +219,7 @@ void main() {
             return true;
           });
         });
-      }).then(expectAsync1((v)=> print(v)));
+      }).then(expectAsync1((v) => expect(v, isTrue)));
     });
   });
 }
