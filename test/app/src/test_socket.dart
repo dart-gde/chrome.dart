@@ -130,35 +130,36 @@ class TestSocket {
 
     });
 
-    group("chrome.socket.TcpClient", () {
-
-      TcpClient client;
-      setUp(() {
-        client = new TcpClient("google.com", 80);
-      });
-      tearDown(() {
-        client.disconnect();
-      });
-
-      test("connect", () {
-        client.connect().then(expectAsync1((bool isConnected) {
-          expect(isConnected, isTrue);
-          expect(client.isConnected, isTrue);
-          client.onRead = expectAsync1((SocketReadInfo readInfo) {
-            expect(readInfo.resultCode, greaterThan(0));
-          });
-
-          client.receive = expectAsync2((String message, TcpClient client) {
-            //_logger.fine("message = ${message}");
-            expect(message, isNotNull);
-          });
-
-          client.send("GET /\n").then(expectAsync1((writeInfo){
-            expect(writeInfo.bytesWritten, equals(6));
-          }));
-        }));
-      });
-    });
+// TODO: https://github.com/dart-gde/chrome.dart/issues/95
+//    group("chrome.socket.TcpClient", () {
+//
+//      TcpClient client;
+//      setUp(() {
+//        client = new TcpClient("google.com", 80);
+//      });
+//      tearDown(() {
+//        client.disconnect();
+//      });
+//
+//      test("connect", () {
+//        client.connect().then(expectAsync1((bool isConnected) {
+//          expect(isConnected, isTrue);
+//          expect(client.isConnected, isTrue);
+//          client.onRead = expectAsync1((SocketReadInfo readInfo) {
+//            expect(readInfo.resultCode, greaterThan(0));
+//          });
+//
+//          client.receive = expectAsync2((String message, TcpClient client) {
+//            //_logger.fine("message = ${message}");
+//            expect(message, isNotNull);
+//          });
+//
+//          client.send("GET /\n").then(expectAsync1((writeInfo){
+//            expect(writeInfo.bytesWritten, equals(6));
+//          }));
+//        }));
+//      });
+//    });
 
     group("chrome.socket.TcpServer", () {
 
