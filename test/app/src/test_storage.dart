@@ -22,15 +22,14 @@ void main() {
     });
 
     // get, set
-// TODO: https://github.com/dart-gde/chrome.dart/issues/94
-//    test('local.set_get', () {
-//      return storage.local.set({"foo": "bar"})
-//          .then((_) {
-//            return storage.local.get(["foo"]);
-//          })
-//          .then((Map<String, String> result) {
-//            expect(result["foo"], equals("bar"));
-//          });
-//    });
+    test('local.set_get', () {
+      return storage.local.set({"foo": "bar"})
+          .then((_) {
+            return storage.local.get(["foo"]);
+          })
+          .then((Map<String, String> result) {
+            expect(result["foo"], equals("bar"));
+          });
+    });
   });
 }
