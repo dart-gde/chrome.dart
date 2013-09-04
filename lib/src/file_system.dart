@@ -154,7 +154,7 @@ class ChromeFileSystem {
    * This will return a dom FileEntry. js.retain() has been called on it; it is
    * the caller's responsibility to call js.release();
    */
-  Future<FileEntry> restoreEntry(String id) {
+  Future<Entry> restoreEntry(String id) {
     ChromeCompleter<FileEntry> completer = new ChromeCompleter.oneArg(Entry.createFrom);
     chromeProxy.fileSystem.restoreEntry(id, completer.callback);
     return completer.future;

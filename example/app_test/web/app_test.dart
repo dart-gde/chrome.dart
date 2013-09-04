@@ -45,7 +45,11 @@ Future<DirectoryEntry> testPackageDir() {
   return chrome.runtime.getPackageDirectoryEntry().then((chrome.DirectoryEntry dir) {
     log("package dir is ${dir.name}");
 
-    dir.release();
+    //dir.release();
+
+    return dir.getEntries().then((var entries) {
+      entries.forEach((e) => print(e));
+    });
   });
 }
 
