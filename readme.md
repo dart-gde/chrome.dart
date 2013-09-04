@@ -7,6 +7,8 @@
 A team effort to create interop with the [Chrome.* APIs][] used for
 [Chrome Packaged Apps][].
 
+View the dartdoc [API documentation](http://dart-gde.github.com/chrome.dart).
+
 ### Using
 
 #### Chrome Packaged Apps
