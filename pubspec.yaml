@@ -1,5 +1,5 @@
 name: chrome
-version: 0.3.0
+version: 0.3.1-dev
 authors:
 - Adam Singer <financeCoding@gmail.com>
 - Kevin Moore <kevin@thinkpixellab.com>
@@ -8,6 +8,7 @@ description: >
   A library for accessing the chrome.* apis in a Chrome packaged app or
   extension.
 homepage: https://github.com/dart-gde/chrome.dart
+documentation: http://dart-gde.github.com/chrome.dart
 environment:
   sdk: '>=0.6.15'
 dependencies:
