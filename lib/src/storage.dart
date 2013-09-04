@@ -3,6 +3,7 @@ library chrome.storage;
 import 'dart:async';
 
 import 'package:js/js.dart' as js;
+import 'package:js/js_wrapping.dart' as jsw;
 
 import 'common.dart';
 
@@ -48,13 +49,13 @@ class StorageArea {
    */
   Future<Map<String, String>> get(List<String> keys) {
     ChromeCompleter completer = new ChromeCompleter.oneArg((items) {
-      Map<String, String> map = null;
+      Map<String, String> map = new Map<String, String>();;
 
-      if (keys != null) {
-        map = new Map<String, String>();
+      Map m = new jsw.JsObjectToMapAdapter.fromProxy(items);
 
-        for (String key in keys) {
-          map[key] = items[key];
+      for (Object key in m.keys) {
+        if (key is String) {
+          map[key] = m[key];
         }
       }
 
