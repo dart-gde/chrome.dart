@@ -16,7 +16,7 @@ void main() {
   _buildExample('udp_echo_client');
   _buildExample('usb_example');
 
-  _buildTasks('test_harness', 'test/app', ['harness_browser.dart']);
+  _buildTasks('test_harness', 'test/app', ['harness_browser.dart', 'background.dart']);
 
   _buildTasks('test_harness_extension', 'test/ext', ['harness_extension.dart']);
 
