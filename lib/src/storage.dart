@@ -49,7 +49,7 @@ class StorageArea {
    */
   Future<Map<String, dynamic>> get(List<String> keys) {
     ChromeCompleter completer = new ChromeCompleter.oneArg((items) {
-      Map<String, String> map = new Map<String, String>();;
+      Map<String, dynamic> map = new Map<String, dynamic>();
 
       Map m = new jsw.JsObjectToMapAdapter.fromProxy(items);
 
