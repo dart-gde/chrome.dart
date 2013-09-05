@@ -689,7 +689,7 @@ final Iterator&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt;  
         </h4>
         <div class="doc">
 <div class="inherited">
-<p>Returns an <a class="crossref" href="../dart_core/Iterator.html">Iterator</a> that iterates over this <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> object.</p>
+<p>Returns an Iterator that iterates over this Iterable object.</p>
 <div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
 @override Iterator&lt;E&gt; get iterator =&gt; new _JsIterator&lt;E&gt;(this);
@@ -925,7 +925,7 @@ bool <strong>contains</strong>(<a href="../js.wrapping/JsArrayToListAdapter.html
               title="Permalink to JsArrayToListAdapter&lt;E&gt;.contains">#</a></h4>
 <div class="doc">
 <div class="inherited">
-<p>Check whether the collection contains an element equal to 
+<p>Returns true if the collection contains an element equal to 
 <span class="param">element</span>.</p>
 <div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
@@ -992,11 +992,11 @@ Iterable <strong>expand</strong>(Iterable f(<a href="../js.wrapping/JsArrayToLis
               title="Permalink to JsArrayToListAdapter&lt;E&gt;.expand">#</a></h4>
 <div class="doc">
 <div class="inherited">
-<p>Expand each element of this <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> into zero or more elements.</p>
-<p>The resulting Iterable will run through the elements returned
+<p>Expands each element of this <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> into zero or more elements.</p>
+<p>The resulting Iterable runs through the elements returned
 by 
 <span class="param">f</span> for each element of this, in order.</p>
-<p>The returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> is lazy, and will call 
+<p>The returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> is lazy, and calls 
 <span class="param">f</span> for each element
 of this every time it's iterated.</p>
 <div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
@@ -1389,10 +1389,10 @@ bool <strong>remove</strong>(Object element) <a class="anchor-link" href="#remov
               title="Permalink to JsArrayToListAdapter&lt;E&gt;.remove">#</a></h4>
 <div class="doc">
 <div class="inherited">
-<p>Removes <code>value</code> from this list.</p>
+<p>Removes the first occurence of <code>value</code> from this list.</p>
 <p>Returns true if <code>value</code> was in the list.
-Returns false otherwise.
-The method has no effect if <code>value</code> was not in the list.</p>
+Returns false otherwise.</p>
+<p>The method has no effect if <code>value</code> was not in the list.</p>
 <p>An <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> occurs if the list is fixed-length.</p>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
@@ -1631,9 +1631,9 @@ Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong
               title="Permalink to JsArrayToListAdapter&lt;E&gt;.skip">#</a></h4>
 <div class="doc">
 <div class="inherited">
-<p>Returns an <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> that skips the first <code>n</code> elements.</p>
-<p>If <code>this</code> has fewer than <code>n</code> elements, then the resulting <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> will
-be empty.</p>
+<p>Returns an Iterable that skips the first <code>n</code> elements.</p>
+<p>If <code>this</code> has fewer than <code>n</code> elements, then the resulting Iterable is 
+empty.</p>
 <p>It is an error if <code>n</code> is negative.</p>
 <div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
@@ -1647,16 +1647,16 @@ Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong
               title="Permalink to JsArrayToListAdapter&lt;E&gt;.skipWhile">#</a></h4>
 <div class="doc">
 <div class="inherited">
-<p>Returns an <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> that skips elements while 
+<p>Returns an Iterable that skips elements while 
 <span class="param">test</span> is satisfied.</p>
-<p>The filtering happens lazily. Every new <a class="crossref" href="../dart_core/Iterator.html">Iterator</a> of the returned
-<a class="crossref" href="../dart_core/Iterable.html">Iterable</a> iterates over all elements of <code>this</code>.</p>
+<p>The filtering happens lazily. Every new Iterator of the returned
+Iterable iterates over all elements of <code>this</code>.</p>
 <p>As long as the iterator's elements satisfy 
 <span class="param">test</span> they are
 discarded. Once an element does not satisfy the 
 <span class="param">test</span> the iterator stops
 testing and uses every later element unconditionally. That is, the elements
-of the returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> are the elements of <code>this</code> starting from the
+of the returned Iterable are the elements of <code>this</code> starting from the
 first element that does not satisfy 
 <span class="param">test</span>.</p>
 <div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
@@ -1732,14 +1732,14 @@ Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong
               title="Permalink to JsArrayToListAdapter&lt;E&gt;.takeWhile">#</a></h4>
 <div class="doc">
 <div class="inherited">
-<p>Returns an <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> that stops once 
+<p>Returns an Iterable that stops once 
 <span class="param">test</span> is not satisfied anymore.</p>
-<p>The filtering happens lazily. Every new <a class="crossref" href="../dart_core/Iterator.html">Iterator</a> of the returned
-<a class="crossref" href="../dart_core/Iterable.html">Iterable</a> will start iterating over the elements of <code>this</code>.</p>
+<p>The filtering happens lazily. Every new Iterator of the returned
+Iterable starts iterating over the elements of <code>this</code>.</p>
 <p>When the iterator encounters an element <code>e</code> that does not satisfy 
 <span class="param">test</span>,
-it discards <code>e</code> and moves into the finished state. That is, it will not
-ask or provide any more elements.</p>
+it discards <code>e</code> and moves into the finished state. That is, it does not
+get or provide any more elements.</p>
 <div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
 Iterable&lt;E&gt; takeWhile(bool test(E element)) =&gt; _asList().takeWhile(test);
@@ -1763,7 +1763,7 @@ List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>toL
 <div class="doc">
 <div class="inherited">
 <p>Creates a <a class="crossref" href="../dart_core/List.html">List</a> containing the elements of this <a class="crossref" href="../dart_core/Iterable.html">Iterable</a>.</p>
-<p>The elements will be in iteration order. The list is fixed-length
+<p>The elements are in iteration order. The list is fixed-length
 if 
 <span class="param">growable</span> is false.</p>
 <div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
@@ -1828,7 +1828,7 @@ predicate
 returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> is not iterated over, the supplied function 
 <span class="param">test</span> will
 not be invoked. Iterating will not cache results, and thus iterating
-multiple times over the the returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> will invoke the supplied
+multiple times over the returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> will invoke the supplied
 function 
 <span class="param">test</span> multiple times on the same element.</p>
 <div class="docs-inherited-from">docs inherited from Iterable&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
@@ -1842,7 +1842,7 @@ Iterable&lt;E&gt; where(bool test(E element)) =&gt; _asList().where(test);
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-04 18:31:29.057</div>
+          <div>This page was generated at 2013-09-05 00:00:42.937</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>
