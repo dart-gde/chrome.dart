@@ -64,6 +64,11 @@ abstract class Entry {
   String get fullPath => _proxy.fullPath;
 
   /**
+   * Returns a URL that can be used to identify this entry.
+   */
+  String toURL() => _proxy.toURL();
+
+  /**
    * Entry is a directory.
    */
   bool get isDirectory => _proxy.isDirectory;
@@ -123,7 +128,7 @@ class FileEntry extends Entry {
 
     js.Callback fileCallback = new js.Callback.once((var file) {
       var reader = new js.Proxy((js.context as dynamic).FileReader);
-      reader.onloadend = loadCallback;
+      reader.onload = loadCallback;
       reader.onerror = errorCallback;
       reader.readAsText(file);
     });
@@ -152,7 +157,7 @@ class FileEntry extends Entry {
 //
 //    js.Callback fileCallback = new js.Callback.once((var file) {
 //      var reader = new js.Proxy((js.context as dynamic).FileReader);
-//      reader.onloadend = loadCallback;
+//      reader.onload = loadCallback;
 //      reader.onerror = errorCallback;
 //      reader.readAsArrayBuffer(file);
 //    });
@@ -169,7 +174,7 @@ class FileEntry extends Entry {
   Future<FileEntry> writeText(String text) {
     Completer<FileEntry> completer = new Completer();
 
-    js.Callback writeEndCallback = new js.Callback.once((var event) {
+    js.Callback writeCallback = new js.Callback.once((var event) {
         completer.complete(this);
     });
 
@@ -180,7 +185,7 @@ class FileEntry extends Entry {
     js.Callback writerCallback = new js.Callback.once((var writer) {
       // blob = new Blob([contents])
       var blob = new js.Proxy((js.context as dynamic).Blob, js.array([text]));
-      writer.onwriteend = writeEndCallback;
+      writer.onwrite = writeCallback;
       writer.onerror = errorCallback;
       writer.write(blob, js.map({'type': 'text/plain'}));
     });
@@ -260,6 +265,7 @@ class DirectoryEntry extends Entry {
  */
 class FileSystem {
   var _proxy;
+  DirectoryEntry _root;
 
   /**
    * Create and return a new FileSystem given a js.Proxy to a dom
@@ -284,7 +290,13 @@ class FileSystem {
   /**
    * The root directory of the file system.
    */
-  DirectoryEntry get root => new DirectoryEntry.retain(_proxy.root);
+  DirectoryEntry get root {
+    if (_root == null) {
+      _root = new DirectoryEntry.retain(_proxy.root);
+    }
+
+    return _root;
+  }
 
   String toString() => name;
 
@@ -293,6 +305,11 @@ class FileSystem {
    */
   void release() {
     js.release(_proxy);
+
+    if (_root != null) {
+      _root.release();
+      _root = null;
+    }
   }
 
   js.Proxy get proxy => _proxy;
