@@ -1,5 +1,7 @@
 # Changelog - chrome.dart
 
+## 0.3.1-dev
+
 ## 0.3.0 Sept 2013 (SDK 0.6.21.3_r26639)
 
 - Refactoring of fileSystem library and wrapping of FileEntry
