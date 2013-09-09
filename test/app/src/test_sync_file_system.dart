@@ -11,6 +11,11 @@ class TestSyncFileSystem {
         syncFileSystem.requestFileSystem().then((FileSystem fs) {
           expect(fs, isNotNull);
           expect(fs is FileSystem, isTrue);
+          expect(fs.name, isNotNull);
+
+          // root
+          expect(fs.root, isNotNull);
+          expect(fs.root.toURL(), isNotNull);
         }).catchError((error) {
           // this is ok - the user may not be signed in
           expect(error, isNotNull);
