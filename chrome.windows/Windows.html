@@ -32,27 +32,26 @@
         
 <button id="show-inherited" class="show-inherited">Hide inherited</button>
 <div class="doc">
+<p>Encapsulation of the <code>chrome.windows</code> namespace.
+The single instance of this class is accessed from the <code>tabs</code>
+getter.</p>
 <pre class="source">
 class Windows {
 
  Windows._();
 
- /**
-  * The windowId value that represents the absence of a chrome browser window.
-  */
+ /// The windowId value that represents the absence of a chrome browser window.
  int get WINDOW_ID_NONE =&gt;
      chromeProxy.windows.WINDOW_ID_NONE as int;
- /**
-  * The windowId value that represents the current window.
-  */
+ /// The windowId value that represents the current window.
  int get WINDOW_ID_CURRENT =&gt;
      chromeProxy.windows.WINDOW_ID_CURRENT as int;
 
  /**
   * Gets details about a window.
   *
-  * @param populate If true, the window object will have a tabs property that
-  *                 contains a list of the tabs.Tab objects
+  * If [populate] is true, the window object will have a [tabs] property that
+  * contains a list of [tabs.Tab] objects.
   */
  Future&lt;Window&gt; get(int windowId, {bool populate}) {
    var completer =
@@ -70,8 +69,8 @@ class Windows {
   * Gets the window that was most recently focused — typically the window
   * 'on top'.
   *
-  * @param populate If true, the window object will have a tabs property that
-  *                 contains a list of the tabs.Tab objects
+  * If [populate] is true, the window object will have a [tabs] property that
+  * contains a list of [tabs.Tab] objects.
   */
  Future&lt;Window&gt; getCurrent({bool populate}) {
    var completer =
@@ -87,8 +86,8 @@ class Windows {
  /**
   * Gets the current window.
   *
-  * @param populate If true, the window object will have a tabs property that
-  *                 contains a list of the tabs.Tab objects
+  * If [populate] is true, the window object will have a [tabs] property that
+  * contains a list of [tabs.Tab] objects.
   */
  Future&lt;Window&gt; getLastFocused({bool populate}) {
    var completer =
@@ -104,8 +103,8 @@ class Windows {
  /**
   * Gets the current window.
   *
-  * @param populate If true, the window objects will have a tabs property that
-  *                 contains a list of the tabs.Tab objects
+  * If [populate] is true, the window object will have a [tabs] property that
+  * contains a list of [tabs.Tab] objects.
   */
  Future&lt;List&lt;Window&gt;&gt; getAll({bool populate}) {
    var completer =
@@ -261,7 +260,7 @@ class Windows {
   * Fired when the currently focused window changes. Will be
   * {@link WINDOW_ID_NONE} if all chrome windows have lost focus.
   *
-  * Note: On some Linux window managers, {@link WINDOW_ID_NONE} will always be
+  * Note: On some Linux window managers, [WINDOW_ID_NONE] will always be
   * sent immediately preceding a switch from one chrome window to another.
   */
  Stream&lt;int&gt; get onFocusChanged =&gt; _onFocusChanged.stream;
@@ -300,7 +299,7 @@ final Stream&lt;int&gt;         <strong>onFocusChanged</strong> <a class="anchor
         <div class="doc">
 <p>Fired when the currently focused window changes. Will be
 {@link WINDOW<em>ID</em>NONE} if all chrome windows have lost focus.</p>
-<p>Note: On some Linux window managers, {@link WINDOW<em>ID</em>NONE} will always be
+<p>Note: On some Linux window managers, [WINDOW_ID_NONE] will always be
 sent immediately preceding a switch from one chrome window to another.</p>
 <pre class="source">
 Stream&lt;int&gt; get onFocusChanged =&gt; _onFocusChanged.stream;
@@ -414,9 +413,9 @@ Future&lt;<a href="../chrome.windows/Window.html">Window</a>&gt; <strong>get</st
               title="Permalink to Windows.get">#</a></h4>
 <div class="doc">
 <p>Gets details about a window.</p>
-<p>@param populate If true, the window object will have a tabs property that</p>
-<pre><code>            contains a list of the tabs.Tab objects
-</code></pre>
+<p>If 
+<span class="param">populate</span> is true, the window object will have a <code>tabs</code> property that
+contains a list of <code>tabs.Tab</code> objects.</p>
 <pre class="source">
 Future&lt;Window&gt; get(int windowId, {bool populate}) {
  var completer =
@@ -438,9 +437,9 @@ Future&lt;List&lt;<a href="../chrome.windows/Window.html">Window</a>&gt;&gt; <st
               title="Permalink to Windows.getAll">#</a></h4>
 <div class="doc">
 <p>Gets the current window.</p>
-<p>@param populate If true, the window objects will have a tabs property that</p>
-<pre><code>            contains a list of the tabs.Tab objects
-</code></pre>
+<p>If 
+<span class="param">populate</span> is true, the window object will have a <code>tabs</code> property that
+contains a list of <code>tabs.Tab</code> objects.</p>
 <pre class="source">
 Future&lt;List&lt;Window&gt;&gt; getAll({bool populate}) {
  var completer =
@@ -469,9 +468,9 @@ Future&lt;<a href="../chrome.windows/Window.html">Window</a>&gt; <strong>getCurr
 <div class="doc">
 <p>Gets the window that was most recently focused — typically the window
 'on top'.</p>
-<p>@param populate If true, the window object will have a tabs property that</p>
-<pre><code>            contains a list of the tabs.Tab objects
-</code></pre>
+<p>If 
+<span class="param">populate</span> is true, the window object will have a <code>tabs</code> property that
+contains a list of <code>tabs.Tab</code> objects.</p>
 <pre class="source">
 Future&lt;Window&gt; getCurrent({bool populate}) {
  var completer =
@@ -492,9 +491,9 @@ Future&lt;<a href="../chrome.windows/Window.html">Window</a>&gt; <strong>getLast
               title="Permalink to Windows.getLastFocused">#</a></h4>
 <div class="doc">
 <p>Gets the current window.</p>
-<p>@param populate If true, the window object will have a tabs property that</p>
-<pre><code>            contains a list of the tabs.Tab objects
-</code></pre>
+<p>If 
+<span class="param">populate</span> is true, the window object will have a <code>tabs</code> property that
+contains a list of <code>tabs.Tab</code> objects.</p>
 <pre class="source">
 Future&lt;Window&gt; getLastFocused({bool populate}) {
  var completer =
@@ -582,7 +581,7 @@ Future&lt;Window&gt; update(int windowId, {
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-05 00:20:55.185</div>
+          <div>This page was generated at 2013-09-09 23:42:18.457</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

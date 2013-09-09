@@ -32,6 +32,9 @@
         
 <button id="show-inherited" class="show-inherited">Hide inherited</button>
 <div class="doc">
+<p>Encapsulation of the <code>chrome.tabs</code> namespace.
+The single instance of this class is accessed from the <a class="crossref" href="../chrome.tabs.html#tabs">tabs</a>
+getter.</p>
 <pre class="source">
 class Tabs {
 
@@ -70,7 +73,7 @@ class Tabs {
   * runtime.onMessage event is fired in each content script running in the
   * specified tab for the current extension.
   *
-  * @returns The response object sent by the handler of the message.
+  * Returns the response object sent by the handler of the message.
   */
  Future sendMessage(int tabId, dynamic message) {
    var completer = new ChromeCompleter.oneArg();
@@ -83,24 +86,6 @@ class Tabs {
  /**
   * Creates a new tab. Note: This function can be used without requesting the
   * 'tabs' permission in the manifest.
-  *
-  * @param windowId The window to create the new tab in. Defaults to the
-  *                 current window.
-  * @param index The position the tab should take in the window. The provided
-  *              value will be clamped to between zero and the number of tabs
-  *              in the window.
-  * @param url The URL to navigate the tab to initially. Fully-qualified URLs
-  *            must include a scheme (i.e. 'http://www.google.com', not
-  *            'www.google.com'). Relative URLs will be relative to the
-  *            current page within the extension. Defaults to the New Tab Page.
-  * @param active Whether the tab should become the active tab in the window.
-  *               Defaults to true.
-  * @param pinned Whether the tab should be pinned. Defaults to false.
-  * @param openerTabId The ID of the tab that opened this tab. If specified,
-  *                    the opener tab must be in the same window as the newly
-  *                    created tab.
-  *
-  * @returns Details about the created tab. Will contain the ID of the new tab.
   */
  Future&lt;Tab&gt; create({
      int windowId,
@@ -138,12 +123,6 @@ class Tabs {
  /**
   * Duplicates a tab. Note: This function can be used without requesting the
   * 'tabs' permission in the manifest.
-  *
-  * @param tabId The ID of the tab which is to be duplicated.
-  *
-  * @returns Details about the duplicated tab. The Tab object doesn't contain
-  *          url, title and faviconUrl if the 'tabs' permission has not been
-  *          requested.
   */
  Future&lt;Tab&gt; duplicate(int tabId) {
    var completer = new ChromeCompleter.oneArg((tab) =&gt; new Tab(tab));
@@ -156,20 +135,6 @@ class Tabs {
  /**
   * Gets all tabs that have the specified properties, or all tabs if no
   * properties are specified.
-  *
-  * @param active Whether the tabs are active in their windows.
-  * @param pinned Whether the tabs are pinned.
-  * @param highlighted Whether the tabs are highlighted.
-  * @param Whether the tabs are in the current window.
-  * @param lastFocusedWindow Whether the tabs are in the last focused window.
-  * @param status Whether the tabs have completed loading.
-  * @param title Match page titles against a pattern.
-  * @param url Match tabs against a URL pattern. Note that fragment
-  *            identifiers are not matched.
-  * @param windowId The ID of the parent window, or windows.WINDOW_ID_CURRENT
-  *                 for the current window.
-  * @param windowType The type of window the tabs are in.
-  * @param index The position of the tabs within their windows.
   */
  Future&lt;List&lt;Tab&gt;&gt; query({
      bool active,
@@ -233,11 +198,6 @@ class Tabs {
 
  /**
   * Highlights the given tabs.
-  *
-  * @param tabs Tab indices to highlight.
-  * @param windowId The window that contains the tabs.
-  *
-  * @returns Contains details about the window whose tabs were highlighted.
   */
  Future&lt;Window&gt; highlight(List&lt;int&gt; tabIndices, {int windowId}) {
    Map&lt;String, dynamic&gt; highlightInfo = { 'tabs': js.array(tabIndices) };
@@ -257,17 +217,6 @@ class Tabs {
   * Modifies the properties of a tab. Properties that are not specified are
   * not modified. Note: This function can be used without requesting the
   * 'tabs' permission in the manifest.
-  *
-  * @param tabId Defaults to the selected tab of the current window.
-  * @param url A URL to navigate the tab to.
-  * @param active Whether the tab should be active.
-  * @param highlighted Adds or removes the tab from the current selection.
-  * @param pinned Whether the tab should be pinned.
-  * @param openerTabId The ID of the tab that opened this tab. If specified,
-  *                    the opener tab must be in the same window as this tab.
-  *
-  * @returns Details about the updated tab, or null if the 'tabs' permission
-  *          has not been requested.
   */
  Future&lt;Tab&gt; update({
      int tabId,
@@ -309,15 +258,7 @@ class Tabs {
 
  /**
   * Moves one or more tabs to a new position within its window, or to a new
-  * window. Note that tabs can only be moved to and from normal
-  * (window.type === "normal") windows.
-  *
-  * @param tabIds The tabs to move.
-  * @param index The position to move the window to. -1 will place the tab at
-  *              the end of the window.
-  * @param windowId Defaults to the window the tab is currently in.
-  *
-  * @returns Details about the moved tabs.
+  * window. Note that tabs can only be moved to and from normal windows.
   */
  Future&lt;List&lt;Tab&gt;&gt; move(List&lt;int&gt; tabIds, int index, {int windowId}) {
    Map&lt;String, dynamic&gt; moveProperties = { 'index': index};
@@ -347,10 +288,6 @@ class Tabs {
 
  /**
   * Reload a tab.
-  *
-  * @param tabId The ID of the tab to reload; defaults to the selected tab of
-  *              the current window.
-  * @param bypassCache Whether using any local cache. Default is false.
   */
  Future reload({int tabId, bool bypassCache}) {
    var reloadProperties = {};
@@ -370,8 +307,6 @@ class Tabs {
  /**
   * Closes one or more tabs. Note: This function can be used without
   * requesting the 'tabs' permission in the manifest.
-  *
-  * @param tabIds The list of tabs to close.
   */
  Future remove(List&lt;int&gt; tabIds) {
    var completer = new ChromeCompleter.noArgs();
@@ -384,13 +319,7 @@ class Tabs {
  /**
   * Detects the primary language of the content in a tab.
   *
-  * @param tabId Defaults to the active tab of the current window.
-  *
-  * @returns An ISO language code such as en or fr. For a complete list of
-  *          languages supported by this method, see kLanguageInfoTable. The
-  *          2nd to 4th columns will be checked and the first non-NULL value
-  *          will be returned except for Simplified Chinese for which zh-CN
-  *          will be returned. For an unknown language, und will be returned.
+  * Returns an ISO language code such as 'en' or 'fr'.
   */
  Future&lt;String&gt; detectLanguage({int tabId}) {
    var completer = new ChromeCompleter.oneArg();
@@ -404,17 +333,11 @@ class Tabs {
   * Captures the visible area of the currently active tab in the specified
   * window. You must have host permission for the URL displayed by the tab.
   *
-  * @param windowId The target window. Defaults to the current window.
-  * @param format The format of the resulting image. Default is jpeg.
-  * @param quality When format is 'jpeg', controls the quality of the
-  *                resulting image. This value is ignored for PNG images. As
-  *                quality is decreased, the resulting image will have more
-  *                visual artifacts, and the number of bytes needed to store
-  *                it will decrease.
+  * The default [format] is 'jpeg'.
   *
-  * @returns A data URL which encodes an image of the visible area of the
-  *          captured tab. May be assigned to the 'src' property of an HTML
-  *          Image element for display.
+  * Returns a data URL which encodes an image of the visible area of the
+  * captured tab. May be assigned to the 'src' property of an HTML Image
+  * element for display.
   */
  Future&lt;String&gt; captureVisibleTab({
      int windowId,
@@ -437,21 +360,8 @@ class Tabs {
 
  /**
   * Injects JavaScript code into a page. For details, see the programmatic
-  * injection section of the content scripts doc. Either the code or the file
-  * parameter must be set, but both may not be set at the same time.
-  *
-  * @param tabId The ID of the tab in which to run the script; defaults to the
-  *              active tab of the current window.
-  * @param code JavaScript or CSS code to inject.
-  * @param file JavaScript or CSS file to inject.
-  * @param allFrames If allFrames is true, implies that the JavaScript or CSS
-  *                  should be injected into all frames of current page. By
-  *                  default, it's false and will only be injected into the
-  *                  top frame.
-  * @param runAt The soonest that the JavaScript or CSS will be injected into
-  *              the tab. Defaults to "document_idle".
-  *
-  * @returns The result of the script in every injected frame.
+  * injection section of the content scripts doc. Either the [code] or the
+  * [file] parameter must be set, but both may not be set at the same time.
   */
  Future&lt;js.Proxy&gt; executeScript({
      int tabId,
@@ -471,19 +381,8 @@ class Tabs {
 
  /**
   * Injects CSS into a page. For details, see the programmatic injection
-  * section of the content scripts doc. Either the code or the file
+  * section of the content scripts doc. Either the [code] or the [file]
   * parameter must be set, but both may not be set at the same time.
-  *
-  * @param tabId The ID of the tab in which to run the script; defaults to the
-  *              active tab of the current window.
-  * @param code JavaScript or CSS code to inject.
-  * @param file JavaScript or CSS file to inject.
-  * @param allFrames If allFrames is true, implies that the JavaScript or CSS
-  *                  should be injected into all frames of current page. By
-  *                  default, it's false and will only be injected into the
-  *                  top frame.
-  * @param runAt The soonest that the JavaScript or CSS will be injected into
-  *              the tab. Defaults to "document_idle".
   */
  Future insertCSS({
      int tabId,
@@ -508,7 +407,7 @@ class Tabs {
 
  /**
   * Fired when a tab is created. Note that the tab's URL may not be set at the
-  * time this event fired, but you can listen to onUpdated events to be
+  * time this event fired, but you can listen to [onUpdated] events to be
   * notified when a URL is set.
   */
  Stream&lt;Tab&gt; get onCreated =&gt; _onCreated.stream;
@@ -534,7 +433,7 @@ class Tabs {
   * Fired when a tab is moved within a window. Only one move event is fired,
   * representing the tab the user directly moved. Move events are not fired
   * for the other tabs that must move in response. This event is not fired
-  * when a tab is moved between windows. For that, see onDetached.
+  * when a tab is moved between windows. For that, see [onDetached].
   */
  Stream&lt;TabMovedEvent&gt;  get onMoved =&gt; _onMoved.stream;
 
@@ -546,7 +445,7 @@ class Tabs {
 
  /**
   * Fires when the active tab in a window changes. Note that the tab's URL may
-  * not be set at the time this event fired, but you can listen to onUpdated
+  * not be set at the time this event fired, but you can listen to [onUpdated]
   * events to be notified when a URL is set.
   */
  Stream&lt;TabActivatedEvent&gt; get onActivated =&gt; _onActivated.stream;
@@ -641,7 +540,7 @@ final Stream&lt;<a href="../chrome.tabs/TabActivatedEvent.html">TabActivatedEven
         </h4>
         <div class="doc">
 <p>Fires when the active tab in a window changes. Note that the tab's URL may
-not be set at the time this event fired, but you can listen to onUpdated
+not be set at the time this event fired, but you can listen to <a class="crossref" href="../chrome.tabs/Tabs.html#onUpdated">onUpdated</a>
 events to be notified when a URL is set.</p>
 <pre class="source">
 Stream&lt;TabActivatedEvent&gt; get onActivated =&gt; _onActivated.stream;
@@ -670,7 +569,7 @@ final Stream&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt;         <strong>on
         </h4>
         <div class="doc">
 <p>Fired when a tab is created. Note that the tab's URL may not be set at the
-time this event fired, but you can listen to onUpdated events to be
+time this event fired, but you can listen to <a class="crossref" href="../chrome.tabs/Tabs.html#onUpdated">onUpdated</a> events to be
 notified when a URL is set.</p>
 <pre class="source">
 Stream&lt;Tab&gt; get onCreated =&gt; _onCreated.stream;
@@ -714,7 +613,7 @@ final Stream&lt;<a href="../chrome.tabs/TabMovedEvent.html">TabMovedEvent</a>&gt
 <p>Fired when a tab is moved within a window. Only one move event is fired,
 representing the tab the user directly moved. Move events are not fired
 for the other tabs that must move in response. This event is not fired
-when a tab is moved between windows. For that, see onDetached.</p>
+when a tab is moved between windows. For that, see <a class="crossref" href="../chrome.tabs/Tabs.html#onDetached">onDetached</a>.</p>
 <pre class="source">
 Stream&lt;TabMovedEvent&gt;  get onMoved =&gt; _onMoved.stream;
 </pre>
@@ -771,18 +670,11 @@ Future&lt;String&gt; <strong>captureVisibleTab</strong>({int windowId, <a href="
 <div class="doc">
 <p>Captures the visible area of the currently active tab in the specified
 window. You must have host permission for the URL displayed by the tab.</p>
-<p>@param windowId The target window. Defaults to the current window.
-@param format The format of the resulting image. Default is jpeg.
-@param quality When format is 'jpeg', controls the quality of the</p>
-<pre><code>           resulting image. This value is ignored for PNG images. As
-           quality is decreased, the resulting image will have more
-           visual artifacts, and the number of bytes needed to store
-           it will decrease.
-</code></pre>
-<p>@returns A data URL which encodes an image of the visible area of the</p>
-<pre><code>     captured tab. May be assigned to the 'src' property of an HTML
-     Image element for display.
-</code></pre>
+<p>The default 
+<span class="param">format</span> is 'jpeg'.</p>
+<p>Returns a data URL which encodes an image of the visible area of the
+captured tab. May be assigned to the 'src' property of an HTML Image
+element for display.</p>
 <pre class="source">
 Future&lt;String&gt; captureVisibleTab({
    int windowId,
@@ -812,27 +704,6 @@ Future&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt; <strong>create</strong>(
 <div class="doc">
 <p>Creates a new tab. Note: This function can be used without requesting the
 'tabs' permission in the manifest.</p>
-<p>@param windowId The window to create the new tab in. Defaults to the</p>
-<pre><code>            current window.
-</code></pre>
-<p>@param index The position the tab should take in the window. The provided</p>
-<pre><code>         value will be clamped to between zero and the number of tabs
-         in the window.
-</code></pre>
-<p>@param url The URL to navigate the tab to initially. Fully-qualified URLs</p>
-<pre><code>       must include a scheme (i.e. 'http://www.google.com', not
-       'www.google.com'). Relative URLs will be relative to the
-       current page within the extension. Defaults to the New Tab Page.
-</code></pre>
-<p>@param active Whether the tab should become the active tab in the window.</p>
-<pre><code>          Defaults to true.
-</code></pre>
-<p>@param pinned Whether the tab should be pinned. Defaults to false.
-@param openerTabId The ID of the tab that opened this tab. If specified,</p>
-<pre><code>               the opener tab must be in the same window as the newly
-               created tab.
-</code></pre>
-<p>@returns Details about the created tab. Will contain the ID of the new tab.</p>
 <pre class="source">
 Future&lt;Tab&gt; create({
    int windowId,
@@ -875,13 +746,7 @@ Future&lt;String&gt; <strong>detectLanguage</strong>({int tabId}) <a class="anch
               title="Permalink to Tabs.detectLanguage">#</a></h4>
 <div class="doc">
 <p>Detects the primary language of the content in a tab.</p>
-<p>@param tabId Defaults to the active tab of the current window.</p>
-<p>@returns An ISO language code such as en or fr. For a complete list of</p>
-<pre><code>     languages supported by this method, see kLanguageInfoTable. The
-     2nd to 4th columns will be checked and the first non-NULL value
-     will be returned except for Simplified Chinese for which zh-CN
-     will be returned. For an unknown language, und will be returned.
-</code></pre>
+<p>Returns an ISO language code such as 'en' or 'fr'.</p>
 <pre class="source">
 Future&lt;String&gt; detectLanguage({int tabId}) {
  var completer = new ChromeCompleter.oneArg();
@@ -900,11 +765,6 @@ Future&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt; <strong>duplicate</stron
 <div class="doc">
 <p>Duplicates a tab. Note: This function can be used without requesting the
 'tabs' permission in the manifest.</p>
-<p>@param tabId The ID of the tab which is to be duplicated.</p>
-<p>@returns Details about the duplicated tab. The Tab object doesn't contain</p>
-<pre><code>     url, title and faviconUrl if the 'tabs' permission has not been
-     requested.
-</code></pre>
 <pre class="source">
 Future&lt;Tab&gt; duplicate(int tabId) {
  var completer = new ChromeCompleter.oneArg((tab) =&gt; new Tab(tab));
@@ -922,22 +782,10 @@ Future&lt;<a href="../js/Proxy.html">Proxy</a>&gt; <strong>executeScript</strong
               title="Permalink to Tabs.executeScript">#</a></h4>
 <div class="doc">
 <p>Injects JavaScript code into a page. For details, see the programmatic
-injection section of the content scripts doc. Either the code or the file
-parameter must be set, but both may not be set at the same time.</p>
-<p>@param tabId The ID of the tab in which to run the script; defaults to the</p>
-<pre><code>         active tab of the current window.
-</code></pre>
-<p>@param code JavaScript or CSS code to inject.
-@param file JavaScript or CSS file to inject.
-@param allFrames If allFrames is true, implies that the JavaScript or CSS</p>
-<pre><code>             should be injected into all frames of current page. By
-             default, it's false and will only be injected into the
-             top frame.
-</code></pre>
-<p>@param runAt The soonest that the JavaScript or CSS will be injected into</p>
-<pre><code>         the tab. Defaults to "document_idle".
-</code></pre>
-<p>@returns The result of the script in every injected frame.</p>
+injection section of the content scripts doc. Either the 
+<span class="param">code</span> or the
+
+<span class="param">file</span> parameter must be set, but both may not be set at the same time.</p>
 <pre class="source">
 Future&lt;js.Proxy&gt; executeScript({
    int tabId,
@@ -1001,9 +849,6 @@ Future&lt;<a href="../chrome.windows/Window.html">Window</a>&gt; <strong>highlig
               title="Permalink to Tabs.highlight">#</a></h4>
 <div class="doc">
 <p>Highlights the given tabs.</p>
-<p>@param tabs Tab indices to highlight.
-@param windowId The window that contains the tabs.</p>
-<p>@returns Contains details about the window whose tabs were highlighted.</p>
 <pre class="source">
 Future&lt;Window&gt; highlight(List&lt;int&gt; tabIndices, {int windowId}) {
  Map&lt;String, dynamic&gt; highlightInfo = { 'tabs': js.array(tabIndices) };
@@ -1027,21 +872,10 @@ Future <strong>insertCSS</strong>({int tabId, String code, String file, bool all
               title="Permalink to Tabs.insertCSS">#</a></h4>
 <div class="doc">
 <p>Injects CSS into a page. For details, see the programmatic injection
-section of the content scripts doc. Either the code or the file
+section of the content scripts doc. Either the 
+<span class="param">code</span> or the 
+<span class="param">file</span>
 parameter must be set, but both may not be set at the same time.</p>
-<p>@param tabId The ID of the tab in which to run the script; defaults to the</p>
-<pre><code>         active tab of the current window.
-</code></pre>
-<p>@param code JavaScript or CSS code to inject.
-@param file JavaScript or CSS file to inject.
-@param allFrames If allFrames is true, implies that the JavaScript or CSS</p>
-<pre><code>             should be injected into all frames of current page. By
-             default, it's false and will only be injected into the
-             top frame.
-</code></pre>
-<p>@param runAt The soonest that the JavaScript or CSS will be injected into</p>
-<pre><code>         the tab. Defaults to "document_idle".
-</code></pre>
 <pre class="source">
 Future insertCSS({
    int tabId,
@@ -1067,14 +901,7 @@ Future&lt;List&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt;&gt; <strong>move
               title="Permalink to Tabs.move">#</a></h4>
 <div class="doc">
 <p>Moves one or more tabs to a new position within its window, or to a new
-window. Note that tabs can only be moved to and from normal
-(window.type === "normal") windows.</p>
-<p>@param tabIds The tabs to move.
-@param index The position to move the window to. -1 will place the tab at</p>
-<pre><code>         the end of the window.
-</code></pre>
-<p>@param windowId Defaults to the window the tab is currently in.</p>
-<p>@returns Details about the moved tabs.</p>
+window. Note that tabs can only be moved to and from normal windows.</p>
 <pre class="source">
 Future&lt;List&lt;Tab&gt;&gt; move(List&lt;int&gt; tabIds, int index, {int windowId}) {
  Map&lt;String, dynamic&gt; moveProperties = { 'index': index};
@@ -1111,21 +938,6 @@ Future&lt;List&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt;&gt; <strong>quer
 <div class="doc">
 <p>Gets all tabs that have the specified properties, or all tabs if no
 properties are specified.</p>
-<p>@param active Whether the tabs are active in their windows.
-@param pinned Whether the tabs are pinned.
-@param highlighted Whether the tabs are highlighted.
-@param Whether the tabs are in the current window.
-@param lastFocusedWindow Whether the tabs are in the last focused window.
-@param status Whether the tabs have completed loading.
-@param title Match page titles against a pattern.
-@param url Match tabs against a URL pattern. Note that fragment</p>
-<pre><code>       identifiers are not matched.
-</code></pre>
-<p>@param windowId The ID of the parent window, or windows.WINDOW<em>ID</em>CURRENT</p>
-<pre><code>            for the current window.
-</code></pre>
-<p>@param windowType The type of window the tabs are in.
-@param index The position of the tabs within their windows.</p>
 <pre class="source">
 Future&lt;List&lt;Tab&gt;&gt; query({
    bool active,
@@ -1195,10 +1007,6 @@ Future <strong>reload</strong>({int tabId, bool bypassCache}) <a class="anchor-l
               title="Permalink to Tabs.reload">#</a></h4>
 <div class="doc">
 <p>Reload a tab.</p>
-<p>@param tabId The ID of the tab to reload; defaults to the selected tab of</p>
-<pre><code>         the current window.
-</code></pre>
-<p>@param bypassCache Whether using any local cache. Default is false.</p>
 <pre class="source">
 Future reload({int tabId, bool bypassCache}) {
  var reloadProperties = {};
@@ -1224,7 +1032,6 @@ Future <strong>remove</strong>(List&lt;int&gt; tabIds) <a class="anchor-link" hr
 <div class="doc">
 <p>Closes one or more tabs. Note: This function can be used without
 requesting the 'tabs' permission in the manifest.</p>
-<p>@param tabIds The list of tabs to close.</p>
 <pre class="source">
 Future remove(List&lt;int&gt; tabIds) {
  var completer = new ChromeCompleter.noArgs();
@@ -1244,7 +1051,7 @@ Future <strong>sendMessage</strong>(int tabId, message) <a class="anchor-link" h
 <p>Sends a single message to the content script(s) in the specified tab. The
 runtime.onMessage event is fired in each content script running in the
 specified tab for the current extension.</p>
-<p>@returns The response object sent by the handler of the message.</p>
+<p>Returns the response object sent by the handler of the message.</p>
 <pre class="source">
 Future sendMessage(int tabId, dynamic message) {
  var completer = new ChromeCompleter.oneArg();
@@ -1264,17 +1071,6 @@ Future&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt; <strong>update</strong>(
 <p>Modifies the properties of a tab. Properties that are not specified are
 not modified. Note: This function can be used without requesting the
 'tabs' permission in the manifest.</p>
-<p>@param tabId Defaults to the selected tab of the current window.
-@param url A URL to navigate the tab to.
-@param active Whether the tab should be active.
-@param highlighted Adds or removes the tab from the current selection.
-@param pinned Whether the tab should be pinned.
-@param openerTabId The ID of the tab that opened this tab. If specified,</p>
-<pre><code>               the opener tab must be in the same window as this tab.
-</code></pre>
-<p>@returns Details about the updated tab, or null if the 'tabs' permission</p>
-<pre><code>     has not been requested.
-</code></pre>
 <pre class="source">
 Future&lt;Tab&gt; update({
    int tabId,
@@ -1321,7 +1117,7 @@ Future&lt;Tab&gt; update({
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-05 00:20:55.163</div>
+          <div>This page was generated at 2013-09-09 23:42:18.439</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

@@ -50,7 +50,8 @@ class ContextMenuClickEvent {
   */
  dynamic parentMenuItemId;
  /**
-  * One of 'image', 'video', or 'audio' if the context menu was activated on
+  * One of [ContextMenuContext.IMAGE], [ContextMenuContext.VIDEO], or
+  * [ContextMenuContext.AUDIO] if the context menu was activated on
   * one of these types of elements.
   */
  ContextMenuContext mediaType;
@@ -93,7 +94,7 @@ class ContextMenuClickEvent {
   */
  bool checked;
 
- ContextMenuClickEvent(onClickData, this.tab) {
+ ContextMenuClickEvent._(onClickData, this.tab) {
    this.menuItemId = onClickData.menuItemId;
    this.parentMenuItemId = onClickData['parentMenuItemId'];
    if (onClickData['mediaType'] != null) {
@@ -110,39 +111,6 @@ class ContextMenuClickEvent {
  }
 }
 </pre>
-</div>
-<div>
-<h3>Constructors</h3>
-<div class="method"><h4 id="">
-<button class="show-code">Code</button>
-new <strong>ContextMenuClickEvent</strong>(onClickData, <a href="../chrome.tabs/Tab.html">Tab</a> tab) <a class="anchor-link" href="#"
-              title="Permalink to ContextMenuClickEvent.ContextMenuClickEvent">#</a></h4>
-<div class="doc">
-<div class="inherited">
-<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
-<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
-through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
-only.</p>
-<div class="docs-inherited-from">docs inherited from Object </div></div>
-<pre class="source">
-ContextMenuClickEvent(onClickData, this.tab) {
- this.menuItemId = onClickData.menuItemId;
- this.parentMenuItemId = onClickData['parentMenuItemId'];
- if (onClickData['mediaType'] != null) {
-   this.mediaType = new ContextMenuContext(onClickData['mediaType']);
- }
- this.linkUrl = onClickData['linkUrl'];
- this.srcUrl = onClickData['srcUrl'];
- this.pageUrl = onClickData['pageUrl'];
- this.frameUrl = onClickData['frameUrl'];
- this.selectionText = onClickData['selectionText'];
- this.editable = onClickData.editable;
- this.wasChecked = onClickData['wasChecked'];
- this.checked = onClickData['checked'];
-}
-</pre>
-</div>
-</div>
 </div>
 <div>
 <h3>Properties</h3>
@@ -208,7 +176,8 @@ String linkUrl
             title="Permalink to ContextMenuClickEvent.mediaType">#</a>
         </h4>
         <div class="doc">
-<p>One of 'image', 'video', or 'audio' if the context menu was activated on
+<p>One of <a class="crossref" href="../chrome.context_menus/ContextMenuContext.html#IMAGE">ContextMenuContext.IMAGE</a>, <a class="crossref" href="../chrome.context_menus/ContextMenuContext.html#VIDEO">ContextMenuContext.VIDEO</a>, or
+<a class="crossref" href="../chrome.context_menus/ContextMenuContext.html#AUDIO">ContextMenuContext.AUDIO</a> if the context menu was activated on
 one of these types of elements.</p>
 <pre class="source">
 ContextMenuContext mediaType
@@ -317,7 +286,7 @@ bool wasChecked
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-05 00:20:54.728</div>
+          <div>This page was generated at 2013-09-09 23:42:17.980</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

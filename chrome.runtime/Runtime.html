@@ -123,14 +123,6 @@ class Runtime {
 
  /**
   * Requests an update check for this app/extension.
-  *
-  * Completed Map contains key 'status' with the following enumeration of
-  * strings "throttled", "no_update", "update_available".
-  *
-  * Completed Map will also contain key 'details' which could be Map or null.
-  * null object is returned if no details are provided. In the case of details
-  * available, a Map with 'version' key, value being the version of the
-  * available update.
   */
  Future&lt;UpdateDetails&gt; requestUpdateCheck() {
    var completer = new ChromeCompleter.twoArgs((status, details) {
@@ -161,7 +153,7 @@ class Runtime {
   * send messages to content scripts using this method. To send messages to
   * content scripts, use tabs.sendMessage.
   *
-  * @returns The JSON response object sent by the handler of the message.
+  * Returns the JSON response object sent by the handler of the message.
   */
  Future&lt;dynamic&gt; sendMessage(dynamic message) {
    var completer = new ChromeCompleter.oneArg(convertJsonResponse);
@@ -204,19 +196,13 @@ class Runtime {
  final ChromeStreamController&lt;InstalledEvent&gt; _onInstalled =
      new ChromeStreamController&lt;InstalledEvent&gt;.oneArg(
          () =&gt; chromeProxy.runtime.onInstalled,
-         (details) =&gt; new InstalledEvent(
+         (details) =&gt; new InstalledEvent._(
              details.reason, details['previousVersion']));
 
  /**
   * Fired when the extension is first installed,
   * when the extension is updated to a new version,
   * and when Chrome is updated to a new version.
-  *
-  * 'reason' is an enumerated string of "install", "update", "chrome_update".
-  *
-  * 'previousVersion' indicates the previous version
-  * of the extension, which has just been updated. This is present only if
-  * 'reason' is 'update'.
   */
  Stream&lt;InstalledEvent&gt; get onInstalled =&gt; _onInstalled.stream;
 
@@ -243,7 +229,8 @@ class Runtime {
          () =&gt; null);
 
  /**
-  * Sent after onSuspend() to indicate that the app won't be unloaded after all.
+  * Sent after onSuspend() to indicate that the app won't be unloaded after
+  * all.
   */
  Stream get onSuspendCanceled =&gt; _onSuspendCanceled.stream;
 
@@ -333,10 +320,6 @@ final Stream&lt;<a href="../chrome.runtime/InstalledEvent.html">InstalledEvent</
 <p>Fired when the extension is first installed,
 when the extension is updated to a new version,
 and when Chrome is updated to a new version.</p>
-<p>'reason' is an enumerated string of "install", "update", "chrome_update".</p>
-<p>'previousVersion' indicates the previous version
-of the extension, which has just been updated. This is present only if
-'reason' is 'update'.</p>
 <pre class="source">
 Stream&lt;InstalledEvent&gt; get onInstalled =&gt; _onInstalled.stream;
 </pre>
@@ -395,7 +378,8 @@ final Stream         <strong>onSuspendCanceled</strong> <a class="anchor-link"
             title="Permalink to Runtime.onSuspendCanceled">#</a>
         </h4>
         <div class="doc">
-<p>Sent after onSuspend() to indicate that the app won't be unloaded after all.</p>
+<p>Sent after onSuspend() to indicate that the app won't be unloaded after
+all.</p>
 <pre class="source">
 Stream get onSuspendCanceled =&gt; _onSuspendCanceled.stream;
 </pre>
@@ -539,12 +523,6 @@ Future&lt;<a href="../chrome.runtime/UpdateDetails.html">UpdateDetails</a>&gt; <
               title="Permalink to Runtime.requestUpdateCheck">#</a></h4>
 <div class="doc">
 <p>Requests an update check for this app/extension.</p>
-<p>Completed Map contains key 'status' with the following enumeration of
-strings "throttled", "no<em>update", "update</em>available".</p>
-<p>Completed Map will also contain key 'details' which could be Map or null.
-null object is returned if no details are provided. In the case of details
-available, a Map with 'version' key, value being the version of the
-available update.</p>
 <pre class="source">
 Future&lt;UpdateDetails&gt; requestUpdateCheck() {
  var completer = new ChromeCompleter.twoArgs((status, details) {
@@ -580,7 +558,7 @@ sends a single message with an optional response. The onMessage event is
 fired in each extension page of the extension. Note that extensions cannot
 send messages to content scripts using this method. To send messages to
 content scripts, use tabs.sendMessage.</p>
-<p>@returns The JSON response object sent by the handler of the message.</p>
+<p>Returns the JSON response object sent by the handler of the message.</p>
 <pre class="source">
 Future&lt;dynamic&gt; sendMessage(dynamic message) {
  var completer = new ChromeCompleter.oneArg(convertJsonResponse);
@@ -597,7 +575,7 @@ Future&lt;dynamic&gt; sendMessage(dynamic message) {
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-05 00:20:54.977</div>
+          <div>This page was generated at 2013-09-09 23:42:18.264</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

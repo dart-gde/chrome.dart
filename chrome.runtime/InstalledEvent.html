@@ -34,31 +34,17 @@
 <div class="doc">
 <pre class="source">
 class InstalledEvent {
+ /// an enumerated string of 'install', 'update', 'chrome_update'
  final String reason;
+ /**
+  * indicates the previous version  of the extension, which has just been
+  * updated. This is present only if [reason] is 'update'.
+  */
  final String previousVersion;
 
- InstalledEvent(this.reason, this.previousVersion);
+ InstalledEvent._(this.reason, this.previousVersion);
 }
 </pre>
-</div>
-<div>
-<h3>Constructors</h3>
-<div class="method"><h4 id="">
-<button class="show-code">Code</button>
-new <strong>InstalledEvent</strong>(String reason, String previousVersion) <a class="anchor-link" href="#"
-              title="Permalink to InstalledEvent.InstalledEvent">#</a></h4>
-<div class="doc">
-<div class="inherited">
-<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
-<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
-through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
-only.</p>
-<div class="docs-inherited-from">docs inherited from Object </div></div>
-<pre class="source">
-InstalledEvent(this.reason, this.previousVersion);
-</pre>
-</div>
-</div>
 </div>
 <div>
 <h3>Properties</h3>
@@ -69,6 +55,8 @@ final String         <strong>previousVersion</strong> <a class="anchor-link"
             title="Permalink to InstalledEvent.previousVersion">#</a>
         </h4>
         <div class="doc">
+<p>indicates the previous version  of the extension, which has just been
+updated. This is present only if <a class="crossref" href="../chrome.runtime/InstalledEvent.html#reason">reason</a> is 'update'.</p>
 <pre class="source">
 final String previousVersion
 </pre>
@@ -81,6 +69,7 @@ final String         <strong>reason</strong> <a class="anchor-link"
             title="Permalink to InstalledEvent.reason">#</a>
         </h4>
         <div class="doc">
+<p>an enumerated string of 'install', 'update', 'chrome_update'</p>
 <pre class="source">
 final String reason
 </pre>
@@ -91,7 +80,7 @@ final String reason
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-05 00:20:54.948</div>
+          <div>This page was generated at 2013-09-09 23:42:18.242</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

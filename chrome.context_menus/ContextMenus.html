@@ -32,6 +32,9 @@
         
 <button id="show-inherited" class="show-inherited">Hide inherited</button>
 <div class="doc">
+<p>Encapsulation of the <code>chrome.contextMenus</code> namespace.
+The single instance of this class is accessed from the <a class="crossref" href="../chrome.context_menus.html#contextMenus">contextMenus</a>
+getter.</p>
 <pre class="source">
 class ContextMenus {
 
@@ -40,48 +43,47 @@ class ContextMenus {
  get _contextMenus =&gt; chromeProxy.contextMenus;
 
  /**
-  * Creates a new context menu item.
+  * Creates a new context menu item. The [type] of menu item defaults to
+  * [ContextMenuType.NORMAL] if not specified.
   *
-  * @param type The type of menu item. Defaults to 'normal' if not specified.
-  * @param id The unique ID to assign to this item. Mandatory for event pages.
-  *           Cannot be the same as another ID for this extension.
-  * @param title The text to be displayed in the item; this is required unless
-  *              type is 'separator'. When the context is 'selection', you can
-  *              use %s within the string to show the selected text. For
-  *              example, if this parameter's value is "Translate '%s' to
-  *              Pig Latin" and the user selects the word "cool", the context
-  *              menu item for the selection is "Translate 'cool' to
-  *              Pig Latin".
-  * @param checked The initial state of a checkbox or radio item: true for
-  *                selected and false for unselected. Only one radio item can
-  *                be selected at a time in a given group of radio items.
-  * @param contexts List of contexts this menu item will appear in. Defaults
-  *                 to ['page'] if not specified. Specifying ['all'] is
-  *                 equivalent to the combination of all other contexts except
-  *                 for 'launcher'. The 'launcher' context is only supported
-  *                 by apps and is used to add menu items to the context menu
-  *                 that appears when clicking on the app icon in the
-  *                 launcher/taskbar/dock/etc. Different platforms might put
-  *                 limitations on what is actually supported in a launcher
-  *                 context menu.
-  * @param onClick A function that will be called back when the menu item is
-  *                clicked. Event pages cannot use this; instead, they should
-  *                register a listener for chrome.contextMenus.onClicked.
-  * @param parentId The ID of a parent menu item; this makes the item a child
-  *                 of a previously added item.
-  * @param documentUrlPatterns Lets you restrict the item to apply only to
-  *                            documents whose URL matches one of the given
-  *                            patterns. (This applies to frames as well.) For
-  *                            details on the format of a pattern, see Match
-  *                            Patterns.
-  * @param targetUrlPatterns Similar to documentUrlPatterns, but lets you
-  *                          filter based on the src attribute of
-  *                          img/audio/video tags and the href of anchor tags.
-  * @param enabled Whether this context menu item is enabled or disabled.
-  *                Defaults to true.
+  * [id] is mandatory for event pages and Cannot be the same as another ID
+  * for this extension.
   *
-  * @returns if onClick is provided, then returns a StreamSubscription object
-  *          for that event, otherwise returns null.
+  * [title] is required unless type is [ContextMenuType.SEPARATOR]. When the
+  * context is [ContextMenuContext.SELECTION], you can use %s within the
+  * string to show the selected text. For example, if this parameter's value
+  * is "Translate '%s' to Pig Latin" and the user selects the word "cool",
+  * the context menu item for the selection is "Translate 'cool' to Pig Latin".
+  *
+  * [checked] sets the initial state of a [ContextMenuType.CHECKBOX] or
+  * [ContextMenuType.RADIO] item: true for selected and false for unselected.
+  * Only one radio item can be selected at a time in a given group of radio
+  * items.
+  *
+  * [contexts] defaults to [ContextMenuContext.PAGE] if not specified.
+  * Specifying [ContextMenuContext.PAGE] is equivalent to the combination of
+  * all other contexts except for [ContextMenuContext.LAUNCHER]. The
+  * [ContextMenuContext.LAUNCHER] context is only supported by apps and is
+  * used to add menu items to the context menu that appears when clicking on
+  * the app icon in the launcher/taskbar/dock/etc. Different platforms might
+  * put limitations on what is actually supported in a launcher context menu.
+  *
+  * [onClick] will be called back when the menu item is clicked. Event pages
+  * cannot use this; instead, they should register a listener for
+  * [chrome.contextMenus.onClicked].
+  *
+  * [parentId] makes the item a child of a previously added item.
+  *
+  * [documentUrlPatterns] lets you restrict the item to apply only to
+  * documents whose URL matches one of the given patterns. (This applies to
+  * frames as well.)
+  *
+  * [targetUrlPatterns] is similar to documentUrlPatterns, but lets you
+  * filter based on the src attribute of img/audio/video tags and the href
+  * of anchor tags.
+  *
+  * If onClick is provided, then returns a StreamSubscription object for that
+  * event, otherwise returns null.
   */
  Future&lt;StreamSubscription&lt;ContextMenuClickEvent&gt;&gt; create({
      ContextMenuType type,
@@ -138,14 +140,7 @@ class ContextMenus {
  /**
   * Updates a previously created context menu item.
   *
-  * Accepts the same values as the create function.
-  *
-  * @param id The ID of the item to update.
-  * @param parentId Note: You cannot change an item to be a child of one of
-  *                 its own descendants.
-  *
-  * @returns if onClick is provided, then returns a StreamSubscription object
-  *          for that event, otherwise returns null
+  * Accepts and returns the same values as [create].
   */
  Future&lt;StreamSubscription&lt;ContextMenuClickEvent&gt;&gt; update(String id, {
      ContextMenuType type,
@@ -204,15 +199,13 @@ class ContextMenus {
          if (jsTab != null) {
            tab = new Tab(jsTab);
          }
-         controller.add(new ContextMenuClickEvent(clickData, tab));
+         controller.add(new ContextMenuClickEvent._(clickData, tab));
        });
    return controller.stream.listen(callback);
  }
 
  /**
   * Removes a context menu item.
-  *
-  * @param id The ID of the context menu item to remove.
   */
  Future remove(String id) {
    ChromeCompleter completer = new ChromeCompleter.noArgs();
@@ -241,7 +234,7 @@ class ContextMenus {
            if (jsTab != null) {
              tab = new Tab(jsTab);
            }
-           return new ContextMenuClickEvent(clickData, tab);
+           return new ContextMenuClickEvent._(clickData, tab);
          });
 
  /**
@@ -274,56 +267,47 @@ Stream&lt;ContextMenuClickEvent&gt; get onClicked =&gt; _onClicked.stream;
 Future&lt;StreamSubscription&lt;<a href="../chrome.context_menus/ContextMenuClickEvent.html">ContextMenuClickEvent</a>&gt;&gt; <strong>create</strong>({<a href="../chrome.context_menus/ContextMenuType.html">ContextMenuType</a> type, String id, String title, bool checked, List&lt;<a href="../chrome.context_menus/ContextMenuContext.html">ContextMenuContext</a>&gt; contexts, void onClick(<a href="../chrome.context_menus/ContextMenuClickEvent.html">ContextMenuClickEvent</a> event), String parentId, List&lt;String&gt; documentUrlPatterns, List&lt;String&gt; targetUrlPatterns, bool enabled}) <a class="anchor-link" href="#create"
               title="Permalink to ContextMenus.create">#</a></h4>
 <div class="doc">
-<p>Creates a new context menu item.</p>
-<p>@param type The type of menu item. Defaults to 'normal' if not specified.
-@param id The unique ID to assign to this item. Mandatory for event pages.</p>
-<pre><code>      Cannot be the same as another ID for this extension.
-</code></pre>
-<p>@param title The text to be displayed in the item; this is required unless</p>
-<pre><code>         type is 'separator'. When the context is 'selection', you can
-         use %s within the string to show the selected text. For
-         example, if this parameter's value is "Translate '%s' to
-         Pig Latin" and the user selects the word "cool", the context
-         menu item for the selection is "Translate 'cool' to
-         Pig Latin".
-</code></pre>
-<p>@param checked The initial state of a checkbox or radio item: true for</p>
-<pre><code>           selected and false for unselected. Only one radio item can
-           be selected at a time in a given group of radio items.
-</code></pre>
-<p>@param contexts List of contexts this menu item will appear in. Defaults</p>
-<pre><code>            to ['page'] if not specified. Specifying ['all'] is
-            equivalent to the combination of all other contexts except
-            for 'launcher'. The 'launcher' context is only supported
-            by apps and is used to add menu items to the context menu
-            that appears when clicking on the app icon in the
-            launcher/taskbar/dock/etc. Different platforms might put
-            limitations on what is actually supported in a launcher
-            context menu.
-</code></pre>
-<p>@param onClick A function that will be called back when the menu item is</p>
-<pre><code>           clicked. Event pages cannot use this; instead, they should
-           register a listener for chrome.contextMenus.onClicked.
-</code></pre>
-<p>@param parentId The ID of a parent menu item; this makes the item a child</p>
-<pre><code>            of a previously added item.
-</code></pre>
-<p>@param documentUrlPatterns Lets you restrict the item to apply only to</p>
-<pre><code>                       documents whose URL matches one of the given
-                       patterns. (This applies to frames as well.) For
-                       details on the format of a pattern, see Match
-                       Patterns.
-</code></pre>
-<p>@param targetUrlPatterns Similar to documentUrlPatterns, but lets you</p>
-<pre><code>                     filter based on the src attribute of
-                     img/audio/video tags and the href of anchor tags.
-</code></pre>
-<p>@param enabled Whether this context menu item is enabled or disabled.</p>
-<pre><code>           Defaults to true.
-</code></pre>
-<p>@returns if onClick is provided, then returns a StreamSubscription object</p>
-<pre><code>     for that event, otherwise returns null.
-</code></pre>
+<p>Creates a new context menu item. The 
+<span class="param">type</span> of menu item defaults to
+<a class="crossref" href="../chrome.context_menus/ContextMenuType.html#NORMAL">ContextMenuType.NORMAL</a> if not specified.</p>
+<p>
+<span class="param">id</span> is mandatory for event pages and Cannot be the same as another ID
+for this extension.</p>
+<p>
+<span class="param">title</span> is required unless type is <a class="crossref" href="../chrome.context_menus/ContextMenuType.html#SEPARATOR">ContextMenuType.SEPARATOR</a>. When the
+context is <a class="crossref" href="../chrome.context_menus/ContextMenuContext.html#SELECTION">ContextMenuContext.SELECTION</a>, you can use %s within the
+string to show the selected text. For example, if this parameter's value
+is "Translate '%s' to Pig Latin" and the user selects the word "cool",
+the context menu item for the selection is "Translate 'cool' to Pig Latin".</p>
+<p>
+<span class="param">checked</span> sets the initial state of a <a class="crossref" href="../chrome.context_menus/ContextMenuType.html#CHECKBOX">ContextMenuType.CHECKBOX</a> or
+<a class="crossref" href="../chrome.context_menus/ContextMenuType.html#RADIO">ContextMenuType.RADIO</a> item: true for selected and false for unselected.
+Only one radio item can be selected at a time in a given group of radio
+items.</p>
+<p>
+<span class="param">contexts</span> defaults to <a class="crossref" href="../chrome.context_menus/ContextMenuContext.html#PAGE">ContextMenuContext.PAGE</a> if not specified.
+Specifying <a class="crossref" href="../chrome.context_menus/ContextMenuContext.html#PAGE">ContextMenuContext.PAGE</a> is equivalent to the combination of
+all other contexts except for <a class="crossref" href="../chrome.context_menus/ContextMenuContext.html#LAUNCHER">ContextMenuContext.LAUNCHER</a>. The
+<a class="crossref" href="../chrome.context_menus/ContextMenuContext.html#LAUNCHER">ContextMenuContext.LAUNCHER</a> context is only supported by apps and is
+used to add menu items to the context menu that appears when clicking on
+the app icon in the launcher/taskbar/dock/etc. Different platforms might
+put limitations on what is actually supported in a launcher context menu.</p>
+<p>
+<span class="param">onClick</span> will be called back when the menu item is clicked. Event pages
+cannot use this; instead, they should register a listener for
+<code>chrome.contextMenus.onClicked</code>.</p>
+<p>
+<span class="param">parentId</span> makes the item a child of a previously added item.</p>
+<p>
+<span class="param">documentUrlPatterns</span> lets you restrict the item to apply only to
+documents whose URL matches one of the given patterns. (This applies to
+frames as well.)</p>
+<p>
+<span class="param">targetUrlPatterns</span> is similar to documentUrlPatterns, but lets you
+filter based on the src attribute of img/audio/video tags and the href
+of anchor tags.</p>
+<p>If onClick is provided, then returns a StreamSubscription object for that
+event, otherwise returns null.</p>
 <pre class="source">
 Future&lt;StreamSubscription&lt;ContextMenuClickEvent&gt;&gt; create({
    ContextMenuType type,
@@ -385,7 +369,6 @@ Future <strong>remove</strong>(String id) <a class="anchor-link" href="#remove"
               title="Permalink to ContextMenus.remove">#</a></h4>
 <div class="doc">
 <p>Removes a context menu item.</p>
-<p>@param id The ID of the context menu item to remove.</p>
 <pre class="source">
 Future remove(String id) {
  ChromeCompleter completer = new ChromeCompleter.noArgs();
@@ -420,14 +403,7 @@ Future&lt;StreamSubscription&lt;<a href="../chrome.context_menus/ContextMenuClic
               title="Permalink to ContextMenus.update">#</a></h4>
 <div class="doc">
 <p>Updates a previously created context menu item.</p>
-<p>Accepts the same values as the create function.</p>
-<p>@param id The ID of the item to update.
-@param parentId Note: You cannot change an item to be a child of one of</p>
-<pre><code>            its own descendants.
-</code></pre>
-<p>@returns if onClick is provided, then returns a StreamSubscription object</p>
-<pre><code>     for that event, otherwise returns null
-</code></pre>
+<p>Accepts and returns the same values as <a class="crossref" href="../chrome.context_menus/ContextMenus.html#create">create</a>.</p>
 <pre class="source">
 Future&lt;StreamSubscription&lt;ContextMenuClickEvent&gt;&gt; update(String id, {
    ContextMenuType type,
@@ -484,7 +460,7 @@ Future&lt;StreamSubscription&lt;ContextMenuClickEvent&gt;&gt; update(String id, 
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-05 00:20:54.738</div>
+          <div>This page was generated at 2013-09-09 23:42:18.000</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>
