@@ -7,28 +7,30 @@ import 'package:js/js.dart' as js;
 import 'common.dart';
 import 'tabs.dart';
 
+/// accessor for the `chrome.windows` namespace.
 final Windows windows = new Windows._();
 
+/**
+ * Encapsulation of the `chrome.windows` namespace.
+ * The single instance of this class is accessed from the [tabs]
+ * getter.
+ */
 class Windows {
 
   Windows._();
 
-  /**
-   * The windowId value that represents the absence of a chrome browser window.
-   */
+  /// The windowId value that represents the absence of a chrome browser window.
   int get WINDOW_ID_NONE =>
       chromeProxy.windows.WINDOW_ID_NONE as int;
-  /**
-   * The windowId value that represents the current window.
-   */
+  /// The windowId value that represents the current window.
   int get WINDOW_ID_CURRENT =>
       chromeProxy.windows.WINDOW_ID_CURRENT as int;
 
   /**
    * Gets details about a window.
    *
-   * @param populate If true, the window object will have a tabs property that
-   *                 contains a list of the tabs.Tab objects
+   * If [populate] is true, the window object will have a [tabs] property that
+   * contains a list of [tabs.Tab] objects.
    */
   Future<Window> get(int windowId, {bool populate}) {
     var completer =
@@ -46,8 +48,8 @@ class Windows {
    * Gets the window that was most recently focused — typically the window
    * 'on top'.
    *
-   * @param populate If true, the window object will have a tabs property that
-   *                 contains a list of the tabs.Tab objects
+   * If [populate] is true, the window object will have a [tabs] property that
+   * contains a list of [tabs.Tab] objects.
    */
   Future<Window> getCurrent({bool populate}) {
     var completer =
@@ -63,8 +65,8 @@ class Windows {
   /**
    * Gets the current window.
    *
-   * @param populate If true, the window object will have a tabs property that
-   *                 contains a list of the tabs.Tab objects
+   * If [populate] is true, the window object will have a [tabs] property that
+   * contains a list of [tabs.Tab] objects.
    */
   Future<Window> getLastFocused({bool populate}) {
     var completer =
@@ -80,8 +82,8 @@ class Windows {
   /**
    * Gets the current window.
    *
-   * @param populate If true, the window objects will have a tabs property that
-   *                 contains a list of the tabs.Tab objects
+   * If [populate] is true, the window object will have a [tabs] property that
+   * contains a list of [tabs.Tab] objects.
    */
   Future<List<Window>> getAll({bool populate}) {
     var completer =
@@ -237,7 +239,7 @@ class Windows {
    * Fired when the currently focused window changes. Will be
    * {@link WINDOW_ID_NONE} if all chrome windows have lost focus.
    *
-   * Note: On some Linux window managers, {@link WINDOW_ID_NONE} will always be
+   * Note: On some Linux window managers, [WINDOW_ID_NONE] will always be
    * sent immediately preceding a switch from one chrome window to another.
    */
   Stream<int> get onFocusChanged => _onFocusChanged.stream;
