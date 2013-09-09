@@ -7,8 +7,14 @@ import 'package:js/js.dart' as js;
 import 'common.dart';
 import 'tabs.dart';
 
+/// accessor for the `chrome.browserAction` namespace.
 final BrowserAction browserAction = new BrowserAction._();
 
+/**
+ * Encapsulation of the `chrome.browserAction` namespace.
+ * The single instance of this class is accessed from the [browserAction]
+ * getter.
+ */
 class BrowserAction {
 
   BrowserAction._();
@@ -16,11 +22,9 @@ class BrowserAction {
   get _browserAction => chromeProxy.browserAction;
 
   /**
-   * Sets the title of the browser action. This shows up in the tooltip.
+   * Sets the [title] of the browser action. This shows up in the tooltip.
    *
-   * @param title The string the browser action should display when moused over.
-   * @param tabId Limits the change to when a particular tab is selected.
-   *              Automatically resets when the tab is closed.
+   * If no [tabId] is specified, the non-tab-specific title is set.
    */
   void setTitle(String title, {int tabId}) {
     var details = { 'title': title };
@@ -35,8 +39,7 @@ class BrowserAction {
   /**
    * Gets the title of the browser action.
    *
-   * @param tabId Specify the tab to get the title from. If no tab is specified,
-   *              the non-tab-specific title is returned.
+   * If no [tabId] is specified, the non-tab-specific title is returned.
    */
   Future<String> getTitle({int tabId}) {
     var details = { };
@@ -55,10 +58,9 @@ class BrowserAction {
    * Sets the html document to be opened as a popup when the user clicks on the
    * browser action's icon.
    *
-   * @param popup The html file to show in a popup. If set to the empty string
-   *              (''), no popup is shown.
-   * @param tabId Limits the change to when a particular tab is selected.
-   *              Automatically resets when the tab is closed.
+   * If [popup] is '', then no popup is shown.
+   *
+   * If no [tabId] is specified, the non-tab-specific popup is set.
    */
   void setPopup(String popup, {int tabId}) {
     var details = { 'popup': popup };
@@ -73,8 +75,7 @@ class BrowserAction {
   /**
    * Gets the html document set as the popup for this browser action.
    *
-   * @param tabId Specify the tab to get the popup from. If no tab is specified,
-   *              the non-tab-specific popup is returned.
+   * If no [tabId] is specified, the non-tab-specific popup is returned.
    */
   Future<String> getPopup({int tabId}) {
     var details = { };
@@ -91,12 +92,10 @@ class BrowserAction {
 
   /**
    * Sets the badge text for the browser action. The badge is displayed on top
-   * of the icon.
+   * of the icon. Any number of characters can be passed, but only about four
+   * can fit in the space.
    *
-   * @param text Any number of characters can be passed, but only about four
-   *             can fit in the space.
-   * @param tabId Limits the change to when a particular tab is selected.
-   *              Automatically resets when the tab is closed.
+   * If no [tabId] is specified, the non-tab-specific badge test is set.
    */
   void setBadgeText(String text, {int tabId}) {
     var details = { 'text': text };
@@ -109,11 +108,9 @@ class BrowserAction {
   }
 
   /**
-   * Gets the badge text of the browser action. If no tab is specified, the
-   * non-tab-specific badge text is returned.
+   * Gets the badge text of the browser action.
    *
-   * @param tabId Specify the tab to get the badge text from. If no tab is
-   *              specified, the non-tab-specific badge text is returned.
+   * If no [tabId] is specified, the non-tab-specific badge text is returned.
    */
   Future<String> getBadgeText({int tabId}) {
     var details = { };
@@ -131,9 +128,7 @@ class BrowserAction {
   /**
    * Sets the background color for the badge.
    *
-   * @param color The RGBA color of the badge.
-   * @param tabId Limits the change to when a particular tab is selected.
-   *              Automatically resets when the tab is closed.
+   * If no [tabId] is specified, the non-tab-specific background color is set.
    */
   void setBadgeBackgroundColor(Color color, {int tabId}) {
     var details = { 'color': color.toArray() };
@@ -148,9 +143,8 @@ class BrowserAction {
   /**
    * Gets the background color of the browser action.
    *
-   * @param tabId Specify the tab to get the badge background color from. If no
-   *               tab is specified, the non-tab-specific badge background
-   *               color is returned.
+   * If no [tabId] is specified, the non-tab-specific background color is
+   * returned.
    */
   Future<Color> getBadgeBackgroundColor({int tabId}) {
     var details = { };
@@ -169,8 +163,7 @@ class BrowserAction {
    * Enables the browser action for a tab. By default, browser actions are
    * enabled.
    *
-   * @param tabId The id of the tab for which you want to modify the browser
-   *              action.
+   * If no [tabId] is specified, the browser action is disabled for all tabs.
    */
   void enable({int tabId}) {
     js.scoped(() {
@@ -185,8 +178,7 @@ class BrowserAction {
   /**
    * Disables the browser action for a tab.
    *
-   * @param tabId The id of the tab for which you want to modify the browser
-   *              action.
+   * If no [tabId] is specified, the browser action is enabled for all tabs.
    */
   void disable({int tabId}) {
     js.scoped(() {

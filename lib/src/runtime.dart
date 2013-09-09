@@ -116,14 +116,6 @@ class Runtime {
 
   /**
    * Requests an update check for this app/extension.
-   *
-   * Completed Map contains key 'status' with the following enumeration of
-   * strings "throttled", "no_update", "update_available".
-   *
-   * Completed Map will also contain key 'details' which could be Map or null.
-   * null object is returned if no details are provided. In the case of details
-   * available, a Map with 'version' key, value being the version of the
-   * available update.
    */
   Future<UpdateDetails> requestUpdateCheck() {
     var completer = new ChromeCompleter.twoArgs((status, details) {
@@ -154,7 +146,7 @@ class Runtime {
    * send messages to content scripts using this method. To send messages to
    * content scripts, use tabs.sendMessage.
    *
-   * @returns The JSON response object sent by the handler of the message.
+   * Returns the JSON response object sent by the handler of the message.
    */
   Future<dynamic> sendMessage(dynamic message) {
     var completer = new ChromeCompleter.oneArg(convertJsonResponse);
@@ -197,19 +189,13 @@ class Runtime {
   final ChromeStreamController<InstalledEvent> _onInstalled =
       new ChromeStreamController<InstalledEvent>.oneArg(
           () => chromeProxy.runtime.onInstalled,
-          (details) => new InstalledEvent(
+          (details) => new InstalledEvent._(
               details.reason, details['previousVersion']));
 
   /**
    * Fired when the extension is first installed,
    * when the extension is updated to a new version,
    * and when Chrome is updated to a new version.
-   *
-   * 'reason' is an enumerated string of "install", "update", "chrome_update".
-   *
-   * 'previousVersion' indicates the previous version
-   * of the extension, which has just been updated. This is present only if
-   * 'reason' is 'update'.
    */
   Stream<InstalledEvent> get onInstalled => _onInstalled.stream;
 
@@ -236,7 +222,8 @@ class Runtime {
           () => null);
 
   /**
-   * Sent after onSuspend() to indicate that the app won't be unloaded after all.
+   * Sent after onSuspend() to indicate that the app won't be unloaded after
+   * all.
    */
   Stream get onSuspendCanceled => _onSuspendCanceled.stream;
 
@@ -308,11 +295,17 @@ class UpdateDetails {
   int get hashCode => status.hashCode + (version != null ? version : 0);
 }
 
+
 class InstalledEvent {
+  /// an enumerated string of 'install', 'update', 'chrome_update'
   final String reason;
+  /**
+   * indicates the previous version  of the extension, which has just been
+   * updated. This is present only if [reason] is 'update'.
+   */
   final String previousVersion;
 
-  InstalledEvent(this.reason, this.previousVersion);
+  InstalledEvent._(this.reason, this.previousVersion);
 }
 
 class MessageEvent {
