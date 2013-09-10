@@ -2,26 +2,23 @@ library harness_browser;
 
 import 'dart:async';
 import 'dart:html' as html;
-import 'dart:typed_data' as typed_data;
 
 import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
 import 'package:logging/logging.dart';
-import 'package:js/js.dart' as js;
 
-import 'package:chrome/app.dart';
+import 'package:chrome/app.dart' as app;
 
 import 'src/test_app.dart' as app;
 import 'src/test_storage.dart' as storage;
-
-part 'src/test_file_system.dart';
-part 'src/test_i18n.dart';
-part 'src/test_power.dart';
-part 'src/test_push_messaging.dart';
-part 'src/test_runtime.dart';
-part 'src/test_serial.dart';
-part 'src/test_socket.dart';
-part 'src/test_sync_file_system.dart';
+import 'src/test_file_system.dart' as file_system;
+import 'src/test_i18n.dart' as i18n;
+import 'src/test_power.dart' as power;
+import 'src/test_push_messaging.dart' as push_messaging;
+import 'src/test_runtime.dart' as runtime;
+import 'src/test_serial.dart' as serial;
+import 'src/test_socket.dart' as socket;
+import 'src/test_sync_file_system.dart' as sync_file_system;
 
 void main() {
   Logger.root.level = Level.ALL;
@@ -45,19 +42,18 @@ void main() {
 
   html.window.onKeyUp.listen((html.KeyboardEvent event) {
     if (event.keyCode == html.KeyCode.R) {
-      runtime.reload();
+      app.runtime.reload();
     }
   });
 
   app.main();
   storage.main();
-
-  new TestFileSystem().main();
-  new TestI18N().main();
-  new TestPower().main();
-  new TestPushMessaging().main();
-  new TestRuntime().main();
-  new TestSerial().main();
-  new TestSocket().main();
-  new TestSyncFileSystem().main();
+  i18n.main();
+  file_system.main();
+  power.main();
+  push_messaging.main();
+  runtime.main();
+  serial.main();
+  socket.main();
+  sync_file_system.main();
 }
