@@ -8,6 +8,8 @@ import 'dart:async';
 
 import 'package:js/js.dart' as js;
 
+import 'common.dart';
+
 // FileEntry interface definition:
 //   http://www.w3.org/TR/file-system-api/#the-fileentry-interface
 //   http://dev.w3.org/2006/webapi/FileAPI/
@@ -62,6 +64,11 @@ abstract class Entry {
   String get fullPath => _proxy.fullPath;
 
   /**
+   * Returns a URL that can be used to identify this entry.
+   */
+  String toURL() => _proxy.toURL();
+
+  /**
    * Entry is a directory.
    */
   bool get isDirectory => _proxy.isDirectory;
@@ -84,8 +91,7 @@ abstract class Entry {
 }
 
 /**
- * A class to make working with js.Proxy instances that represent a dom
- * FileEntry.
+ * A class to wrap js.Proxy instances that represent a dom FileEntry.
  *
  * see: http://www.w3.org/TR/file-system-api/
  * see: http://dev.w3.org/2006/webapi/FileAPI/
@@ -122,7 +128,7 @@ class FileEntry extends Entry {
 
     js.Callback fileCallback = new js.Callback.once((var file) {
       var reader = new js.Proxy((js.context as dynamic).FileReader);
-      reader.onloadend = loadCallback;
+      reader.onload = loadCallback;
       reader.onerror = errorCallback;
       reader.readAsText(file);
     });
@@ -151,7 +157,7 @@ class FileEntry extends Entry {
 //
 //    js.Callback fileCallback = new js.Callback.once((var file) {
 //      var reader = new js.Proxy((js.context as dynamic).FileReader);
-//      reader.onloadend = loadCallback;
+//      reader.onload = loadCallback;
 //      reader.onerror = errorCallback;
 //      reader.readAsArrayBuffer(file);
 //    });
@@ -168,7 +174,7 @@ class FileEntry extends Entry {
   Future<FileEntry> writeText(String text) {
     Completer<FileEntry> completer = new Completer();
 
-    js.Callback writeEndCallback = new js.Callback.once((var event) {
+    js.Callback writeCallback = new js.Callback.once((var event) {
         completer.complete(this);
     });
 
@@ -179,7 +185,7 @@ class FileEntry extends Entry {
     js.Callback writerCallback = new js.Callback.once((var writer) {
       // blob = new Blob([contents])
       var blob = new js.Proxy((js.context as dynamic).Blob, js.array([text]));
-      writer.onwriteend = writeEndCallback;
+      writer.onwrite = writeCallback;
       writer.onerror = errorCallback;
       writer.write(blob, js.map({'type': 'text/plain'}));
     });
@@ -197,8 +203,7 @@ class FileEntry extends Entry {
 }
 
 /**
- * A class to make working with js.Proxy instances that represent a dom
- * DirectoryEntry.
+ * A class to wrap js.Proxy instances that represent a dom DirectoryEntry.
  *
  * see: http://www.w3.org/TR/file-system-api/
  * see: http://dev.w3.org/2006/webapi/FileAPI/
@@ -217,16 +222,50 @@ class DirectoryEntry extends Entry {
    */
   DirectoryEntry.retain(js.Proxy proxy): super.retain(proxy);
 
+  /**
+   * Return a list of child entries for this directory.
+   */
+  Future<List<Entry>> getEntries() {
+    Completer<List<Entry>> completer = new Completer();
+
+    List<Entry> entries = [];
+
+    var directoryReader = (proxy as dynamic).createReader();
+    js.retain(directoryReader);
+
+    js.Callback entriesCallback = null;
+
+    js.Callback errorCallback = new js.Callback.once((var domError) {
+      entriesCallback.dispose();
+      js.release(directoryReader);
+      completer.completeError(domError);
+    });
+
+    entriesCallback = new js.Callback.many((/*Entry[]*/ result) {
+      if (result.length == 0) {
+        entriesCallback.dispose();
+        js.release(directoryReader);
+        completer.complete(entries);
+      } else {
+        entries.addAll(listify(result).map((e) => Entry.createFrom(e)));
+        directoryReader.readEntries(entriesCallback, errorCallback);
+      }
+    });
+
+    directoryReader.readEntries(entriesCallback, errorCallback);
+
+    return completer.future;
+  }
 }
 
 /**
- * A class to make working with js.Proxy instances that represent a dom
- * FileSystem.
+ * A class to wrap js.Proxy instances that represent a dom FileSystem.
  *
  * see: http://www.w3.org/TR/file-system-api/
  */
 class FileSystem {
   var _proxy;
+  DirectoryEntry _root;
 
   /**
    * Create and return a new FileSystem given a js.Proxy to a dom
@@ -251,7 +290,13 @@ class FileSystem {
   /**
    * The root directory of the file system.
    */
-  DirectoryEntry get root => new DirectoryEntry.retain(_proxy.root);
+  DirectoryEntry get root {
+    if (_root == null) {
+      _root = new DirectoryEntry.retain(_proxy.root);
+    }
+
+    return _root;
+  }
 
   String toString() => name;
 
@@ -260,6 +305,11 @@ class FileSystem {
    */
   void release() {
     js.release(_proxy);
+
+    if (_root != null) {
+      _root.release();
+      _root = null;
+    }
   }
 
   js.Proxy get proxy => _proxy;
