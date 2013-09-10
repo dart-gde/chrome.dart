@@ -1,20 +1,24 @@
-part of harness_browser;
+library test_serial;
 
-class TestSerial {
+import 'dart:async';
 
-  void main() {
-    group('chrome.serial', () {
-      test('constructor', () {
-        var serial = new Serial('/tmp/com', 9600);
-        expect(serial.port, equals('/tmp/com'));
-        expect(serial.speed, equals(9600));
-      });
+import 'package:unittest/unittest.dart';
 
-      test('getPorts', () {
-        Serial.ports.then(expectAsync1((List<String> ports) {
-          expect(ports is List<String>, isTrue);
-        }));
-      });
+import 'package:chrome/app.dart';
+
+void main() {
+  group('chrome.serial', () {
+    test('constructor', () {
+      var serial = new Serial('/tmp/com', 9600);
+      expect(serial.port, equals('/tmp/com'));
+      expect(serial.speed, equals(9600));
+    });
+
+    test('getPorts', () {
+      Serial.ports.then(expectAsync1((List<String> ports) {
+        expect(ports is List<String>, isTrue);
+      }));
+    });
 
 //      test('open exception', () {
 //        Serial serial = new Serial('/tmp/comcomcomcom', 9600);
@@ -26,6 +30,6 @@ class TestSerial {
 //          expect(serial.isConnected, isFalse);
 //        }));
 //      });
-    });
-  }
+  });
 }
+
