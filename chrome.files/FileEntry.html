@@ -32,8 +32,7 @@
         
 <button id="show-inherited" class="show-inherited">Hide inherited</button>
 <div class="doc">
-<p>A class to make working with js.Proxy instances that represent a dom
-FileEntry.</p>
+<p>A class to wrap js.Proxy instances that represent a dom FileEntry.</p>
 <p>see: http://www.w3.org/TR/file-system-api/
 see: http://dev.w3.org/2006/webapi/FileAPI/</p>
 <pre class="source">
@@ -69,7 +68,7 @@ class FileEntry extends Entry {
 
    js.Callback fileCallback = new js.Callback.once((var file) {
      var reader = new js.Proxy((js.context as dynamic).FileReader);
-     reader.onloadend = loadCallback;
+     reader.onload = loadCallback;
      reader.onerror = errorCallback;
      reader.readAsText(file);
    });
@@ -98,7 +97,7 @@ class FileEntry extends Entry {
 //
 //    js.Callback fileCallback = new js.Callback.once((var file) {
 //      var reader = new js.Proxy((js.context as dynamic).FileReader);
-//      reader.onloadend = loadCallback;
+//      reader.onload = loadCallback;
 //      reader.onerror = errorCallback;
 //      reader.readAsArrayBuffer(file);
 //    });
@@ -115,7 +114,7 @@ class FileEntry extends Entry {
  Future&lt;FileEntry&gt; writeText(String text) {
    Completer&lt;FileEntry&gt; completer = new Completer();
 
-   js.Callback writeEndCallback = new js.Callback.once((var event) {
+   js.Callback writeCallback = new js.Callback.once((var event) {
        completer.complete(this);
    });
 
@@ -126,7 +125,7 @@ class FileEntry extends Entry {
    js.Callback writerCallback = new js.Callback.once((var writer) {
      // blob = new Blob([contents])
      var blob = new js.Proxy((js.context as dynamic).Blob, js.array([text]));
-     writer.onwriteend = writeEndCallback;
+     writer.onwrite = writeCallback;
      writer.onerror = errorCallback;
      writer.write(blob, js.map({'type': 'text/plain'}));
    });
@@ -263,7 +262,7 @@ Future&lt;String&gt; readText() {
 
  js.Callback fileCallback = new js.Callback.once((var file) {
    var reader = new js.Proxy((js.context as dynamic).FileReader);
-   reader.onloadend = loadCallback;
+   reader.onload = loadCallback;
    reader.onerror = errorCallback;
    reader.readAsText(file);
  });
@@ -301,6 +300,17 @@ String toString() =&gt; name;
 </pre>
 </div>
 </div>
+<div class="method inherited"><h4 id="toURL">
+<button class="show-code">Code</button>
+String <strong>toURL</strong>() <a class="anchor-link" href="#toURL"
+              title="Permalink to FileEntry.toURL">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.files/Entry.html">Entry</a> </div><div class="doc">
+<p>Returns a URL that can be used to identify this entry.</p>
+<pre class="source">
+String toURL() =&gt; _proxy.toURL();
+</pre>
+</div>
+</div>
 <div class="method"><h4 id="writeText">
 <button class="show-code">Code</button>
 Future&lt;<a href="../chrome.files/FileEntry.html">FileEntry</a>&gt; <strong>writeText</strong>(String text) <a class="anchor-link" href="#writeText"
@@ -312,7 +322,7 @@ is returned.</p>
 Future&lt;FileEntry&gt; writeText(String text) {
  Completer&lt;FileEntry&gt; completer = new Completer();
 
- js.Callback writeEndCallback = new js.Callback.once((var event) {
+ js.Callback writeCallback = new js.Callback.once((var event) {
      completer.complete(this);
  });
 
@@ -323,7 +333,7 @@ Future&lt;FileEntry&gt; writeText(String text) {
  js.Callback writerCallback = new js.Callback.once((var writer) {
    // blob = new Blob([contents])
    var blob = new js.Proxy((js.context as dynamic).Blob, js.array([text]));
-   writer.onwriteend = writeEndCallback;
+   writer.onwrite = writeCallback;
    writer.onerror = errorCallback;
    writer.write(blob, js.map({'type': 'text/plain'}));
  });
@@ -346,7 +356,7 @@ Future&lt;FileEntry&gt; writeText(String text) {
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-09 23:42:18.079</div>
+          <div>This page was generated at 2013-09-10 17:05:25.240</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

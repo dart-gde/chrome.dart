@@ -32,12 +32,12 @@
         
 <button id="show-inherited" class="show-inherited">Hide inherited</button>
 <div class="doc">
-<p>A class to make working with js.Proxy instances that represent a dom
-FileSystem.</p>
+<p>A class to wrap js.Proxy instances that represent a dom FileSystem.</p>
 <p>see: http://www.w3.org/TR/file-system-api/</p>
 <pre class="source">
 class FileSystem {
  var _proxy;
+ DirectoryEntry _root;
 
  /**
   * Create and return a new FileSystem given a js.Proxy to a dom
@@ -62,7 +62,13 @@ class FileSystem {
  /**
   * The root directory of the file system.
   */
- DirectoryEntry get root =&gt; new DirectoryEntry.retain(_proxy.root);
+ DirectoryEntry get root {
+   if (_root == null) {
+     _root = new DirectoryEntry.retain(_proxy.root);
+   }
+
+   return _root;
+ }
 
  String toString() =&gt; name;
 
@@ -71,6 +77,11 @@ class FileSystem {
   */
  void release() {
    js.release(_proxy);
+
+   if (_root != null) {
+     _root.release();
+     _root = null;
+   }
  }
 
  js.Proxy get proxy =&gt; _proxy;
@@ -162,7 +173,13 @@ final <a href="../chrome.files/DirectoryEntry.html">DirectoryEntry</a>         <
         <div class="doc">
 <p>The root directory of the file system.</p>
 <pre class="source">
-DirectoryEntry get root =&gt; new DirectoryEntry.retain(_proxy.root);
+DirectoryEntry get root {
+ if (_root == null) {
+   _root = new DirectoryEntry.retain(_proxy.root);
+ }
+
+ return _root;
+}
 </pre>
 </div>
 </div>
@@ -178,6 +195,11 @@ void <strong>release</strong>() <a class="anchor-link" href="#release"
 <pre class="source">
 void release() {
  js.release(_proxy);
+
+ if (_root != null) {
+   _root.release();
+   _root = null;
+ }
 }
 </pre>
 </div>
@@ -200,7 +222,7 @@ String toString() =&gt; name;
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-09 23:42:18.036</div>
+          <div>This page was generated at 2013-09-10 17:05:25.162</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

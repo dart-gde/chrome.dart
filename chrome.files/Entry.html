@@ -67,6 +67,11 @@ abstract class Entry {
  String get fullPath =&gt; _proxy.fullPath;
 
  /**
+  * Returns a URL that can be used to identify this entry.
+  */
+ String toURL() =&gt; _proxy.toURL();
+
+ /**
   * Entry is a directory.
   */
  bool get isDirectory =&gt; _proxy.isDirectory;
@@ -240,12 +245,23 @@ String toString() =&gt; name;
 </pre>
 </div>
 </div>
+<div class="method"><h4 id="toURL">
+<button class="show-code">Code</button>
+String <strong>toURL</strong>() <a class="anchor-link" href="#toURL"
+              title="Permalink to Entry.toURL">#</a></h4>
+<div class="doc">
+<p>Returns a URL that can be used to identify this entry.</p>
+<pre class="source">
+String toURL() =&gt; _proxy.toURL();
+</pre>
+</div>
+</div>
 </div>
         </div>
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-09 23:42:18.092</div>
+          <div>This page was generated at 2013-09-10 17:05:25.267</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

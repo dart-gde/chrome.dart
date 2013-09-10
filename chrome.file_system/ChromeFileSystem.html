@@ -171,7 +171,7 @@ class ChromeFileSystem {
   * This will return a dom FileEntry. js.retain() has been called on it; it is
   * the caller's responsibility to call js.release();
   */
- Future&lt;FileEntry&gt; restoreEntry(String id) {
+ Future&lt;Entry&gt; restoreEntry(String id) {
    ChromeCompleter&lt;FileEntry&gt; completer = new ChromeCompleter.oneArg(Entry.createFrom);
    chromeProxy.fileSystem.restoreEntry(id, completer.callback);
    return completer.future;
@@ -378,7 +378,7 @@ Future&lt;bool&gt; isWritableEntry(Entry entry) {
 </div>
 <div class="method"><h4 id="restoreEntry">
 <button class="show-code">Code</button>
-Future&lt;<a href="../chrome.files/FileEntry.html">FileEntry</a>&gt; <strong>restoreEntry</strong>(String id) <a class="anchor-link" href="#restoreEntry"
+Future&lt;<a href="../chrome.files/Entry.html">Entry</a>&gt; <strong>restoreEntry</strong>(String id) <a class="anchor-link" href="#restoreEntry"
               title="Permalink to ChromeFileSystem.restoreEntry">#</a></h4>
 <div class="doc">
 <p>Returns the file entry with the given id if it can be restored. This call
@@ -386,7 +386,7 @@ will fail otherwise. This method is new in Chrome 30.</p>
 <p>This will return a dom FileEntry. js.retain() has been called on it; it is
 the caller's responsibility to call js.release();</p>
 <pre class="source">
-Future&lt;FileEntry&gt; restoreEntry(String id) {
+Future&lt;Entry&gt; restoreEntry(String id) {
  ChromeCompleter&lt;FileEntry&gt; completer = new ChromeCompleter.oneArg(Entry.createFrom);
  chromeProxy.fileSystem.restoreEntry(id, completer.callback);
  return completer.future;
@@ -418,7 +418,7 @@ String retainEntry(Entry entry) {
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-09 23:42:18.122</div>
+          <div>This page was generated at 2013-09-10 17:05:25.328</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>
