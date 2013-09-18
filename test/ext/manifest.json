@@ -17,5 +17,6 @@
     "default_icon" : "Dart_Logo_16.png"
   },
   "icons": {"128": "dart_icon.png"},
-  "manifest_version": 2
+  "manifest_version": 2,
+  "devtools_page": "devtools.html"
 }

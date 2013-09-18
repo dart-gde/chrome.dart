@@ -40,7 +40,7 @@ class InspectedWindow {
     var completer = new Completer();
     js.scoped(() {
       _inspectedWindow.eval(jsExpression, new js.Callback.once(
-          (result, isException) {
+          (result, [isException = false]) {
             if (isException) {
               completer.completeError(result);
             } else {
@@ -88,8 +88,9 @@ class InspectedWindow {
 
   /// Retrieves the list of resources from the inspected page.
   Future<List<Resource>> getResources() {
-    var completer = new ChromeCompleter.oneArg((List resources) =>
-        resources.map((resource) => new Resource._(resource.url)));
+    var completer = new ChromeCompleter.oneArg((resources) =>
+        listify(resources).map((resource) =>
+            new Resource._(resource)).toList());
     js.scoped(() {
       _inspectedWindow.getResources(completer.callback);
     });
@@ -125,6 +126,8 @@ class Resource {
   Resource._(this._resource) {
     js.retain(_resource);
   }
+
+  String get url => _resource.url;
 
   Future<ResourceContent> getContent() {
     var completer = new ChromeCompleter.twoArgs((content, encoding) =>
