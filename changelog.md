@@ -1,6 +1,12 @@
 # Changelog - chrome.dart
 
-## 0.3.1-dev
+## 0.3.1 Sept 2013 (SDK 0.7.3.1_r27487)
+
+- Auto doc generation and deployment to drone.io [API documentation]
+(http://dart-gde.github.com/chrome.dart).
+- Implemented DirectoryEntry.getEntries()
+- Documentation updates, removal of javadoc'isms
+- Refactored unit tests so each test module has a single main() entry point.
 
 ## 0.3.0 Sept 2013 (SDK 0.6.21.3_r26639)
 
