@@ -18,7 +18,7 @@ void main() {
 
   _buildTasks('test_harness', 'test/app', ['harness_browser.dart', 'background.dart']);
 
-  _buildTasks('test_harness_extension', 'test/ext', ['harness_extension.dart']);
+  _buildTasks('test_harness_extension', 'test/ext', ['harness_extension.dart', 'harness_devtools.dart']);
 
   addChainedTask("build_and_analyze_all", allTasks,
       description: "Build and analyze all samples and tests");
