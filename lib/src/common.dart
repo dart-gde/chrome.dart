@@ -135,7 +135,7 @@ class ChromeStreamController<T> {
   void _ensureHandlerAdded() {
     if (!_handlerAdded) {
       js.scoped(() {
-        _event().addListener(_listener);
+        (_event() as dynamic).addListener(_listener);
       });
       _handlerAdded = true;
     }
@@ -144,7 +144,7 @@ class ChromeStreamController<T> {
   void _removeHandler() {
     if (_handlerAdded) {
       js.scoped(() {
-        _event().removeListener(_listener);
+        (_event() as dynamic).removeListener(_listener);
       });
       _handlerAdded = false;
     }
