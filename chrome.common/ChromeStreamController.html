@@ -84,7 +84,7 @@ class ChromeStreamController&lt;T&gt; {
  void _ensureHandlerAdded() {
    if (!_handlerAdded) {
      js.scoped(() {
-       _event().addListener(_listener);
+       (_event() as dynamic).addListener(_listener);
      });
      _handlerAdded = true;
    }
@@ -93,7 +93,7 @@ class ChromeStreamController&lt;T&gt; {
  void _removeHandler() {
    if (_handlerAdded) {
      js.scoped(() {
-       _event().removeListener(_listener);
+       (_event() as dynamic).removeListener(_listener);
      });
      _handlerAdded = false;
    }
@@ -205,7 +205,7 @@ Stream&lt;T&gt; get stream {
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-18 19:52:44.761</div>
+          <div>This page was generated at 2013-09-19 17:49:55.873</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>
