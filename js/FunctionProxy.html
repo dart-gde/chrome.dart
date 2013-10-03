@@ -173,7 +173,8 @@ noSuchMethod(Invocation invocation) {
  } else {
    kind = 'method';
  }
- return _forward(this, member, kind, args);
+ return _forward(this, member, kind, args,
+     onNone: () =&gt; super.noSuchMethod(invocation));
 }
 </pre>
 </div>
@@ -197,13 +198,8 @@ String <strong>toString</strong>() <a class="anchor-link" href="#toString"
 <p>Returns a string representation of this object.</p>
 <div class="docs-inherited-from">docs inherited from Object </div></div>
 <pre class="source">
-String toString() {
- try {
-   return _forward(this, 'toString', 'method', []);
- } catch(e) {
-   return super.toString();
- }
-}
+String toString() =&gt;
+   _forward(this, 'toString', 'method', [], onNone: () =&gt; super.toString());
 </pre>
 </div>
 </div>
@@ -212,7 +208,7 @@ String toString() {
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-24 20:19:14.905</div>
+          <div>This page was generated at 2013-10-03 00:19:35.710</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

@@ -34,6 +34,7 @@
 <div class="doc">
 <p>Proxies to JavaScript objects.</p>
 <pre class="source">
+@proxy
 class Proxy implements Serializable&lt;Proxy&gt; {
  SendPortSync _port;
  final _id;
@@ -113,13 +114,8 @@ class Proxy implements Serializable&lt;Proxy&gt; {
      : (other is Proxy &amp;&amp;
         _jsPortEquals.callSync([_serialize(this), _serialize(other)]));
 
- String toString() {
-   try {
-     return _forward(this, 'toString', 'method', []);
-   } catch(e) {
-     return super.toString();
-   }
- }
+ String toString() =&gt;
+     _forward(this, 'toString', 'method', [], onNone: () =&gt; super.toString());
 
  // Forward member accesses to the backing JavaScript object.
  noSuchMethod(Invocation invocation) {
@@ -148,18 +144,20 @@ class Proxy implements Serializable&lt;Proxy&gt; {
    } else {
      kind = 'method';
    }
-   return _forward(this, member, kind, args);
+   return _forward(this, member, kind, args,
+       onNone: () =&gt; super.noSuchMethod(invocation));
  }
 
  // Forward member accesses to the backing JavaScript object.
- static _forward(Proxy receiver, String member, String kind, List args) {
+ static _forward(Proxy receiver, String member, String kind, List args,
+     {onNone()}) {
    _enterScopeIfNeeded();
    var result = receiver._port.callSync([receiver._id, member, kind,
                                          args.map(_serialize).toList()]);
    switch (result[0]) {
      case 'return': return _deserialize(result[1]);
      case 'throws': throw _deserialize(result[1]);
-     case 'none': throw new NoSuchMethodError(receiver, member, args, {});
+     case 'none': return onNone == null ? null : onNone();
      default: throw 'Invalid return value';
    }
  }
@@ -320,7 +318,8 @@ noSuchMethod(Invocation invocation) {
  } else {
    kind = 'method';
  }
- return _forward(this, member, kind, args);
+ return _forward(this, member, kind, args,
+     onNone: () =&gt; super.noSuchMethod(invocation));
 }
 </pre>
 </div>
@@ -344,13 +343,8 @@ String <strong>toString</strong>() <a class="anchor-link" href="#toString"
 <p>Returns a string representation of this object.</p>
 <div class="docs-inherited-from">docs inherited from Object </div></div>
 <pre class="source">
-String toString() {
- try {
-   return _forward(this, 'toString', 'method', []);
- } catch(e) {
-   return super.toString();
- }
-}
+String toString() =&gt;
+   _forward(this, 'toString', 'method', [], onNone: () =&gt; super.toString());
 </pre>
 </div>
 </div>
@@ -359,7 +353,7 @@ String toString() {
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-09-24 20:19:14.995</div>
+          <div>This page was generated at 2013-10-03 00:19:35.754</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>
