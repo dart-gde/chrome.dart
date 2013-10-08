@@ -737,8 +737,7 @@ void <strong>set length</strong>(int length) <a class="anchor-link" href="#lengt
 <div class="inherited">
 <p>Changes the length of this list.</p>
 <p>If <code>newLength</code> is greater than
-the current 
-<span class="param">length</span>, entries are initialized to <code>null</code>.</p>
+the current length, entries are initialized to <code>null</code>.</p>
 <p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> if the list is fixed-length.</p>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
@@ -897,6 +896,11 @@ Map&lt;int, <a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong
 <p>The map uses the indices of this list as keys and the corresponding objects
 as values. The <code>Map.keys</code> <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> iterates the indices of this list
 in numerical order.</p>
+<pre><code>List&lt;String&gt; words = ['fee', 'fi', 'fo', 'fum'];
+Map&lt;int, String&gt; map = words.asMap();
+map[0] + map[1];   // 'feefi';
+map.keys.toList(); // [0, 1, 2, 3]
+</code></pre>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
 Map&lt;int, E&gt; asMap() =&gt; _asList().asMap();
@@ -1128,12 +1132,11 @@ List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>get
 of the call to this method. The returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> behaves like
 <code>skip(start).take(end - start)</code>. That is, it does not throw exceptions
 if <code>this</code> changes size.</p>
-<p>Example:</p>
-<pre><code>var list = [1, 2, 3, 4, 5];
-var range = list.getRange(1, 4);
-print(range.join(', '));  // =&gt; 2, 3, 4
-list.length = 3;
-print(range.join(', '));  // =&gt; 2, 3
+<pre><code>List&lt;String&gt; colors = ['red', 'green', 'blue', 'orange', 'pink'];
+Iterable&lt;String&gt; range = colors.getRange(1, 4);
+range.join(', ');  // 'green, blue, orange'
+colors.length = 3;
+range.join(', ');  // 'green, blue'
 </code></pre>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
@@ -1150,11 +1153,17 @@ int <strong>indexOf</strong>(<a href="../js.wrapping/JsArrayToListAdapter.html">
 <div class="inherited">
 <p>Returns the first index of 
 <span class="param">element</span> in this list.</p>
-<p>Searches the list from index <code>start</code> to the length of the list.
+<p>Searches the list from index <code>start</code> to the end of the list.
 The first time an object <code>o</code> is encountered so that <code>o == element</code>,
-the index of <code>o</code> is returned.
-Returns -1 if 
+the index of <code>o</code> is returned.</p>
+<pre><code>List&lt;String&gt; notes = ['do', 're', 'mi', 're'];
+notes.indexOf('re');    // 1
+notes.indexOf('re', 2); // 3
+</code></pre>
+<p>Returns -1 if 
 <span class="param">element</span> is not found.</p>
+<pre><code>notes.indexOf('fa');    // -1
+</code></pre>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
 int indexOf(E element, [int startIndex = 0]) {
@@ -1390,9 +1399,16 @@ bool <strong>remove</strong>(Object element) <a class="anchor-link" href="#remov
 <div class="doc">
 <div class="inherited">
 <p>Removes the first occurence of <code>value</code> from this list.</p>
-<p>Returns true if <code>value</code> was in the list.
-Returns false otherwise.</p>
+<p>Returns true if <code>value</code> was in the list, false otherwise.</p>
+<pre><code>List&lt;String&gt; parts = ['head', 'shoulders', 'knees', 'toes'];
+parts.remove('head'); // true
+parts.join(', ');     // 'shoulders, knees, toes'
+</code></pre>
 <p>The method has no effect if <code>value</code> was not in the list.</p>
+<pre><code>// Note: 'head' has already been removed.
+parts.remove('head'); // false
+parts.join(', ');     // 'shoulders, knees, toes'
+</code></pre>
 <p>An <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> occurs if the list is fixed-length.</p>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
@@ -1469,6 +1485,10 @@ void <strong>removeWhere</strong>(bool test(<a href="../js.wrapping/JsArrayToLis
 <span class="param">test</span>.</p>
 <p>An object <code>o</code> satisfies 
 <span class="param">test</span> if <code>test(o)</code> is true.</p>
+<pre><code>List&lt;String&gt; numbers = ['one', 'two', 'three', 'four'];
+numbers.removeWhere((item) =&gt; item.length == 3);
+numbers.join(', '); // 'three, four'
+</code></pre>
 <p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> if this is a fixed-length list.</p>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
@@ -1488,14 +1508,13 @@ void <strong>replaceRange</strong>(int start, int end, Iterable&lt;<a href="../j
 <span class="param">start</span> inclusive to 
 <span class="param">end</span> exclusive
 and replaces them with the contents of the <code>iterable</code>.</p>
+<pre><code>List&lt;int&gt; list = [1, 2, 3, 4];
+list.replaceRange(1, 3, [6, 7]);
+list.join(', '); // '1, 6, 7, 4'
+</code></pre>
 <p>An error occurs if 
 <span class="param">start</span>..
 <span class="param">end</span> is not a valid range for <code>this</code>.</p>
-<p>Example:</p>
-<pre><code>var list = [1, 2, 3, 4, 5];
-list.replaceRange(1, 3, [6, 7, 8, 9]);
-print(list);  // [1, 6, 7, 8, 9, 4, 5]
-</code></pre>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
 void replaceRange(int start, int end, Iterable&lt;E&gt; newContents) {
@@ -1516,6 +1535,10 @@ void <strong>retainWhere</strong>(bool test(<a href="../js.wrapping/JsArrayToLis
 <span class="param">test</span>.</p>
 <p>An object <code>o</code> satisfies 
 <span class="param">test</span> if <code>test(o)</code> is true.</p>
+<pre><code>List&lt;String&gt; numbers = ['one', 'two', 'three', 'four'];
+numbers.retainWhere((item) =&gt; item.length == 3);
+numbers.join(', '); // 'one, two'
+</code></pre>
 <p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a> if this is a fixed-length list.</p>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
@@ -1535,6 +1558,10 @@ void <strong>setAll</strong>(int index, Iterable&lt;<a href="../js.wrapping/JsAr
 <span class="param">iterable</span>, starting
 at position 
 <span class="param">index</span> in this list.</p>
+<pre><code>List&lt;String&gt; list = ['a', 'b', 'c'];
+list.setAll(1, ['bee', 'sea']);
+list.join(', '); // 'a, bee, sea'
+</code></pre>
 <p>This operation does not increase the length of <code>this</code>.</p>
 <p>An error occurs if the 
 <span class="param">index</span> is less than 0 or greater than length.
@@ -1564,6 +1591,13 @@ void <strong>setRange</strong>(int start, int length, List&lt;<a href="../js.wra
 <p>Copies the objects of <code>iterable</code>, skipping <code>skipCount</code> objects first,
 into the range 
 <span class="param">start</span> inclusive to <code>end</code> exclusive of <code>this</code>.</p>
+<pre><code>List&lt;int&gt; list1 = [1, 2, 3, 4];
+List&lt;int&gt; list2 = [5, 6, 7, 8, 9];
+// Copies the 4th and 5th items in list2 as the 2nd and 3rd items
+// of list1.
+list1.setRange(1, 3, list2, 3);
+list1.join(', '); // '1, 8, 9, 4'
+</code></pre>
 <p>If 
 <span class="param">start</span> equals <code>end</code> and 
 <span class="param">start</span>..<code>end</code> represents a legal range, this
@@ -1572,12 +1606,6 @@ method has no effect.</p>
 <span class="param">start</span>..<code>end</code> is not a valid range for <code>this</code>.
 An error occurs if the <code>iterable</code> does not have enough objects after
 skipping <code>skipCount</code> objects.</p>
-<p>Example:</p>
-<pre><code>var list = [1, 2, 3, 4];
-var list2 = [5, 6, 7, 8, 9];
-list.setRange(1, 3, list2, 3);
-print(list);  // =&gt; [1, 8, 9, 4]
-</code></pre>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
 @override void setRange(int start, int length, List&lt;E&gt; from,
@@ -1589,6 +1617,13 @@ print(list);  // =&gt; [1, 8, 9, 4]
  $unsafe["splice"].apply($unsafe, array(args));
 }
 </pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="shuffle">
+abstract void <strong>shuffle</strong>() <a class="anchor-link" href="#shuffle"
+              title="Permalink to JsArrayToListAdapter&lt;E&gt;.shuffle">#</a></h4>
+<div class="inherited-from">inherited from List </div><div class="doc">
+<p>Shuffles the elements of this list randomly.</p>
 </div>
 </div>
 <div class="method"><h4 id="singleWhere">
@@ -1675,9 +1710,18 @@ void <strong>sort</strong>([int compare(<a href="../js.wrapping/JsArrayToListAda
 <span class="param">compare</span> function.</p>
 <p>The 
 <span class="param">compare</span> function must act as a <a class="crossref" href="../dart_core/Comparator.html">Comparator</a>.</p>
+<pre><code>List&lt;String&gt; numbers = ['one', 'two', 'three', 'four'];
+// Sort from shortest to longest.
+numbers.sort((x, y) =&gt; x.length.compareTo(y.length));
+numbers.join(', '); // 'one, two, four, three'
+</code></pre>
 <p>The default List implementations use <a class="crossref" href="../dart_core/Comparable.html#compare">Comparable.compare</a> if
 
 <span class="param">compare</span> is omitted.</p>
+<pre><code>List&lt;int&gt; nums = [13, 2, -11];
+nums.sort();
+     nums.join(', '); // '-11, 2, 13'
+</code></pre>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
 <pre class="source">
 @override void sort([int compare(E a, E b)]) {
@@ -1693,12 +1737,17 @@ List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; <strong>sub
               title="Permalink to JsArrayToListAdapter&lt;E&gt;.sublist">#</a></h4>
 <div class="doc">
 <div class="inherited">
-<p>Returns a new list containing the objects
-from 
+<p>Returns a new list containing the objects from 
 <span class="param">start</span> inclusive to 
-<span class="param">end</span> exclusive.</p>
+<span class="param">end</span>
+exclusive.</p>
+<pre><code>List&lt;String&gt; colors = ['red', 'green', 'blue', 'orange', 'pink'];
+colors.sublist(1, 3); // ['green', 'blue']
+</code></pre>
 <p>If 
 <span class="param">end</span> is omitted, the <a class="crossref" href="../js.wrapping/JsArrayToListAdapter.html#length">length</a> of <code>this</code> is used.</p>
+<pre><code>colors.sublist(1);  // ['green', 'blue', 'orange', 'pink']
+</code></pre>
 <p>An error occurs if 
 <span class="param">start</span> is outside the range <code>0</code> .. <code>length</code> or if
 
@@ -1842,7 +1891,7 @@ Iterable&lt;E&gt; where(bool test(E element)) =&gt; _asList().where(test);
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-03 00:19:35.953</div>
+          <div>This page was generated at 2013-10-08 22:20:26.707</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

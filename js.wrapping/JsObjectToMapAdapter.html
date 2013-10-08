@@ -356,9 +356,16 @@ updates the map by mapping
 <span class="param">key</span> to the value returned by
 
 <span class="param">ifAbsent</span>. Returns the value in the map.</p>
-<p>It is an error to add or remove keys from the map during the call to
-
-<span class="param">ifAbsent</span>.</p>
+<pre><code>Map&lt;String, int&gt; scores = {'Bob': 36};
+for (var key in ['Bob', 'Rohan', 'Sophena']) {
+  scores.putIfAbsent(key, () =&gt; key.length);
+}
+scores['Bob'];      // 36
+scores['Rohan'];    //  5
+scores['Sophena'];  //  7
+</code></pre>
+<p>The code that 
+<span class="param">ifAbsent</span> executes must not add or remove keys.</p>
 <div class="docs-inherited-from">docs inherited from Map&lt;String, <a href="../js.wrapping/JsObjectToMapAdapter.html">V</a>&gt; </div></div>
 <pre class="source">
 @override V putIfAbsent(String key, V ifAbsent()) =&gt;
@@ -404,7 +411,7 @@ dynamic <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-03 00:19:35.793</div>
+          <div>This page was generated at 2013-10-08 22:20:26.560</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>
