@@ -155,7 +155,7 @@ final bool         <strong>isEmpty</strong> <a class="anchor-link"
         </h4>
         <div class="doc">
 <div class="inherited">
-<p>Returns true if there is no {key, value} pair in the map.</p>
+<p>Returns true if there is no key-value pair in the map.</p>
 <div class="docs-inherited-from">docs inherited from Map&lt;String, <a href="../js.wrapping/JsObjectToMapAdapter.html">V</a>&gt; </div></div>
 <pre class="source">
 @override bool get isEmpty =&gt; Maps.isEmpty(this);
@@ -170,7 +170,7 @@ final bool         <strong>isNotEmpty</strong> <a class="anchor-link"
         </h4>
         <div class="doc">
 <div class="inherited">
-<p>Returns true if there is at least one {key, value} pair in the map.</p>
+<p>Returns true if there is at least one key-value pair in the map.</p>
 <div class="docs-inherited-from">docs inherited from Map&lt;String, <a href="../js.wrapping/JsObjectToMapAdapter.html">V</a>&gt; </div></div>
 <pre class="source">
 @override bool get isNotEmpty =&gt; Maps.isNotEmpty(this);
@@ -186,6 +186,8 @@ final Iterable&lt;String&gt;         <strong>keys</strong> <a class="anchor-link
         <div class="doc">
 <div class="inherited">
 <p>The keys of <code>this</code>.</p>
+<p>The returned iterable has efficient <code>length</code> and <code>contains</code> operations,
+based on <a class="crossref" href="../js.wrapping/JsObjectToMapAdapter.html#length">length</a> and <a class="crossref" href="../js.wrapping/JsObjectToMapAdapter.html#containsKey">containsKey</a> of the map.</p>
 <div class="docs-inherited-from">docs inherited from Map&lt;String, <a href="../js.wrapping/JsObjectToMapAdapter.html">V</a>&gt; </div></div>
 <pre class="source">
 @override Iterable&lt;String&gt; get keys =&gt;
@@ -201,7 +203,7 @@ final int         <strong>length</strong> <a class="anchor-link"
         </h4>
         <div class="doc">
 <div class="inherited">
-<p>The number of {key, value} pairs in the map.</p>
+<p>The number of key-value pairs in the map.</p>
 <div class="docs-inherited-from">docs inherited from Map&lt;String, <a href="../js.wrapping/JsObjectToMapAdapter.html">V</a>&gt; </div></div>
 <pre class="source">
 @override int get length =&gt; Maps.length(this);
@@ -217,6 +219,8 @@ final Iterable&lt;<a href="../js.wrapping/JsObjectToMapAdapter.html">V</a>&gt;  
         <div class="doc">
 <div class="inherited">
 <p>The values of <code>this</code>.</p>
+<p>The returned iterable has an efficient <code>length</code> method based on the
+<a class="crossref" href="../js.wrapping/JsObjectToMapAdapter.html#length">length</a> of the map.</p>
 <div class="docs-inherited-from">docs inherited from Map&lt;String, <a href="../js.wrapping/JsObjectToMapAdapter.html">V</a>&gt; </div></div>
 <pre class="source">
 @override Iterable&lt;V&gt; get values =&gt; Maps.getValues(this);
@@ -411,7 +415,7 @@ dynamic <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-08 22:20:26.560</div>
+          <div>This page was generated at 2013-10-22 18:21:01.084</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

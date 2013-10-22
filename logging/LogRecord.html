@@ -56,6 +56,8 @@ class LogRecord {
  LogRecord(this.level, this.message, this.loggerName, [this.exception])
      : time = new DateTime.now(),
        sequenceNumber = LogRecord._nextNumber++;
+
+ String toString() =&gt; '[${level.name}] $loggerName: $message';
 }
 </pre>
 </div>
@@ -159,11 +161,27 @@ final DateTime time
 </div>
 </div>
 </div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to LogRecord.toString">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; '[${level.name}] $loggerName: $message';
+</pre>
+</div>
+</div>
+</div>
         </div>
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-08 22:20:26.774</div>
+          <div>This page was generated at 2013-10-22 18:21:01.302</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>
