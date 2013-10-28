@@ -49,26 +49,26 @@ class Logger {
  /** Logging [Level] used for entries generated on this logger. */
  Level _level;
 
+ final Map&lt;String, Logger&gt; _children;
+
  /** Children in the hierarchy of loggers, indexed by their simple names. */
- Map&lt;String, Logger&gt; children;
+ final Map&lt;String, Logger&gt; children;
 
  /** Controller used to notify when log entries are added to this logger. */
  StreamController&lt;LogRecord&gt; _controller;
-
- /** The broadcast stream associated with the controller. */
- Stream _stream;
 
  /**
   * Singleton constructor. Calling `new Logger(name)` will return the same
   * actual instance whenever it is called with the same string name.
   */
  factory Logger(String name) {
+   return _loggers.putIfAbsent(name, () =&gt; new Logger._named(name));
+ }
+
+ factory Logger._named(String name) {
    if (name.startsWith('.')) {
      throw new ArgumentError("name shouldn't start with a '.'");
    }
-   if (_loggers == null) _loggers = &lt;String, Logger&gt;{};
-   if (_loggers.containsKey(name)) return _loggers[name];
-
    // Split hierarchical names (separated with '.').
    int dot = name.lastIndexOf('.');
    Logger parent = null;
@@ -80,14 +80,13 @@ class Logger {
      parent = new Logger(name.substring(0, dot));
      thisName = name.substring(dot + 1);
    }
-   final res = new Logger._internal(thisName, parent);
-   _loggers[name] = res;
-   return res;
+   return new Logger._internal(thisName, parent, new Map&lt;String, Logger&gt;());
  }
 
- Logger._internal(this.name, this.parent)
-     : children = new Map&lt;String, Logger&gt;() {
-   if (parent != null) parent.children[name] = this;
+ Logger._internal(this.name, this.parent, Map&lt;String, Logger&gt; children) :
+   this._children = children,
+   this.children = new UnmodifiableMapView(children) {
+   if (parent != null) parent._children[name] = this;
  }
 
  /**
@@ -103,7 +102,7 @@ class Logger {
  }
 
  /** Override the level for this particular [Logger] and its children. */
- set level(Level value) {
+ void set level(Level value) {
    if (hierarchicalLoggingEnabled &amp;&amp; parent != null) {
      _level = value;
    } else {
@@ -139,14 +138,18 @@ class Logger {
 
  /**
   * Adds a log record for a [message] at a particular [logLevel] if
-  * `isLoggable(logLevel)` is true. Use this method to create log entries for
-  * user-defined levels. To record a message at a predefined level (e.g.
-  * [Level.INFO], [Level.WARNING], etc) you can use their specialized methods
-  * instead (e.g. [info], [warning], etc).
+  * `isLoggable(logLevel)` is true.
+  *
+  * Use this method to create log entries for user-defined levels. To record a
+  * message at a predefined level (e.g. [Level.INFO], [Level.WARNING], etc) you
+  * can use their specialized methods instead (e.g. [info], [warning], etc).
   */
- void log(Level logLevel, String message, [exception]) {
+ void log(Level logLevel, String message, [Object error,
+                                           StackTrace stackTrace]) {
    if (isLoggable(logLevel)) {
-     var record = new LogRecord(logLevel, message, fullName, exception);
+     var record = new LogRecord(logLevel, message, fullName, error,
+         stackTrace);
+
      if (hierarchicalLoggingEnabled) {
        var target = this;
        while (target != null) {
@@ -160,44 +163,43 @@ class Logger {
  }
 
  /** Log message at level [Level.FINEST]. */
- void finest(String message, [exception]) =&gt;
-     log(Level.FINEST, message, exception);
+ void finest(String message, [Object error, StackTrace stackTrace]) =&gt;
+     log(Level.FINEST, message, error, stackTrace);
 
  /** Log message at level [Level.FINER]. */
- void finer(String message, [exception]) =&gt;
-     log(Level.FINER, message, exception);
+ void finer(String message, [Object error, StackTrace stackTrace]) =&gt;
+     log(Level.FINER, message, error, stackTrace);
 
  /** Log message at level [Level.FINE]. */
- void fine(String message, [exception]) =&gt;
-     log(Level.FINE, message, exception);
+ void fine(String message, [Object error, StackTrace stackTrace]) =&gt;
+     log(Level.FINE, message, error, stackTrace);
 
  /** Log message at level [Level.CONFIG]. */
- void config(String message, [exception]) =&gt;
-     log(Level.CONFIG, message, exception);
+ void config(String message, [Object error, StackTrace stackTrace]) =&gt;
+     log(Level.CONFIG, message, error, stackTrace);
 
  /** Log message at level [Level.INFO]. */
- void info(String message, [exception]) =&gt;
-     log(Level.INFO, message, exception);
+ void info(String message, [Object error, StackTrace stackTrace]) =&gt;
+     log(Level.INFO, message, error, stackTrace);
 
  /** Log message at level [Level.WARNING]. */
- void warning(String message, [exception]) =&gt;
-     log(Level.WARNING, message, exception);
+ void warning(String message, [Object error, StackTrace stackTrace]) =&gt;
+     log(Level.WARNING, message, error, stackTrace);
 
  /** Log message at level [Level.SEVERE]. */
- void severe(String message, [exception]) =&gt;
-     log(Level.SEVERE, message, exception);
+ void severe(String message, [Object error, StackTrace stackTrace]) =&gt;
+     log(Level.SEVERE, message, error, stackTrace);
 
  /** Log message at level [Level.SHOUT]. */
- void shout(String message, [exception]) =&gt;
-     log(Level.SHOUT, message, exception);
+ void shout(String message, [Object error, StackTrace stackTrace]) =&gt;
+     log(Level.SHOUT, message, error, stackTrace);
 
  Stream&lt;LogRecord&gt; _getStream() {
    if (hierarchicalLoggingEnabled || parent == null) {
      if (_controller == null) {
        _controller = new StreamController&lt;LogRecord&gt;.broadcast(sync: true);
-       _stream = _controller.stream;
      }
-     return _stream;
+     return _controller.stream;
    } else {
      return root._getStream();
    }
@@ -213,7 +215,7 @@ class Logger {
  static Logger get root =&gt; new Logger('');
 
  /** All [Logger]s in the system. */
- static Map&lt;String, Logger&gt; _loggers;
+ static final Map&lt;String, Logger&gt; _loggers = &lt;String, Logger&gt;{};
 }
 </pre>
 </div>
@@ -244,26 +246,7 @@ factory <strong>Logger</strong>(String name) <a class="anchor-link" href="#"
 actual instance whenever it is called with the same string name.</p>
 <pre class="source">
 factory Logger(String name) {
- if (name.startsWith('.')) {
-   throw new ArgumentError("name shouldn't start with a '.'");
- }
- if (_loggers == null) _loggers = &lt;String, Logger&gt;{};
- if (_loggers.containsKey(name)) return _loggers[name];
-
- // Split hierarchical names (separated with '.').
- int dot = name.lastIndexOf('.');
- Logger parent = null;
- String thisName;
- if (dot == -1) {
-   if (name != '') parent = new Logger('');
-   thisName = name;
- } else {
-   parent = new Logger(name.substring(0, dot));
-   thisName = name.substring(dot + 1);
- }
- final res = new Logger._internal(thisName, parent);
- _loggers[name] = res;
- return res;
+ return _loggers.putIfAbsent(name, () =&gt; new Logger._named(name));
 }
 </pre>
 </div>
@@ -273,14 +256,14 @@ factory Logger(String name) {
 <h3>Properties</h3>
 <div class="field"><h4 id="children">
 <button class="show-code">Code</button>
-Map&lt;String, <a href="../logging/Logger.html">Logger</a>&gt;         <strong>children</strong> <a class="anchor-link"
+final Map&lt;String, <a href="../logging/Logger.html">Logger</a>&gt;         <strong>children</strong> <a class="anchor-link"
             href="#children"
             title="Permalink to Logger.children">#</a>
         </h4>
         <div class="doc">
 <p>Children in the hierarchy of loggers, indexed by their simple names. </p>
 <pre class="source">
-Map&lt;String, Logger&gt; children
+final Map&lt;String, Logger&gt; children
 </pre>
 </div>
 </div>
@@ -318,12 +301,12 @@ Level get level {
 </div>
 <div class="method"><h4 id="level=">
 <button class="show-code">Code</button>
-dynamic <strong>set level</strong>(<a href="../logging/Level.html">Level</a> value) <a class="anchor-link" href="#level="
+void <strong>set level</strong>(<a href="../logging/Level.html">Level</a> value) <a class="anchor-link" href="#level="
               title="Permalink to Logger.set level">#</a></h4>
 <div class="doc">
 <p>Override the level for this particular <a class="crossref" href="../logging/Logger.html">Logger</a> and its children. </p>
 <pre class="source">
-set level(Level value) {
+void set level(Level value) {
  if (hierarchicalLoggingEnabled &amp;&amp; parent != null) {
    _level = value;
  } else {
@@ -403,61 +386,61 @@ void clearListeners() {
 </div>
 <div class="method"><h4 id="config">
 <button class="show-code">Code</button>
-void <strong>config</strong>(String message, [exception]) <a class="anchor-link" href="#config"
+void <strong>config</strong>(String message, [Object error, StackTrace stackTrace]) <a class="anchor-link" href="#config"
               title="Permalink to Logger.config">#</a></h4>
 <div class="doc">
 <p>Log message at level <a class="crossref" href="../logging/Level.html#CONFIG">Level.CONFIG</a>. </p>
 <pre class="source">
-void config(String message, [exception]) =&gt;
-   log(Level.CONFIG, message, exception);
+void config(String message, [Object error, StackTrace stackTrace]) =&gt;
+   log(Level.CONFIG, message, error, stackTrace);
 </pre>
 </div>
 </div>
 <div class="method"><h4 id="fine">
 <button class="show-code">Code</button>
-void <strong>fine</strong>(String message, [exception]) <a class="anchor-link" href="#fine"
+void <strong>fine</strong>(String message, [Object error, StackTrace stackTrace]) <a class="anchor-link" href="#fine"
               title="Permalink to Logger.fine">#</a></h4>
 <div class="doc">
 <p>Log message at level <a class="crossref" href="../logging/Level.html#FINE">Level.FINE</a>. </p>
 <pre class="source">
-void fine(String message, [exception]) =&gt;
-   log(Level.FINE, message, exception);
+void fine(String message, [Object error, StackTrace stackTrace]) =&gt;
+   log(Level.FINE, message, error, stackTrace);
 </pre>
 </div>
 </div>
 <div class="method"><h4 id="finer">
 <button class="show-code">Code</button>
-void <strong>finer</strong>(String message, [exception]) <a class="anchor-link" href="#finer"
+void <strong>finer</strong>(String message, [Object error, StackTrace stackTrace]) <a class="anchor-link" href="#finer"
               title="Permalink to Logger.finer">#</a></h4>
 <div class="doc">
 <p>Log message at level <a class="crossref" href="../logging/Level.html#FINER">Level.FINER</a>. </p>
 <pre class="source">
-void finer(String message, [exception]) =&gt;
-   log(Level.FINER, message, exception);
+void finer(String message, [Object error, StackTrace stackTrace]) =&gt;
+   log(Level.FINER, message, error, stackTrace);
 </pre>
 </div>
 </div>
 <div class="method"><h4 id="finest">
 <button class="show-code">Code</button>
-void <strong>finest</strong>(String message, [exception]) <a class="anchor-link" href="#finest"
+void <strong>finest</strong>(String message, [Object error, StackTrace stackTrace]) <a class="anchor-link" href="#finest"
               title="Permalink to Logger.finest">#</a></h4>
 <div class="doc">
 <p>Log message at level <a class="crossref" href="../logging/Level.html#FINEST">Level.FINEST</a>. </p>
 <pre class="source">
-void finest(String message, [exception]) =&gt;
-   log(Level.FINEST, message, exception);
+void finest(String message, [Object error, StackTrace stackTrace]) =&gt;
+   log(Level.FINEST, message, error, stackTrace);
 </pre>
 </div>
 </div>
 <div class="method"><h4 id="info">
 <button class="show-code">Code</button>
-void <strong>info</strong>(String message, [exception]) <a class="anchor-link" href="#info"
+void <strong>info</strong>(String message, [Object error, StackTrace stackTrace]) <a class="anchor-link" href="#info"
               title="Permalink to Logger.info">#</a></h4>
 <div class="doc">
 <p>Log message at level <a class="crossref" href="../logging/Level.html#INFO">Level.INFO</a>. </p>
 <pre class="source">
-void info(String message, [exception]) =&gt;
-   log(Level.INFO, message, exception);
+void info(String message, [Object error, StackTrace stackTrace]) =&gt;
+   log(Level.INFO, message, error, stackTrace);
 </pre>
 </div>
 </div>
@@ -475,20 +458,23 @@ bool isLoggable(Level value) =&gt; (value &gt;= level);
 </div>
 <div class="method"><h4 id="log">
 <button class="show-code">Code</button>
-void <strong>log</strong>(<a href="../logging/Level.html">Level</a> logLevel, String message, [exception]) <a class="anchor-link" href="#log"
+void <strong>log</strong>(<a href="../logging/Level.html">Level</a> logLevel, String message, [Object error, StackTrace stackTrace]) <a class="anchor-link" href="#log"
               title="Permalink to Logger.log">#</a></h4>
 <div class="doc">
 <p>Adds a log record for a 
 <span class="param">message</span> at a particular 
 <span class="param">logLevel</span> if
-<code>isLoggable(logLevel)</code> is true. Use this method to create log entries for
-user-defined levels. To record a message at a predefined level (e.g.
-<a class="crossref" href="../logging/Level.html#INFO">Level.INFO</a>, <a class="crossref" href="../logging/Level.html#WARNING">Level.WARNING</a>, etc) you can use their specialized methods
-instead (e.g. <a class="crossref" href="../logging/Logger.html#info">info</a>, <a class="crossref" href="../logging/Logger.html#warning">warning</a>, etc).</p>
+<code>isLoggable(logLevel)</code> is true.</p>
+<p>Use this method to create log entries for user-defined levels. To record a
+message at a predefined level (e.g. <a class="crossref" href="../logging/Level.html#INFO">Level.INFO</a>, <a class="crossref" href="../logging/Level.html#WARNING">Level.WARNING</a>, etc) you
+can use their specialized methods instead (e.g. <a class="crossref" href="../logging/Logger.html#info">info</a>, <a class="crossref" href="../logging/Logger.html#warning">warning</a>, etc).</p>
 <pre class="source">
-void log(Level logLevel, String message, [exception]) {
+void log(Level logLevel, String message, [Object error,
+                                         StackTrace stackTrace]) {
  if (isLoggable(logLevel)) {
-   var record = new LogRecord(logLevel, message, fullName, exception);
+   var record = new LogRecord(logLevel, message, fullName, error,
+       stackTrace);
+
    if (hierarchicalLoggingEnabled) {
      var target = this;
      while (target != null) {
@@ -505,37 +491,37 @@ void log(Level logLevel, String message, [exception]) {
 </div>
 <div class="method"><h4 id="severe">
 <button class="show-code">Code</button>
-void <strong>severe</strong>(String message, [exception]) <a class="anchor-link" href="#severe"
+void <strong>severe</strong>(String message, [Object error, StackTrace stackTrace]) <a class="anchor-link" href="#severe"
               title="Permalink to Logger.severe">#</a></h4>
 <div class="doc">
 <p>Log message at level <a class="crossref" href="../logging/Level.html#SEVERE">Level.SEVERE</a>. </p>
 <pre class="source">
-void severe(String message, [exception]) =&gt;
-   log(Level.SEVERE, message, exception);
+void severe(String message, [Object error, StackTrace stackTrace]) =&gt;
+   log(Level.SEVERE, message, error, stackTrace);
 </pre>
 </div>
 </div>
 <div class="method"><h4 id="shout">
 <button class="show-code">Code</button>
-void <strong>shout</strong>(String message, [exception]) <a class="anchor-link" href="#shout"
+void <strong>shout</strong>(String message, [Object error, StackTrace stackTrace]) <a class="anchor-link" href="#shout"
               title="Permalink to Logger.shout">#</a></h4>
 <div class="doc">
 <p>Log message at level <a class="crossref" href="../logging/Level.html#SHOUT">Level.SHOUT</a>. </p>
 <pre class="source">
-void shout(String message, [exception]) =&gt;
-   log(Level.SHOUT, message, exception);
+void shout(String message, [Object error, StackTrace stackTrace]) =&gt;
+   log(Level.SHOUT, message, error, stackTrace);
 </pre>
 </div>
 </div>
 <div class="method"><h4 id="warning">
 <button class="show-code">Code</button>
-void <strong>warning</strong>(String message, [exception]) <a class="anchor-link" href="#warning"
+void <strong>warning</strong>(String message, [Object error, StackTrace stackTrace]) <a class="anchor-link" href="#warning"
               title="Permalink to Logger.warning">#</a></h4>
 <div class="doc">
 <p>Log message at level <a class="crossref" href="../logging/Level.html#WARNING">Level.WARNING</a>. </p>
 <pre class="source">
-void warning(String message, [exception]) =&gt;
-   log(Level.WARNING, message, exception);
+void warning(String message, [Object error, StackTrace stackTrace]) =&gt;
+   log(Level.WARNING, message, error, stackTrace);
 </pre>
 </div>
 </div>
@@ -544,7 +530,7 @@ void warning(String message, [exception]) =&gt;
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-22 18:21:01.356</div>
+          <div>This page was generated at 2013-10-28 20:20:12.006</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

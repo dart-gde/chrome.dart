@@ -1,0 +1,335 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>UnmodifiableMapView&lt;K, V&gt; class / unmodifiable_collection Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="unmodifiable_collection" data-type="UnmodifiableMapView&amp;lt;K, V&amp;gt;">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../unmodifiable_collection.html">unmodifiable_collection</a> &rsaquo; <a href="../unmodifiable_collection/UnmodifiableMapView.html">UnmodifiableMapView&lt;K, V&gt;</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>UnmodifiableMapView&lt;K, V&gt;</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>An unmodifiable map.</p>
+<p>An UnmodifiableMapView contains a <a class="crossref" href="../dart_core/Map.html">Map</a> object and ensures
+that it does not change.
+Methods that would change the map,
+such as <a class="crossref" href="../unmodifiable_collection/UnmodifiableMapView.html#addAll">addAll</a> and <a class="crossref" href="../unmodifiable_collection/UnmodifiableMapView.html#remove">remove</a>, throw an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>.
+Permitted operations defer to the wrapped map.</p>
+<pre class="source">
+class UnmodifiableMapView&lt;K, V&gt; implements Map&lt;K, V&gt; {
+ Map&lt;K, V&gt; _source;
+ UnmodifiableMapView(Map&lt;K, V&gt; source) : _source = source;
+
+ static void _throw() {
+   throw new UnsupportedError("Cannot modify an unmodifiable Map");
+ }
+
+ int get length =&gt; _source.length;
+
+ bool get isEmpty =&gt; _source.isEmpty;
+
+ bool get isNotEmpty =&gt; _source.isNotEmpty;
+
+ V operator [](K key) =&gt; _source[key];
+
+ bool containsKey(K key) =&gt; _source.containsKey(key);
+
+ bool containsValue(V value) =&gt; _source.containsValue(value);
+
+ void forEach(void f(K key, V value)) =&gt; _source.forEach(f);
+
+ Iterable&lt;K&gt; get keys =&gt; _source.keys;
+
+ Iterable&lt;V&gt; get values =&gt; _source.values;
+
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the map are disallowed.
+  */
+ void operator []=(K key, V value) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the map are disallowed.
+  */
+ V putIfAbsent(K key, V ifAbsent()) { _throw(); }
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the map are disallowed.
+  */
+ void addAll(Map&lt;K, V&gt; other) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the map are disallowed.
+  */
+ V remove(K key) { _throw(); }
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the map are disallowed.
+  */
+ void clear() =&gt; _throw();
+}
+</pre>
+</div>
+<h3>Implements</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../dart_core/Map.html">Map&lt;K, V&gt;</a></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>UnmodifiableMapView</strong>(Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; source) <a class="anchor-link" href="#"
+              title="Permalink to UnmodifiableMapView&lt;K, V&gt;.UnmodifiableMapView">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a Map instance with the default implementation.</p>
+<div class="docs-inherited-from">docs inherited from Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; </div></div>
+<pre class="source">
+UnmodifiableMapView(Map&lt;K, V&gt; source) : _source = source;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="isEmpty">
+<button class="show-code">Code</button>
+final bool         <strong>isEmpty</strong> <a class="anchor-link"
+            href="#isEmpty"
+            title="Permalink to UnmodifiableMapView&lt;K, V&gt;.isEmpty">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if there is no key-value pair in the map.</p>
+<div class="docs-inherited-from">docs inherited from Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; </div></div>
+<pre class="source">
+bool get isEmpty =&gt; _source.isEmpty;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="isNotEmpty">
+<button class="show-code">Code</button>
+final bool         <strong>isNotEmpty</strong> <a class="anchor-link"
+            href="#isNotEmpty"
+            title="Permalink to UnmodifiableMapView&lt;K, V&gt;.isNotEmpty">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if there is at least one key-value pair in the map.</p>
+<div class="docs-inherited-from">docs inherited from Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; </div></div>
+<pre class="source">
+bool get isNotEmpty =&gt; _source.isNotEmpty;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="keys">
+<button class="show-code">Code</button>
+final Iterable&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>&gt;         <strong>keys</strong> <a class="anchor-link"
+            href="#keys"
+            title="Permalink to UnmodifiableMapView&lt;K, V&gt;.keys">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>The keys of <code>this</code>.</p>
+<p>The returned iterable has efficient <code>length</code> and <code>contains</code> operations,
+based on <a class="crossref" href="../unmodifiable_collection/UnmodifiableMapView.html#length">length</a> and <a class="crossref" href="../unmodifiable_collection/UnmodifiableMapView.html#containsKey">containsKey</a> of the map.</p>
+<div class="docs-inherited-from">docs inherited from Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; </div></div>
+<pre class="source">
+Iterable&lt;K&gt; get keys =&gt; _source.keys;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="length">
+<button class="show-code">Code</button>
+final int         <strong>length</strong> <a class="anchor-link"
+            href="#length"
+            title="Permalink to UnmodifiableMapView&lt;K, V&gt;.length">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>The number of key-value pairs in the map.</p>
+<div class="docs-inherited-from">docs inherited from Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; </div></div>
+<pre class="source">
+int get length =&gt; _source.length;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="values">
+<button class="show-code">Code</button>
+final Iterable&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt;         <strong>values</strong> <a class="anchor-link"
+            href="#values"
+            title="Permalink to UnmodifiableMapView&lt;K, V&gt;.values">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>The values of <code>this</code>.</p>
+<p>The returned iterable has an efficient <code>length</code> method based on the
+<a class="crossref" href="../unmodifiable_collection/UnmodifiableMapView.html#length">length</a> of the map.</p>
+<div class="docs-inherited-from">docs inherited from Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; </div></div>
+<pre class="source">
+Iterable&lt;V&gt; get values =&gt; _source.values;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Operators</h3>
+<div class="method"><h4 id="[]">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a> <strong>operator []</strong>(<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a> key) <a class="anchor-link" href="#[]"
+              title="Permalink to UnmodifiableMapView&lt;K, V&gt;.operator []">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the value for the given 
+<span class="param">key</span> or null if 
+<span class="param">key</span> is not
+in the map. Because null values are supported, one should either
+use <a class="crossref" href="../unmodifiable_collection/UnmodifiableMapView.html#containsKey">containsKey</a> to distinguish between an absent key and a null
+value, or use the <a class="crossref" href="../unmodifiable_collection/UnmodifiableMapView.html#putIfAbsent">putIfAbsent</a> method.</p>
+<div class="docs-inherited-from">docs inherited from Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; </div></div>
+<pre class="source">
+V operator [](K key) =&gt; _source[key];
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="[]=">
+<button class="show-code">Code</button>
+void <strong>operator []=</strong>(<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a> key, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a> value) <a class="anchor-link" href="#[]="
+              title="Permalink to UnmodifiableMapView&lt;K, V&gt;.operator []=">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the map are disallowed.</p>
+<pre class="source">
+void operator []=(K key, V value) =&gt; _throw();
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="addAll">
+<button class="show-code">Code</button>
+void <strong>addAll</strong>(Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; other) <a class="anchor-link" href="#addAll"
+              title="Permalink to UnmodifiableMapView&lt;K, V&gt;.addAll">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the map are disallowed.</p>
+<pre class="source">
+void addAll(Map&lt;K, V&gt; other) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="clear">
+<button class="show-code">Code</button>
+void <strong>clear</strong>() <a class="anchor-link" href="#clear"
+              title="Permalink to UnmodifiableMapView&lt;K, V&gt;.clear">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the map are disallowed.</p>
+<pre class="source">
+void clear() =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="containsKey">
+<button class="show-code">Code</button>
+bool <strong>containsKey</strong>(<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a> key) <a class="anchor-link" href="#containsKey"
+              title="Permalink to UnmodifiableMapView&lt;K, V&gt;.containsKey">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns true if this map contains the given key.</p>
+<div class="docs-inherited-from">docs inherited from Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; </div></div>
+<pre class="source">
+bool containsKey(K key) =&gt; _source.containsKey(key);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="containsValue">
+<button class="show-code">Code</button>
+bool <strong>containsValue</strong>(<a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a> value) <a class="anchor-link" href="#containsValue"
+              title="Permalink to UnmodifiableMapView&lt;K, V&gt;.containsValue">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns true if this map contains the given value.</p>
+<div class="docs-inherited-from">docs inherited from Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; </div></div>
+<pre class="source">
+bool containsValue(V value) =&gt; _source.containsValue(value);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="forEach">
+<button class="show-code">Code</button>
+void <strong>forEach</strong>(void f(<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a> key, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a> value)) <a class="anchor-link" href="#forEach"
+              title="Permalink to UnmodifiableMapView&lt;K, V&gt;.forEach">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Applies 
+<span class="param">f</span> to each {key, value} pair of the map.</p>
+<p>It is an error to add or remove keys from the map during iteration.</p>
+<div class="docs-inherited-from">docs inherited from Map&lt;<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a>, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a>&gt; </div></div>
+<pre class="source">
+void forEach(void f(K key, V value)) =&gt; _source.forEach(f);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="putIfAbsent">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a> <strong>putIfAbsent</strong>(<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a> key, <a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a> ifAbsent()) <a class="anchor-link" href="#putIfAbsent"
+              title="Permalink to UnmodifiableMapView&lt;K, V&gt;.putIfAbsent">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the map are disallowed.</p>
+<pre class="source">
+V putIfAbsent(K key, V ifAbsent()) { _throw(); }
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="remove">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/UnmodifiableMapView.html">V</a> <strong>remove</strong>(<a href="../unmodifiable_collection/UnmodifiableMapView.html">K</a> key) <a class="anchor-link" href="#remove"
+              title="Permalink to UnmodifiableMapView&lt;K, V&gt;.remove">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the map are disallowed.</p>
+<pre class="source">
+V remove(K key) { _throw(); }
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-10-28 20:20:12.052</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

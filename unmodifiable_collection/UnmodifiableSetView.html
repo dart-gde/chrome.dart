@@ -1,0 +1,640 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>UnmodifiableSetView&lt;E&gt; class / unmodifiable_collection Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="unmodifiable_collection" data-type="UnmodifiableSetView&amp;lt;E&amp;gt;">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../unmodifiable_collection.html">unmodifiable_collection</a> &rsaquo; <a href="../unmodifiable_collection/UnmodifiableSetView.html">UnmodifiableSetView&lt;E&gt;</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>UnmodifiableSetView&lt;E&gt;</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>An unmodifiable set.</p>
+<p>An UnmodifiableSetView contains a <a class="crossref" href="../dart_core/Set.html">Set</a> object and ensures
+that it does not change.
+Methods that would change the set,
+such as <a class="crossref" href="../unmodifiable_collection/UnmodifiableSetView.html#add">add</a> and <a class="crossref" href="../unmodifiable_collection/UnmodifiableSetView.html#remove">remove</a>, throw an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>.
+Permitted operations defer to the wrapped set.</p>
+<pre class="source">
+class UnmodifiableSetView&lt;E&gt; extends _IterableView&lt;E&gt;
+                                     implements Set&lt;E&gt; {
+ Set&lt;E&gt; _source;
+ UnmodifiableSetView(Set&lt;E&gt; source) : _source = source;
+
+ void _throw() {
+   throw new UnsupportedError("Cannot modify an unmodifiable Set");
+ }
+
+ bool containsAll(Iterable&lt;E&gt; other) =&gt; _source.containsAll(other);
+
+ Set&lt;E&gt; intersection(Set&lt;E&gt; other) =&gt; _source.intersection(other);
+
+ Set&lt;E&gt; union(Set&lt;E&gt; other) =&gt; _source.union(other);
+
+ Set&lt;E&gt; difference(Set&lt;E&gt; other) =&gt; _source.difference(other);
+
+ E lookup(Object object) =&gt; _source.lookup(object);
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the set are disallowed.
+  */
+ bool add(E value) {
+   _throw();
+ }
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the set are disallowed.
+  */
+ void addAll(Iterable&lt;E&gt; elements) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the set are disallowed.
+  */
+ bool remove(Object value) { _throw(); }
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the set are disallowed.
+  */
+ void removeAll(Iterable elements) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the set are disallowed.
+  */
+ void retainAll(Iterable elements) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the set are disallowed.
+  */
+ void removeWhere(bool test(E element)) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the set are disallowed.
+  */
+ void retainWhere(bool test(E element)) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the set are disallowed.
+  */
+ void clear() =&gt; _throw();
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../unmodifiable_collection/_IterableView.html">_IterableView&lt;E&gt;</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>UnmodifiableSetView&lt;E&gt;</strong></span></p>
+<h3>Implements</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../dart_core/Set.html">Set&lt;E&gt;</a></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>UnmodifiableSetView</strong>(Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; source) <a class="anchor-link" href="#"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.UnmodifiableSetView">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates an empty <a class="crossref" href="../dart_core/Set.html">Set</a>.</p>
+<p>The created <code>Set</code> is a <code>LinkedHashSet</code>. As such, it considers elements that
+are equal (using <code>==</code>) to be indistinguishable, and requires them to
+have a compatible <a class="crossref" href="../dart_core/Object.html#hashCode">Object.hashCode</a> implementation.</p>
+<div class="docs-inherited-from">docs inherited from Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; </div></div>
+<pre class="source">
+UnmodifiableSetView(Set&lt;E&gt; source) : _source = source;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="first">
+<button class="show-code">Code</button>
+final <a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>         <strong>first</strong> <a class="anchor-link"
+            href="#first"
+            title="Permalink to UnmodifiableSetView&lt;E&gt;.first">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E get first =&gt; _source.first;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="isEmpty">
+<button class="show-code">Code</button>
+final bool         <strong>isEmpty</strong> <a class="anchor-link"
+            href="#isEmpty"
+            title="Permalink to UnmodifiableSetView&lt;E&gt;.isEmpty">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+bool get isEmpty =&gt; _source.isEmpty;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="isNotEmpty">
+<button class="show-code">Code</button>
+final bool         <strong>isNotEmpty</strong> <a class="anchor-link"
+            href="#isNotEmpty"
+            title="Permalink to UnmodifiableSetView&lt;E&gt;.isNotEmpty">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+bool get isNotEmpty =&gt; _source.isNotEmpty;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="iterator">
+<button class="show-code">Code</button>
+final Iterator&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt;         <strong>iterator</strong> <a class="anchor-link"
+            href="#iterator"
+            title="Permalink to UnmodifiableSetView&lt;E&gt;.iterator">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterator&lt;E&gt; get iterator =&gt; _source.iterator;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="last">
+<button class="show-code">Code</button>
+final <a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>         <strong>last</strong> <a class="anchor-link"
+            href="#last"
+            title="Permalink to UnmodifiableSetView&lt;E&gt;.last">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E get last =&gt; _source.last;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="length">
+<button class="show-code">Code</button>
+final int         <strong>length</strong> <a class="anchor-link"
+            href="#length"
+            title="Permalink to UnmodifiableSetView&lt;E&gt;.length">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+int get length =&gt; _source.length;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="single">
+<button class="show-code">Code</button>
+final <a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>         <strong>single</strong> <a class="anchor-link"
+            href="#single"
+            title="Permalink to UnmodifiableSetView&lt;E&gt;.single">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E get single =&gt; _source.single;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="add">
+<button class="show-code">Code</button>
+bool <strong>add</strong>(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> value) <a class="anchor-link" href="#add"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.add">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the set are disallowed.</p>
+<pre class="source">
+bool add(E value) {
+ _throw();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="addAll">
+<button class="show-code">Code</button>
+void <strong>addAll</strong>(Iterable&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; elements) <a class="anchor-link" href="#addAll"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.addAll">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the set are disallowed.</p>
+<pre class="source">
+void addAll(Iterable&lt;E&gt; elements) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="any">
+<button class="show-code">Code</button>
+bool <strong>any</strong>(bool test(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element)) <a class="anchor-link" href="#any"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.any">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+bool any(bool test(E element)) =&gt; _source.any(test);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="clear">
+<button class="show-code">Code</button>
+void <strong>clear</strong>() <a class="anchor-link" href="#clear"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.clear">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the set are disallowed.</p>
+<pre class="source">
+void clear() =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="contains">
+<button class="show-code">Code</button>
+bool <strong>contains</strong>(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element) <a class="anchor-link" href="#contains"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.contains">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+bool contains(E element) =&gt; _source.contains(element);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="containsAll">
+<button class="show-code">Code</button>
+bool <strong>containsAll</strong>(Iterable&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; other) <a class="anchor-link" href="#containsAll"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.containsAll">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns whether this Set contains all the elements of 
+<span class="param">other</span>.</p>
+<div class="docs-inherited-from">docs inherited from Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; </div></div>
+<pre class="source">
+bool containsAll(Iterable&lt;E&gt; other) =&gt; _source.containsAll(other);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="difference">
+<button class="show-code">Code</button>
+Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; <strong>difference</strong>(Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; other) <a class="anchor-link" href="#difference"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.difference">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a new set with the the elements of this that are not in 
+<span class="param">other</span>.</p>
+<p>That is, the returned set contains all the elements of this <code>Set</code> that
+are not elements of 
+<span class="param">other</span>.</p>
+<div class="docs-inherited-from">docs inherited from Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; </div></div>
+<pre class="source">
+Set&lt;E&gt; difference(Set&lt;E&gt; other) =&gt; _source.difference(other);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="elementAt">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> <strong>elementAt</strong>(int index) <a class="anchor-link" href="#elementAt"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.elementAt">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E elementAt(int index) =&gt; _source.elementAt(index);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="every">
+<button class="show-code">Code</button>
+bool <strong>every</strong>(bool test(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element)) <a class="anchor-link" href="#every"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.every">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+bool every(bool test(E element)) =&gt; _source.every(test);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="expand">
+<button class="show-code">Code</button>
+Iterable <strong>expand</strong>(Iterable f(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element)) <a class="anchor-link" href="#expand"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.expand">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable expand(Iterable f(E element)) =&gt; _source.expand(f);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="firstWhere">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> <strong>firstWhere</strong>(bool test(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element), {<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> orElse()}) <a class="anchor-link" href="#firstWhere"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.firstWhere">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E firstWhere(bool test(E element), { E orElse() })
+   =&gt; _source.firstWhere(test, orElse: orElse);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="fold">
+<button class="show-code">Code</button>
+dynamic <strong>fold</strong>(initialValue, combine(previousValue, <a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element)) <a class="anchor-link" href="#fold"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.fold">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+dynamic fold(var initialValue,
+            dynamic combine(var previousValue, E element))
+   =&gt; _source.fold(initialValue, combine);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="forEach">
+<button class="show-code">Code</button>
+void <strong>forEach</strong>(void f(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element)) <a class="anchor-link" href="#forEach"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.forEach">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+void forEach(void f(E element)) =&gt; _source.forEach(f);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="intersection">
+<button class="show-code">Code</button>
+Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; <strong>intersection</strong>(Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; other) <a class="anchor-link" href="#intersection"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.intersection">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a new set which is the intersection between this set and 
+<span class="param">other</span>.</p>
+<p>That is, the returned set contains all the elements of this <code>Set</code> that
+are also elements of 
+<span class="param">other</span>.</p>
+<div class="docs-inherited-from">docs inherited from Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; </div></div>
+<pre class="source">
+Set&lt;E&gt; intersection(Set&lt;E&gt; other) =&gt; _source.intersection(other);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="join">
+<button class="show-code">Code</button>
+String <strong>join</strong>([String separator = ""]) <a class="anchor-link" href="#join"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.join">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+String join([String separator = ""]) =&gt; _source.join(separator);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="lastWhere">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> <strong>lastWhere</strong>(bool test(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element), {<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> orElse()}) <a class="anchor-link" href="#lastWhere"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.lastWhere">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E lastWhere(bool test(E element), {E orElse()})
+   =&gt; _source.lastWhere(test, orElse: orElse);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="lookup">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> <strong>lookup</strong>(Object object) <a class="anchor-link" href="#lookup"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.lookup">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>If an object equal to 
+<span class="param">object</span> is in the set, return it.</p>
+<p>Checks if there is an object in the set that is equal to 
+<span class="param">object</span>.
+If so, that object is returned, otherwise returns null.</p>
+<div class="docs-inherited-from">docs inherited from Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; </div></div>
+<pre class="source">
+E lookup(Object object) =&gt; _source.lookup(object);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="map">
+<button class="show-code">Code</button>
+Iterable <strong>map</strong>(f(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element)) <a class="anchor-link" href="#map"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.map">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable map(f(E element)) =&gt; _source.map(f);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="reduce">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> <strong>reduce</strong>(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> combine(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> value, <a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element)) <a class="anchor-link" href="#reduce"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.reduce">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E reduce(E combine(E value, E element)) =&gt; _source.reduce(combine);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="remove">
+<button class="show-code">Code</button>
+bool <strong>remove</strong>(Object value) <a class="anchor-link" href="#remove"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.remove">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the set are disallowed.</p>
+<pre class="source">
+bool remove(Object value) { _throw(); }
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeAll">
+<button class="show-code">Code</button>
+void <strong>removeAll</strong>(Iterable elements) <a class="anchor-link" href="#removeAll"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.removeAll">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the set are disallowed.</p>
+<pre class="source">
+void removeAll(Iterable elements) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeWhere">
+<button class="show-code">Code</button>
+void <strong>removeWhere</strong>(bool test(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element)) <a class="anchor-link" href="#removeWhere"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.removeWhere">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the set are disallowed.</p>
+<pre class="source">
+void removeWhere(bool test(E element)) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="retainAll">
+<button class="show-code">Code</button>
+void <strong>retainAll</strong>(Iterable elements) <a class="anchor-link" href="#retainAll"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.retainAll">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the set are disallowed.</p>
+<pre class="source">
+void retainAll(Iterable elements) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="retainWhere">
+<button class="show-code">Code</button>
+void <strong>retainWhere</strong>(bool test(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element)) <a class="anchor-link" href="#retainWhere"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.retainWhere">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the set are disallowed.</p>
+<pre class="source">
+void retainWhere(bool test(E element)) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="singleWhere">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> <strong>singleWhere</strong>(bool test(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element)) <a class="anchor-link" href="#singleWhere"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.singleWhere">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E singleWhere(bool test(E element)) =&gt; _source.singleWhere(test);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="skip">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; <strong>skip</strong>(int n) <a class="anchor-link" href="#skip"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.skip">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable&lt;E&gt; skip(int n) =&gt; _source.skip(n);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="skipWhile">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; <strong>skipWhile</strong>(bool test(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> value)) <a class="anchor-link" href="#skipWhile"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.skipWhile">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable&lt;E&gt; skipWhile(bool test(E value)) =&gt; _source.skipWhile(test);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="take">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; <strong>take</strong>(int n) <a class="anchor-link" href="#take"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.take">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable&lt;E&gt; take(int n) =&gt; _source.take(n);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="takeWhile">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; <strong>takeWhile</strong>(bool test(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> value)) <a class="anchor-link" href="#takeWhile"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.takeWhile">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable&lt;E&gt; takeWhile(bool test(E value)) =&gt; _source.takeWhile(test);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toList">
+<button class="show-code">Code</button>
+List&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; <strong>toList</strong>({bool growable: true}) <a class="anchor-link" href="#toList"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.toList">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+List&lt;E&gt; toList({ bool growable: true }) =&gt; _source.toList(growable: growable);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toSet">
+<button class="show-code">Code</button>
+Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; <strong>toSet</strong>() <a class="anchor-link" href="#toSet"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.toSet">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Set&lt;E&gt; toSet() =&gt; _source.toSet();
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.toString">#</a></h4>
+<div class="inherited-from">inherited from IterableBase </div><div class="doc">
+<p>Returns a string representation of (some of) the elements of <code>this</code>.</p>
+<p>Elements are represented by their own <code>toString</code> results.</p>
+<p>The representation always contains the first three elements.
+If there are less than a hundred elements in the iterable, it also
+contains the last two elements.</p>
+<p>If the resulting string isn't above 80 characters, more elements are
+included from the start of the iterable.</p>
+<p>The conversion may omit calling <code>toString</code> on some elements if they
+are known to now occur in the output, and it may stop iterating after
+a hundred elements.</p>
+<pre class="source">
+String toString() =&gt; _iterableToString(this);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="union">
+<button class="show-code">Code</button>
+Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; <strong>union</strong>(Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; other) <a class="anchor-link" href="#union"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.union">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a new set which contains all the elements of this set and 
+<span class="param">other</span>.</p>
+<p>That is, the returned set contains all the elements of this <code>Set</code> and
+all the elements of 
+<span class="param">other</span>.</p>
+<div class="docs-inherited-from">docs inherited from Set&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; </div></div>
+<pre class="source">
+Set&lt;E&gt; union(Set&lt;E&gt; other) =&gt; _source.union(other);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="where">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a>&gt; <strong>where</strong>(bool test(<a href="../unmodifiable_collection/UnmodifiableSetView.html">E</a> element)) <a class="anchor-link" href="#where"
+              title="Permalink to UnmodifiableSetView&lt;E&gt;.where">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable&lt;E&gt; where(bool test(E element)) =&gt; _source.where(test);
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-10-28 20:20:12.083</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

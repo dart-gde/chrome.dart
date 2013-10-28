@@ -50,10 +50,21 @@ class LogRecord {
 
  static int _nextNumber = 0;
 
- /** Associated exception (if any) when recording errors messages. */
- var exception;
+ /** Associated error (if any) when recording errors messages. */
+ final Object error;
 
- LogRecord(this.level, this.message, this.loggerName, [this.exception])
+ // TODO(kevmoo) - remove before V1
+ /**
+  * DEPRECATED. Use [error] instead.
+  */
+ @deprecated
+ Object get exception =&gt; error;
+
+ /** Associated stackTrace (if any) when recording errors messages. */
+ final StackTrace stackTrace;
+
+ LogRecord(this.level, this.message, this.loggerName, [this.error,
+                                                       this.stackTrace])
      : time = new DateTime.now(),
        sequenceNumber = LogRecord._nextNumber++;
 
@@ -65,7 +76,7 @@ class LogRecord {
 <h3>Constructors</h3>
 <div class="method"><h4 id="">
 <button class="show-code">Code</button>
-new <strong>LogRecord</strong>(<a href="../logging/Level.html">Level</a> level, String message, String loggerName, [exception]) <a class="anchor-link" href="#"
+new <strong>LogRecord</strong>(<a href="../logging/Level.html">Level</a> level, String message, String loggerName, [Object error, StackTrace stackTrace]) <a class="anchor-link" href="#"
               title="Permalink to LogRecord.LogRecord">#</a></h4>
 <div class="doc">
 <div class="inherited">
@@ -75,7 +86,8 @@ through their identity. An <a class="crossref" href="../dart_core/Object.html">O
 only.</p>
 <div class="docs-inherited-from">docs inherited from Object </div></div>
 <pre class="source">
-LogRecord(this.level, this.message, this.loggerName, [this.exception])
+LogRecord(this.level, this.message, this.loggerName, [this.error,
+                                                     this.stackTrace])
    : time = new DateTime.now(),
      sequenceNumber = LogRecord._nextNumber++;
 </pre>
@@ -84,16 +96,30 @@ LogRecord(this.level, this.message, this.loggerName, [this.exception])
 </div>
 <div>
 <h3>Properties</h3>
+<div class="field"><h4 id="error">
+<button class="show-code">Code</button>
+final Object         <strong>error</strong> <a class="anchor-link"
+            href="#error"
+            title="Permalink to LogRecord.error">#</a>
+        </h4>
+        <div class="doc">
+<p>Associated error (if any) when recording errors messages. </p>
+<pre class="source">
+final Object error
+</pre>
+</div>
+</div>
 <div class="field"><h4 id="exception">
 <button class="show-code">Code</button>
-var         <strong>exception</strong> <a class="anchor-link"
+final Object         <strong>exception</strong> <a class="anchor-link"
             href="#exception"
             title="Permalink to LogRecord.exception">#</a>
         </h4>
         <div class="doc">
-<p>Associated exception (if any) when recording errors messages. </p>
+<p>DEPRECATED. Use <a class="crossref" href="../logging/LogRecord.html#error">error</a> instead.</p>
 <pre class="source">
-var exception
+@deprecated
+Object get exception =&gt; error;
 </pre>
 </div>
 </div>
@@ -147,6 +173,19 @@ final int sequenceNumber
 </pre>
 </div>
 </div>
+<div class="field"><h4 id="stackTrace">
+<button class="show-code">Code</button>
+final StackTrace         <strong>stackTrace</strong> <a class="anchor-link"
+            href="#stackTrace"
+            title="Permalink to LogRecord.stackTrace">#</a>
+        </h4>
+        <div class="doc">
+<p>Associated stackTrace (if any) when recording errors messages. </p>
+<pre class="source">
+final StackTrace stackTrace
+</pre>
+</div>
+</div>
 <div class="field"><h4 id="time">
 <button class="show-code">Code</button>
 final DateTime         <strong>time</strong> <a class="anchor-link"
@@ -181,7 +220,7 @@ String toString() =&gt; '[${level.name}] $loggerName: $message';
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-22 18:21:01.302</div>
+          <div>This page was generated at 2013-10-28 20:20:11.959</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

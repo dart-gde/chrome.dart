@@ -44,7 +44,6 @@ own level, make sure you use a value between those used in <a class="crossref" h
 <pre class="source">
 class Level implements Comparable&lt;Level&gt; {
 
- // TODO(sigmund): mark name/value as 'const' when the language supports it.
  final String name;
 
  /**
@@ -85,7 +84,7 @@ class Level implements Comparable&lt;Level&gt; {
  /** Key for extra debugging loudness ([value] = 1200). */
  static const Level SHOUT = const Level('SHOUT', 1200);
 
- bool operator ==(Level other) =&gt; other != null &amp;&amp; value == other.value;
+ bool operator ==(Object other) =&gt; other is Level &amp;&amp; value == other.value;
  bool operator &lt;(Level other) =&gt; value &lt; other.value;
  bool operator &lt;=(Level other) =&gt; value &lt;= other.value;
  bool operator &gt;(Level other) =&gt; value &gt; other.value;
@@ -346,7 +345,7 @@ bool operator &gt;=(Level other) =&gt; value &gt;= other.value;
 </div>
 <div class="method"><h4 id="==">
 <button class="show-code">Code</button>
-bool <strong>operator ==</strong>(<a href="../logging/Level.html">Level</a> other) <a class="anchor-link" href="#=="
+bool <strong>operator ==</strong>(Object other) <a class="anchor-link" href="#=="
               title="Permalink to Level.operator ==">#</a></h4>
 <div class="doc">
 <div class="inherited">
@@ -371,7 +370,7 @@ was modified.</p>
 the <a class="crossref" href="../logging/Level.html#hashCode">hashCode</a> method as well to maintain consistency.</p>
 <div class="docs-inherited-from">docs inherited from Object </div></div>
 <pre class="source">
-bool operator ==(Level other) =&gt; other != null &amp;&amp; value == other.value;
+bool operator ==(Object other) =&gt; other is Level &amp;&amp; value == other.value;
 </pre>
 </div>
 </div>
@@ -414,7 +413,7 @@ String toString() =&gt; name;
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-22 18:21:01.331</div>
+          <div>This page was generated at 2013-10-28 20:20:11.985</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

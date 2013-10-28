@@ -1,0 +1,985 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>NonGrowableListView&lt;E&gt; class / unmodifiable_collection Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="unmodifiable_collection" data-type="NonGrowableListView&amp;lt;E&amp;gt;">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../unmodifiable_collection.html">unmodifiable_collection</a> &rsaquo; <a href="../unmodifiable_collection/NonGrowableListView.html">NonGrowableListView&lt;E&gt;</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>NonGrowableListView&lt;E&gt;</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>A fixed-length list.</p>
+<p>A NonGrowableListView contains a <a class="crossref" href="../dart_core/List.html">List</a> object and ensures that
+its length does not change.
+Methods that would change the length of the list,
+such as <a class="crossref" href="../unmodifiable_collection/NonGrowableListView.html#add">add</a> and <a class="crossref" href="../unmodifiable_collection/NonGrowableListView.html#remove">remove</a>, throw an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>.</p>
+<p>This class <em>does</em> allow changes to the contents of the wrapped list.
+You can, for example, <a class="crossref" href="../unmodifiable_collection/NonGrowableListView.html#sort">sort</a> the list.
+Permitted operations defer to the wrapped list.</p>
+<pre class="source">
+class NonGrowableListView&lt;E&gt; extends _IterableView&lt;E&gt;
+                                    implements List&lt;E&gt; {
+ List&lt;E&gt; _source;
+ NonGrowableListView(List&lt;E&gt; source) : _source = source;
+
+ static void _throw() {
+   throw new UnsupportedError(
+       "Cannot change the length of a fixed-length list");
+ }
+
+ int get length =&gt; _source.length;
+
+ E operator [](int index) =&gt; _source[index];
+
+ int indexOf(E element, [int start = 0]) =&gt; _source.indexOf(element, start);
+
+ int lastIndexOf(E element, [int start])
+     =&gt; _source.lastIndexOf(element, start);
+
+ Iterable&lt;E&gt; getRange(int start, int end) =&gt; _source.getRange(start, end);
+
+ List&lt;E&gt; sublist(int start, [int end]) =&gt; _source.sublist(start, end);
+
+ Iterable&lt;E&gt; get reversed =&gt; _source.reversed;
+
+ Map&lt;int, E&gt; asMap() =&gt; _source.asMap();
+
+ void operator []=(int index, E value) { _source[index] = value; }
+
+ void sort([int compare(E a, E b)]) { _source.sort(compare); }
+
+ void shuffle([Random random]) { _source.shuffle(random); }
+
+ void setRange(int start, int end, Iterable&lt;E&gt; iterable, [int skipCount = 0]) {
+   _source.setRange(start, end, iterable, skipCount);
+ }
+
+ void fillRange(int start, int end, [E fillValue]) {
+   _source.fillRange(start, end, fillValue);
+ }
+
+ void setAll(int index, Iterable&lt;E&gt; iterable) {
+   _source.setAll(index, iterable);
+ }
+
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ void set length(int newLength) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ bool add(E value) {
+   _throw();
+ }
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ void addAll(Iterable&lt;E&gt; iterable) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ void insert(int index, E element) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ void insertAll(int index, Iterable&lt;E&gt; iterable) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ bool remove(Object value) { _throw(); }
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ E removeAt(int index) { _throw(); }
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ E removeLast() { _throw(); }
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ void removeWhere(bool test(E element)) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ void retainWhere(bool test(E element)) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ void removeRange(int start, int end) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ void replaceRange(int start, int end, Iterable&lt;E&gt; iterable) =&gt; _throw();
+
+ /**
+  * Throws an [UnsupportedError];
+  * operations that change the length of the list are disallowed.
+  */
+ void clear() =&gt; _throw();
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../unmodifiable_collection/_IterableView.html">_IterableView&lt;E&gt;</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>NonGrowableListView&lt;E&gt;</strong></span></p>
+<h3>Implements</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../dart_core/List.html">List&lt;E&gt;</a></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>NonGrowableListView</strong>(List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; source) <a class="anchor-link" href="#"
+              title="Permalink to NonGrowableListView&lt;E&gt;.NonGrowableListView">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a list of the given length.</p>
+<p>The created list is fixed-length if <a class="crossref" href="../unmodifiable_collection/NonGrowableListView.html#length">length</a> is provided.</p>
+<pre><code>List fixedLengthList = new List(3);
+fixedLengthList.length;     // 3
+fixedLengthList.length = 1; // Error
+</code></pre>
+<p>The list has length 0 and is growable if <a class="crossref" href="../unmodifiable_collection/NonGrowableListView.html#length">length</a> is omitted.</p>
+<pre><code>List growableList = new List();
+growableList.length; // 0;
+growableList.length = 3;
+</code></pre>
+<p>An error occurs if <a class="crossref" href="../unmodifiable_collection/NonGrowableListView.html#length">length</a> is negative.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+NonGrowableListView(List&lt;E&gt; source) : _source = source;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="first">
+<button class="show-code">Code</button>
+final <a href="../unmodifiable_collection/NonGrowableListView.html">E</a>         <strong>first</strong> <a class="anchor-link"
+            href="#first"
+            title="Permalink to NonGrowableListView&lt;E&gt;.first">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E get first =&gt; _source.first;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="isEmpty">
+<button class="show-code">Code</button>
+final bool         <strong>isEmpty</strong> <a class="anchor-link"
+            href="#isEmpty"
+            title="Permalink to NonGrowableListView&lt;E&gt;.isEmpty">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+bool get isEmpty =&gt; _source.isEmpty;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="isNotEmpty">
+<button class="show-code">Code</button>
+final bool         <strong>isNotEmpty</strong> <a class="anchor-link"
+            href="#isNotEmpty"
+            title="Permalink to NonGrowableListView&lt;E&gt;.isNotEmpty">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+bool get isNotEmpty =&gt; _source.isNotEmpty;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="iterator">
+<button class="show-code">Code</button>
+final Iterator&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt;         <strong>iterator</strong> <a class="anchor-link"
+            href="#iterator"
+            title="Permalink to NonGrowableListView&lt;E&gt;.iterator">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterator&lt;E&gt; get iterator =&gt; _source.iterator;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="last">
+<button class="show-code">Code</button>
+final <a href="../unmodifiable_collection/NonGrowableListView.html">E</a>         <strong>last</strong> <a class="anchor-link"
+            href="#last"
+            title="Permalink to NonGrowableListView&lt;E&gt;.last">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E get last =&gt; _source.last;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="length">
+<button class="show-code">Code</button>
+int <strong>get length</strong> <a class="anchor-link" href="#length"
+              title="Permalink to NonGrowableListView&lt;E&gt;.get length">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the number of objects in this list.</p>
+<p>The valid indices for a list are <code>0</code> through <code>length - 1</code>.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+int get length =&gt; _source.length;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="length=">
+<button class="show-code">Code</button>
+void <strong>set length</strong>(int newLength) <a class="anchor-link" href="#length="
+              title="Permalink to NonGrowableListView&lt;E&gt;.set length">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+void set length(int newLength) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="reversed">
+<button class="show-code">Code</button>
+final Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt;         <strong>reversed</strong> <a class="anchor-link"
+            href="#reversed"
+            title="Permalink to NonGrowableListView&lt;E&gt;.reversed">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns an <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> of the objects in this list in reverse order.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+Iterable&lt;E&gt; get reversed =&gt; _source.reversed;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="single">
+<button class="show-code">Code</button>
+final <a href="../unmodifiable_collection/NonGrowableListView.html">E</a>         <strong>single</strong> <a class="anchor-link"
+            href="#single"
+            title="Permalink to NonGrowableListView&lt;E&gt;.single">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E get single =&gt; _source.single;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Operators</h3>
+<div class="method"><h4 id="[]">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> <strong>operator []</strong>(int index) <a class="anchor-link" href="#[]"
+              title="Permalink to NonGrowableListView&lt;E&gt;.operator []">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the object at the given 
+<span class="param">index</span> in the list
+or throws a <a class="crossref" href="../dart_core/RangeError.html">RangeError</a> if 
+<span class="param">index</span> is out of bounds.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+E operator [](int index) =&gt; _source[index];
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="[]=">
+<button class="show-code">Code</button>
+void <strong>operator []=</strong>(int index, <a href="../unmodifiable_collection/NonGrowableListView.html">E</a> value) <a class="anchor-link" href="#[]="
+              title="Permalink to NonGrowableListView&lt;E&gt;.operator []=">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Sets the value at the given 
+<span class="param">index</span> in the list to 
+<span class="param">value</span>
+or throws a <a class="crossref" href="../dart_core/RangeError.html">RangeError</a> if 
+<span class="param">index</span> is out of bounds.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+void operator []=(int index, E value) { _source[index] = value; }
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="add">
+<button class="show-code">Code</button>
+bool <strong>add</strong>(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> value) <a class="anchor-link" href="#add"
+              title="Permalink to NonGrowableListView&lt;E&gt;.add">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+bool add(E value) {
+ _throw();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="addAll">
+<button class="show-code">Code</button>
+void <strong>addAll</strong>(Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; iterable) <a class="anchor-link" href="#addAll"
+              title="Permalink to NonGrowableListView&lt;E&gt;.addAll">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+void addAll(Iterable&lt;E&gt; iterable) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="any">
+<button class="show-code">Code</button>
+bool <strong>any</strong>(bool test(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element)) <a class="anchor-link" href="#any"
+              title="Permalink to NonGrowableListView&lt;E&gt;.any">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+bool any(bool test(E element)) =&gt; _source.any(test);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asMap">
+<button class="show-code">Code</button>
+Map&lt;int, <a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; <strong>asMap</strong>() <a class="anchor-link" href="#asMap"
+              title="Permalink to NonGrowableListView&lt;E&gt;.asMap">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns an unmodifiable <a class="crossref" href="../dart_core/Map.html">Map</a> view of <code>this</code>.</p>
+<p>The map uses the indices of this list as keys and the corresponding objects
+as values. The <code>Map.keys</code> <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> iterates the indices of this list
+in numerical order.</p>
+<pre><code>List&lt;String&gt; words = ['fee', 'fi', 'fo', 'fum'];
+Map&lt;int, String&gt; map = words.asMap();
+map[0] + map[1];   // 'feefi';
+map.keys.toList(); // [0, 1, 2, 3]
+</code></pre>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+Map&lt;int, E&gt; asMap() =&gt; _source.asMap();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="clear">
+<button class="show-code">Code</button>
+void <strong>clear</strong>() <a class="anchor-link" href="#clear"
+              title="Permalink to NonGrowableListView&lt;E&gt;.clear">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+void clear() =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="contains">
+<button class="show-code">Code</button>
+bool <strong>contains</strong>(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element) <a class="anchor-link" href="#contains"
+              title="Permalink to NonGrowableListView&lt;E&gt;.contains">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+bool contains(E element) =&gt; _source.contains(element);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="elementAt">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> <strong>elementAt</strong>(int index) <a class="anchor-link" href="#elementAt"
+              title="Permalink to NonGrowableListView&lt;E&gt;.elementAt">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E elementAt(int index) =&gt; _source.elementAt(index);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="every">
+<button class="show-code">Code</button>
+bool <strong>every</strong>(bool test(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element)) <a class="anchor-link" href="#every"
+              title="Permalink to NonGrowableListView&lt;E&gt;.every">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+bool every(bool test(E element)) =&gt; _source.every(test);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="expand">
+<button class="show-code">Code</button>
+Iterable <strong>expand</strong>(Iterable f(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element)) <a class="anchor-link" href="#expand"
+              title="Permalink to NonGrowableListView&lt;E&gt;.expand">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable expand(Iterable f(E element)) =&gt; _source.expand(f);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fillRange">
+<button class="show-code">Code</button>
+void <strong>fillRange</strong>(int start, int end, [<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> fillValue]) <a class="anchor-link" href="#fillRange"
+              title="Permalink to NonGrowableListView&lt;E&gt;.fillRange">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Sets the objects in the range 
+<span class="param">start</span> inclusive to 
+<span class="param">end</span> exclusive
+to the given 
+<span class="param">fillValue</span>.</p>
+<p>An error occurs if 
+<span class="param">start</span>..
+<span class="param">end</span> is not a valid range for <code>this</code>.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+void fillRange(int start, int end, [E fillValue]) {
+ _source.fillRange(start, end, fillValue);
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="firstWhere">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> <strong>firstWhere</strong>(bool test(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element), {<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> orElse()}) <a class="anchor-link" href="#firstWhere"
+              title="Permalink to NonGrowableListView&lt;E&gt;.firstWhere">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E firstWhere(bool test(E element), { E orElse() })
+   =&gt; _source.firstWhere(test, orElse: orElse);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="fold">
+<button class="show-code">Code</button>
+dynamic <strong>fold</strong>(initialValue, combine(previousValue, <a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element)) <a class="anchor-link" href="#fold"
+              title="Permalink to NonGrowableListView&lt;E&gt;.fold">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+dynamic fold(var initialValue,
+            dynamic combine(var previousValue, E element))
+   =&gt; _source.fold(initialValue, combine);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="forEach">
+<button class="show-code">Code</button>
+void <strong>forEach</strong>(void f(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element)) <a class="anchor-link" href="#forEach"
+              title="Permalink to NonGrowableListView&lt;E&gt;.forEach">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+void forEach(void f(E element)) =&gt; _source.forEach(f);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getRange">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; <strong>getRange</strong>(int start, int end) <a class="anchor-link" href="#getRange"
+              title="Permalink to NonGrowableListView&lt;E&gt;.getRange">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns an <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> that iterates over the objects in the range
+
+<span class="param">start</span> inclusive to 
+<span class="param">end</span> exclusive.</p>
+<p>An error occurs if 
+<span class="param">end</span> is before 
+<span class="param">start</span>.</p>
+<p>An error occurs if the 
+<span class="param">start</span> and 
+<span class="param">end</span> are not valid ranges at the time
+of the call to this method. The returned <a class="crossref" href="../dart_core/Iterable.html">Iterable</a> behaves like
+<code>skip(start).take(end - start)</code>. That is, it does not throw exceptions
+if <code>this</code> changes size.</p>
+<pre><code>List&lt;String&gt; colors = ['red', 'green', 'blue', 'orange', 'pink'];
+Iterable&lt;String&gt; range = colors.getRange(1, 4);
+range.join(', ');  // 'green, blue, orange'
+colors.length = 3;
+range.join(', ');  // 'green, blue'
+</code></pre>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+Iterable&lt;E&gt; getRange(int start, int end) =&gt; _source.getRange(start, end);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="indexOf">
+<button class="show-code">Code</button>
+int <strong>indexOf</strong>(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element, [int start = 0]) <a class="anchor-link" href="#indexOf"
+              title="Permalink to NonGrowableListView&lt;E&gt;.indexOf">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the first index of 
+<span class="param">element</span> in this list.</p>
+<p>Searches the list from index 
+<span class="param">start</span> to the end of the list.
+The first time an object <code>o</code> is encountered so that <code>o == element</code>,
+the index of <code>o</code> is returned.</p>
+<pre><code>List&lt;String&gt; notes = ['do', 're', 'mi', 're'];
+notes.indexOf('re');    // 1
+notes.indexOf('re', 2); // 3
+</code></pre>
+<p>Returns -1 if 
+<span class="param">element</span> is not found.</p>
+<pre><code>notes.indexOf('fa');    // -1
+</code></pre>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+int indexOf(E element, [int start = 0]) =&gt; _source.indexOf(element, start);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="insert">
+<button class="show-code">Code</button>
+void <strong>insert</strong>(int index, <a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element) <a class="anchor-link" href="#insert"
+              title="Permalink to NonGrowableListView&lt;E&gt;.insert">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+void insert(int index, E element) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="insertAll">
+<button class="show-code">Code</button>
+void <strong>insertAll</strong>(int index, Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; iterable) <a class="anchor-link" href="#insertAll"
+              title="Permalink to NonGrowableListView&lt;E&gt;.insertAll">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+void insertAll(int index, Iterable&lt;E&gt; iterable) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="join">
+<button class="show-code">Code</button>
+String <strong>join</strong>([String separator = ""]) <a class="anchor-link" href="#join"
+              title="Permalink to NonGrowableListView&lt;E&gt;.join">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+String join([String separator = ""]) =&gt; _source.join(separator);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="lastIndexOf">
+<button class="show-code">Code</button>
+int <strong>lastIndexOf</strong>(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element, [int start]) <a class="anchor-link" href="#lastIndexOf"
+              title="Permalink to NonGrowableListView&lt;E&gt;.lastIndexOf">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns the last index of 
+<span class="param">element</span> in this list.</p>
+<p>Searches the list backwards from index 
+<span class="param">start</span> to 0.</p>
+<p>The first time an object <code>o</code> is encountered so that <code>o == element</code>,
+the index of <code>o</code> is returned.</p>
+<pre><code>List&lt;String&gt; notes = ['do', 're', 'mi', 're'];
+notes.lastIndexOf('re', 2); // 1
+</code></pre>
+<p>If 
+<span class="param">start</span> is not provided, this method searches from the end of the
+list./Returns</p>
+<pre><code>notes.lastIndexOf('re');  // 3
+</code></pre>
+<p>Returns -1 if 
+<span class="param">element</span> is not found.</p>
+<pre><code>notes.lastIndexOf('fa');  // -1
+</code></pre>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+int lastIndexOf(E element, [int start])
+   =&gt; _source.lastIndexOf(element, start);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="lastWhere">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> <strong>lastWhere</strong>(bool test(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element), {<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> orElse()}) <a class="anchor-link" href="#lastWhere"
+              title="Permalink to NonGrowableListView&lt;E&gt;.lastWhere">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E lastWhere(bool test(E element), {E orElse()})
+   =&gt; _source.lastWhere(test, orElse: orElse);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="map">
+<button class="show-code">Code</button>
+Iterable <strong>map</strong>(f(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element)) <a class="anchor-link" href="#map"
+              title="Permalink to NonGrowableListView&lt;E&gt;.map">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable map(f(E element)) =&gt; _source.map(f);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="reduce">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> <strong>reduce</strong>(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> combine(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> value, <a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element)) <a class="anchor-link" href="#reduce"
+              title="Permalink to NonGrowableListView&lt;E&gt;.reduce">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E reduce(E combine(E value, E element)) =&gt; _source.reduce(combine);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="remove">
+<button class="show-code">Code</button>
+bool <strong>remove</strong>(Object value) <a class="anchor-link" href="#remove"
+              title="Permalink to NonGrowableListView&lt;E&gt;.remove">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+bool remove(Object value) { _throw(); }
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeAt">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> <strong>removeAt</strong>(int index) <a class="anchor-link" href="#removeAt"
+              title="Permalink to NonGrowableListView&lt;E&gt;.removeAt">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+E removeAt(int index) { _throw(); }
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeLast">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> <strong>removeLast</strong>() <a class="anchor-link" href="#removeLast"
+              title="Permalink to NonGrowableListView&lt;E&gt;.removeLast">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+E removeLast() { _throw(); }
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeRange">
+<button class="show-code">Code</button>
+void <strong>removeRange</strong>(int start, int end) <a class="anchor-link" href="#removeRange"
+              title="Permalink to NonGrowableListView&lt;E&gt;.removeRange">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+void removeRange(int start, int end) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeWhere">
+<button class="show-code">Code</button>
+void <strong>removeWhere</strong>(bool test(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element)) <a class="anchor-link" href="#removeWhere"
+              title="Permalink to NonGrowableListView&lt;E&gt;.removeWhere">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+void removeWhere(bool test(E element)) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="replaceRange">
+<button class="show-code">Code</button>
+void <strong>replaceRange</strong>(int start, int end, Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; iterable) <a class="anchor-link" href="#replaceRange"
+              title="Permalink to NonGrowableListView&lt;E&gt;.replaceRange">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+void replaceRange(int start, int end, Iterable&lt;E&gt; iterable) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="retainWhere">
+<button class="show-code">Code</button>
+void <strong>retainWhere</strong>(bool test(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element)) <a class="anchor-link" href="#retainWhere"
+              title="Permalink to NonGrowableListView&lt;E&gt;.retainWhere">#</a></h4>
+<div class="doc">
+<p>Throws an <a class="crossref" href="../dart_core/UnsupportedError.html">UnsupportedError</a>;
+operations that change the length of the list are disallowed.</p>
+<pre class="source">
+void retainWhere(bool test(E element)) =&gt; _throw();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setAll">
+<button class="show-code">Code</button>
+void <strong>setAll</strong>(int index, Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; iterable) <a class="anchor-link" href="#setAll"
+              title="Permalink to NonGrowableListView&lt;E&gt;.setAll">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Overwrites objects of <code>this</code> with the objects of 
+<span class="param">iterable</span>, starting
+at position 
+<span class="param">index</span> in this list.</p>
+<pre><code>List&lt;String&gt; list = ['a', 'b', 'c'];
+list.setAll(1, ['bee', 'sea']);
+list.join(', '); // 'a, bee, sea'
+</code></pre>
+<p>This operation does not increase the length of <code>this</code>.</p>
+<p>An error occurs if the 
+<span class="param">index</span> is less than 0 or greater than length.
+An error occurs if the 
+<span class="param">iterable</span> is longer than <a class="crossref" href="../unmodifiable_collection/NonGrowableListView.html#length">length</a> - 
+<span class="param">index</span>.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+void setAll(int index, Iterable&lt;E&gt; iterable) {
+ _source.setAll(index, iterable);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setRange">
+<button class="show-code">Code</button>
+void <strong>setRange</strong>(int start, int end, Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; iterable, [int skipCount = 0]) <a class="anchor-link" href="#setRange"
+              title="Permalink to NonGrowableListView&lt;E&gt;.setRange">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Copies the objects of 
+<span class="param">iterable</span>, skipping 
+<span class="param">skipCount</span> objects first,
+into the range 
+<span class="param">start</span> inclusive to 
+<span class="param">end</span> exclusive of <code>this</code>.</p>
+<pre><code>List&lt;int&gt; list1 = [1, 2, 3, 4];
+List&lt;int&gt; list2 = [5, 6, 7, 8, 9];
+// Copies the 4th and 5th items in list2 as the 2nd and 3rd items
+// of list1.
+list1.setRange(1, 3, list2, 3);
+list1.join(', '); // '1, 8, 9, 4'
+</code></pre>
+<p>If 
+<span class="param">start</span> equals 
+<span class="param">end</span> and 
+<span class="param">start</span>..
+<span class="param">end</span> represents a legal range, this
+method has no effect.</p>
+<p>An error occurs if 
+<span class="param">start</span>..
+<span class="param">end</span> is not a valid range for <code>this</code>.
+An error occurs if the 
+<span class="param">iterable</span> does not have enough objects after
+skipping 
+<span class="param">skipCount</span> objects.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+void setRange(int start, int end, Iterable&lt;E&gt; iterable, [int skipCount = 0]) {
+ _source.setRange(start, end, iterable, skipCount);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="shuffle">
+<button class="show-code">Code</button>
+void <strong>shuffle</strong>([Random random]) <a class="anchor-link" href="#shuffle"
+              title="Permalink to NonGrowableListView&lt;E&gt;.shuffle">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Shuffles the elements of this list randomly.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+void shuffle([Random random]) { _source.shuffle(random); }
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="singleWhere">
+<button class="show-code">Code</button>
+<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> <strong>singleWhere</strong>(bool test(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element)) <a class="anchor-link" href="#singleWhere"
+              title="Permalink to NonGrowableListView&lt;E&gt;.singleWhere">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+E singleWhere(bool test(E element)) =&gt; _source.singleWhere(test);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="skip">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; <strong>skip</strong>(int n) <a class="anchor-link" href="#skip"
+              title="Permalink to NonGrowableListView&lt;E&gt;.skip">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable&lt;E&gt; skip(int n) =&gt; _source.skip(n);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="skipWhile">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; <strong>skipWhile</strong>(bool test(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> value)) <a class="anchor-link" href="#skipWhile"
+              title="Permalink to NonGrowableListView&lt;E&gt;.skipWhile">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable&lt;E&gt; skipWhile(bool test(E value)) =&gt; _source.skipWhile(test);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="sort">
+<button class="show-code">Code</button>
+void <strong>sort</strong>([int compare(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> a, <a href="../unmodifiable_collection/NonGrowableListView.html">E</a> b)]) <a class="anchor-link" href="#sort"
+              title="Permalink to NonGrowableListView&lt;E&gt;.sort">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Sorts this list according to the order specified by the 
+<span class="param">compare</span> function.</p>
+<p>The 
+<span class="param">compare</span> function must act as a <a class="crossref" href="../dart_core/Comparator.html">Comparator</a>.</p>
+<pre><code>List&lt;String&gt; numbers = ['one', 'two', 'three', 'four'];
+// Sort from shortest to longest.
+numbers.sort((x, y) =&gt; x.length.compareTo(y.length));
+numbers.join(', '); // 'one, two, four, three'
+</code></pre>
+<p>The default List implementations use <a class="crossref" href="../dart_core/Comparable.html#compare">Comparable.compare</a> if
+
+<span class="param">compare</span> is omitted.</p>
+<pre><code>List&lt;int&gt; nums = [13, 2, -11];
+nums.sort();
+     nums.join(', '); // '-11, 2, 13'
+</code></pre>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+void sort([int compare(E a, E b)]) { _source.sort(compare); }
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="sublist">
+<button class="show-code">Code</button>
+List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; <strong>sublist</strong>(int start, [int end]) <a class="anchor-link" href="#sublist"
+              title="Permalink to NonGrowableListView&lt;E&gt;.sublist">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Returns a new list containing the objects from 
+<span class="param">start</span> inclusive to 
+<span class="param">end</span>
+exclusive.</p>
+<pre><code>List&lt;String&gt; colors = ['red', 'green', 'blue', 'orange', 'pink'];
+colors.sublist(1, 3); // ['green', 'blue']
+</code></pre>
+<p>If 
+<span class="param">end</span> is omitted, the <a class="crossref" href="../unmodifiable_collection/NonGrowableListView.html#length">length</a> of <code>this</code> is used.</p>
+<pre><code>colors.sublist(1);  // ['green', 'blue', 'orange', 'pink']
+</code></pre>
+<p>An error occurs if 
+<span class="param">start</span> is outside the range <code>0</code> .. <code>length</code> or if
+
+<span class="param">end</span> is outside the range <code>start</code> .. <code>length</code>.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
+<pre class="source">
+List&lt;E&gt; sublist(int start, [int end]) =&gt; _source.sublist(start, end);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="take">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; <strong>take</strong>(int n) <a class="anchor-link" href="#take"
+              title="Permalink to NonGrowableListView&lt;E&gt;.take">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable&lt;E&gt; take(int n) =&gt; _source.take(n);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="takeWhile">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; <strong>takeWhile</strong>(bool test(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> value)) <a class="anchor-link" href="#takeWhile"
+              title="Permalink to NonGrowableListView&lt;E&gt;.takeWhile">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable&lt;E&gt; takeWhile(bool test(E value)) =&gt; _source.takeWhile(test);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toList">
+<button class="show-code">Code</button>
+List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; <strong>toList</strong>({bool growable: true}) <a class="anchor-link" href="#toList"
+              title="Permalink to NonGrowableListView&lt;E&gt;.toList">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+List&lt;E&gt; toList({ bool growable: true }) =&gt; _source.toList(growable: growable);
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toSet">
+<button class="show-code">Code</button>
+Set&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; <strong>toSet</strong>() <a class="anchor-link" href="#toSet"
+              title="Permalink to NonGrowableListView&lt;E&gt;.toSet">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Set&lt;E&gt; toSet() =&gt; _source.toSet();
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="where">
+<button class="show-code">Code</button>
+Iterable&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; <strong>where</strong>(bool test(<a href="../unmodifiable_collection/NonGrowableListView.html">E</a> element)) <a class="anchor-link" href="#where"
+              title="Permalink to NonGrowableListView&lt;E&gt;.where">#</a></h4>
+<div class="inherited-from">inherited from <a href="../unmodifiable_collection/_IterableView.html">_IterableView</a> </div><div class="doc">
+<pre class="source">
+Iterable&lt;E&gt; where(bool test(E element)) =&gt; _source.where(test);
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          <div>This page was generated at 2013-10-28 20:20:12.133</div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        
