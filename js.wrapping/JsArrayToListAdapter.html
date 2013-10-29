@@ -36,7 +36,8 @@
 You can provide a translator to automatically wrap contained Proxy to some
 TypedProxy or something else.</p>
 <pre class="source">
-class JsArrayToListAdapter&lt;E&gt; extends TypedProxy /*with ListMixin&lt;E&gt;*/ implements List&lt;E&gt; {
+class JsArrayToListAdapter&lt;E&gt; extends TypedProxy /*with ListMixin&lt;E&gt;*/
+   implements List&lt;E&gt; {
 
  /// Like [JsArrayToListAdapter.fromProxy] but with `null` handling for
  /// [proxy].
@@ -103,6 +104,11 @@ class JsArrayToListAdapter&lt;E&gt; extends TypedProxy /*with ListMixin&lt;E&gt;
  }
  @override void removeRange(int start, int end) {
    $unsafe.splice(start, end - start);
+ }
+
+ @override void shuffle([Random random]) {
+   var shuffled = _asList().shuffle(random);
+   setRange(0, shuffled.length, shuffled);
  }
 
  // private methods
@@ -1619,11 +1625,20 @@ skipping <code>skipCount</code> objects.</p>
 </pre>
 </div>
 </div>
-<div class="method inherited"><h4 id="shuffle">
-abstract void <strong>shuffle</strong>([Random random]) <a class="anchor-link" href="#shuffle"
+<div class="method"><h4 id="shuffle">
+<button class="show-code">Code</button>
+void <strong>shuffle</strong>([Random random]) <a class="anchor-link" href="#shuffle"
               title="Permalink to JsArrayToListAdapter&lt;E&gt;.shuffle">#</a></h4>
-<div class="inherited-from">inherited from List </div><div class="doc">
+<div class="doc">
+<div class="inherited">
 <p>Shuffles the elements of this list randomly.</p>
+<div class="docs-inherited-from">docs inherited from List&lt;<a href="../js.wrapping/JsArrayToListAdapter.html">E</a>&gt; </div></div>
+<pre class="source">
+@override void shuffle([Random random]) {
+ var shuffled = _asList().shuffle(random);
+ setRange(0, shuffled.length, shuffled);
+}
+</pre>
 </div>
 </div>
 <div class="method"><h4 id="singleWhere">
@@ -1891,7 +1906,7 @@ Iterable&lt;E&gt; where(bool test(E element)) =&gt; _asList().where(test);
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-28 20:20:11.898</div>
+          <div>This page was generated at 2013-10-29 17:59:34.502</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

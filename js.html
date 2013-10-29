@@ -92,10 +92,7 @@ final <a href="js/Proxy.html">Proxy</a>         <strong>context</strong> <a clas
         <div class="doc">
 <p>Returns a proxy to the global JavaScript context for this page.</p>
 <pre class="source">
-Proxy get context {
- _enterScopeIfNeeded();
- return _deserialize(_jsPortSync.callSync([]));
-}
+final Proxy context = new Proxy._(js.context)
 </pre>
 </div>
 </div>
@@ -118,24 +115,8 @@ Set
 Set 
 <span class="param">jsOnly</span> to only count proxies to JavaScript objects (live or all).</p>
 <pre class="source">
-int proxyCount({all: false, dartOnly: false, jsOnly: false}) {
- final js = !dartOnly;
- final dart = !jsOnly;
- final jsCounts = js ? _proxyCountJavaScript() : null;
- var sum = 0;
- if (!all) {
-   if (js)
-     sum += jsCounts[0];
-   if (dart)
-     sum += _proxiedObjectTable.count;
- } else {
-   if (js)
-     sum += jsCounts[1];
-   if (dart)
-     sum += _proxiedObjectTable.total;
- }
- return sum;
-}
+@deprecated
+int proxyCount({all: false, dartOnly: false, jsOnly: false}) =&gt; 0;
 </pre>
 </div>
 </div>
@@ -172,7 +153,7 @@ void <strong>deleteProperty</strong>(<a href="js/Serializable.html">Serializable
 <span class="param">proxy</span>.</p>
 <pre class="source">
 void deleteProperty(Serializable&lt;Proxy&gt; proxy, String name) {
- _jsPortDeleteProperty.callSync([proxy.toJs(), name].map(_serialize).toList());
+ proxy.toJs()._jsObject.deleteProperty(name);
 }
 </pre>
 </div>
@@ -187,7 +168,7 @@ bool <strong>hasProperty</strong>(<a href="js/Serializable.html">Serializable</a
 <span class="param">name</span> property.</p>
 <pre class="source">
 bool hasProperty(Serializable&lt;Proxy&gt; proxy, String name) =&gt;
- _jsPortHasProperty.callSync([proxy.toJs(), name].map(_serialize).toList());
+   proxy.toJs()._jsObject.hasProperty(name);
 </pre>
 </div>
 </div>
@@ -201,8 +182,7 @@ bool <strong>instanceof</strong>(<a href="js/Serializable.html">Serializable</a>
 <span class="param">type</span>.</p>
 <pre class="source">
 bool instanceof(Serializable&lt;Proxy&gt; proxy, Serializable&lt;FunctionProxy&gt; type) =&gt;
-   _jsPortInstanceof.callSync([proxy.toJs(), type.toJs()].map(_serialize)
-       .toList());
+   proxy.toJs()._jsObject.instanceof(type.toJs()._jsObject);
 </pre>
 </div>
 </div>
@@ -214,9 +194,8 @@ void <strong>release</strong>(<a href="js/Serializable.html">Serializable</a>&lt
 <p>Releases a retained 
 <span class="param">object</span>.</p>
 <pre class="source">
-void release(Serializable&lt;Proxy&gt; object) {
- _jsInvalidate.callSync(_serialize(object.toJs()));
-}
+@deprecated
+void release(Serializable&lt;Proxy&gt; object) {}
 </pre>
 </div>
 </div>
@@ -231,10 +210,8 @@ Instead, it will need to be explicitly released.
 The given 
 <span class="param">object</span> is returned for convenience.</p>
 <pre class="source">
-dynamic retain(Serializable&lt;Proxy&gt; object) {
- _jsGlobalize.callSync(_serialize(object.toJs()));
- return object;
-}
+@deprecated
+dynamic retain(Serializable&lt;Proxy&gt; object) =&gt; object;
 </pre>
 </div>
 </div>
@@ -245,9 +222,8 @@ void <strong>$experimentalExitScope</strong>(int depth) <a class="anchor-link" h
 <div class="doc">
 <p>WARNING: This API is experimental and may be removed.</p>
 <pre class="source">
-void $experimentalExitScope(int depth) {
- _exitScope(depth);
-}
+@deprecated
+void $experimentalExitScope(int depth) {}
 </pre>
 </div>
 </div>
@@ -258,9 +234,8 @@ int <strong>$experimentalEnterScope</strong>() <a class="anchor-link" href="#$ex
 <div class="doc">
 <p>WARNING: This API is experimental and may be removed.</p>
 <pre class="source">
-int $experimentalEnterScope() {
- return _enterScope();
-}
+@deprecated
+int $experimentalEnterScope() =&gt; 0;
 </pre>
 </div>
 </div>
@@ -273,14 +248,8 @@ dynamic <strong>scoped</strong>(f) <a class="anchor-link" href="#scoped"
 <span class="param">f</span> within a scope.  Any proxies created within this
 scope are invalidated afterward unless they are converted to a global proxy.</p>
 <pre class="source">
-scoped(f) {
- var depth = _enterScope();
- try {
-   return f();
- } finally {
-   _exitScope(depth);
- }
-}
+@deprecated
+scoped(f) =&gt; f();
 </pre>
 </div>
 </div>
@@ -319,7 +288,7 @@ scoped(f) {
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-28 20:20:11.681</div>
+          <div>This page was generated at 2013-10-29 17:59:34.232</div>
         </div>
         <script async src="client-live-nav.js"></script>
         </body></html>

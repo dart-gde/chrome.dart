@@ -235,7 +235,7 @@ class Serial {
  SerialReadCallback onRead;
 
  Future&lt;WriteInfo&gt; write(String data) {
-   var completer = new Completer();
+   Completer completer = new Completer();
 
    if (isConnected) {
      _jsWrite() {
@@ -264,7 +264,7 @@ class Serial {
 
      js.scoped(_jsWrite);
    } else {
-     completer.completeException(
+     completer.completeError(
          new StateError("Serial port not connected $port $speed"));
    }
 
@@ -622,7 +622,7 @@ Future&lt;<a href="../chrome.serial/WriteInfo.html">WriteInfo</a>&gt; <strong>wr
 <div class="doc">
 <pre class="source">
 Future&lt;WriteInfo&gt; write(String data) {
- var completer = new Completer();
+ Completer completer = new Completer();
 
  if (isConnected) {
    _jsWrite() {
@@ -651,7 +651,7 @@ Future&lt;WriteInfo&gt; write(String data) {
 
    js.scoped(_jsWrite);
  } else {
-   completer.completeException(
+   completer.completeError(
        new StateError("Serial port not connected $port $speed"));
  }
 
@@ -665,7 +665,7 @@ Future&lt;WriteInfo&gt; write(String data) {
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-28 20:20:11.219</div>
+          <div>This page was generated at 2013-10-29 17:59:33.698</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

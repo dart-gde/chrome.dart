@@ -44,7 +44,10 @@ class TranslatorForSerializable&lt;E extends Serializable&gt;
  }
 
  Mapper&lt;dynamic, E&gt; get fromJs =&gt; this._fromJs;
+ void set fromJs(v) =&gt; throw "final";
+
  Mapper&lt;E, dynamic&gt; get toJs =&gt; this._toJs;
+ void set toJs(v) =&gt; throw "final";
 }
 </pre>
 </div>
@@ -75,27 +78,33 @@ TranslatorForSerializable(Mapper&lt;dynamic, E&gt; fromJs, {mapOnlyNotNull: true
 </div>
 <div>
 <h3>Properties</h3>
-<div class="field inherited"><h4 id="fromJs">
+<div class="field"><h4 id="fromJs">
 <button class="show-code">Code</button>
-final <a href="../js.wrapping/Mapper.html">Mapper</a>         <strong>fromJs</strong> <a class="anchor-link"
+<a href="../js.wrapping/Mapper.html">Mapper</a>         <strong>fromJs</strong> <a class="anchor-link"
             href="#fromJs"
             title="Permalink to TranslatorForSerializable&lt;E&gt;.fromJs">#</a>
         </h4>
-        <div class="inherited-from">inherited from <a href="../js.wrapping/Translator.html">Translator</a> </div><div class="doc">
+        <div class="doc">
 <pre class="source">
-final Mapper&lt;dynamic, E&gt; fromJs
+Mapper&lt;dynamic, E&gt; get fromJs =&gt; this._fromJs;
+</pre>
+<pre class="source">
+void set fromJs(v) =&gt; throw "final";
 </pre>
 </div>
 </div>
-<div class="field inherited"><h4 id="toJs">
+<div class="field"><h4 id="toJs">
 <button class="show-code">Code</button>
-final <a href="../js.wrapping/Mapper.html">Mapper</a>         <strong>toJs</strong> <a class="anchor-link"
+<a href="../js.wrapping/Mapper.html">Mapper</a>         <strong>toJs</strong> <a class="anchor-link"
             href="#toJs"
             title="Permalink to TranslatorForSerializable&lt;E&gt;.toJs">#</a>
         </h4>
-        <div class="inherited-from">inherited from <a href="../js.wrapping/Translator.html">Translator</a> </div><div class="doc">
+        <div class="doc">
 <pre class="source">
-final Mapper&lt;E, dynamic&gt; toJs
+Mapper&lt;E, dynamic&gt; get toJs =&gt; this._toJs;
+</pre>
+<pre class="source">
+void set toJs(v) =&gt; throw "final";
 </pre>
 </div>
 </div>
@@ -104,7 +113,7 @@ final Mapper&lt;E, dynamic&gt; toJs
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-28 20:20:11.932</div>
+          <div>This page was generated at 2013-10-29 17:59:34.547</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

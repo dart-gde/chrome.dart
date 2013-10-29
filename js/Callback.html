@@ -37,58 +37,45 @@ JavaScript.</p>
 <p>A callback can either be:</p><ul><li>
 <p>single-fire, in which case it is automatically invalidated after the first
   invocation, or</p></li><li>multi-fire, in which case it must be explicitly disposed.</li></ul>
+<p><em>Deprecated</em> Use the callback directly or use <a class="crossref" href="../js/FunctionProxy.html#withThis">FunctionProxy.withThis(f)</a> to
+capture the js <code>this</code>.</p>
 <pre class="source">
+@deprecated
 class Callback implements Serializable&lt;FunctionProxy&gt; {
- var _manualDispose;
- var _id;
- var _callback;
+ final FunctionProxy _functionProxy;
 
- _initialize(manualDispose) {
-   _manualDispose = manualDispose;
-   _id = _proxiedObjectTable.add(_callback);
-   _proxiedObjectTable.globalize(_id);
- }
+ Callback._(this._functionProxy);
 
- _dispose() {
-   var c = _proxiedObjectTable.invalidate(_id);
- }
+ factory Callback(Function f) =&gt; new Callback._(new FunctionProxy(f));
 
- FunctionProxy toJs() =&gt;
-     new FunctionProxy._internal(_proxiedObjectTable.sendPort, _id);
+ factory Callback.withThis(Function f) =&gt;
+     new Callback._(new FunctionProxy.withThis(f));
+
+
+ /**
+  * Creates a single-fire [Callback] that invokes [f]. The callback is
+  * automatically disposed after the first invocation.
+  */
+ @deprecated
+ factory Callback.once(Function f, {bool withThis: false}) =&gt; withThis ?
+     new Callback.withThis(f) : new Callback(f);
+
+ /**
+  * Creates a multi-fire [Callback] that invokes [f]. The callback must be
+  * explicitly disposed to avoid memory leaks.
+  */
+ @deprecated
+ factory Callback.many(Function f, {bool withThis: false}) =&gt; withThis ?
+     new Callback.withThis(f) : new Callback(f);
+
+ FunctionProxy toJs() =&gt; _functionProxy;
 
  /**
   * Disposes this [Callback] so that it may be collected.
   * Once a [Callback] is disposed, it is an error to invoke it from JavaScript.
   */
- dispose() {
-   assert(_manualDispose);
-   _dispose();
- }
-
- /**
-  * Creates a single-fire [Callback] that invokes [f].  The callback is
-  * automatically disposed after the first invocation.
-  */
- Callback.once(Function f, {bool withThis: false}) {
-   _callback = (List args) {
-     try {
-       return Function.apply(f, withThis ? args : args.skip(1).toList());
-     } finally {
-       _dispose();
-     }
-   };
-   _initialize(false);
- }
-
- /**
-  * Creates a multi-fire [Callback] that invokes [f].  The callback must be
-  * explicitly disposed to avoid memory leaks.
-  */
- Callback.many(Function f, {bool withThis: false}) {
-   _callback = (List args) =&gt;
-       Function.apply(f, withThis ? args : args.skip(1).toList());
-   _initialize(true);
- }
+ @deprecated
+ dispose() {}
 }
 </pre>
 </div>
@@ -97,42 +84,60 @@ class Callback implements Serializable&lt;FunctionProxy&gt; {
 <span class="type-box"><span class="icon-class"></span><a href="../js/Serializable.html">Serializable&lt;FunctionProxy&gt;</a></span></p>
 <div>
 <h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+factory <strong>Callback</strong>(Function f) <a class="anchor-link" href="#"
+              title="Permalink to Callback.Callback">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+factory Callback(Function f) =&gt; new Callback._(new FunctionProxy(f));
+</pre>
+</div>
+</div>
 <div class="method"><h4 id="many">
 <button class="show-code">Code</button>
-new <strong>Callback.many</strong>(Function f, {bool withThis: false}) <a class="anchor-link" href="#many"
+factory <strong>Callback.many</strong>(Function f, {bool withThis: false}) <a class="anchor-link" href="#many"
               title="Permalink to Callback.Callback.many">#</a></h4>
 <div class="doc">
 <p>Creates a multi-fire <a class="crossref" href="../js/Callback.html">Callback</a> that invokes 
-<span class="param">f</span>.  The callback must be
+<span class="param">f</span>. The callback must be
 explicitly disposed to avoid memory leaks.</p>
 <pre class="source">
-Callback.many(Function f, {bool withThis: false}) {
- _callback = (List args) =&gt;
-     Function.apply(f, withThis ? args : args.skip(1).toList());
- _initialize(true);
-}
+@deprecated
+factory Callback.many(Function f, {bool withThis: false}) =&gt; withThis ?
+   new Callback.withThis(f) : new Callback(f);
 </pre>
 </div>
 </div>
 <div class="method"><h4 id="once">
 <button class="show-code">Code</button>
-new <strong>Callback.once</strong>(Function f, {bool withThis: false}) <a class="anchor-link" href="#once"
+factory <strong>Callback.once</strong>(Function f, {bool withThis: false}) <a class="anchor-link" href="#once"
               title="Permalink to Callback.Callback.once">#</a></h4>
 <div class="doc">
 <p>Creates a single-fire <a class="crossref" href="../js/Callback.html">Callback</a> that invokes 
-<span class="param">f</span>.  The callback is
+<span class="param">f</span>. The callback is
 automatically disposed after the first invocation.</p>
 <pre class="source">
-Callback.once(Function f, {bool withThis: false}) {
- _callback = (List args) {
-   try {
-     return Function.apply(f, withThis ? args : args.skip(1).toList());
-   } finally {
-     _dispose();
-   }
- };
- _initialize(false);
-}
+@deprecated
+factory Callback.once(Function f, {bool withThis: false}) =&gt; withThis ?
+   new Callback.withThis(f) : new Callback(f);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="withThis">
+<button class="show-code">Code</button>
+factory <strong>Callback.withThis</strong>(Function f) <a class="anchor-link" href="#withThis"
+              title="Permalink to Callback.Callback.withThis">#</a></h4>
+<div class="doc">
+<pre class="source">
+factory Callback.withThis(Function f) =&gt;
+   new Callback._(new FunctionProxy.withThis(f));
 </pre>
 </div>
 </div>
@@ -147,10 +152,8 @@ dynamic <strong>dispose</strong>() <a class="anchor-link" href="#dispose"
 <p>Disposes this <a class="crossref" href="../js/Callback.html">Callback</a> so that it may be collected.
 Once a <a class="crossref" href="../js/Callback.html">Callback</a> is disposed, it is an error to invoke it from JavaScript.</p>
 <pre class="source">
-dispose() {
- assert(_manualDispose);
- _dispose();
-}
+@deprecated
+dispose() {}
 </pre>
 </div>
 </div>
@@ -160,8 +163,7 @@ dispose() {
               title="Permalink to Callback.toJs">#</a></h4>
 <div class="doc">
 <pre class="source">
-FunctionProxy toJs() =&gt;
-   new FunctionProxy._internal(_proxiedObjectTable.sendPort, _id);
+FunctionProxy toJs() =&gt; _functionProxy;
 </pre>
 </div>
 </div>
@@ -170,7 +172,7 @@ FunctionProxy toJs() =&gt;
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-28 20:20:11.742</div>
+          <div>This page was generated at 2013-10-29 17:59:34.312</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

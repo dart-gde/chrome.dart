@@ -72,7 +72,9 @@ class JsDateToDateTimeAdapter extends TypedProxy implements DateTime {
  @override int get weekday =&gt; _asDateTime().weekday;
  @override int get millisecondsSinceEpoch =&gt;
      _asDateTime().millisecondsSinceEpoch;
+ @override void set millisecondsSinceEpoch(v) =&gt; throw "final";
  @override bool get isUtc =&gt; _asDateTime().isUtc;
+ @override void set isUtc(v) =&gt; throw "final";
  @override String toString() =&gt; _asDateTime().toString();
  @override DateTime add(Duration duration) =&gt; _asDateTime().add(duration);
  @override DateTime subtract(Duration duration) =&gt;
@@ -209,19 +211,24 @@ assert(moonLanding.hour == 20);
 </pre>
 </div>
 </div>
-<div class="field inherited"><h4 id="isUtc">
+<div class="field"><h4 id="isUtc">
 <button class="show-code">Code</button>
-final bool         <strong>isUtc</strong> <a class="anchor-link"
+bool         <strong>isUtc</strong> <a class="anchor-link"
             href="#isUtc"
             title="Permalink to JsDateToDateTimeAdapter.isUtc">#</a>
         </h4>
-        <div class="inherited-from">inherited from DateTime </div><div class="doc">
+        <div class="doc">
+<div class="inherited">
 <p>True if this <a class="crossref" href="../dart_core/DateTime.html">DateTime</a> is set to UTC time.</p>
 <pre><code>DateTime dDay = new DateTime.utc(1944, 6, 6);
 assert(dDay.isUtc);
 </code></pre>
+<div class="docs-inherited-from">docs inherited from DateTime </div></div>
 <pre class="source">
-final bool isUtc
+@override bool get isUtc =&gt; _asDateTime().isUtc;
+</pre>
+<pre class="source">
+@override void set isUtc(v) =&gt; throw "final";
 </pre>
 </div>
 </div>
@@ -243,21 +250,27 @@ assert(moonLanding.millisecond == 0);
 </pre>
 </div>
 </div>
-<div class="field inherited"><h4 id="millisecondsSinceEpoch">
+<div class="field"><h4 id="millisecondsSinceEpoch">
 <button class="show-code">Code</button>
-final int         <strong>millisecondsSinceEpoch</strong> <a class="anchor-link"
+int         <strong>millisecondsSinceEpoch</strong> <a class="anchor-link"
             href="#millisecondsSinceEpoch"
             title="Permalink to JsDateToDateTimeAdapter.millisecondsSinceEpoch">#</a>
         </h4>
-        <div class="inherited-from">inherited from DateTime </div><div class="doc">
+        <div class="doc">
+<div class="inherited">
 <p>The number of milliseconds since
 the "Unix epoch" 1970-01-01T00:00:00Z (UTC).</p>
 <p>This value is independent of the time zone.</p>
 <p>This value is at most
 8,640,000,000,000,000ms (100,000,000 days) from the Unix epoch.
 In other words: <code>millisecondsSinceEpoch.abs() &lt;= 8640000000000000</code>.</p>
+<div class="docs-inherited-from">docs inherited from DateTime </div></div>
 <pre class="source">
-final int millisecondsSinceEpoch
+@override int get millisecondsSinceEpoch =&gt;
+   _asDateTime().millisecondsSinceEpoch;
+</pre>
+<pre class="source">
+@override void set millisecondsSinceEpoch(v) =&gt; throw "final";
 </pre>
 </div>
 </div>
@@ -626,7 +639,7 @@ Otherwise this method is equivalent to:</p>
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-28 20:20:11.795</div>
+          <div>This page was generated at 2013-10-29 17:59:34.382</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>
