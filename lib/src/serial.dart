@@ -287,7 +287,7 @@ class Serial {
   SerialReadCallback onRead;
 
   Future<WriteInfo> write(String data) {
-    var completer = new Completer();
+    Completer completer = new Completer();
 
     if (isConnected) {
       _jsWrite() {
@@ -316,7 +316,7 @@ class Serial {
 
       js.scoped(_jsWrite);
     } else {
-      completer.completeException(
+      completer.completeError(
           new StateError("Serial port not connected $port $speed"));
     }
 

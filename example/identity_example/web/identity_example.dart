@@ -1,6 +1,8 @@
+
 import 'dart:async';
+import 'dart:convert' show JSON;
 import 'dart:html';
-import 'dart:json';
+
 import 'package:chrome/app.dart';
 
 final plusUrl = "https://www.googleapis.com/plus/v1/people/me";
@@ -40,7 +42,7 @@ void main() {
             revokeButton.style.display = null;
             outputDiv.children.clear();
             print("request.responseText = ${request.responseText}");
-            var data = parse(request.responseText);
+            var data = JSON.parse(request.responseText);
             ParagraphElement p = new ParagraphElement()
             ..text = "Logged in as ${data["displayName"]}";
             outputDiv.children.add(p);

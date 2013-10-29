@@ -3,7 +3,6 @@ library chrome.file_system;
 import 'dart:async';
 
 import 'package:js/js.dart' as js;
-import 'package:meta/meta.dart';
 
 import 'common.dart';
 import 'files.dart';
