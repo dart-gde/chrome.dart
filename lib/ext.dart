@@ -5,6 +5,7 @@ library chrome_ext;
 export 'src/browser_action.dart';
 export 'src/context_menus.dart';
 export 'src/debugger.dart';
+export 'src/devtools.dart';
 export 'src/i18n.dart';
 export 'src/identity.dart';
 export 'src/media_galleries.dart';
