@@ -194,7 +194,7 @@ fixedLengthList.length = 1; // Error
 growableList.length; // 0;
 growableList.length = 3;
 </code></pre>
-<p>An error occurs if <a class="crossref" href="../unmodifiable_collection/NonGrowableListView.html#length">length</a> is negative.</p>
+<p>The <a class="crossref" href="../unmodifiable_collection/NonGrowableListView.html#length">length</a> must not be negative or null, if it is provided.</p>
 <div class="docs-inherited-from">docs inherited from List&lt;<a href="../unmodifiable_collection/NonGrowableListView.html">E</a>&gt; </div></div>
 <pre class="source">
 NonGrowableListView(List&lt;E&gt; source) : _source = source;
@@ -978,7 +978,7 @@ Iterable&lt;E&gt; where(bool test(E element)) =&gt; _source.where(test);
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-29 17:59:34.773</div>
+          <div>This page was generated at 2013-11-05 02:20:13.482</div>
         </div>
         <script async src="../client-live-nav.js"></script>
         </body></html>

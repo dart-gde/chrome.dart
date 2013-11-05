@@ -27,11 +27,39 @@
 </div>
 <div class="content">
 <h2><strong>logging</strong> library</h2>
-<div class="doc"><p>Support for debugging and error logging.</p>
-<p>This library introduces abstractions similar to those used in other
-languages, such as the Closure JS Logger and java.util.logging.Logger.</p>
+<div class="doc"><p>Support for logging.</p>
 <p>For information on installing and importing this library, see the
-<a href="http://pub.dartlang.org/packages/logging">logging package on pub.dartlang.org</a>.</p></div>
+<a href="http://pub.dartlang.org/packages/logging">logging package on pub.dartlang.org</a>.</p>
+<h2>Initializing</h2>
+<p>By default, the logging package does not do anything useful with the
+log messages. You must configure the logging level and add a handler
+for the log messages.</p>
+<p>Here is a simple logging configuration that logs all messages
+via <code>print</code>.</p>
+<pre><code>Logger.root.level = Level.ALL;
+Logger.root.onRecord.listen((LogRecord rec) {
+  print('${rec.level.name}: ${rec.time}: ${rec.message}');
+});
+</code></pre>
+<p>First, set the root <a class="crossref" href="logging/Level.html">Level</a>. All messages at or above the level are
+sent to the <code>onRecord</code> stream.</p>
+<p>Then, listen on the <code>onRecord</code> stream for <a class="crossref" href="logging/LogRecord.html">LogRecord</a> events. The
+<a class="crossref" href="logging/LogRecord.html">LogRecord</a> class has various properties for the message, error,
+logger name, and more.</p>
+<h2>Logging messages</h2>
+<p>Create a <a class="crossref" href="logging/Logger.html">Logger</a> with a unique name to easily identify the source
+of the log messages.</p>
+<pre><code>final Logger log = new Logger('MyClassName');
+</code></pre>
+<p>Here is an example of logging a debug message and an error:</p>
+<pre><code>Future future = doSomethingAsync();
+future.then((result) {
+  log.fine('Got the result: $result');
+  processResult(result);
+})
+.catchError((e, stackTrace) =&gt; log.severe('Oh noes!', e, stackTrace));
+</code></pre>
+<p>See the <a class="crossref" href="logging/Logger.html">Logger</a> class for the different logging methods.</p></div>
 <div>
 <h3>Properties</h3>
 <div class="field"><h4 id="hierarchicalLoggingEnabled">
@@ -83,7 +111,7 @@ bool hierarchicalLoggingEnabled = false
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-29 17:59:34.557</div>
+          <div>This page was generated at 2013-11-05 02:20:13.274</div>
         </div>
         <script async src="client-live-nav.js"></script>
         </body></html>

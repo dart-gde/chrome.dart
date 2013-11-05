@@ -35,7 +35,7 @@ ability to pass Dart objects and functions to JavaScript functions.  Scopes
 enable developers to use proxies without memory leaks - a common challenge
 with cross-runtime interoperation.</p>
 <p>The top-level <a class="crossref" href="js.html#context">context</a> getter provides a <a class="crossref" href="js/Proxy.html">Proxy</a> to the global JavaScript
-context for the page your Dart code is running on.  In the following example:</p>
+context for the page your Dart code is running on. In the following example:</p>
 <pre><code>import 'package:js/js.dart' as js;
 
 void main() {
@@ -44,23 +44,20 @@ void main() {
 </code></pre>
 <p>js.context.alert creates a proxy to the top-level alert function in
 JavaScript.  It is invoked from Dart as a regular function that forwards to
-the underlying JavaScript one.  By default, proxies are released when
+the underlying JavaScript one. By default, proxies are released when
 the currently executing event completes, e.g., when main is completes
 in this example.</p>
 <p>The library also enables JavaScript proxies to Dart objects and functions.
 For example, the following Dart code:</p>
-<pre><code>js.context.dartCallback = new Callback.once((x) =&gt; print(x*2));
+<pre><code>js.context.dartCallback = (x) =&gt; print(x*2);
 </code></pre>
 <p>defines a top-level JavaScript function 'dartCallback' that is a proxy to
-the corresponding Dart function.  The <a class="crossref" href="js/Callback.html#once">Callback.once</a> constructor allows the
-proxy to the Dart function to be retained across multiple events;
-instead it is released after the first invocation.  (This is a common
-pattern for asychronous callbacks.)</p>
+the corresponding Dart function.</p>
 <p>Note, parameters and return values are intuitively passed by value for
-primitives and by reference for non-primitives.  In the latter case, the
+primitives and by reference for non-primitives. In the latter case, the
 references are automatically wrapped and unwrapped as proxies by the library.</p>
 <p>This library also allows construction of JavaScripts objects given a <a class="crossref" href="js/Proxy.html">Proxy</a>
-to a corresponding JavaScript constructor.  For example, if the following
+to a corresponding JavaScript constructor. For example, if the following
 JavaScript is loaded on the page:</p>
 <pre><code>function Foo(x) {
   this.x = x;
@@ -90,7 +87,7 @@ final <a href="js/Proxy.html">Proxy</a>         <strong>context</strong> <a clas
             title="Permalink to context">#</a>
         </h4>
         <div class="doc">
-<p>Returns a proxy to the global JavaScript context for this page.</p>
+<p>A proxy on the global JavaScript context for this page.</p>
 <pre class="source">
 final Proxy context = new Proxy._(js.context)
 </pre>
@@ -99,27 +96,6 @@ final Proxy context = new Proxy._(js.context)
 </div>
 <div>
 <h3>Functions</h3>
-<div class="method"><h4 id="proxyCount">
-<button class="show-code">Code</button>
-int <strong>proxyCount</strong>({all: false, dartOnly: false, jsOnly: false}) <a class="anchor-link" href="#proxyCount"
-              title="Permalink to proxyCount">#</a></h4>
-<div class="doc">
-<p>Returns the number of allocated proxy objects matching the given
-conditions.  By default, the total number of live proxy objects are
-return.  In a well behaved program, this should stay below a small
-bound.</p>
-<p>Set 
-<span class="param">all</span> to true to return the total number of proxies ever allocated.
-Set 
-<span class="param">dartOnly</span> to only count proxies to Dart objects (live or all).
-Set 
-<span class="param">jsOnly</span> to only count proxies to JavaScript objects (live or all).</p>
-<pre class="source">
-@deprecated
-int proxyCount({all: false, dartOnly: false, jsOnly: false}) =&gt; 0;
-</pre>
-</div>
-</div>
 <div class="method"><h4 id="array">
 <button class="show-code">Code</button>
 <a href="js/Proxy.html">Proxy</a> <strong>array</strong>(Iterable data) <a class="anchor-link" href="#array"
@@ -186,73 +162,6 @@ bool instanceof(Serializable&lt;Proxy&gt; proxy, Serializable&lt;FunctionProxy&g
 </pre>
 </div>
 </div>
-<div class="method"><h4 id="release">
-<button class="show-code">Code</button>
-void <strong>release</strong>(<a href="js/Serializable.html">Serializable</a>&lt;<a href="js/Proxy.html">Proxy</a>&gt; object) <a class="anchor-link" href="#release"
-              title="Permalink to release">#</a></h4>
-<div class="doc">
-<p>Releases a retained 
-<span class="param">object</span>.</p>
-<pre class="source">
-@deprecated
-void release(Serializable&lt;Proxy&gt; object) {}
-</pre>
-</div>
-</div>
-<div class="method"><h4 id="retain">
-<button class="show-code">Code</button>
-dynamic <strong>retain</strong>(<a href="js/Serializable.html">Serializable</a>&lt;<a href="js/Proxy.html">Proxy</a>&gt; object) <a class="anchor-link" href="#retain"
-              title="Permalink to retain">#</a></h4>
-<div class="doc">
-<p>Retains the given 
-<span class="param">object</span> beyond the current scope.
-Instead, it will need to be explicitly released.
-The given 
-<span class="param">object</span> is returned for convenience.</p>
-<pre class="source">
-@deprecated
-dynamic retain(Serializable&lt;Proxy&gt; object) =&gt; object;
-</pre>
-</div>
-</div>
-<div class="method"><h4 id="$experimentalExitScope">
-<button class="show-code">Code</button>
-void <strong>$experimentalExitScope</strong>(int depth) <a class="anchor-link" href="#$experimentalExitScope"
-              title="Permalink to $experimentalExitScope">#</a></h4>
-<div class="doc">
-<p>WARNING: This API is experimental and may be removed.</p>
-<pre class="source">
-@deprecated
-void $experimentalExitScope(int depth) {}
-</pre>
-</div>
-</div>
-<div class="method"><h4 id="$experimentalEnterScope">
-<button class="show-code">Code</button>
-int <strong>$experimentalEnterScope</strong>() <a class="anchor-link" href="#$experimentalEnterScope"
-              title="Permalink to $experimentalEnterScope">#</a></h4>
-<div class="doc">
-<p>WARNING: This API is experimental and may be removed.</p>
-<pre class="source">
-@deprecated
-int $experimentalEnterScope() =&gt; 0;
-</pre>
-</div>
-</div>
-<div class="method"><h4 id="scoped">
-<button class="show-code">Code</button>
-dynamic <strong>scoped</strong>(f) <a class="anchor-link" href="#scoped"
-              title="Permalink to scoped">#</a></h4>
-<div class="doc">
-<p>Executes the closure 
-<span class="param">f</span> within a scope.  Any proxies created within this
-scope are invalidated afterward unless they are converted to a global proxy.</p>
-<pre class="source">
-@deprecated
-scoped(f) =&gt; f();
-</pre>
-</div>
-</div>
 </div>
 <div>
 <h3>Abstract Classes</h3>
@@ -267,19 +176,13 @@ scoped(f) =&gt; f();
 <h3>Classes</h3>
           <div class="type">
           <h4>
-            <a href="js/Callback.html"><strong>Callback</strong></a>
-          </h4>
-          </div>
-          
-          <div class="type">
-          <h4>
             <a href="js/FunctionProxy.html"><strong>FunctionProxy</strong></a>
           </h4>
           </div>
           
           <div class="type">
           <h4>
-            <a href="js/Proxy.html"><strong>Proxy</strong></a>
+            <a href="js/Proxy.html"><strong>Proxy&lt;T&gt;</strong></a>
           </h4>
           </div>
           
@@ -288,7 +191,7 @@ scoped(f) =&gt; f();
         <div class="clear"></div>
         </div>
         <div class="footer">
-          <div>This page was generated at 2013-10-29 17:59:34.232</div>
+          <div>This page was generated at 2013-11-05 02:20:12.965</div>
         </div>
         <script async src="client-live-nav.js"></script>
         </body></html>
