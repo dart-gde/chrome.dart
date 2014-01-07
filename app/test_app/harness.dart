@@ -7,7 +7,7 @@ import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
 import 'package:logging/logging.dart';
 
-import 'package:chrome_gen/chrome_app.dart' as chrome;
+import 'package:chrome/chrome_app.dart' as chrome;
 
 import 'src/test_app.dart' as app;
 import 'src/test_i18n.dart' as i18n;

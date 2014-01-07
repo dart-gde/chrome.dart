@@ -3,7 +3,7 @@ library test_browser_action;
 import 'dart:async';
 
 import 'package:unittest/unittest.dart';
-import 'package:chrome_gen/chrome_ext.dart' as chrome;
+import 'package:chrome/chrome_ext.dart' as chrome;
 
 void main() {
   group('chrome.browser_action', () {

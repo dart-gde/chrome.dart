@@ -7,7 +7,7 @@ import 'package:unittest/html_enhanced_config.dart';
 import 'package:unittest/unittest.dart';
 import 'package:logging/logging.dart';
 
-import 'package:chrome_gen/chrome_ext.dart' as chrome;
+import 'package:chrome/chrome_ext.dart' as chrome;
 
 import 'src/test_context_menus.dart' as context_menus;
 import 'src/test_windows.dart' as windows;

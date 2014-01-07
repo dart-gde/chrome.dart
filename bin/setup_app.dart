@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:unscripted/unscripted.dart';
-import 'package:chrome_gen/build/build.dart' as build;
+import 'package:chrome/build/build.dart' as build;
 
 void main(List<String> arguments) => sketch(buildApp).execute(arguments);
 

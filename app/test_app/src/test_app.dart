@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:unittest/unittest.dart';
 import 'package:logging/logging.dart';
-import 'package:chrome_gen/chrome_app.dart' as chrome;
+import 'package:chrome/chrome_app.dart' as chrome;
 
 const String _TEST_WINDOW_URL = 'test_window.html';
 
