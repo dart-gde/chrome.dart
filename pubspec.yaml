@@ -1,0 +1,19 @@
+name: chrome_gen
+version: 0.3.4-dev
+environment:
+  sdk: ">=1.0.0 <2.0.0"
+authors:
+- Devon Carew <devoncarew@gmail.com>
+- Adam Singer <financeCoding@gmail.com>
+- Kevin Moore <kevin@thinkpixellab.com>
+description: >
+  An library for accessing the Chrome APIs in a packaged app or extension.
+homepage: https://github.com/dart-gde/chrome_gen.dart
+dev_dependencies:
+  args: any
+  browser: any
+  logging: any
+  parsers: ">=0.13.7"
+  path: any
+  unittest: any
+  unscripted: any

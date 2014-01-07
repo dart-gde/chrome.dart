@@ -1,0 +1,25 @@
+{
+  "name": "chrome.dart - test",
+  "manifest_version": 2,
+
+  "version": "1",
+  "minimum_chrome_version": "28",
+
+  "default_locale": "en",
+
+  "permissions": [
+    "serial",
+    { "fileSystem": ["write"] },
+    { "socket" : ["tcp-connect", "tcp-listen", "udp-bind", "udp-send-to"] },
+    "storage",
+    "syncFileSystem",
+    "power",
+    "pushMessaging"
+  ],
+
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  }
+}

@@ -1,0 +1,4 @@
+html, body {
+  overflow: scroll;
+  -webkit-user-select: auto;
+}

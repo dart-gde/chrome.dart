@@ -1,0 +1,35 @@
+body {
+  background-color: #F8F8F8;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.2em;
+  margin: 15px;
+}
+
+h1, p {
+  color: #333;
+}
+
+#container_id {
+  height: 500px;
+  position: relative;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+#summary {
+  float: left;
+}
+
+#notes {
+  float: right;
+  width: 120px;
+  text-align: right;
+}
+
+button {
+  margin: 0.5em;
+}

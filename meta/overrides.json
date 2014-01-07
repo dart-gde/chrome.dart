@@ -1,0 +1,40 @@
+{
+
+  "renameNamespace": {
+    "i18n": "I18N"
+  },
+
+  "suppressClass": [
+    "pageAction.ImageDataType",
+    "app.window.Bounds",
+    "system.display.Bounds"
+  ],
+
+  "renameClass": {
+    "bluetooth.Device": "BluetoothDevice",
+    "serial.Device": "SerialDevice",
+
+    "socket.ReadInfo": "SocketReadInfo",
+    "socket.WriteInfo": "SocketWriteInfo",
+    "serial.ReadInfo": "SerialReadInfo",
+    "serial.WriteInfo": "SerialWriteInfo",
+
+    "bookmarks.OnChangedEvent": "BookmarksOnChangedEvent",
+    "storage.OnChangedEvent": "StorageOnChangedEvent",
+
+    "bookmarks.OnMovedEvent": "BookmarksOnMovedEvent",
+    "bookmarks.OnRemovedEvent": "BookmarksOnRemovedEvent",
+    "tabs.OnMovedEvent": "TabsOnMovedEvent",
+    "tabs.OnRemovedEvent": "TabsOnRemovedEvent",
+
+    "devtools.inspectedWindow.GetContentResult": "GetResourceContentResult",
+    "devtools.network.GetContentResult": "GetRequestContentResult",
+
+    "syncFileSystem.DOMFileSystem": "FileSystem",
+    "mediaGalleries.DOMFileSystem": "FileSystem",
+
+    "events.Event": "ChromeEvent",
+    "runtime.Event": "ChromeEvent"
+  }
+
+}

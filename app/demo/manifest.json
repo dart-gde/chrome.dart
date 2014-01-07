@@ -1,0 +1,26 @@
+{
+  "name": "Demo app",
+  "version": "1",
+  "minimum_chrome_version": "30",
+  "manifest_version": 2,
+
+  "icons": {"128": "dart_icon.png"},
+
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+
+  "permissions": [
+    "alarms",
+    { "fileSystem": ["write", "retainEntries", "directory"] },
+    "idle",
+    "storage",
+    "syncFileSystem",
+    "system.cpu",
+    "system.memory",
+    { "socket" : ["tcp-connect", "tcp-listen"] },
+    "tts"
+  ]
+}
