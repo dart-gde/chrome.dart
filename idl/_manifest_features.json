@@ -1,0 +1,409 @@
+// Copyright (c) 2012 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// See c/c/e/features/* to understand this file, in particular feature.h,
+// simple_feature.h, and base_feature_provider.h.
+
+{
+  "app": {
+    "channel": "stable",
+    "extension_types": ["legacy_packaged_app", "hosted_app", "platform_app"]
+  },
+  // The default platform app CSP can only be overridden by whitelisted apps.
+  // This is a separate key from the top-level content_security_policy one since
+  // we can't combine type restrictions with whitelisted ID restrictions. If
+  // there is a need for additional whitelisted entries, the feature system
+  // should instead be extended to support OR-ing of restrictions.
+  "app.content_security_policy": {
+    "channel": "stable",
+    "extension_types": ["platform_app"],
+    "min_manifest_version": 2,
+    "whitelist": [
+      "nckgahadagoaajjgafhacjanaoiihapd",  // Google Talk prod
+      "eggnbpckecmjlblplehfpjjdhhidfdoj",  // Google Talk beta
+      "ppleadejekpmccmnpjdimmlfljlkdfej",  // Google Talk alpha
+      "ljclpkphhpbpinifbeabbhlfddcpfdde",   // Google Talk debug
+      "lphgohfeebnhcpiohjndkgbhhkoapkjc" // Apps Debugger
+    ]
+  },
+  "app.background": {
+    "channel": "stable",
+    "extension_types": ["platform_app"],
+    "min_manifest_version": 2
+  },
+  "app.isolation": {
+    "channel": "stable",
+    // Platform apps always have isolated storage, thus they cannot specify it
+    // via the manifest.
+    "extension_types": ["legacy_packaged_app", "hosted_app"]
+  },
+  "app.launch": {
+    "channel": "stable",
+    "extension_types": ["legacy_packaged_app", "hosted_app"]
+  },
+  "author": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "background": {
+    "channel": "stable",
+    "extension_types": [
+      // Platform apps specify their background page via app.background.
+      "extension", "legacy_packaged_app", "hosted_app"
+    ]
+  },
+  "background.persistent": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app"
+    ],
+    "min_manifest_version": 2
+  },
+  "background_page": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app", "hosted_app"
+    ],
+    "max_manifest_version": 1
+  },
+  "browser_action": {
+    "channel": "stable",
+    "extension_types": ["extension"]
+  },
+  "chrome_settings_overrides": {
+    "channel": "dev",
+    "extension_types": ["extension"]
+  },
+  "chrome_url_overrides": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app"]
+  },
+  "commands": {
+    "channel": "stable",
+    "extension_types": ["extension"],
+    "min_manifest_version": 2
+  },
+  "commands.global": {
+    "channel": "dev",
+    "extension_types": ["extension"],
+    "min_manifest_version": 2
+  },
+  "content_pack": {
+    "channel": "dev",
+    "extension_types": ["extension"]
+  },
+  "content_security_policy": {
+    "channel": "stable",
+    // Platform apps have a restricted content security policy that cannot be
+    // overriden (except for a whitelist of exceptions, see the
+    // app.content_security_policy whitelist).
+    "extension_types": ["extension", "legacy_packaged_app"]
+  },
+  "content_scripts": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app"]
+  },
+  "converted_from_user_script": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app", "hosted_app"
+    ],
+    "no_doc": true
+  },
+  "current_locale": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "default_locale": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "description": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "devtools_page": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app"]
+  },
+  "display_in_launcher": [
+    {
+      "channel": "stable",
+      "extension_types": ["legacy_packaged_app", "platform_app"],
+      "location": "component"
+    },
+    {
+      "channel": "stable",
+      "extension_types": ["legacy_packaged_app", "platform_app"],
+      "whitelist": [
+        "nmmhkkegccagdldgiimedpiccmgmieda"
+      ]
+    }
+  ],
+  "display_in_new_tab_page": [
+    {
+      "channel": "stable",
+      "extension_types": ["legacy_packaged_app", "platform_app"],
+      "location": "component"
+    },
+    {
+      "channel": "stable",
+      "extension_types": ["legacy_packaged_app", "platform_app"],
+      "whitelist": [
+        "nmmhkkegccagdldgiimedpiccmgmieda"
+      ]
+    }
+  ],
+  "export": [
+    {
+      "channel": "stable",
+      "extension_types": ["shared_module"],
+      "whitelist": [
+        "6EAED1924DB611B6EEF2A664BD077BE7EAD33B8F",
+        "4EB74897CB187C7633357C2FE832E0AD6A44883A"
+      ]
+    },
+    {
+      "channel": "dev",
+      "extension_types": ["shared_module"]
+    }
+  ],
+  "externally_connectable": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "hosted_app", "legacy_packaged_app", "platform_app"
+    ]
+  },
+  "file_browser_handlers": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app"]
+  },
+  "file_handlers": {
+    "channel": "stable",
+    "extension_types": ["platform_app"]
+  },
+  "homepage_url": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app"]
+  },
+  "icons": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "import": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "incognito": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app"]
+  },
+  "input_components": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app"]
+  },
+  "key": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "kiosk_enabled": {
+    "channel": "stable",
+    "extension_types": [
+      "platform_app"
+    ]
+  },
+  "kiosk_only": {
+    "channel": "dev",
+    "extension_types": [
+      "platform_app"
+    ]
+  },
+  "manifest_version": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "media_galleries_handlers": {
+    "channel": "dev",
+    "extension_types": ["platform_app"]
+  },
+  "mime_types": {
+    "channel": "stable",
+    "extension_types": [ "extension", "legacy_packaged_app", "platform_app" ],
+    "whitelist": [
+      "oickdpebdnfbgkcaoklfcdhjniefkcji",  // browser_tests
+      "gbkeegbaiigmenfmjfclcdgdpimamgkj",  // QuickOffice
+      "ionpfmkccalenbmnddpbmocokhaknphg",  // QuickOffice Dev
+      "bpmcpldpdmajfigpchkicefoigmkfalc",  // Quickoffice component extension
+      "ehibbfinohgbchlgdbfpikodjaojhccn"   // Editor
+    ]
+  },
+  "minimum_chrome_version": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app", "hosted_app", "platform_app"
+    ]
+  },
+  "nacl_modules": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app", "hosted_app", "platform_app"
+    ]
+  },
+  "name": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "oauth2": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app", "platform_app"
+    ]
+  },
+  "oauth2.auto_approve": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "platform_app"
+    ],
+    "whitelist": [
+      "mdbihdcgjmagbcapkhhkjbbdlkflmbfo",  // unit_tests
+      "pafkbggdmjlpgkdkcbjmhmfcdpncadgh",  // Google Now
+      "hkhhlkdconhgemhegnplaldnmnmkaemd",  // Get Started App
+      "nmmhkkegccagdldgiimedpiccmgmieda",  // In-app payments support app.
+      "4B1D0E19C6C43C008C44A8278C8B5BFE15ABEB3C",
+      "F7FA7ABC1ECB89BA8EE6656847EFABBF43BB9BCA",
+      "1A26E32DE447A17CBE5E9750CDBA78F58539B39C",  // TODO(rockot): Kill these.
+      "E61F841D8210B6A9891E5384CB665FBED31FCD7B",  // http://crbug.com/281715
+                                                   // -------------------------
+      "0F42756099D914A026DADFA182871C015735DD95",  // These 6 IDs are for
+      "E7E2461CE072DF036CF9592740196159E2D7C089",  // http://crbug.com/300087
+      "A74A4D44C7CFCD8844830E6140C8D763E12DD8F3",
+      "312745D9BF916161191143F6490085EEA0434997",
+      "53041A2FA309EECED01FFC751E7399186E860B2C",
+      "2D22CDB6583FD0A13758AEBE8B15E45208B4E9A7"
+    ]
+  },
+  "offline_enabled": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app", "hosted_app", "platform_app"
+    ]
+  },
+  "omnibox": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app"]
+  },
+  "optional_permissions": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app", "hosted_app", "platform_app"
+    ]
+  },
+  "options_page": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app", "hosted_app"
+    ]
+  },
+  "page_action": {
+    "channel": "stable",
+    "extension_types": ["extension"]
+  },
+  "page_actions": {
+    "channel": "stable",
+    "extension_types": ["extension"],
+    "max_manifest_version": 1
+  },
+  "permissions": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app", "hosted_app", "platform_app"
+    ]
+  },
+  "platforms": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "plugins": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app", "hosted_app"]
+  },
+  "requirements": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app", "hosted_app", "platform_app"
+    ]
+  },
+  "sandbox": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "platform_app", "legacy_packaged_app"
+    ],
+    "min_manifest_version": 2
+  },
+  "script_badge": {
+    "channel": "trunk",
+    "extension_types": ["extension"]
+  },
+  "short_name": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "signature": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "sockets": {
+    "channel": "dev",
+    "extension_types": ["platform_app"]
+  },
+  "spellcheck": {
+    "channel": "dev",
+    "extension_types": ["extension"]
+  },
+  "storage": {
+    "channel": "dev",
+    "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
+    "min_manifest_version": 2
+  },
+  "storage.managed_schema": {
+    "channel": "dev",
+    "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
+    "min_manifest_version": 2
+  },
+  "system_indicator": {
+    "channel": "dev",
+    "extension_types": ["extension", "legacy_packaged_app", "platform_app"]
+  },
+  "theme": {
+    "channel": "stable",
+    "extension_types": ["theme"]
+  },
+  "tts_engine": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app"]
+  },
+  "update_url": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "url_handlers": {
+    "channel": "dev",
+    "extension_types": ["platform_app"]
+  },
+  "version": {
+    "channel": "stable",
+    "extension_types": "all"
+  },
+  "web_accessible_resources": {
+    "channel": "stable",
+    "extension_types": [
+      "extension", "legacy_packaged_app", "hosted_app"
+    ]
+  },
+  "webview": {
+    "channel": "dev",
+    "extension_types": ["platform_app"],
+    "min_manifest_version": 2
+  }
+}

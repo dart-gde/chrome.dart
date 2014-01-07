@@ -1,0 +1,185 @@
+// Copyright 2013 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// The type schemas for structured manifest items. Not actually a callable API.
+
+[
+  {
+    "namespace": "manifestTypes",
+    "description": "Schemas for structured manifest entries",
+    "compiler_options": {
+      "generate_error_messages": true
+    },
+    "types": [
+      {
+        "id": "ExternallyConnectable",
+        "type": "object",
+        // Note: description commented out because externally_connectable.html
+        // already describes it, and the repetition looks odd.
+        // "description": "The <code>externally_connectable</code> manifest property declares which extensions, apps, and web pages can connect to your extension via $ref:runtime.connect and $ref:runtime.sendMessage.",
+        "properties": {
+          "ids": {
+            "description": "<p>The IDs of extensions or apps that are allowed to connect. If left empty or unspecified, no extensions or apps can connect.</p><p>The wildcard <code>\"*\"</code> will allow all extensions and apps to connect.</p>",
+            "optional": true,
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "matches": {
+            "description": "<p>The URL patterns for <em>web pages</em> that are allowed to connect. <em>This does not affect content scripts.</em> If left empty or unspecified, no web pages can connect.</p><p>Patterns cannot include wildcard domains nor subdomains of (effective) top level domains; <code>*://google.com/*</code> and <code>http://*.chromium.org/*</code> are valid, while <code>&lt;all_urls&gt;</code>, <code>http://*/*</code>, <code>*://*.com/*</code>, and even <code>http://*.appspot.com/*</code> are not.</p>",
+            "optional": true,
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "accepts_tls_channel_id": {
+            "description": "If <code>true</code>, messages sent via $ref:runtime.connect or $ref:runtime.sendMessage will set $ref:runtime.MessageSender.tlsChannelId if those methods request it to be. If <code>false</code>, $ref:runtime.MessageSender.tlsChannelId will never be set under any circumstance.",
+            "optional": true,
+            "type": "boolean"
+          }
+        }
+      },
+      {
+        "id": "ChromeSettingsOverrides",
+        "type": "object",
+        "description": "Chrome settings which can be overriden by an extension.",
+        "properties": {
+          "homepage": {
+            "description": "New value for the homepage.",
+            "optional": true,
+            "type": "string"
+          },
+          "search_provider": {
+            "type": "object",
+            "description": "A search engine",
+            "optional": true,
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the search engine displayed to user."
+              },
+              "keyword": {
+                "type": "string",
+                "description": "Omnibox keyword for the search engine."
+              },
+              "favicon_url": {
+                "type": "string",
+                "description": "An icon URL for the search engine."
+              },
+              "search_url": {
+                "type": "string",
+                "description": "An search URL used by the search engine."
+              },
+              "encoding": {
+                "type": "string",
+                "description": "Encoding of the search term."
+              },
+              "suggest_url": {
+                "type": "string",
+                "optional": true,
+                "description": "If omitted, this engine does not support suggestions."
+              },
+              "instant_url": {
+                "type": "string",
+                "optional": true,
+                "description": "If omitted, this engine does not support instant."
+              },
+              "image_url": {
+                "type": "string",
+                "optional": true,
+                "description": "If omitted, this engine does not support image search."
+              },
+              "search_url_post_params": {
+                "type": "string",
+                "optional": true,
+                "description": "The string of post parameters to search_url"
+              },
+              "suggest_url_post_params": {
+                "type": "string",
+                "optional": true,
+                "description": "The string of post parameters to suggest_url"
+              },
+              "instant_url_post_params": {
+                "type": "string",
+                "optional": true,
+                "description": "The string of post parameters to instant_url"
+              },
+              "image_url_post_params": {
+                "type": "string",
+                "optional": true,
+                "description": "The string of post parameters to image_url"
+              },
+              "alternate_urls": {
+                "type": "array",
+                "items": { "type": "string" },
+                "optional": true,
+                "description": "A list of URL patterns that can be used, in addition to |search_url|."
+              },
+              "is_default": {
+                "type": "boolean",
+                "description": "Specifies if the search provider should be default."
+              }
+            }
+          },
+          "startup_page": {
+            "description": "A new startup page to be added to the list.",
+            "optional": true,
+            "type": "string"
+          }
+        }
+      },
+      {
+        "id": "sockets",
+        "type": "object",
+        "description": "The <code>sockets</code> manifest property declares which sockets operations an app can issue.",
+        "properties": {
+          "udp": {
+            "description": "The <code>udp</code> manifest property declares which sockets.udp operations an app can issue.",
+            "optional": true,
+            "type": "object",
+            "properties": {
+              "bind": {
+                "description": "<p>The host:port pattern for <code>bind</code> operations.</p>",
+                "optional": true,
+                "type": "string"
+              },
+              "send": {
+                "description": "<p>The host:port pattern for <code>send</code> operations.</p>",
+                "optional": true,
+                "type": "string"
+              },
+              "multicastMembership": {
+                "description": "<p>The host:port pattern for <code>joinGroup</code> operations.</p>",
+                "optional": true,
+                "type": "string"
+              }
+            }
+          },
+          "tcp": {
+            "description": "The <code>tcp</code> manifest property declares which sockets.tcp operations an app can issue.",
+            "optional": true,
+            "type": "object",
+            "properties": {
+              "connect": {
+                "description": "<p>The host:port pattern for <code>connect</code> operations.</p>",
+                "optional": true,
+                "type": "string"
+              }
+            }
+          },
+          "tcpServer": {
+            "description": "The <code>tcpServer</code> manifest property declares which sockets.tcpServer operations an app can issue.",
+            "optional": true,
+            "type": "object",
+            "properties": {
+              "listen": {
+                "description": "<p>The host:port pattern for <code>listen</code> operations.</p>",
+                "optional": true,
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

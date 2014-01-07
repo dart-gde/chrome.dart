@@ -1,0 +1,21 @@
+{
+  "name": "chrome_ext.dart - test",
+  "version": "1.0",
+  "description": "unit test for chrome_ext.dart",
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "tabs",
+    "experimental"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_title": "chrome_ext.dart - test",
+    "default_icon" : "Dart_Logo_16.png"
+  },
+  "icons": {"128": "dart_icon.png"},
+  "manifest_version": 2
+}
