@@ -1,0 +1,77 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeApi abstract class / chrome.src.common_exp Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.src.common_exp" data-type="ChromeApi">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.src.common_exp.html">chrome.src.common_exp</a> &rsaquo; <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeApi</strong>
+          abstract class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>A common super class for the Chrome APIs.</p>
+<pre class="source">
+abstract class ChromeApi {
+ /**
+  * Returns true if the API is available. The common causes of an API not being
+  * avilable are:
+  *
+  *  * a permission is missing in the application's manifest.json file
+  *  * the API is defined on a newer version of Chrome then the current runtime
+  */
+ bool get available;
+}
+</pre>
+</div>
+<h3>Subclasses</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.alarms/ChromeAlarms.html">ChromeAlarms</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.bookmarks/ChromeBookmarks.html">ChromeBookmarks</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.browserAction/ChromeBrowserAction.html">ChromeBrowserAction</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.browsingData/ChromeBrowsingData.html">ChromeBrowsingData</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.commands/ChromeCommands.html">ChromeCommands</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.contentSettings/ChromeContentSettings.html">ChromeContentSettings</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.contextMenus/ChromeContextMenus.html">ChromeContextMenus</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.cookies/ChromeCookies.html">ChromeCookies</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.debugger/ChromeDebugger.html">ChromeDebugger</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.declarativeContent/ChromeDeclarativeContent.html">ChromeDeclarativeContent</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.declarativeWebRequest/ChromeDeclarativeWebRequest.html">ChromeDeclarativeWebRequest</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.desktopCapture/ChromeDesktopCapture.html">ChromeDesktopCapture</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.devtools/ChromeDevtoolsInspectedWindow.html">ChromeDevtoolsInspectedWindow</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.devtools/ChromeDevtoolsNetwork.html">ChromeDevtoolsNetwork</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.devtools/ChromeDevtoolsPanels.html">ChromeDevtoolsPanels</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.downloads/ChromeDownloads.html">ChromeDownloads</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.events/ChromeEvents.html">ChromeEvents</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.extension/ChromeExtension.html">ChromeExtension</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.fileBrowserHandler/ChromeFileBrowserHandler.html">ChromeFileBrowserHandler</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.fontSettings/ChromeFontSettings.html">ChromeFontSettings</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.history/ChromeHistory.html">ChromeHistory</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.i18n/ChromeI18N.html">ChromeI18N</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.identity/ChromeIdentity.html">ChromeIdentity</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.idle/ChromeIdle.html">ChromeIdle</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.infobars/ChromeInfobars.html">ChromeInfobars</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.input/ChromeInputIme.html">ChromeInputIme</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.location/ChromeLocation.html">ChromeLocation</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.management/ChromeManagement.html">ChromeManagement</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.notifications/ChromeNotifications.html">ChromeNotifications</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.omnibox/ChromeOmnibox.html">ChromeOmnibox</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.pageAction/ChromePageAction.html">ChromePageAction</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.pageCapture/ChromePageCapture.html">ChromePageCapture</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.permissions/ChromePermissions.html">ChromePermissions</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.power/ChromePower.html">ChromePower</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.privacy/ChromePrivacy.html">ChromePrivacy</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.processes/ChromeProcesses.html">ChromeProcesses</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.proxy/ChromeProxy.html">ChromeProxy</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.pushMessaging/ChromePushMessaging.html">ChromePushMessaging</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.runtime/ChromeRuntime.html">ChromeRuntime</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.scriptBadge/ChromeScriptBadge.html">ChromeScriptBadge</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.sessions/ChromeSessions.html">ChromeSessions</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.storage/ChromeStorage.html">ChromeStorage</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.system/ChromeSystemCpu.html">ChromeSystemCpu</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.system/ChromeSystemMemory.html">ChromeSystemMemory</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.system/ChromeSystemStorage.html">ChromeSystemStorage</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.tabCapture/ChromeTabCapture.html">ChromeTabCapture</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.tabs/ChromeTabs.html">ChromeTabs</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.topSites/ChromeTopSites.html">ChromeTopSites</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.tts/ChromeTts.html">ChromeTts</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.ttsEngine/ChromeTtsEngine.html">ChromeTtsEngine</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.types/ChromeTypes.html">ChromeTypes</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.webNavigation/ChromeWebNavigation.html">ChromeWebNavigation</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.webRequest/ChromeWebRequest.html">ChromeWebRequest</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.windows/ChromeWindows.html">ChromeWindows</a></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeApi.available">#</a>
+        </h4>
+        <div class="doc">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<pre class="source">
+bool get available;
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

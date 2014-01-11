@@ -1,0 +1,254 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>VisitItem class / chrome.history Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.history" data-type="VisitItem">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.history.html">chrome.history</a> &rsaquo; <a href="../chrome.history/VisitItem.html">VisitItem</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>VisitItem</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>An object encapsulating one visit to a URL.</p>
+<pre class="source">
+class VisitItem extends ChromeObject {
+ VisitItem({String id, String visitId, var visitTime, String referringVisitId, String transition}) {
+   if (id != null) this.id = id;
+   if (visitId != null) this.visitId = visitId;
+   if (visitTime != null) this.visitTime = visitTime;
+   if (referringVisitId != null) this.referringVisitId = referringVisitId;
+   if (transition != null) this.transition = transition;
+ }
+ VisitItem.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * The unique identifier for the item.
+  */
+ String get id =&gt; jsProxy['id'];
+ set id(String value) =&gt; jsProxy['id'] = value;
+
+ /**
+  * The unique identifier for this visit.
+  */
+ String get visitId =&gt; jsProxy['visitId'];
+ set visitId(String value) =&gt; jsProxy['visitId'] = value;
+
+ /**
+  * When this visit occurred, represented in milliseconds since the epoch.
+  */
+ dynamic get visitTime =&gt; jsProxy['visitTime'];
+ set visitTime(var value) =&gt; jsProxy['visitTime'] = jsify(value);
+
+ /**
+  * The visit ID of the referrer.
+  */
+ String get referringVisitId =&gt; jsProxy['referringVisitId'];
+ set referringVisitId(String value) =&gt; jsProxy['referringVisitId'] = value;
+
+ /**
+  * The [transition type](#transition_types) for this visit from its referrer.
+  * enum of `link`, `typed`, `auto_bookmark`, `auto_subframe`,
+  * `manual_subframe`, `generated`, `auto_toplevel`, `form_submit`, `reload`,
+  * `keyword`, `keyword_generated`
+  */
+ String get transition =&gt; jsProxy['transition'];
+ set transition(String value) =&gt; jsProxy['transition'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>VisitItem</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>VisitItem</strong>({String id, String visitId, visitTime, String referringVisitId, String transition}) <a class="anchor-link" href="#"
+              title="Permalink to VisitItem.VisitItem">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+VisitItem({String id, String visitId, var visitTime, String referringVisitId, String transition}) {
+ if (id != null) this.id = id;
+ if (visitId != null) this.visitId = visitId;
+ if (visitTime != null) this.visitTime = visitTime;
+ if (referringVisitId != null) this.referringVisitId = referringVisitId;
+ if (transition != null) this.transition = transition;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>VisitItem.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to VisitItem.VisitItem.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+VisitItem.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="id">
+<button class="show-code">Code</button>
+String         <strong>id</strong> <a class="anchor-link"
+            href="#id"
+            title="Permalink to VisitItem.id">#</a>
+        </h4>
+        <div class="doc">
+<p>The unique identifier for the item.</p>
+<pre class="source">
+String get id =&gt; jsProxy['id'];
+</pre>
+<pre class="source">
+set id(String value) =&gt; jsProxy['id'] = value;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to VisitItem.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="referringVisitId">
+<button class="show-code">Code</button>
+String         <strong>referringVisitId</strong> <a class="anchor-link"
+            href="#referringVisitId"
+            title="Permalink to VisitItem.referringVisitId">#</a>
+        </h4>
+        <div class="doc">
+<p>The visit ID of the referrer.</p>
+<pre class="source">
+String get referringVisitId =&gt; jsProxy['referringVisitId'];
+</pre>
+<pre class="source">
+set referringVisitId(String value) =&gt; jsProxy['referringVisitId'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="transition">
+<button class="show-code">Code</button>
+String         <strong>transition</strong> <a class="anchor-link"
+            href="#transition"
+            title="Permalink to VisitItem.transition">#</a>
+        </h4>
+        <div class="doc">
+<p>The <a href="#transition_types">transition type</a> for this visit from its referrer.
+enum of <code>link</code>, <code>typed</code>, <code>auto_bookmark</code>, <code>auto_subframe</code>,
+<code>manual_subframe</code>, <code>generated</code>, <code>auto_toplevel</code>, <code>form_submit</code>, <code>reload</code>,
+<code>keyword</code>, <code>keyword_generated</code></p>
+<pre class="source">
+String get transition =&gt; jsProxy['transition'];
+</pre>
+<pre class="source">
+set transition(String value) =&gt; jsProxy['transition'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="visitId">
+<button class="show-code">Code</button>
+String         <strong>visitId</strong> <a class="anchor-link"
+            href="#visitId"
+            title="Permalink to VisitItem.visitId">#</a>
+        </h4>
+        <div class="doc">
+<p>The unique identifier for this visit.</p>
+<pre class="source">
+String get visitId =&gt; jsProxy['visitId'];
+</pre>
+<pre class="source">
+set visitId(String value) =&gt; jsProxy['visitId'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="visitTime">
+<button class="show-code">Code</button>
+var         <strong>visitTime</strong> <a class="anchor-link"
+            href="#visitTime"
+            title="Permalink to VisitItem.visitTime">#</a>
+        </h4>
+        <div class="doc">
+<p>When this visit occurred, represented in milliseconds since the epoch.</p>
+<pre class="source">
+dynamic get visitTime =&gt; jsProxy['visitTime'];
+</pre>
+<pre class="source">
+set visitTime(var value) =&gt; jsProxy['visitTime'] = jsify(value);
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to VisitItem.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to VisitItem.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

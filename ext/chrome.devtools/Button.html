@@ -1,0 +1,162 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Button class / chrome.devtools Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.devtools" data-type="Button">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.devtools.html">chrome.devtools</a> &rsaquo; <a href="../chrome.devtools/Button.html">Button</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Button</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>A button created by the extension.</p>
+<pre class="source">
+class Button extends ChromeObject {
+ Button();
+ Button.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * Updates the attributes of the button. If some of the arguments are omitted
+  * or `null`, the corresponding attributes are not updated.
+  * 
+  * [iconPath] Path to the new icon of the button.
+  * 
+  * [tooltipText] Text shown as a tooltip when user hovers the mouse over the
+  * button.
+  * 
+  * [disabled] Whether the button is disabled.
+  */
+ void update([String iconPath, String tooltipText, bool disabled]) {
+   jsProxy.callMethod('update', [iconPath, tooltipText, disabled]);
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>Button</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>Button</strong>() <a class="anchor-link" href="#"
+              title="Permalink to Button.Button">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+Button();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>Button.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to Button.Button.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+Button.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to Button.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to Button.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to Button.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="update">
+<button class="show-code">Code</button>
+void <strong>update</strong>([String iconPath, String tooltipText, bool disabled]) <a class="anchor-link" href="#update"
+              title="Permalink to Button.update">#</a></h4>
+<div class="doc">
+<p>Updates the attributes of the button. If some of the arguments are omitted
+or <code>null</code>, the corresponding attributes are not updated.</p>
+<p>
+<span class="param">iconPath</span> Path to the new icon of the button.</p>
+<p>
+<span class="param">tooltipText</span> Text shown as a tooltip when user hovers the mouse over the
+button.</p>
+<p>
+<span class="param">disabled</span> Whether the button is disabled.</p>
+<pre class="source">
+void update([String iconPath, String tooltipText, bool disabled]) {
+ jsProxy.callMethod('update', [iconPath, tooltipText, disabled]);
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

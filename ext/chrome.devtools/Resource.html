@@ -1,0 +1,231 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Resource class / chrome.devtools Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.devtools" data-type="Resource">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.devtools.html">chrome.devtools</a> &rsaquo; <a href="../chrome.devtools/Resource.html">Resource</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Resource</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>A resource within the inspected page, such as a document, a script, or an
+image.</p>
+<pre class="source">
+class Resource extends ChromeObject {
+ Resource({String url}) {
+   if (url != null) this.url = url;
+ }
+ Resource.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * The URL of the resource.
+  */
+ String get url =&gt; jsProxy['url'];
+ set url(String value) =&gt; jsProxy['url'] = value;
+
+ /**
+  * Gets the content of the resource.
+  * 
+  * Returns:
+  * [content] Content of the resource (potentially encoded).
+  * [encoding] Empty if content is not encoded, encoding name otherwise.
+  * Currently, only base64 is supported.
+  */
+ Future&lt;GetResourceContentResult&gt; getContent() {
+   var completer = new ChromeCompleter&lt;GetResourceContentResult&gt;.twoArgs(GetResourceContentResult._create);
+   jsProxy.callMethod('getContent', [completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the content of the resource.
+  * 
+  * [content] New content of the resource. Only resources with the text type
+  * are currently supported.
+  * 
+  * [commit] True if the user has finished editing the resource, and the new
+  * content of the resource should be persisted; false if this is a minor
+  * change sent in progress of the user editing the resource.
+  * 
+  * Returns:
+  * Set to undefined if the resource content was set successfully; describes
+  * error otherwise.
+  */
+ Future&lt;Map&lt;String, dynamic&gt;&gt; setContent(String content, bool commit) {
+   var completer = new ChromeCompleter&lt;Map&lt;String, dynamic&gt;&gt;.oneArg(mapify);
+   jsProxy.callMethod('setContent', [content, commit, completer.callback]);
+   return completer.future;
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>Resource</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>Resource</strong>({String url}) <a class="anchor-link" href="#"
+              title="Permalink to Resource.Resource">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+Resource({String url}) {
+ if (url != null) this.url = url;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>Resource.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to Resource.Resource.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+Resource.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to Resource.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="url">
+<button class="show-code">Code</button>
+String         <strong>url</strong> <a class="anchor-link"
+            href="#url"
+            title="Permalink to Resource.url">#</a>
+        </h4>
+        <div class="doc">
+<p>The URL of the resource.</p>
+<pre class="source">
+String get url =&gt; jsProxy['url'];
+</pre>
+<pre class="source">
+set url(String value) =&gt; jsProxy['url'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="getContent">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.devtools/GetResourceContentResult.html">GetResourceContentResult</a>&gt; <strong>getContent</strong>() <a class="anchor-link" href="#getContent"
+              title="Permalink to Resource.getContent">#</a></h4>
+<div class="doc">
+<p>Gets the content of the resource.</p>
+<p>Returns:
+<code>content</code> Content of the resource (potentially encoded).
+<code>encoding</code> Empty if content is not encoded, encoding name otherwise.
+Currently, only base64 is supported.</p>
+<pre class="source">
+Future&lt;GetResourceContentResult&gt; getContent() {
+ var completer = new ChromeCompleter&lt;GetResourceContentResult&gt;.twoArgs(GetResourceContentResult._create);
+ jsProxy.callMethod('getContent', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setContent">
+<button class="show-code">Code</button>
+Future&lt;Map&lt;String, dynamic&gt;&gt; <strong>setContent</strong>(String content, bool commit) <a class="anchor-link" href="#setContent"
+              title="Permalink to Resource.setContent">#</a></h4>
+<div class="doc">
+<p>Sets the content of the resource.</p>
+<p>
+<span class="param">content</span> New content of the resource. Only resources with the text type
+are currently supported.</p>
+<p>
+<span class="param">commit</span> True if the user has finished editing the resource, and the new
+content of the resource should be persisted; false if this is a minor
+change sent in progress of the user editing the resource.</p>
+<p>Returns:
+Set to undefined if the resource content was set successfully; describes
+error otherwise.</p>
+<pre class="source">
+Future&lt;Map&lt;String, dynamic&gt;&gt; setContent(String content, bool commit) {
+ var completer = new ChromeCompleter&lt;Map&lt;String, dynamic&gt;&gt;.oneArg(mapify);
+ jsProxy.callMethod('setContent', [content, commit, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to Resource.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to Resource.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

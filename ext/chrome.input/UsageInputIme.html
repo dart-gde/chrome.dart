@@ -1,0 +1,175 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>UsageInputIme class / chrome.input Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.input" data-type="UsageInputIme">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.input.html">chrome.input</a> &rsaquo; <a href="../chrome.input/UsageInputIme.html">UsageInputIme</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>UsageInputIme</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class UsageInputIme extends ChromeObject {
+ UsageInputIme({String title, String body}) {
+   if (title != null) this.title = title;
+   if (body != null) this.body = body;
+ }
+ UsageInputIme.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * The title string of details description.
+  */
+ String get title =&gt; jsProxy['title'];
+ set title(String value) =&gt; jsProxy['title'] = value;
+
+ /**
+  * The body string of detail description.
+  */
+ String get body =&gt; jsProxy['body'];
+ set body(String value) =&gt; jsProxy['body'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>UsageInputIme</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>UsageInputIme</strong>({String title, String body}) <a class="anchor-link" href="#"
+              title="Permalink to UsageInputIme.UsageInputIme">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+UsageInputIme({String title, String body}) {
+ if (title != null) this.title = title;
+ if (body != null) this.body = body;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>UsageInputIme.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to UsageInputIme.UsageInputIme.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+UsageInputIme.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="body">
+<button class="show-code">Code</button>
+String         <strong>body</strong> <a class="anchor-link"
+            href="#body"
+            title="Permalink to UsageInputIme.body">#</a>
+        </h4>
+        <div class="doc">
+<p>The body string of detail description.</p>
+<pre class="source">
+String get body =&gt; jsProxy['body'];
+</pre>
+<pre class="source">
+set body(String value) =&gt; jsProxy['body'] = value;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to UsageInputIme.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="title">
+<button class="show-code">Code</button>
+String         <strong>title</strong> <a class="anchor-link"
+            href="#title"
+            title="Permalink to UsageInputIme.title">#</a>
+        </h4>
+        <div class="doc">
+<p>The title string of details description.</p>
+<pre class="source">
+String get title =&gt; jsProxy['title'];
+</pre>
+<pre class="source">
+set title(String value) =&gt; jsProxy['title'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to UsageInputIme.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to UsageInputIme.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

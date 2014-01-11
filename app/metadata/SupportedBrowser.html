@@ -1,0 +1,177 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>SupportedBrowser class / metadata Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="metadata" data-type="SupportedBrowser">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../metadata.html">metadata</a> &rsaquo; <a href="../metadata/SupportedBrowser.html">SupportedBrowser</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>SupportedBrowser</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>An annotation used to mark a feature as only being supported by a subset
+of the browsers that Dart supports by default.</p>
+<p>If an API is not annotated with <a class="crossref" href="../metadata/SupportedBrowser.html">SupportedBrowser</a> then it is assumed to
+work on all browsers Dart supports.</p>
+<pre class="source">
+class SupportedBrowser {
+ static const String CHROME = "Chrome";
+ static const String FIREFOX = "Firefox";
+ static const String IE = "Internet Explorer";
+ static const String OPERA = "Opera";
+ static const String SAFARI = "Safari";
+
+ /// The name of the browser.
+ final String browserName;
+ /// The minimum version of the browser that supports the feature, or null
+ /// if supported on all versions.
+ final String minimumVersion;
+
+ const SupportedBrowser(this.browserName, [this.minimumVersion]);
+}
+</pre>
+</div>
+<div>
+<h3>Static Properties</h3>
+<div class="field"><h4 id="CHROME">
+<button class="show-code">Code</button>
+const String         <strong>CHROME</strong> <a class="anchor-link"
+            href="#CHROME"
+            title="Permalink to SupportedBrowser.CHROME">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const String CHROME = "Chrome"
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="FIREFOX">
+<button class="show-code">Code</button>
+const String         <strong>FIREFOX</strong> <a class="anchor-link"
+            href="#FIREFOX"
+            title="Permalink to SupportedBrowser.FIREFOX">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const String FIREFOX = "Firefox"
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="IE">
+<button class="show-code">Code</button>
+const String         <strong>IE</strong> <a class="anchor-link"
+            href="#IE"
+            title="Permalink to SupportedBrowser.IE">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const String IE = "Internet Explorer"
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="OPERA">
+<button class="show-code">Code</button>
+const String         <strong>OPERA</strong> <a class="anchor-link"
+            href="#OPERA"
+            title="Permalink to SupportedBrowser.OPERA">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const String OPERA = "Opera"
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="SAFARI">
+<button class="show-code">Code</button>
+const String         <strong>SAFARI</strong> <a class="anchor-link"
+            href="#SAFARI"
+            title="Permalink to SupportedBrowser.SAFARI">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const String SAFARI = "Safari"
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+const <strong>SupportedBrowser</strong>(String browserName, [String minimumVersion]) <a class="anchor-link" href="#"
+              title="Permalink to SupportedBrowser.SupportedBrowser">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+const SupportedBrowser(this.browserName, [this.minimumVersion]);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="browserName">
+<button class="show-code">Code</button>
+final String         <strong>browserName</strong> <a class="anchor-link"
+            href="#browserName"
+            title="Permalink to SupportedBrowser.browserName">#</a>
+        </h4>
+        <div class="doc">
+<p>The name of the browser.</p>
+<pre class="source">
+final String browserName
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="minimumVersion">
+<button class="show-code">Code</button>
+final String         <strong>minimumVersion</strong> <a class="anchor-link"
+            href="#minimumVersion"
+            title="Permalink to SupportedBrowser.minimumVersion">#</a>
+        </h4>
+        <div class="doc">
+<p>The minimum version of the browser that supports the feature, or null
+if supported on all versions.</p>
+<pre class="source">
+final String minimumVersion
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

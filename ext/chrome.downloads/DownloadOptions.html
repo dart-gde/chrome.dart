@@ -1,0 +1,267 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>DownloadOptions class / chrome.downloads Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.downloads" data-type="DownloadOptions">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.downloads.html">chrome.downloads</a> &rsaquo; <a href="../chrome.downloads/DownloadOptions.html">DownloadOptions</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>DownloadOptions</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class DownloadOptions extends ChromeObject {
+ DownloadOptions({String url, String filename, FilenameConflictAction conflictAction, bool saveAs, HttpMethod method, List&lt;HeaderNameValuePair&gt; headers, String body}) {
+   if (url != null) this.url = url;
+   if (filename != null) this.filename = filename;
+   if (conflictAction != null) this.conflictAction = conflictAction;
+   if (saveAs != null) this.saveAs = saveAs;
+   if (method != null) this.method = method;
+   if (headers != null) this.headers = headers;
+   if (body != null) this.body = body;
+ }
+ DownloadOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ String get url =&gt; jsProxy['url'];
+ set url(String value) =&gt; jsProxy['url'] = value;
+
+ String get filename =&gt; jsProxy['filename'];
+ set filename(String value) =&gt; jsProxy['filename'] = value;
+
+ FilenameConflictAction get conflictAction =&gt; _createFilenameConflictAction(jsProxy['conflictAction']);
+ set conflictAction(FilenameConflictAction value) =&gt; jsProxy['conflictAction'] = jsify(value);
+
+ bool get saveAs =&gt; jsProxy['saveAs'];
+ set saveAs(bool value) =&gt; jsProxy['saveAs'] = value;
+
+ HttpMethod get method =&gt; _createHttpMethod(jsProxy['method']);
+ set method(HttpMethod value) =&gt; jsProxy['method'] = jsify(value);
+
+ List&lt;HeaderNameValuePair&gt; get headers =&gt; listify(jsProxy['headers'], _createHeaderNameValuePair);
+ set headers(List&lt;HeaderNameValuePair&gt; value) =&gt; jsProxy['headers'] = jsify(value);
+
+ String get body =&gt; jsProxy['body'];
+ set body(String value) =&gt; jsProxy['body'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>DownloadOptions</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>DownloadOptions</strong>({String url, String filename, <a href="../chrome.downloads/FilenameConflictAction.html">FilenameConflictAction</a> conflictAction, bool saveAs, <a href="../chrome.downloads/HttpMethod.html">HttpMethod</a> method, List&lt;<a href="../chrome.downloads/HeaderNameValuePair.html">HeaderNameValuePair</a>&gt; headers, String body}) <a class="anchor-link" href="#"
+              title="Permalink to DownloadOptions.DownloadOptions">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+DownloadOptions({String url, String filename, FilenameConflictAction conflictAction, bool saveAs, HttpMethod method, List&lt;HeaderNameValuePair&gt; headers, String body}) {
+ if (url != null) this.url = url;
+ if (filename != null) this.filename = filename;
+ if (conflictAction != null) this.conflictAction = conflictAction;
+ if (saveAs != null) this.saveAs = saveAs;
+ if (method != null) this.method = method;
+ if (headers != null) this.headers = headers;
+ if (body != null) this.body = body;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>DownloadOptions.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to DownloadOptions.DownloadOptions.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+DownloadOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="body">
+<button class="show-code">Code</button>
+String         <strong>body</strong> <a class="anchor-link"
+            href="#body"
+            title="Permalink to DownloadOptions.body">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+String get body =&gt; jsProxy['body'];
+</pre>
+<pre class="source">
+set body(String value) =&gt; jsProxy['body'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="conflictAction">
+<button class="show-code">Code</button>
+<a href="../chrome.downloads/FilenameConflictAction.html">FilenameConflictAction</a>         <strong>conflictAction</strong> <a class="anchor-link"
+            href="#conflictAction"
+            title="Permalink to DownloadOptions.conflictAction">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+FilenameConflictAction get conflictAction =&gt; _createFilenameConflictAction(jsProxy['conflictAction']);
+</pre>
+<pre class="source">
+set conflictAction(FilenameConflictAction value) =&gt; jsProxy['conflictAction'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="filename">
+<button class="show-code">Code</button>
+String         <strong>filename</strong> <a class="anchor-link"
+            href="#filename"
+            title="Permalink to DownloadOptions.filename">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+String get filename =&gt; jsProxy['filename'];
+</pre>
+<pre class="source">
+set filename(String value) =&gt; jsProxy['filename'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="headers">
+<button class="show-code">Code</button>
+List&lt;<a href="../chrome.downloads/HeaderNameValuePair.html">HeaderNameValuePair</a>&gt;         <strong>headers</strong> <a class="anchor-link"
+            href="#headers"
+            title="Permalink to DownloadOptions.headers">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+List&lt;HeaderNameValuePair&gt; get headers =&gt; listify(jsProxy['headers'], _createHeaderNameValuePair);
+</pre>
+<pre class="source">
+set headers(List&lt;HeaderNameValuePair&gt; value) =&gt; jsProxy['headers'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to DownloadOptions.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="method">
+<button class="show-code">Code</button>
+<a href="../chrome.downloads/HttpMethod.html">HttpMethod</a>         <strong>method</strong> <a class="anchor-link"
+            href="#method"
+            title="Permalink to DownloadOptions.method">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+HttpMethod get method =&gt; _createHttpMethod(jsProxy['method']);
+</pre>
+<pre class="source">
+set method(HttpMethod value) =&gt; jsProxy['method'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="saveAs">
+<button class="show-code">Code</button>
+bool         <strong>saveAs</strong> <a class="anchor-link"
+            href="#saveAs"
+            title="Permalink to DownloadOptions.saveAs">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+bool get saveAs =&gt; jsProxy['saveAs'];
+</pre>
+<pre class="source">
+set saveAs(bool value) =&gt; jsProxy['saveAs'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="url">
+<button class="show-code">Code</button>
+String         <strong>url</strong> <a class="anchor-link"
+            href="#url"
+            title="Permalink to DownloadOptions.url">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+String get url =&gt; jsProxy['url'];
+</pre>
+<pre class="source">
+set url(String value) =&gt; jsProxy['url'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to DownloadOptions.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to DownloadOptions.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

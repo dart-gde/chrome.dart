@@ -1,0 +1,301 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>CookiesGetAllParams class / chrome.cookies Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.cookies" data-type="CookiesGetAllParams">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.cookies.html">chrome.cookies</a> &rsaquo; <a href="../chrome.cookies/CookiesGetAllParams.html">CookiesGetAllParams</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>CookiesGetAllParams</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class CookiesGetAllParams extends ChromeObject {
+ CookiesGetAllParams({String url, String name, String domain, String path, bool secure, bool session, String storeId}) {
+   if (url != null) this.url = url;
+   if (name != null) this.name = name;
+   if (domain != null) this.domain = domain;
+   if (path != null) this.path = path;
+   if (secure != null) this.secure = secure;
+   if (session != null) this.session = session;
+   if (storeId != null) this.storeId = storeId;
+ }
+ CookiesGetAllParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * Restricts the retrieved cookies to those that would match the given URL.
+  */
+ String get url =&gt; jsProxy['url'];
+ set url(String value) =&gt; jsProxy['url'] = value;
+
+ /**
+  * Filters the cookies by name.
+  */
+ String get name =&gt; jsProxy['name'];
+ set name(String value) =&gt; jsProxy['name'] = value;
+
+ /**
+  * Restricts the retrieved cookies to those whose domains match or are
+  * subdomains of this one.
+  */
+ String get domain =&gt; jsProxy['domain'];
+ set domain(String value) =&gt; jsProxy['domain'] = value;
+
+ /**
+  * Restricts the retrieved cookies to those whose path exactly matches this
+  * string.
+  */
+ String get path =&gt; jsProxy['path'];
+ set path(String value) =&gt; jsProxy['path'] = value;
+
+ /**
+  * Filters the cookies by their Secure property.
+  */
+ bool get secure =&gt; jsProxy['secure'];
+ set secure(bool value) =&gt; jsProxy['secure'] = value;
+
+ /**
+  * Filters out session vs. persistent cookies.
+  */
+ bool get session =&gt; jsProxy['session'];
+ set session(bool value) =&gt; jsProxy['session'] = value;
+
+ /**
+  * The cookie store to retrieve cookies from. If omitted, the current
+  * execution context's cookie store will be used.
+  */
+ String get storeId =&gt; jsProxy['storeId'];
+ set storeId(String value) =&gt; jsProxy['storeId'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>CookiesGetAllParams</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>CookiesGetAllParams</strong>({String url, String name, String domain, String path, bool secure, bool session, String storeId}) <a class="anchor-link" href="#"
+              title="Permalink to CookiesGetAllParams.CookiesGetAllParams">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+CookiesGetAllParams({String url, String name, String domain, String path, bool secure, bool session, String storeId}) {
+ if (url != null) this.url = url;
+ if (name != null) this.name = name;
+ if (domain != null) this.domain = domain;
+ if (path != null) this.path = path;
+ if (secure != null) this.secure = secure;
+ if (session != null) this.session = session;
+ if (storeId != null) this.storeId = storeId;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>CookiesGetAllParams.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to CookiesGetAllParams.CookiesGetAllParams.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+CookiesGetAllParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="domain">
+<button class="show-code">Code</button>
+String         <strong>domain</strong> <a class="anchor-link"
+            href="#domain"
+            title="Permalink to CookiesGetAllParams.domain">#</a>
+        </h4>
+        <div class="doc">
+<p>Restricts the retrieved cookies to those whose domains match or are
+subdomains of this one.</p>
+<pre class="source">
+String get domain =&gt; jsProxy['domain'];
+</pre>
+<pre class="source">
+set domain(String value) =&gt; jsProxy['domain'] = value;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to CookiesGetAllParams.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="name">
+<button class="show-code">Code</button>
+String         <strong>name</strong> <a class="anchor-link"
+            href="#name"
+            title="Permalink to CookiesGetAllParams.name">#</a>
+        </h4>
+        <div class="doc">
+<p>Filters the cookies by name.</p>
+<pre class="source">
+String get name =&gt; jsProxy['name'];
+</pre>
+<pre class="source">
+set name(String value) =&gt; jsProxy['name'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="path">
+<button class="show-code">Code</button>
+String         <strong>path</strong> <a class="anchor-link"
+            href="#path"
+            title="Permalink to CookiesGetAllParams.path">#</a>
+        </h4>
+        <div class="doc">
+<p>Restricts the retrieved cookies to those whose path exactly matches this
+string.</p>
+<pre class="source">
+String get path =&gt; jsProxy['path'];
+</pre>
+<pre class="source">
+set path(String value) =&gt; jsProxy['path'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="secure">
+<button class="show-code">Code</button>
+bool         <strong>secure</strong> <a class="anchor-link"
+            href="#secure"
+            title="Permalink to CookiesGetAllParams.secure">#</a>
+        </h4>
+        <div class="doc">
+<p>Filters the cookies by their Secure property.</p>
+<pre class="source">
+bool get secure =&gt; jsProxy['secure'];
+</pre>
+<pre class="source">
+set secure(bool value) =&gt; jsProxy['secure'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="session">
+<button class="show-code">Code</button>
+bool         <strong>session</strong> <a class="anchor-link"
+            href="#session"
+            title="Permalink to CookiesGetAllParams.session">#</a>
+        </h4>
+        <div class="doc">
+<p>Filters out session vs. persistent cookies.</p>
+<pre class="source">
+bool get session =&gt; jsProxy['session'];
+</pre>
+<pre class="source">
+set session(bool value) =&gt; jsProxy['session'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="storeId">
+<button class="show-code">Code</button>
+String         <strong>storeId</strong> <a class="anchor-link"
+            href="#storeId"
+            title="Permalink to CookiesGetAllParams.storeId">#</a>
+        </h4>
+        <div class="doc">
+<p>The cookie store to retrieve cookies from. If omitted, the current
+execution context's cookie store will be used.</p>
+<pre class="source">
+String get storeId =&gt; jsProxy['storeId'];
+</pre>
+<pre class="source">
+set storeId(String value) =&gt; jsProxy['storeId'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="url">
+<button class="show-code">Code</button>
+String         <strong>url</strong> <a class="anchor-link"
+            href="#url"
+            title="Permalink to CookiesGetAllParams.url">#</a>
+        </h4>
+        <div class="doc">
+<p>Restricts the retrieved cookies to those that would match the given URL.</p>
+<pre class="source">
+String get url =&gt; jsProxy['url'];
+</pre>
+<pre class="source">
+set url(String value) =&gt; jsProxy['url'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to CookiesGetAllParams.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to CookiesGetAllParams.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

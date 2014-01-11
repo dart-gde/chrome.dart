@@ -1,0 +1,557 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>AppWindow class / chrome.app Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.app" data-type="AppWindow">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.app.html">chrome.app</a> &rsaquo; <a href="../chrome.app/AppWindow.html">AppWindow</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>AppWindow</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class AppWindow extends ChromeObject {
+ AppWindow({Window contentWindow}) {
+   if (contentWindow != null) this.contentWindow = contentWindow;
+ }
+ AppWindow.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ Window get contentWindow =&gt; _createWindow(jsProxy['contentWindow']);
+ set contentWindow(Window value) =&gt; jsProxy['contentWindow'] = jsify(value);
+
+ /**
+  * Focus the window.
+  */
+ void focus() {
+   jsProxy.callMethod('focus');
+ }
+
+ /**
+  * Fullscreens the window.
+  */
+ void fullscreen() {
+   jsProxy.callMethod('fullscreen');
+ }
+
+ /**
+  * Is the window fullscreen?
+  */
+ bool isFullscreen() {
+   return jsProxy.callMethod('isFullscreen');
+ }
+
+ /**
+  * Minimize the window.
+  */
+ void minimize() {
+   jsProxy.callMethod('minimize');
+ }
+
+ /**
+  * Is the window minimized?
+  */
+ bool isMinimized() {
+   return jsProxy.callMethod('isMinimized');
+ }
+
+ /**
+  * Maximize the window.
+  */
+ void maximize() {
+   jsProxy.callMethod('maximize');
+ }
+
+ /**
+  * Is the window maximized?
+  */
+ bool isMaximized() {
+   return jsProxy.callMethod('isMaximized');
+ }
+
+ /**
+  * Restore the window, exiting a maximized, minimized, or fullscreen state.
+  */
+ void restore() {
+   jsProxy.callMethod('restore');
+ }
+
+ /**
+  * Move the window to the position ([left], [top]).
+  */
+ void moveTo(int left, int top) {
+   jsProxy.callMethod('moveTo', [left, top]);
+ }
+
+ /**
+  * Resize the window to [width]x[height] pixels in size.
+  */
+ void resizeTo(int width, int height) {
+   jsProxy.callMethod('resizeTo', [width, height]);
+ }
+
+ /**
+  * Draw attention to the window.
+  */
+ void drawAttention() {
+   jsProxy.callMethod('drawAttention');
+ }
+
+ /**
+  * Clear attention to the window.
+  */
+ void clearAttention() {
+   jsProxy.callMethod('clearAttention');
+ }
+
+ /**
+  * Close the window.
+  */
+ void close() {
+   jsProxy.callMethod('close');
+ }
+
+ /**
+  * Show the window. Does nothing if the window is already visible.
+  */
+ void show() {
+   jsProxy.callMethod('show');
+ }
+
+ /**
+  * Hide the window. Does nothing if the window is already hidden.
+  */
+ void hide() {
+   jsProxy.callMethod('hide');
+ }
+
+ /**
+  * Get the window's bounds as a [Bounds] object.
+  */
+ Bounds getBounds() {
+   return _createBounds(jsProxy.callMethod('getBounds'));
+ }
+
+ /**
+  * Set the window's bounds.
+  */
+ void setBounds(Bounds bounds) {
+   jsProxy.callMethod('setBounds', [jsify(bounds)]);
+ }
+
+ /**
+  * Set the app icon for the window (experimental). Currently this is only
+  * being implemented on Ash. todo(stevenjb): Investigate implementing this on
+  * Windows and OSX.
+  */
+ void setIcon(String icon_url) {
+   jsProxy.callMethod('setIcon', [icon_url]);
+ }
+
+ /**
+  * Is the window always on top? Currently available in the Dev channel only.
+  */
+ bool isAlwaysOnTop() {
+   return jsProxy.callMethod('isAlwaysOnTop');
+ }
+
+ /**
+  * Set whether the window should stay above most other windows. Currently
+  * available in the Dev channel only.
+  */
+ void setAlwaysOnTop(bool always_on_top) {
+   jsProxy.callMethod('setAlwaysOnTop', [always_on_top]);
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>AppWindow</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>AppWindow</strong>({<a href="../chrome.windows/Window.html">Window</a> contentWindow}) <a class="anchor-link" href="#"
+              title="Permalink to AppWindow.AppWindow">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+AppWindow({Window contentWindow}) {
+ if (contentWindow != null) this.contentWindow = contentWindow;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>AppWindow.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to AppWindow.AppWindow.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+AppWindow.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="contentWindow">
+<button class="show-code">Code</button>
+<a href="../chrome.windows/Window.html">Window</a>         <strong>contentWindow</strong> <a class="anchor-link"
+            href="#contentWindow"
+            title="Permalink to AppWindow.contentWindow">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Window get contentWindow =&gt; _createWindow(jsProxy['contentWindow']);
+</pre>
+<pre class="source">
+set contentWindow(Window value) =&gt; jsProxy['contentWindow'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to AppWindow.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="clearAttention">
+<button class="show-code">Code</button>
+void <strong>clearAttention</strong>() <a class="anchor-link" href="#clearAttention"
+              title="Permalink to AppWindow.clearAttention">#</a></h4>
+<div class="doc">
+<p>Clear attention to the window.</p>
+<pre class="source">
+void clearAttention() {
+ jsProxy.callMethod('clearAttention');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="close">
+<button class="show-code">Code</button>
+void <strong>close</strong>() <a class="anchor-link" href="#close"
+              title="Permalink to AppWindow.close">#</a></h4>
+<div class="doc">
+<p>Close the window.</p>
+<pre class="source">
+void close() {
+ jsProxy.callMethod('close');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="drawAttention">
+<button class="show-code">Code</button>
+void <strong>drawAttention</strong>() <a class="anchor-link" href="#drawAttention"
+              title="Permalink to AppWindow.drawAttention">#</a></h4>
+<div class="doc">
+<p>Draw attention to the window.</p>
+<pre class="source">
+void drawAttention() {
+ jsProxy.callMethod('drawAttention');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="focus">
+<button class="show-code">Code</button>
+void <strong>focus</strong>() <a class="anchor-link" href="#focus"
+              title="Permalink to AppWindow.focus">#</a></h4>
+<div class="doc">
+<p>Focus the window.</p>
+<pre class="source">
+void focus() {
+ jsProxy.callMethod('focus');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fullscreen">
+<button class="show-code">Code</button>
+void <strong>fullscreen</strong>() <a class="anchor-link" href="#fullscreen"
+              title="Permalink to AppWindow.fullscreen">#</a></h4>
+<div class="doc">
+<p>Fullscreens the window.</p>
+<pre class="source">
+void fullscreen() {
+ jsProxy.callMethod('fullscreen');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getBounds">
+<button class="show-code">Code</button>
+<a href="../chrome.src.common_exp/Bounds.html">Bounds</a> <strong>getBounds</strong>() <a class="anchor-link" href="#getBounds"
+              title="Permalink to AppWindow.getBounds">#</a></h4>
+<div class="doc">
+<p>Get the window's bounds as a <a class="crossref" href="../chrome.src.common_exp/Bounds.html">Bounds</a> object.</p>
+<pre class="source">
+Bounds getBounds() {
+ return _createBounds(jsProxy.callMethod('getBounds'));
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="hide">
+<button class="show-code">Code</button>
+void <strong>hide</strong>() <a class="anchor-link" href="#hide"
+              title="Permalink to AppWindow.hide">#</a></h4>
+<div class="doc">
+<p>Hide the window. Does nothing if the window is already hidden.</p>
+<pre class="source">
+void hide() {
+ jsProxy.callMethod('hide');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="isAlwaysOnTop">
+<button class="show-code">Code</button>
+bool <strong>isAlwaysOnTop</strong>() <a class="anchor-link" href="#isAlwaysOnTop"
+              title="Permalink to AppWindow.isAlwaysOnTop">#</a></h4>
+<div class="doc">
+<p>Is the window always on top? Currently available in the Dev channel only.</p>
+<pre class="source">
+bool isAlwaysOnTop() {
+ return jsProxy.callMethod('isAlwaysOnTop');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="isFullscreen">
+<button class="show-code">Code</button>
+bool <strong>isFullscreen</strong>() <a class="anchor-link" href="#isFullscreen"
+              title="Permalink to AppWindow.isFullscreen">#</a></h4>
+<div class="doc">
+<p>Is the window fullscreen?</p>
+<pre class="source">
+bool isFullscreen() {
+ return jsProxy.callMethod('isFullscreen');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="isMaximized">
+<button class="show-code">Code</button>
+bool <strong>isMaximized</strong>() <a class="anchor-link" href="#isMaximized"
+              title="Permalink to AppWindow.isMaximized">#</a></h4>
+<div class="doc">
+<p>Is the window maximized?</p>
+<pre class="source">
+bool isMaximized() {
+ return jsProxy.callMethod('isMaximized');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="isMinimized">
+<button class="show-code">Code</button>
+bool <strong>isMinimized</strong>() <a class="anchor-link" href="#isMinimized"
+              title="Permalink to AppWindow.isMinimized">#</a></h4>
+<div class="doc">
+<p>Is the window minimized?</p>
+<pre class="source">
+bool isMinimized() {
+ return jsProxy.callMethod('isMinimized');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="maximize">
+<button class="show-code">Code</button>
+void <strong>maximize</strong>() <a class="anchor-link" href="#maximize"
+              title="Permalink to AppWindow.maximize">#</a></h4>
+<div class="doc">
+<p>Maximize the window.</p>
+<pre class="source">
+void maximize() {
+ jsProxy.callMethod('maximize');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="minimize">
+<button class="show-code">Code</button>
+void <strong>minimize</strong>() <a class="anchor-link" href="#minimize"
+              title="Permalink to AppWindow.minimize">#</a></h4>
+<div class="doc">
+<p>Minimize the window.</p>
+<pre class="source">
+void minimize() {
+ jsProxy.callMethod('minimize');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="moveTo">
+<button class="show-code">Code</button>
+void <strong>moveTo</strong>(int left, int top) <a class="anchor-link" href="#moveTo"
+              title="Permalink to AppWindow.moveTo">#</a></h4>
+<div class="doc">
+<p>Move the window to the position (
+<span class="param">left</span>, 
+<span class="param">top</span>).</p>
+<pre class="source">
+void moveTo(int left, int top) {
+ jsProxy.callMethod('moveTo', [left, top]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="resizeTo">
+<button class="show-code">Code</button>
+void <strong>resizeTo</strong>(int width, int height) <a class="anchor-link" href="#resizeTo"
+              title="Permalink to AppWindow.resizeTo">#</a></h4>
+<div class="doc">
+<p>Resize the window to 
+<span class="param">width</span>x
+<span class="param">height</span> pixels in size.</p>
+<pre class="source">
+void resizeTo(int width, int height) {
+ jsProxy.callMethod('resizeTo', [width, height]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="restore">
+<button class="show-code">Code</button>
+void <strong>restore</strong>() <a class="anchor-link" href="#restore"
+              title="Permalink to AppWindow.restore">#</a></h4>
+<div class="doc">
+<p>Restore the window, exiting a maximized, minimized, or fullscreen state.</p>
+<pre class="source">
+void restore() {
+ jsProxy.callMethod('restore');
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setAlwaysOnTop">
+<button class="show-code">Code</button>
+void <strong>setAlwaysOnTop</strong>(bool always_on_top) <a class="anchor-link" href="#setAlwaysOnTop"
+              title="Permalink to AppWindow.setAlwaysOnTop">#</a></h4>
+<div class="doc">
+<p>Set whether the window should stay above most other windows. Currently
+available in the Dev channel only.</p>
+<pre class="source">
+void setAlwaysOnTop(bool always_on_top) {
+ jsProxy.callMethod('setAlwaysOnTop', [always_on_top]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setBounds">
+<button class="show-code">Code</button>
+void <strong>setBounds</strong>(<a href="../chrome.src.common_exp/Bounds.html">Bounds</a> bounds) <a class="anchor-link" href="#setBounds"
+              title="Permalink to AppWindow.setBounds">#</a></h4>
+<div class="doc">
+<p>Set the window's bounds.</p>
+<pre class="source">
+void setBounds(Bounds bounds) {
+ jsProxy.callMethod('setBounds', [jsify(bounds)]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setIcon">
+<button class="show-code">Code</button>
+void <strong>setIcon</strong>(String icon_url) <a class="anchor-link" href="#setIcon"
+              title="Permalink to AppWindow.setIcon">#</a></h4>
+<div class="doc">
+<p>Set the app icon for the window (experimental). Currently this is only
+being implemented on Ash. todo(stevenjb): Investigate implementing this on
+Windows and OSX.</p>
+<pre class="source">
+void setIcon(String icon_url) {
+ jsProxy.callMethod('setIcon', [icon_url]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="show">
+<button class="show-code">Code</button>
+void <strong>show</strong>() <a class="anchor-link" href="#show"
+              title="Permalink to AppWindow.show">#</a></h4>
+<div class="doc">
+<p>Show the window. Does nothing if the window is already visible.</p>
+<pre class="source">
+void show() {
+ jsProxy.callMethod('show');
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to AppWindow.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to AppWindow.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

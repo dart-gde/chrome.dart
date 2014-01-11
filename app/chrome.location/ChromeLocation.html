@@ -1,0 +1,181 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeLocation class / chrome.location Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.location" data-type="ChromeLocation">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.location.html">chrome.location</a> &rsaquo; <a href="../chrome.location/ChromeLocation.html">ChromeLocation</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeLocation</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeLocation extends ChromeApi {
+ static final JsObject _location = chrome['location'];
+
+ ChromeLocation._();
+
+ bool get available =&gt; _location != null;
+
+ /**
+  * Starts a location watching request. If there is another location watching
+  * request with the same name (or no name if none is specified), it will be
+  * cancelled and replaced by this request.
+  * [name]: Optional name to identify this request. Defaults to the empty
+  * string.
+  * [requestInfo]: Optional parameters for this request.
+  */
+ void watchLocation(String name, WatchLocationRequestInfo requestInfo) {
+   if (_location == null) _throwNotAvailable();
+
+   _location.callMethod('watchLocation', [name, jsify(requestInfo)]);
+ }
+
+ /**
+  * Ends a location watching request.
+  * [name]: Optional name to identify the request to remove. Defaults to the
+  * empty string.
+  */
+ void clearWatch(String name) {
+   if (_location == null) _throwNotAvailable();
+
+   _location.callMethod('clearWatch', [name]);
+ }
+
+ Stream&lt;Location&gt; get onLocationUpdate =&gt; _onLocationUpdate.stream;
+
+ final ChromeStreamController&lt;Location&gt; _onLocationUpdate =
+     new ChromeStreamController&lt;Location&gt;.oneArg(_location, 'onLocationUpdate', _createLocation);
+
+ Stream&lt;String&gt; get onLocationError =&gt; _onLocationError.stream;
+
+ final ChromeStreamController&lt;String&gt; _onLocationError =
+     new ChromeStreamController&lt;String&gt;.oneArg(_location, 'onLocationError', selfConverter);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.location' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeLocation</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeLocation.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _location != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onLocationError">
+<button class="show-code">Code</button>
+final Stream&lt;String&gt;         <strong>onLocationError</strong> <a class="anchor-link"
+            href="#onLocationError"
+            title="Permalink to ChromeLocation.onLocationError">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Stream&lt;String&gt; get onLocationError =&gt; _onLocationError.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onLocationUpdate">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.location/Location.html">Location</a>&gt;         <strong>onLocationUpdate</strong> <a class="anchor-link"
+            href="#onLocationUpdate"
+            title="Permalink to ChromeLocation.onLocationUpdate">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Stream&lt;Location&gt; get onLocationUpdate =&gt; _onLocationUpdate.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="clearWatch">
+<button class="show-code">Code</button>
+void <strong>clearWatch</strong>(String name) <a class="anchor-link" href="#clearWatch"
+              title="Permalink to ChromeLocation.clearWatch">#</a></h4>
+<div class="doc">
+<p>Ends a location watching request.
+
+<span class="param">name</span>: Optional name to identify the request to remove. Defaults to the
+empty string.</p>
+<pre class="source">
+void clearWatch(String name) {
+ if (_location == null) _throwNotAvailable();
+
+ _location.callMethod('clearWatch', [name]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="watchLocation">
+<button class="show-code">Code</button>
+void <strong>watchLocation</strong>(String name, <a href="../chrome.location/WatchLocationRequestInfo.html">WatchLocationRequestInfo</a> requestInfo) <a class="anchor-link" href="#watchLocation"
+              title="Permalink to ChromeLocation.watchLocation">#</a></h4>
+<div class="doc">
+<p>Starts a location watching request. If there is another location watching
+request with the same name (or no name if none is specified), it will be
+cancelled and replaced by this request.
+
+<span class="param">name</span>: Optional name to identify this request. Defaults to the empty
+string.
+
+<span class="param">requestInfo</span>: Optional parameters for this request.</p>
+<pre class="source">
+void watchLocation(String name, WatchLocationRequestInfo requestInfo) {
+ if (_location == null) _throwNotAvailable();
+
+ _location.callMethod('watchLocation', [name, jsify(requestInfo)]);
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

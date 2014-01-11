@@ -1,0 +1,188 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeIdle class / chrome.idle Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.idle" data-type="ChromeIdle">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.idle.html">chrome.idle</a> &rsaquo; <a href="../chrome.idle/ChromeIdle.html">ChromeIdle</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeIdle</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeIdle extends ChromeApi {
+ static final JsObject _idle = chrome['idle'];
+
+ ChromeIdle._();
+
+ bool get available =&gt; _idle != null;
+
+ /**
+  * Returns "locked" if the system is locked, "idle" if the user has not
+  * generated any input for a specified number of seconds, or "active"
+  * otherwise.
+  * 
+  * [detectionIntervalInSeconds] The system is considered idle if
+  * detectionIntervalInSeconds seconds have elapsed since the last user input
+  * detected.
+  * 
+  * Returns:
+  * enum of `active`, `idle`, `locked`
+  */
+ Future&lt;String&gt; queryState(int detectionIntervalInSeconds) {
+   if (_idle == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+   _idle.callMethod('queryState', [detectionIntervalInSeconds, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the interval, in seconds, used to determine when the system is in an
+  * idle state for onStateChanged events. The default interval is 60 seconds.
+  * 
+  * [intervalInSeconds] Threshold, in seconds, used to determine when the
+  * system is in an idle state.
+  */
+ void setDetectionInterval(int intervalInSeconds) {
+   if (_idle == null) _throwNotAvailable();
+
+   _idle.callMethod('setDetectionInterval', [intervalInSeconds]);
+ }
+
+ /**
+  * Fired when the system changes to an active, idle or locked state. The event
+  * fires with "locked" if the screen is locked or the screensaver activates,
+  * "idle" if the system is unlocked and the user has not generated any input
+  * for a specified number of seconds, and "active" when the user generates
+  * input on an idle system.
+  */
+ Stream&lt;String&gt; get onStateChanged =&gt; _onStateChanged.stream;
+
+ final ChromeStreamController&lt;String&gt; _onStateChanged =
+     new ChromeStreamController&lt;String&gt;.oneArg(_idle, 'onStateChanged', selfConverter);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.idle' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeIdle</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeIdle.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _idle != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onStateChanged">
+<button class="show-code">Code</button>
+final Stream&lt;String&gt;         <strong>onStateChanged</strong> <a class="anchor-link"
+            href="#onStateChanged"
+            title="Permalink to ChromeIdle.onStateChanged">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when the system changes to an active, idle or locked state. The event
+fires with "locked" if the screen is locked or the screensaver activates,
+"idle" if the system is unlocked and the user has not generated any input
+for a specified number of seconds, and "active" when the user generates
+input on an idle system.</p>
+<pre class="source">
+Stream&lt;String&gt; get onStateChanged =&gt; _onStateChanged.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="queryState">
+<button class="show-code">Code</button>
+Future&lt;String&gt; <strong>queryState</strong>(int detectionIntervalInSeconds) <a class="anchor-link" href="#queryState"
+              title="Permalink to ChromeIdle.queryState">#</a></h4>
+<div class="doc">
+<p>Returns "locked" if the system is locked, "idle" if the user has not
+generated any input for a specified number of seconds, or "active"
+otherwise.</p>
+<p>
+<span class="param">detectionIntervalInSeconds</span> The system is considered idle if
+detectionIntervalInSeconds seconds have elapsed since the last user input
+detected.</p>
+<p>Returns:
+enum of <code>active</code>, <code>idle</code>, <code>locked</code></p>
+<pre class="source">
+Future&lt;String&gt; queryState(int detectionIntervalInSeconds) {
+ if (_idle == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+ _idle.callMethod('queryState', [detectionIntervalInSeconds, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setDetectionInterval">
+<button class="show-code">Code</button>
+void <strong>setDetectionInterval</strong>(int intervalInSeconds) <a class="anchor-link" href="#setDetectionInterval"
+              title="Permalink to ChromeIdle.setDetectionInterval">#</a></h4>
+<div class="doc">
+<p>Sets the interval, in seconds, used to determine when the system is in an
+idle state for onStateChanged events. The default interval is 60 seconds.</p>
+<p>
+<span class="param">intervalInSeconds</span> Threshold, in seconds, used to determine when the
+system is in an idle state.</p>
+<pre class="source">
+void setDetectionInterval(int intervalInSeconds) {
+ if (_idle == null) _throwNotAvailable();
+
+ _idle.callMethod('setDetectionInterval', [intervalInSeconds]);
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

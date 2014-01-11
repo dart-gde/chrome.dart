@@ -1,0 +1,103 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TabsOnMovedEvent class / chrome.tabs Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.tabs" data-type="TabsOnMovedEvent">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.tabs.html">chrome.tabs</a> &rsaquo; <a href="../chrome.tabs/TabsOnMovedEvent.html">TabsOnMovedEvent</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TabsOnMovedEvent</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Fired when a tab is moved within a window. Only one move event is fired,
+representing the tab the user directly moved. Move events are not fired for
+the other tabs that must move in response. This event is not fired when a tab
+is moved between windows. For that, see <code>onDetached.</code></p>
+<pre class="source">
+class TabsOnMovedEvent {
+ final int tabId;
+
+ final Map moveInfo;
+
+ TabsOnMovedEvent(this.tabId, this.moveInfo);
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>TabsOnMovedEvent</strong>(int tabId, Map moveInfo) <a class="anchor-link" href="#"
+              title="Permalink to TabsOnMovedEvent.TabsOnMovedEvent">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+TabsOnMovedEvent(this.tabId, this.moveInfo);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="moveInfo">
+<button class="show-code">Code</button>
+final Map         <strong>moveInfo</strong> <a class="anchor-link"
+            href="#moveInfo"
+            title="Permalink to TabsOnMovedEvent.moveInfo">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final Map moveInfo
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="tabId">
+<button class="show-code">Code</button>
+final int         <strong>tabId</strong> <a class="anchor-link"
+            href="#tabId"
+            title="Permalink to TabsOnMovedEvent.tabId">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+final int tabId
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

@@ -1,0 +1,288 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeDebugger class / chrome.debugger Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.debugger" data-type="ChromeDebugger">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.debugger.html">chrome.debugger</a> &rsaquo; <a href="../chrome.debugger/ChromeDebugger.html">ChromeDebugger</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeDebugger</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeDebugger extends ChromeApi {
+ static final JsObject _debugger = chrome['debugger'];
+
+ ChromeDebugger._();
+
+ bool get available =&gt; _debugger != null;
+
+ /**
+  * Attaches debugger to the given target.
+  * 
+  * [target] Debugging target to which you want to attach.
+  * 
+  * [requiredVersion] Required debugging protocol version ("0.1"). One can only
+  * attach to the debuggee with matching major version and greater or equal
+  * minor version. List of the protocol versions can be obtained
+  * [here](http://code.google.com/chrome/devtools/docs/remote-debugging.html).
+  */
+ Future attach(Debuggee target, String requiredVersion) {
+   if (_debugger == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _debugger.callMethod('attach', [jsify(target), requiredVersion, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Detaches debugger from the given target.
+  * 
+  * [target] Debugging target from which you want to detach.
+  */
+ Future detach(Debuggee target) {
+   if (_debugger == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _debugger.callMethod('detach', [jsify(target), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sends given command to the debugging target.
+  * 
+  * [target] Debugging target to which you want to send the command.
+  * 
+  * [method] Method name. Should be one of the methods defined by the [remote
+  * debugging
+  * protocol](http://code.google.com/chrome/devtools/docs/remote-debugging.html).
+  * 
+  * [commandParams] JSON object with request parameters. This object must
+  * conform to the remote debugging params scheme for given method.
+  * 
+  * Returns:
+  * JSON object with the response. Structure of the response varies depending
+  * on the method and is defined by the remote debugging protocol.
+  */
+ Future&lt;Map&lt;String, dynamic&gt;&gt; sendCommand(Debuggee target, String method, [Map&lt;String, dynamic&gt; commandParams]) {
+   if (_debugger == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Map&lt;String, dynamic&gt;&gt;.oneArg(mapify);
+   _debugger.callMethod('sendCommand', [jsify(target), method, jsify(commandParams), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Returns the list of available debug targets.
+  * 
+  * Returns:
+  * Array of TargetInfo objects corresponding to the available debug targets.
+  */
+ Future&lt;List&lt;TargetInfo&gt;&gt; getTargets() {
+   if (_debugger == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;TargetInfo&gt;&gt;.oneArg((e) =&gt; listify(e, _createTargetInfo));
+   _debugger.callMethod('getTargets', [completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Fired whenever debugging target issues instrumentation event.
+  */
+ Stream&lt;OnEventEvent&gt; get onEvent =&gt; _onEvent.stream;
+
+ final ChromeStreamController&lt;OnEventEvent&gt; _onEvent =
+     new ChromeStreamController&lt;OnEventEvent&gt;.threeArgs(_debugger, 'onEvent', _createOnEventEvent);
+
+ /**
+  * Fired when browser terminates debugging session for the tab. This happens
+  * when either the tab is being closed or Chrome DevTools is being invoked for
+  * the attached tab.
+  */
+ Stream&lt;OnDetachEvent&gt; get onDetach =&gt; _onDetach.stream;
+
+ final ChromeStreamController&lt;OnDetachEvent&gt; _onDetach =
+     new ChromeStreamController&lt;OnDetachEvent&gt;.twoArgs(_debugger, 'onDetach', _createOnDetachEvent);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.debugger' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeDebugger</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeDebugger.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _debugger != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onDetach">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.debugger/OnDetachEvent.html">OnDetachEvent</a>&gt;         <strong>onDetach</strong> <a class="anchor-link"
+            href="#onDetach"
+            title="Permalink to ChromeDebugger.onDetach">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when browser terminates debugging session for the tab. This happens
+when either the tab is being closed or Chrome DevTools is being invoked for
+the attached tab.</p>
+<pre class="source">
+Stream&lt;OnDetachEvent&gt; get onDetach =&gt; _onDetach.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onEvent">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.debugger/OnEventEvent.html">OnEventEvent</a>&gt;         <strong>onEvent</strong> <a class="anchor-link"
+            href="#onEvent"
+            title="Permalink to ChromeDebugger.onEvent">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired whenever debugging target issues instrumentation event.</p>
+<pre class="source">
+Stream&lt;OnEventEvent&gt; get onEvent =&gt; _onEvent.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="attach">
+<button class="show-code">Code</button>
+Future <strong>attach</strong>(<a href="../chrome.debugger/Debuggee.html">Debuggee</a> target, String requiredVersion) <a class="anchor-link" href="#attach"
+              title="Permalink to ChromeDebugger.attach">#</a></h4>
+<div class="doc">
+<p>Attaches debugger to the given target.</p>
+<p>
+<span class="param">target</span> Debugging target to which you want to attach.</p>
+<p>
+<span class="param">requiredVersion</span> Required debugging protocol version ("0.1"). One can only
+attach to the debuggee with matching major version and greater or equal
+minor version. List of the protocol versions can be obtained
+<a href="http://code.google.com/chrome/devtools/docs/remote-debugging.html">here</a>.</p>
+<pre class="source">
+Future attach(Debuggee target, String requiredVersion) {
+ if (_debugger == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _debugger.callMethod('attach', [jsify(target), requiredVersion, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="detach">
+<button class="show-code">Code</button>
+Future <strong>detach</strong>(<a href="../chrome.debugger/Debuggee.html">Debuggee</a> target) <a class="anchor-link" href="#detach"
+              title="Permalink to ChromeDebugger.detach">#</a></h4>
+<div class="doc">
+<p>Detaches debugger from the given target.</p>
+<p>
+<span class="param">target</span> Debugging target from which you want to detach.</p>
+<pre class="source">
+Future detach(Debuggee target) {
+ if (_debugger == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _debugger.callMethod('detach', [jsify(target), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getTargets">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.debugger/TargetInfo.html">TargetInfo</a>&gt;&gt; <strong>getTargets</strong>() <a class="anchor-link" href="#getTargets"
+              title="Permalink to ChromeDebugger.getTargets">#</a></h4>
+<div class="doc">
+<p>Returns the list of available debug targets.</p>
+<p>Returns:
+Array of TargetInfo objects corresponding to the available debug targets.</p>
+<pre class="source">
+Future&lt;List&lt;TargetInfo&gt;&gt; getTargets() {
+ if (_debugger == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;TargetInfo&gt;&gt;.oneArg((e) =&gt; listify(e, _createTargetInfo));
+ _debugger.callMethod('getTargets', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="sendCommand">
+<button class="show-code">Code</button>
+Future&lt;Map&lt;String, dynamic&gt;&gt; <strong>sendCommand</strong>(<a href="../chrome.debugger/Debuggee.html">Debuggee</a> target, String method, [Map&lt;String, dynamic&gt; commandParams]) <a class="anchor-link" href="#sendCommand"
+              title="Permalink to ChromeDebugger.sendCommand">#</a></h4>
+<div class="doc">
+<p>Sends given command to the debugging target.</p>
+<p>
+<span class="param">target</span> Debugging target to which you want to send the command.</p>
+<p>
+<span class="param">method</span> Method name. Should be one of the methods defined by the <a href="http://code.google.com/chrome/devtools/docs/remote-debugging.html">remote
+debugging
+protocol</a>.</p>
+<p>
+<span class="param">commandParams</span> JSON object with request parameters. This object must
+conform to the remote debugging params scheme for given method.</p>
+<p>Returns:
+JSON object with the response. Structure of the response varies depending
+on the method and is defined by the remote debugging protocol.</p>
+<pre class="source">
+Future&lt;Map&lt;String, dynamic&gt;&gt; sendCommand(Debuggee target, String method, [Map&lt;String, dynamic&gt; commandParams]) {
+ if (_debugger == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Map&lt;String, dynamic&gt;&gt;.oneArg(mapify);
+ _debugger.callMethod('sendCommand', [jsify(target), method, jsify(commandParams), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

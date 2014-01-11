@@ -1,0 +1,175 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>StorageChange class / chrome.storage Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.storage" data-type="StorageChange">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.storage.html">chrome.storage</a> &rsaquo; <a href="../chrome.storage/StorageChange.html">StorageChange</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>StorageChange</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class StorageChange extends ChromeObject {
+ StorageChange({var oldValue, var newValue}) {
+   if (oldValue != null) this.oldValue = oldValue;
+   if (newValue != null) this.newValue = newValue;
+ }
+ StorageChange.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * The old value of the item, if there was an old value.
+  */
+ dynamic get oldValue =&gt; jsProxy['oldValue'];
+ set oldValue(var value) =&gt; jsProxy['oldValue'] = jsify(value);
+
+ /**
+  * The new value of the item, if there is a new value.
+  */
+ dynamic get newValue =&gt; jsProxy['newValue'];
+ set newValue(var value) =&gt; jsProxy['newValue'] = jsify(value);
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>StorageChange</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>StorageChange</strong>({oldValue, newValue}) <a class="anchor-link" href="#"
+              title="Permalink to StorageChange.StorageChange">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+StorageChange({var oldValue, var newValue}) {
+ if (oldValue != null) this.oldValue = oldValue;
+ if (newValue != null) this.newValue = newValue;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>StorageChange.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to StorageChange.StorageChange.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+StorageChange.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to StorageChange.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="newValue">
+<button class="show-code">Code</button>
+var         <strong>newValue</strong> <a class="anchor-link"
+            href="#newValue"
+            title="Permalink to StorageChange.newValue">#</a>
+        </h4>
+        <div class="doc">
+<p>The new value of the item, if there is a new value.</p>
+<pre class="source">
+dynamic get newValue =&gt; jsProxy['newValue'];
+</pre>
+<pre class="source">
+set newValue(var value) =&gt; jsProxy['newValue'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="oldValue">
+<button class="show-code">Code</button>
+var         <strong>oldValue</strong> <a class="anchor-link"
+            href="#oldValue"
+            title="Permalink to StorageChange.oldValue">#</a>
+        </h4>
+        <div class="doc">
+<p>The old value of the item, if there was an old value.</p>
+<pre class="source">
+dynamic get oldValue =&gt; jsProxy['oldValue'];
+</pre>
+<pre class="source">
+set oldValue(var value) =&gt; jsProxy['oldValue'] = jsify(value);
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to StorageChange.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to StorageChange.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

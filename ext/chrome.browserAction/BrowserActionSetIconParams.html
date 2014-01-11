@@ -1,0 +1,229 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>BrowserActionSetIconParams class / chrome.browserAction Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.browserAction" data-type="BrowserActionSetIconParams">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.browserAction.html">chrome.browserAction</a> &rsaquo; <a href="../chrome.browserAction/BrowserActionSetIconParams.html">BrowserActionSetIconParams</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>BrowserActionSetIconParams</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class BrowserActionSetIconParams extends ChromeObject {
+ BrowserActionSetIconParams({var imageData, var path, int tabId}) {
+   if (imageData != null) this.imageData = imageData;
+   if (path != null) this.path = path;
+   if (tabId != null) this.tabId = tabId;
+ }
+ BrowserActionSetIconParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * Either an ImageData object or a dictionary {size -&gt; ImageData} representing
+  * icon to be set. If the icon is specified as a dictionary, the actual image
+  * to be used is chosen depending on screen's pixel density. If the number of
+  * image pixels that fit into one screen space unit equals `scale`, then image
+  * with size `scale` * 19 will be selected. Initially only scales 1 and 2 will
+  * be supported. At least one image must be specified. Note that
+  * 'details.imageData = foo' is equivalent to 'details.imageData = {'19':
+  * foo}'
+  */
+ dynamic get imageData =&gt; jsProxy['imageData'];
+ set imageData(var value) =&gt; jsProxy['imageData'] = jsify(value);
+
+ /**
+  * Either a relative image path or a dictionary {size -&gt; relative image path}
+  * pointing to icon to be set. If the icon is specified as a dictionary, the
+  * actual image to be used is chosen depending on screen's pixel density. If
+  * the number of image pixels that fit into one screen space unit equals
+  * `scale`, then image with size `scale` * 19 will be selected. Initially only
+  * scales 1 and 2 will be supported. At least one image must be specified.
+  * Note that 'details.path = foo' is equivalent to 'details.imageData = {'19':
+  * foo}'
+  */
+ dynamic get path =&gt; jsProxy['path'];
+ set path(var value) =&gt; jsProxy['path'] = jsify(value);
+
+ /**
+  * Limits the change to when a particular tab is selected. Automatically
+  * resets when the tab is closed.
+  */
+ int get tabId =&gt; jsProxy['tabId'];
+ set tabId(int value) =&gt; jsProxy['tabId'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>BrowserActionSetIconParams</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>BrowserActionSetIconParams</strong>({imageData, path, int tabId}) <a class="anchor-link" href="#"
+              title="Permalink to BrowserActionSetIconParams.BrowserActionSetIconParams">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+BrowserActionSetIconParams({var imageData, var path, int tabId}) {
+ if (imageData != null) this.imageData = imageData;
+ if (path != null) this.path = path;
+ if (tabId != null) this.tabId = tabId;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>BrowserActionSetIconParams.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to BrowserActionSetIconParams.BrowserActionSetIconParams.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+BrowserActionSetIconParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="imageData">
+<button class="show-code">Code</button>
+var         <strong>imageData</strong> <a class="anchor-link"
+            href="#imageData"
+            title="Permalink to BrowserActionSetIconParams.imageData">#</a>
+        </h4>
+        <div class="doc">
+<p>Either an ImageData object or a dictionary {size -> ImageData} representing
+icon to be set. If the icon is specified as a dictionary, the actual image
+to be used is chosen depending on screen's pixel density. If the number of
+image pixels that fit into one screen space unit equals <code>scale</code>, then image
+with size <code>scale</code> * 19 will be selected. Initially only scales 1 and 2 will
+be supported. At least one image must be specified. Note that
+'details.imageData = foo' is equivalent to 'details.imageData = {'19':
+foo}'</p>
+<pre class="source">
+dynamic get imageData =&gt; jsProxy['imageData'];
+</pre>
+<pre class="source">
+set imageData(var value) =&gt; jsProxy['imageData'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to BrowserActionSetIconParams.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="path">
+<button class="show-code">Code</button>
+var         <strong>path</strong> <a class="anchor-link"
+            href="#path"
+            title="Permalink to BrowserActionSetIconParams.path">#</a>
+        </h4>
+        <div class="doc">
+<p>Either a relative image path or a dictionary {size -> relative image path}
+pointing to icon to be set. If the icon is specified as a dictionary, the
+actual image to be used is chosen depending on screen's pixel density. If
+the number of image pixels that fit into one screen space unit equals
+<code>scale</code>, then image with size <code>scale</code> * 19 will be selected. Initially only
+scales 1 and 2 will be supported. At least one image must be specified.
+Note that 'details.path = foo' is equivalent to 'details.imageData = {'19':
+foo}'</p>
+<pre class="source">
+dynamic get path =&gt; jsProxy['path'];
+</pre>
+<pre class="source">
+set path(var value) =&gt; jsProxy['path'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="tabId">
+<button class="show-code">Code</button>
+int         <strong>tabId</strong> <a class="anchor-link"
+            href="#tabId"
+            title="Permalink to BrowserActionSetIconParams.tabId">#</a>
+        </h4>
+        <div class="doc">
+<p>Limits the change to when a particular tab is selected. Automatically
+resets when the tab is closed.</p>
+<pre class="source">
+int get tabId =&gt; jsProxy['tabId'];
+</pre>
+<pre class="source">
+set tabId(int value) =&gt; jsProxy['tabId'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to BrowserActionSetIconParams.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to BrowserActionSetIconParams.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

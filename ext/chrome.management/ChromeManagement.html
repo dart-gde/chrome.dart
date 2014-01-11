@@ -1,0 +1,428 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeManagement class / chrome.management Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.management" data-type="ChromeManagement">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.management.html">chrome.management</a> &rsaquo; <a href="../chrome.management/ChromeManagement.html">ChromeManagement</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeManagement</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeManagement extends ChromeApi {
+ static final JsObject _management = chrome['management'];
+
+ ChromeManagement._();
+
+ bool get available =&gt; _management != null;
+
+ /**
+  * Returns a list of information about installed extensions and apps.
+  */
+ Future&lt;List&lt;ExtensionInfo&gt;&gt; getAll() {
+   if (_management == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;ExtensionInfo&gt;&gt;.oneArg((e) =&gt; listify(e, _createExtensionInfo));
+   _management.callMethod('getAll', [completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Returns information about the installed extension, app, or theme that has
+  * the given ID.
+  * 
+  * [id] The ID from an item of [ExtensionInfo.]
+  */
+ Future&lt;ExtensionInfo&gt; get(String id) {
+   if (_management == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;ExtensionInfo&gt;.oneArg(_createExtensionInfo);
+   _management.callMethod('get', [id, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Returns a list of [permission warnings](permission_warnings.html) for the
+  * given extension id.
+  * 
+  * [id] The ID of an already installed extension.
+  */
+ Future&lt;List&lt;String&gt;&gt; getPermissionWarningsById(String id) {
+   if (_management == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;String&gt;&gt;.oneArg(listify);
+   _management.callMethod('getPermissionWarningsById', [id, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Returns a list of [permission warnings](permission_warnings.html) for the
+  * given extension manifest string. Note: This function can be used without
+  * requesting the 'management' permission in the manifest.
+  * 
+  * [manifestStr] Extension manifest JSON string.
+  */
+ Future&lt;List&lt;String&gt;&gt; getPermissionWarningsByManifest(String manifestStr) {
+   if (_management == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;String&gt;&gt;.oneArg(listify);
+   _management.callMethod('getPermissionWarningsByManifest', [manifestStr, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Enables or disables an app or extension.
+  * 
+  * [id] This should be the id from an item of [ExtensionInfo.]
+  * 
+  * [enabled] Whether this item should be enabled or disabled.
+  */
+ Future setEnabled(String id, bool enabled) {
+   if (_management == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _management.callMethod('setEnabled', [id, enabled, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Uninstalls a currently installed app or extension.
+  * 
+  * [id] This should be the id from an item of [ExtensionInfo.]
+  */
+ Future uninstall(String id, [ManagementUninstallParams options]) {
+   if (_management == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _management.callMethod('uninstall', [id, jsify(options), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Uninstalls the calling extension. Note: This function can be used without
+  * requesting the 'management' permission in the manifest.
+  */
+ Future uninstallSelf([ManagementUninstallSelfParams options]) {
+   if (_management == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _management.callMethod('uninstallSelf', [jsify(options), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Launches an application.
+  * 
+  * [id] The extension id of the application.
+  */
+ Future launchApp(String id) {
+   if (_management == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _management.callMethod('launchApp', [id, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Fired when an app or extension has been installed.
+  */
+ Stream&lt;ExtensionInfo&gt; get onInstalled =&gt; _onInstalled.stream;
+
+ final ChromeStreamController&lt;ExtensionInfo&gt; _onInstalled =
+     new ChromeStreamController&lt;ExtensionInfo&gt;.oneArg(_management, 'onInstalled', _createExtensionInfo);
+
+ /**
+  * Fired when an app or extension has been uninstalled.
+  */
+ Stream&lt;String&gt; get onUninstalled =&gt; _onUninstalled.stream;
+
+ final ChromeStreamController&lt;String&gt; _onUninstalled =
+     new ChromeStreamController&lt;String&gt;.oneArg(_management, 'onUninstalled', selfConverter);
+
+ /**
+  * Fired when an app or extension has been enabled.
+  */
+ Stream&lt;ExtensionInfo&gt; get onEnabled =&gt; _onEnabled.stream;
+
+ final ChromeStreamController&lt;ExtensionInfo&gt; _onEnabled =
+     new ChromeStreamController&lt;ExtensionInfo&gt;.oneArg(_management, 'onEnabled', _createExtensionInfo);
+
+ /**
+  * Fired when an app or extension has been disabled.
+  */
+ Stream&lt;ExtensionInfo&gt; get onDisabled =&gt; _onDisabled.stream;
+
+ final ChromeStreamController&lt;ExtensionInfo&gt; _onDisabled =
+     new ChromeStreamController&lt;ExtensionInfo&gt;.oneArg(_management, 'onDisabled', _createExtensionInfo);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.management' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeManagement</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeManagement.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _management != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onDisabled">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.management/ExtensionInfo.html">ExtensionInfo</a>&gt;         <strong>onDisabled</strong> <a class="anchor-link"
+            href="#onDisabled"
+            title="Permalink to ChromeManagement.onDisabled">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when an app or extension has been disabled.</p>
+<pre class="source">
+Stream&lt;ExtensionInfo&gt; get onDisabled =&gt; _onDisabled.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onEnabled">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.management/ExtensionInfo.html">ExtensionInfo</a>&gt;         <strong>onEnabled</strong> <a class="anchor-link"
+            href="#onEnabled"
+            title="Permalink to ChromeManagement.onEnabled">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when an app or extension has been enabled.</p>
+<pre class="source">
+Stream&lt;ExtensionInfo&gt; get onEnabled =&gt; _onEnabled.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onInstalled">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.management/ExtensionInfo.html">ExtensionInfo</a>&gt;         <strong>onInstalled</strong> <a class="anchor-link"
+            href="#onInstalled"
+            title="Permalink to ChromeManagement.onInstalled">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when an app or extension has been installed.</p>
+<pre class="source">
+Stream&lt;ExtensionInfo&gt; get onInstalled =&gt; _onInstalled.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onUninstalled">
+<button class="show-code">Code</button>
+final Stream&lt;String&gt;         <strong>onUninstalled</strong> <a class="anchor-link"
+            href="#onUninstalled"
+            title="Permalink to ChromeManagement.onUninstalled">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when an app or extension has been uninstalled.</p>
+<pre class="source">
+Stream&lt;String&gt; get onUninstalled =&gt; _onUninstalled.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="get">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.management/ExtensionInfo.html">ExtensionInfo</a>&gt; <strong>get</strong>(String id) <a class="anchor-link" href="#get"
+              title="Permalink to ChromeManagement.get">#</a></h4>
+<div class="doc">
+<p>Returns information about the installed extension, app, or theme that has
+the given ID.</p>
+<p>
+<span class="param">id</span> The ID from an item of <a class="crossref" href="../chrome.management/ExtensionInfo.html#">ExtensionInfo.</a></p>
+<pre class="source">
+Future&lt;ExtensionInfo&gt; get(String id) {
+ if (_management == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;ExtensionInfo&gt;.oneArg(_createExtensionInfo);
+ _management.callMethod('get', [id, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getAll">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.management/ExtensionInfo.html">ExtensionInfo</a>&gt;&gt; <strong>getAll</strong>() <a class="anchor-link" href="#getAll"
+              title="Permalink to ChromeManagement.getAll">#</a></h4>
+<div class="doc">
+<p>Returns a list of information about installed extensions and apps.</p>
+<pre class="source">
+Future&lt;List&lt;ExtensionInfo&gt;&gt; getAll() {
+ if (_management == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;ExtensionInfo&gt;&gt;.oneArg((e) =&gt; listify(e, _createExtensionInfo));
+ _management.callMethod('getAll', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getPermissionWarningsById">
+<button class="show-code">Code</button>
+Future&lt;List&lt;String&gt;&gt; <strong>getPermissionWarningsById</strong>(String id) <a class="anchor-link" href="#getPermissionWarningsById"
+              title="Permalink to ChromeManagement.getPermissionWarningsById">#</a></h4>
+<div class="doc">
+<p>Returns a list of <a href="permission_warnings.html">permission warnings</a> for the
+given extension id.</p>
+<p>
+<span class="param">id</span> The ID of an already installed extension.</p>
+<pre class="source">
+Future&lt;List&lt;String&gt;&gt; getPermissionWarningsById(String id) {
+ if (_management == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;String&gt;&gt;.oneArg(listify);
+ _management.callMethod('getPermissionWarningsById', [id, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getPermissionWarningsByManifest">
+<button class="show-code">Code</button>
+Future&lt;List&lt;String&gt;&gt; <strong>getPermissionWarningsByManifest</strong>(String manifestStr) <a class="anchor-link" href="#getPermissionWarningsByManifest"
+              title="Permalink to ChromeManagement.getPermissionWarningsByManifest">#</a></h4>
+<div class="doc">
+<p>Returns a list of <a href="permission_warnings.html">permission warnings</a> for the
+given extension manifest string. Note: This function can be used without
+requesting the 'management' permission in the manifest.</p>
+<p>
+<span class="param">manifestStr</span> Extension manifest JSON string.</p>
+<pre class="source">
+Future&lt;List&lt;String&gt;&gt; getPermissionWarningsByManifest(String manifestStr) {
+ if (_management == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;String&gt;&gt;.oneArg(listify);
+ _management.callMethod('getPermissionWarningsByManifest', [manifestStr, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="launchApp">
+<button class="show-code">Code</button>
+Future <strong>launchApp</strong>(String id) <a class="anchor-link" href="#launchApp"
+              title="Permalink to ChromeManagement.launchApp">#</a></h4>
+<div class="doc">
+<p>Launches an application.</p>
+<p>
+<span class="param">id</span> The extension id of the application.</p>
+<pre class="source">
+Future launchApp(String id) {
+ if (_management == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _management.callMethod('launchApp', [id, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setEnabled">
+<button class="show-code">Code</button>
+Future <strong>setEnabled</strong>(String id, bool enabled) <a class="anchor-link" href="#setEnabled"
+              title="Permalink to ChromeManagement.setEnabled">#</a></h4>
+<div class="doc">
+<p>Enables or disables an app or extension.</p>
+<p>
+<span class="param">id</span> This should be the id from an item of <a class="crossref" href="../chrome.management/ExtensionInfo.html#">ExtensionInfo.</a></p>
+<p>
+<span class="param">enabled</span> Whether this item should be enabled or disabled.</p>
+<pre class="source">
+Future setEnabled(String id, bool enabled) {
+ if (_management == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _management.callMethod('setEnabled', [id, enabled, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="uninstall">
+<button class="show-code">Code</button>
+Future <strong>uninstall</strong>(String id, [<a href="../chrome.management/ManagementUninstallParams.html">ManagementUninstallParams</a> options]) <a class="anchor-link" href="#uninstall"
+              title="Permalink to ChromeManagement.uninstall">#</a></h4>
+<div class="doc">
+<p>Uninstalls a currently installed app or extension.</p>
+<p>
+<span class="param">id</span> This should be the id from an item of <a class="crossref" href="../chrome.management/ExtensionInfo.html#">ExtensionInfo.</a></p>
+<pre class="source">
+Future uninstall(String id, [ManagementUninstallParams options]) {
+ if (_management == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _management.callMethod('uninstall', [id, jsify(options), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="uninstallSelf">
+<button class="show-code">Code</button>
+Future <strong>uninstallSelf</strong>([<a href="../chrome.management/ManagementUninstallSelfParams.html">ManagementUninstallSelfParams</a> options]) <a class="anchor-link" href="#uninstallSelf"
+              title="Permalink to ChromeManagement.uninstallSelf">#</a></h4>
+<div class="doc">
+<p>Uninstalls the calling extension. Note: This function can be used without
+requesting the 'management' permission in the manifest.</p>
+<pre class="source">
+Future uninstallSelf([ManagementUninstallSelfParams options]) {
+ if (_management == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _management.callMethod('uninstallSelf', [jsify(options), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

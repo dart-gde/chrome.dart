@@ -1,0 +1,96 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeDeclarativeContent class / chrome.declarativeContent Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.declarativeContent" data-type="ChromeDeclarativeContent">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.declarativeContent.html">chrome.declarativeContent</a> &rsaquo; <a href="../chrome.declarativeContent/ChromeDeclarativeContent.html">ChromeDeclarativeContent</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeDeclarativeContent</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeDeclarativeContent extends ChromeApi {
+ static final JsObject _declarativeContent = chrome['declarativeContent'];
+
+ ChromeDeclarativeContent._();
+
+ bool get available =&gt; _declarativeContent != null;
+
+ Stream get onPageChanged =&gt; _onPageChanged.stream;
+
+ final ChromeStreamController _onPageChanged =
+     new ChromeStreamController.noArgs(_declarativeContent, 'onPageChanged');
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.declarativeContent' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeDeclarativeContent</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeDeclarativeContent.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _declarativeContent != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onPageChanged">
+<button class="show-code">Code</button>
+final Stream         <strong>onPageChanged</strong> <a class="anchor-link"
+            href="#onPageChanged"
+            title="Permalink to ChromeDeclarativeContent.onPageChanged">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Stream get onPageChanged =&gt; _onPageChanged.stream;
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

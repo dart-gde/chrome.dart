@@ -1,0 +1,130 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>OnExitedEvent class / chrome.processes Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.processes" data-type="OnExitedEvent">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.processes.html">chrome.processes</a> &rsaquo; <a href="../chrome.processes/OnExitedEvent.html">OnExitedEvent</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>OnExitedEvent</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Fired each time a process is terminated, providing the type of exit.</p>
+<pre class="source">
+class OnExitedEvent {
+ /**
+  * The ID of the process that exited.
+  */
+ final int processId;
+
+ /**
+  * The type of exit that occurred for the process - normal, abnormal, killed,
+  * crashed. Only available for renderer processes.
+  */
+ final int exitType;
+
+ /**
+  * The exit code if the process exited abnormally. Only available for renderer
+  * processes.
+  */
+ final int exitCode;
+
+ OnExitedEvent(this.processId, this.exitType, this.exitCode);
+}
+</pre>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>OnExitedEvent</strong>(int processId, int exitType, int exitCode) <a class="anchor-link" href="#"
+              title="Permalink to OnExitedEvent.OnExitedEvent">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Creates a new <a class="crossref" href="../dart_core/Object.html">Object</a> instance.</p>
+<p><a class="crossref" href="../dart_core/Object.html">Object</a> instances have no meaningful state, and are only useful
+through their identity. An <a class="crossref" href="../dart_core/Object.html">Object</a> instance is equal to itself
+only.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+OnExitedEvent(this.processId, this.exitType, this.exitCode);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="exitCode">
+<button class="show-code">Code</button>
+final int         <strong>exitCode</strong> <a class="anchor-link"
+            href="#exitCode"
+            title="Permalink to OnExitedEvent.exitCode">#</a>
+        </h4>
+        <div class="doc">
+<p>The exit code if the process exited abnormally. Only available for renderer
+processes.</p>
+<pre class="source">
+final int exitCode
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="exitType">
+<button class="show-code">Code</button>
+final int         <strong>exitType</strong> <a class="anchor-link"
+            href="#exitType"
+            title="Permalink to OnExitedEvent.exitType">#</a>
+        </h4>
+        <div class="doc">
+<p>The type of exit that occurred for the process - normal, abnormal, killed,
+crashed. Only available for renderer processes.</p>
+<pre class="source">
+final int exitType
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="processId">
+<button class="show-code">Code</button>
+final int         <strong>processId</strong> <a class="anchor-link"
+            href="#processId"
+            title="Permalink to OnExitedEvent.processId">#</a>
+        </h4>
+        <div class="doc">
+<p>The ID of the process that exited.</p>
+<pre class="source">
+final int processId
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

@@ -1,0 +1,136 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeMediaGalleries class / chrome.mediaGalleries Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.mediaGalleries" data-type="ChromeMediaGalleries">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.mediaGalleries.html">chrome.mediaGalleries</a> &rsaquo; <a href="../chrome.mediaGalleries/ChromeMediaGalleries.html">ChromeMediaGalleries</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeMediaGalleries</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeMediaGalleries extends ChromeApi {
+ static final JsObject _mediaGalleries = chrome['mediaGalleries'];
+
+ ChromeMediaGalleries._();
+
+ bool get available =&gt; _mediaGalleries != null;
+
+ /**
+  * Get the media galleries configured in this user agent. If none are
+  * configured or available, the callback will receive an empty array.
+  */
+ Future&lt;List&lt;FileSystem&gt;&gt; getMediaFileSystems([MediaFileSystemsDetails details]) {
+   if (_mediaGalleries == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;FileSystem&gt;&gt;.oneArg((e) =&gt; listify(e, _createDOMFileSystem));
+   _mediaGalleries.callMethod('getMediaFileSystems', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Get metadata about a specific media file system.
+  */
+ MediaFileSystemMetadata getMediaFileSystemMetadata(FileSystem mediaFileSystem) {
+   if (_mediaGalleries == null) _throwNotAvailable();
+
+   return _createMediaFileSystemMetadata(_mediaGalleries.callMethod('getMediaFileSystemMetadata', [jsify(mediaFileSystem)]));
+ }
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.mediaGalleries' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeMediaGalleries</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeMediaGalleries.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _mediaGalleries != null;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="getMediaFileSystemMetadata">
+<button class="show-code">Code</button>
+<a href="../chrome.mediaGalleries/MediaFileSystemMetadata.html">MediaFileSystemMetadata</a> <strong>getMediaFileSystemMetadata</strong>(FileSystem mediaFileSystem) <a class="anchor-link" href="#getMediaFileSystemMetadata"
+              title="Permalink to ChromeMediaGalleries.getMediaFileSystemMetadata">#</a></h4>
+<div class="doc">
+<p>Get metadata about a specific media file system.</p>
+<pre class="source">
+MediaFileSystemMetadata getMediaFileSystemMetadata(FileSystem mediaFileSystem) {
+ if (_mediaGalleries == null) _throwNotAvailable();
+
+ return _createMediaFileSystemMetadata(_mediaGalleries.callMethod('getMediaFileSystemMetadata', [jsify(mediaFileSystem)]));
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getMediaFileSystems">
+<button class="show-code">Code</button>
+Future&lt;List&lt;FileSystem&gt;&gt; <strong>getMediaFileSystems</strong>([<a href="../chrome.mediaGalleries/MediaFileSystemsDetails.html">MediaFileSystemsDetails</a> details]) <a class="anchor-link" href="#getMediaFileSystems"
+              title="Permalink to ChromeMediaGalleries.getMediaFileSystems">#</a></h4>
+<div class="doc">
+<p>Get the media galleries configured in this user agent. If none are
+configured or available, the callback will receive an empty array.</p>
+<pre class="source">
+Future&lt;List&lt;FileSystem&gt;&gt; getMediaFileSystems([MediaFileSystemsDetails details]) {
+ if (_mediaGalleries == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;FileSystem&gt;&gt;.oneArg((e) =&gt; listify(e, _createDOMFileSystem));
+ _mediaGalleries.callMethod('getMediaFileSystems', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

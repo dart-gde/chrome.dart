@@ -1,0 +1,181 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>FileBrowserHandlerSelectFileParams class / chrome.fileBrowserHandler Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.fileBrowserHandler" data-type="FileBrowserHandlerSelectFileParams">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.fileBrowserHandler.html">chrome.fileBrowserHandler</a> &rsaquo; <a href="../chrome.fileBrowserHandler/FileBrowserHandlerSelectFileParams.html">FileBrowserHandlerSelectFileParams</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>FileBrowserHandlerSelectFileParams</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class FileBrowserHandlerSelectFileParams extends ChromeObject {
+ FileBrowserHandlerSelectFileParams({String suggestedName, List&lt;String&gt; allowedFileExtensions}) {
+   if (suggestedName != null) this.suggestedName = suggestedName;
+   if (allowedFileExtensions != null) this.allowedFileExtensions = allowedFileExtensions;
+ }
+ FileBrowserHandlerSelectFileParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * Suggested name for the file.
+  */
+ String get suggestedName =&gt; jsProxy['suggestedName'];
+ set suggestedName(String value) =&gt; jsProxy['suggestedName'] = value;
+
+ /**
+  * List of file extensions that the selected file can have. The list is also
+  * used to specify what files to be shown in the select file dialog. Files
+  * with the listed extensions are only shown in the dialog. Extensions should
+  * not include the leading '.'. Example: ['jpg', 'png']
+  */
+ List&lt;String&gt; get allowedFileExtensions =&gt; listify(jsProxy['allowedFileExtensions']);
+ set allowedFileExtensions(List&lt;String&gt; value) =&gt; jsProxy['allowedFileExtensions'] = jsify(value);
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>FileBrowserHandlerSelectFileParams</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>FileBrowserHandlerSelectFileParams</strong>({String suggestedName, List&lt;String&gt; allowedFileExtensions}) <a class="anchor-link" href="#"
+              title="Permalink to FileBrowserHandlerSelectFileParams.FileBrowserHandlerSelectFileParams">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+FileBrowserHandlerSelectFileParams({String suggestedName, List&lt;String&gt; allowedFileExtensions}) {
+ if (suggestedName != null) this.suggestedName = suggestedName;
+ if (allowedFileExtensions != null) this.allowedFileExtensions = allowedFileExtensions;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>FileBrowserHandlerSelectFileParams.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to FileBrowserHandlerSelectFileParams.FileBrowserHandlerSelectFileParams.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+FileBrowserHandlerSelectFileParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="allowedFileExtensions">
+<button class="show-code">Code</button>
+List&lt;String&gt;         <strong>allowedFileExtensions</strong> <a class="anchor-link"
+            href="#allowedFileExtensions"
+            title="Permalink to FileBrowserHandlerSelectFileParams.allowedFileExtensions">#</a>
+        </h4>
+        <div class="doc">
+<p>List of file extensions that the selected file can have. The list is also
+used to specify what files to be shown in the select file dialog. Files
+with the listed extensions are only shown in the dialog. Extensions should
+not include the leading '.'. Example: <code>'jpg', 'png'</code></p>
+<pre class="source">
+List&lt;String&gt; get allowedFileExtensions =&gt; listify(jsProxy['allowedFileExtensions']);
+</pre>
+<pre class="source">
+set allowedFileExtensions(List&lt;String&gt; value) =&gt; jsProxy['allowedFileExtensions'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to FileBrowserHandlerSelectFileParams.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="suggestedName">
+<button class="show-code">Code</button>
+String         <strong>suggestedName</strong> <a class="anchor-link"
+            href="#suggestedName"
+            title="Permalink to FileBrowserHandlerSelectFileParams.suggestedName">#</a>
+        </h4>
+        <div class="doc">
+<p>Suggested name for the file.</p>
+<pre class="source">
+String get suggestedName =&gt; jsProxy['suggestedName'];
+</pre>
+<pre class="source">
+set suggestedName(String value) =&gt; jsProxy['suggestedName'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to FileBrowserHandlerSelectFileParams.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to FileBrowserHandlerSelectFileParams.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

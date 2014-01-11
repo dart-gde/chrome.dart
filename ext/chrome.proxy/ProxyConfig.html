@@ -1,0 +1,210 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ProxyConfig class / chrome.proxy Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.proxy" data-type="ProxyConfig">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.proxy.html">chrome.proxy</a> &rsaquo; <a href="../chrome.proxy/ProxyConfig.html">ProxyConfig</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ProxyConfig</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>An object encapsulating a complete proxy configuration.</p>
+<pre class="source">
+class ProxyConfig extends ChromeObject {
+ ProxyConfig({ProxyRules rules, PacScript pacScript, String mode}) {
+   if (rules != null) this.rules = rules;
+   if (pacScript != null) this.pacScript = pacScript;
+   if (mode != null) this.mode = mode;
+ }
+ ProxyConfig.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * The proxy rules describing this configuration. Use this for 'fixed_servers'
+  * mode.
+  */
+ ProxyRules get rules =&gt; _createProxyRules(this.jsProxy['rules']);
+ set rules(ProxyRules value) =&gt; this.jsProxy['rules'] = jsify(value);
+
+ /**
+  * The proxy auto-config (PAC) script for this configuration. Use this for
+  * 'pac_script' mode.
+  */
+ PacScript get pacScript =&gt; _createPacScript(this.jsProxy['pacScript']);
+ set pacScript(PacScript value) =&gt; this.jsProxy['pacScript'] = jsify(value);
+
+ /**
+  * 'direct' = Never use a proxy&lt;br&gt;'auto_detect' = Auto detect proxy
+  * settings&lt;br&gt;'pac_script' = Use specified PAC script&lt;br&gt;'fixed_servers' =
+  * Manually specify proxy servers&lt;br&gt;'system' = Use system proxy settings
+  * enum of `direct`, `auto_detect`, `pac_script`, `fixed_servers`, `system`
+  */
+ String get mode =&gt; this.jsProxy['mode'];
+ set mode(String value) =&gt; this.jsProxy['mode'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ProxyConfig</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>ProxyConfig</strong>({<a href="../chrome.proxy/ProxyRules.html">ProxyRules</a> rules, <a href="../chrome.proxy/PacScript.html">PacScript</a> pacScript, String mode}) <a class="anchor-link" href="#"
+              title="Permalink to ProxyConfig.ProxyConfig">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+ProxyConfig({ProxyRules rules, PacScript pacScript, String mode}) {
+ if (rules != null) this.rules = rules;
+ if (pacScript != null) this.pacScript = pacScript;
+ if (mode != null) this.mode = mode;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>ProxyConfig.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to ProxyConfig.ProxyConfig.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+ProxyConfig.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to ProxyConfig.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="mode">
+<button class="show-code">Code</button>
+String         <strong>mode</strong> <a class="anchor-link"
+            href="#mode"
+            title="Permalink to ProxyConfig.mode">#</a>
+        </h4>
+        <div class="doc">
+<p>'direct' = Never use a proxy&lt;br>'auto<em>detect' = Auto detect proxy
+settings&lt;br>'pac</em>script' = Use specified PAC script&lt;br>'fixed_servers' =
+Manually specify proxy servers&lt;br>'system' = Use system proxy settings
+enum of <code>direct</code>, <code>auto_detect</code>, <code>pac_script</code>, <code>fixed_servers</code>, <code>system</code></p>
+<pre class="source">
+String get mode =&gt; this.jsProxy['mode'];
+</pre>
+<pre class="source">
+set mode(String value) =&gt; this.jsProxy['mode'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="pacScript">
+<button class="show-code">Code</button>
+<a href="../chrome.proxy/PacScript.html">PacScript</a>         <strong>pacScript</strong> <a class="anchor-link"
+            href="#pacScript"
+            title="Permalink to ProxyConfig.pacScript">#</a>
+        </h4>
+        <div class="doc">
+<p>The proxy auto-config (PAC) script for this configuration. Use this for
+'pac_script' mode.</p>
+<pre class="source">
+PacScript get pacScript =&gt; _createPacScript(this.jsProxy['pacScript']);
+</pre>
+<pre class="source">
+set pacScript(PacScript value) =&gt; this.jsProxy['pacScript'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="rules">
+<button class="show-code">Code</button>
+<a href="../chrome.proxy/ProxyRules.html">ProxyRules</a>         <strong>rules</strong> <a class="anchor-link"
+            href="#rules"
+            title="Permalink to ProxyConfig.rules">#</a>
+        </h4>
+        <div class="doc">
+<p>The proxy rules describing this configuration. Use this for 'fixed_servers'
+mode.</p>
+<pre class="source">
+ProxyRules get rules =&gt; _createProxyRules(this.jsProxy['rules']);
+</pre>
+<pre class="source">
+set rules(ProxyRules value) =&gt; this.jsProxy['rules'] = jsify(value);
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to ProxyConfig.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to ProxyConfig.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

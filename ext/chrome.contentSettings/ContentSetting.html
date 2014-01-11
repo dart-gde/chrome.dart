@@ -1,0 +1,225 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ContentSetting class / chrome.contentSettings Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.contentSettings" data-type="ContentSetting">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.contentSettings.html">chrome.contentSettings</a> &rsaquo; <a href="../chrome.contentSettings/ContentSetting.html">ContentSetting</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ContentSetting</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ContentSetting extends ChromeObject {
+ ContentSetting();
+ ContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * Clear all content setting rules set by this extension.
+  */
+ Future clear(ContentSettingsClearParams details) {
+   var completer = new ChromeCompleter.noArgs();
+   jsProxy.callMethod('clear', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Gets the current content setting for a given pair of URLs.
+  */
+ Future&lt;Map&gt; get(ContentSettingsGetParams details) {
+   var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+   jsProxy.callMethod('get', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Applies a new content setting rule.
+  */
+ Future set(ContentSettingsSetParams details) {
+   var completer = new ChromeCompleter.noArgs();
+   jsProxy.callMethod('set', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Returns:
+  * A list of resource identifiers for this content type, or [undefined] if
+  * this content type does not use resource identifiers.
+  */
+ Future&lt;List&lt;ResourceIdentifier&gt;&gt; getResourceIdentifiers() {
+   var completer = new ChromeCompleter&lt;List&lt;ResourceIdentifier&gt;&gt;.oneArg((e) =&gt; listify(e, _createResourceIdentifier));
+   jsProxy.callMethod('getResourceIdentifiers', [completer.callback]);
+   return completer.future;
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ContentSetting</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>ContentSetting</strong>() <a class="anchor-link" href="#"
+              title="Permalink to ContentSetting.ContentSetting">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+ContentSetting();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>ContentSetting.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to ContentSetting.ContentSetting.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+ContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to ContentSetting.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="clear">
+<button class="show-code">Code</button>
+Future <strong>clear</strong>(<a href="../chrome.contentSettings/ContentSettingsClearParams.html">ContentSettingsClearParams</a> details) <a class="anchor-link" href="#clear"
+              title="Permalink to ContentSetting.clear">#</a></h4>
+<div class="doc">
+<p>Clear all content setting rules set by this extension.</p>
+<pre class="source">
+Future clear(ContentSettingsClearParams details) {
+ var completer = new ChromeCompleter.noArgs();
+ jsProxy.callMethod('clear', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="get">
+<button class="show-code">Code</button>
+Future&lt;Map&gt; <strong>get</strong>(<a href="../chrome.contentSettings/ContentSettingsGetParams.html">ContentSettingsGetParams</a> details) <a class="anchor-link" href="#get"
+              title="Permalink to ContentSetting.get">#</a></h4>
+<div class="doc">
+<p>Gets the current content setting for a given pair of URLs.</p>
+<pre class="source">
+Future&lt;Map&gt; get(ContentSettingsGetParams details) {
+ var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+ jsProxy.callMethod('get', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getResourceIdentifiers">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.contentSettings/ResourceIdentifier.html">ResourceIdentifier</a>&gt;&gt; <strong>getResourceIdentifiers</strong>() <a class="anchor-link" href="#getResourceIdentifiers"
+              title="Permalink to ContentSetting.getResourceIdentifiers">#</a></h4>
+<div class="doc">
+<p>Returns:
+A list of resource identifiers for this content type, or <code>undefined</code> if
+this content type does not use resource identifiers.</p>
+<pre class="source">
+Future&lt;List&lt;ResourceIdentifier&gt;&gt; getResourceIdentifiers() {
+ var completer = new ChromeCompleter&lt;List&lt;ResourceIdentifier&gt;&gt;.oneArg((e) =&gt; listify(e, _createResourceIdentifier));
+ jsProxy.callMethod('getResourceIdentifiers', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="set">
+<button class="show-code">Code</button>
+Future <strong>set</strong>(<a href="../chrome.contentSettings/ContentSettingsSetParams.html">ContentSettingsSetParams</a> details) <a class="anchor-link" href="#set"
+              title="Permalink to ContentSetting.set">#</a></h4>
+<div class="doc">
+<p>Applies a new content setting rule.</p>
+<pre class="source">
+Future set(ContentSettingsSetParams details) {
+ var completer = new ChromeCompleter.noArgs();
+ jsProxy.callMethod('set', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to ContentSetting.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to ContentSetting.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

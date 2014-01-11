@@ -1,0 +1,150 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeFileBrowserHandler class / chrome.fileBrowserHandler Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.fileBrowserHandler" data-type="ChromeFileBrowserHandler">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.fileBrowserHandler.html">chrome.fileBrowserHandler</a> &rsaquo; <a href="../chrome.fileBrowserHandler/ChromeFileBrowserHandler.html">ChromeFileBrowserHandler</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeFileBrowserHandler</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeFileBrowserHandler extends ChromeApi {
+ static final JsObject _fileBrowserHandler = chrome['fileBrowserHandler'];
+
+ ChromeFileBrowserHandler._();
+
+ bool get available =&gt; _fileBrowserHandler != null;
+
+ /**
+  * Prompts user to select file path under which file should be saved. When the
+  * file is selected, file access permission required to use the file (read,
+  * write and create) are granted to the caller. The file will not actually get
+  * created during the function call, so function caller must ensure its
+  * existence before using it. The function has to be invoked with a user
+  * gesture.
+  * 
+  * [selectionParams] Parameters that will be used while selecting the file.
+  * 
+  * Returns:
+  * Result of the method.
+  */
+ Future&lt;Map&gt; selectFile(FileBrowserHandlerSelectFileParams selectionParams) {
+   if (_fileBrowserHandler == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+   _fileBrowserHandler.callMethod('selectFile', [jsify(selectionParams), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Fired when file system action is executed from ChromeOS file browser.
+  */
+ Stream&lt;OnExecuteEvent&gt; get onExecute =&gt; _onExecute.stream;
+
+ final ChromeStreamController&lt;OnExecuteEvent&gt; _onExecute =
+     new ChromeStreamController&lt;OnExecuteEvent&gt;.twoArgs(_fileBrowserHandler, 'onExecute', _createOnExecuteEvent);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.fileBrowserHandler' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeFileBrowserHandler</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeFileBrowserHandler.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _fileBrowserHandler != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onExecute">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.fileBrowserHandler/OnExecuteEvent.html">OnExecuteEvent</a>&gt;         <strong>onExecute</strong> <a class="anchor-link"
+            href="#onExecute"
+            title="Permalink to ChromeFileBrowserHandler.onExecute">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when file system action is executed from ChromeOS file browser.</p>
+<pre class="source">
+Stream&lt;OnExecuteEvent&gt; get onExecute =&gt; _onExecute.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="selectFile">
+<button class="show-code">Code</button>
+Future&lt;Map&gt; <strong>selectFile</strong>(<a href="../chrome.fileBrowserHandler/FileBrowserHandlerSelectFileParams.html">FileBrowserHandlerSelectFileParams</a> selectionParams) <a class="anchor-link" href="#selectFile"
+              title="Permalink to ChromeFileBrowserHandler.selectFile">#</a></h4>
+<div class="doc">
+<p>Prompts user to select file path under which file should be saved. When the
+file is selected, file access permission required to use the file (read,
+write and create) are granted to the caller. The file will not actually get
+created during the function call, so function caller must ensure its
+existence before using it. The function has to be invoked with a user
+gesture.</p>
+<p>
+<span class="param">selectionParams</span> Parameters that will be used while selecting the file.</p>
+<p>Returns:
+Result of the method.</p>
+<pre class="source">
+Future&lt;Map&gt; selectFile(FileBrowserHandlerSelectFileParams selectionParams) {
+ if (_fileBrowserHandler == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+ _fileBrowserHandler.callMethod('selectFile', [jsify(selectionParams), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

@@ -1,0 +1,554 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeFontSettings class / chrome.fontSettings Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.fontSettings" data-type="ChromeFontSettings">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.fontSettings.html">chrome.fontSettings</a> &rsaquo; <a href="../chrome.fontSettings/ChromeFontSettings.html">ChromeFontSettings</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeFontSettings</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeFontSettings extends ChromeApi {
+ static final JsObject _fontSettings = chrome['fontSettings'];
+
+ ChromeFontSettings._();
+
+ bool get available =&gt; _fontSettings != null;
+
+ /**
+  * Clears the font set by this extension, if any.
+  */
+ Future clearFont(FontSettingsClearFontParams details) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _fontSettings.callMethod('clearFont', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Gets the font for a given script and generic font family.
+  */
+ Future&lt;Map&gt; getFont(FontSettingsGetFontParams details) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+   _fontSettings.callMethod('getFont', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the font for a given script and generic font family.
+  */
+ Future setFont(FontSettingsSetFontParams details) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _fontSettings.callMethod('setFont', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Gets a list of fonts on the system.
+  */
+ Future&lt;List&lt;FontName&gt;&gt; getFontList() {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;FontName&gt;&gt;.oneArg((e) =&gt; listify(e, _createFontName));
+   _fontSettings.callMethod('getFontList', [completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Clears the default font size set by this extension, if any.
+  * 
+  * [details] This parameter is currently unused.
+  */
+ Future clearDefaultFontSize([FontSettingsClearDefaultFontSizeParams details]) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _fontSettings.callMethod('clearDefaultFontSize', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Gets the default font size.
+  * 
+  * [details] This parameter is currently unused.
+  */
+ Future&lt;Map&gt; getDefaultFontSize([FontSettingsGetDefaultFontSizeParams details]) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+   _fontSettings.callMethod('getDefaultFontSize', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the default font size.
+  */
+ Future setDefaultFontSize(FontSettingsSetDefaultFontSizeParams details) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _fontSettings.callMethod('setDefaultFontSize', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Clears the default fixed font size set by this extension, if any.
+  * 
+  * [details] This parameter is currently unused.
+  */
+ Future clearDefaultFixedFontSize([FontSettingsClearDefaultFixedFontSizeParams details]) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _fontSettings.callMethod('clearDefaultFixedFontSize', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Gets the default size for fixed width fonts.
+  * 
+  * [details] This parameter is currently unused.
+  */
+ Future&lt;Map&gt; getDefaultFixedFontSize([FontSettingsGetDefaultFixedFontSizeParams details]) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+   _fontSettings.callMethod('getDefaultFixedFontSize', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the default size for fixed width fonts.
+  */
+ Future setDefaultFixedFontSize(FontSettingsSetDefaultFixedFontSizeParams details) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _fontSettings.callMethod('setDefaultFixedFontSize', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Clears the minimum font size set by this extension, if any.
+  * 
+  * [details] This parameter is currently unused.
+  */
+ Future clearMinimumFontSize([FontSettingsClearMinimumFontSizeParams details]) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _fontSettings.callMethod('clearMinimumFontSize', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Gets the minimum font size.
+  * 
+  * [details] This parameter is currently unused.
+  */
+ Future&lt;Map&gt; getMinimumFontSize([FontSettingsGetMinimumFontSizeParams details]) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+   _fontSettings.callMethod('getMinimumFontSize', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the minimum font size.
+  */
+ Future setMinimumFontSize(FontSettingsSetMinimumFontSizeParams details) {
+   if (_fontSettings == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _fontSettings.callMethod('setMinimumFontSize', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Fired when a font setting changes.
+  */
+ Stream&lt;Map&gt; get onFontChanged =&gt; _onFontChanged.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onFontChanged =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_fontSettings, 'onFontChanged', mapify);
+
+ /**
+  * Fired when the default font size setting changes.
+  */
+ Stream&lt;Map&gt; get onDefaultFontSizeChanged =&gt; _onDefaultFontSizeChanged.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onDefaultFontSizeChanged =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_fontSettings, 'onDefaultFontSizeChanged', mapify);
+
+ /**
+  * Fired when the default fixed font size setting changes.
+  */
+ Stream&lt;Map&gt; get onDefaultFixedFontSizeChanged =&gt; _onDefaultFixedFontSizeChanged.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onDefaultFixedFontSizeChanged =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_fontSettings, 'onDefaultFixedFontSizeChanged', mapify);
+
+ /**
+  * Fired when the minimum font size setting changes.
+  */
+ Stream&lt;Map&gt; get onMinimumFontSizeChanged =&gt; _onMinimumFontSizeChanged.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onMinimumFontSizeChanged =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_fontSettings, 'onMinimumFontSizeChanged', mapify);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.fontSettings' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeFontSettings</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeFontSettings.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _fontSettings != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onDefaultFixedFontSizeChanged">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onDefaultFixedFontSizeChanged</strong> <a class="anchor-link"
+            href="#onDefaultFixedFontSizeChanged"
+            title="Permalink to ChromeFontSettings.onDefaultFixedFontSizeChanged">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when the default fixed font size setting changes.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onDefaultFixedFontSizeChanged =&gt; _onDefaultFixedFontSizeChanged.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onDefaultFontSizeChanged">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onDefaultFontSizeChanged</strong> <a class="anchor-link"
+            href="#onDefaultFontSizeChanged"
+            title="Permalink to ChromeFontSettings.onDefaultFontSizeChanged">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when the default font size setting changes.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onDefaultFontSizeChanged =&gt; _onDefaultFontSizeChanged.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onFontChanged">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onFontChanged</strong> <a class="anchor-link"
+            href="#onFontChanged"
+            title="Permalink to ChromeFontSettings.onFontChanged">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a font setting changes.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onFontChanged =&gt; _onFontChanged.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onMinimumFontSizeChanged">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onMinimumFontSizeChanged</strong> <a class="anchor-link"
+            href="#onMinimumFontSizeChanged"
+            title="Permalink to ChromeFontSettings.onMinimumFontSizeChanged">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when the minimum font size setting changes.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onMinimumFontSizeChanged =&gt; _onMinimumFontSizeChanged.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="clearDefaultFixedFontSize">
+<button class="show-code">Code</button>
+Future <strong>clearDefaultFixedFontSize</strong>([<a href="../chrome.fontSettings/FontSettingsClearDefaultFixedFontSizeParams.html">FontSettingsClearDefaultFixedFontSizeParams</a> details]) <a class="anchor-link" href="#clearDefaultFixedFontSize"
+              title="Permalink to ChromeFontSettings.clearDefaultFixedFontSize">#</a></h4>
+<div class="doc">
+<p>Clears the default fixed font size set by this extension, if any.</p>
+<p>
+<span class="param">details</span> This parameter is currently unused.</p>
+<pre class="source">
+Future clearDefaultFixedFontSize([FontSettingsClearDefaultFixedFontSizeParams details]) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _fontSettings.callMethod('clearDefaultFixedFontSize', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="clearDefaultFontSize">
+<button class="show-code">Code</button>
+Future <strong>clearDefaultFontSize</strong>([<a href="../chrome.fontSettings/FontSettingsClearDefaultFontSizeParams.html">FontSettingsClearDefaultFontSizeParams</a> details]) <a class="anchor-link" href="#clearDefaultFontSize"
+              title="Permalink to ChromeFontSettings.clearDefaultFontSize">#</a></h4>
+<div class="doc">
+<p>Clears the default font size set by this extension, if any.</p>
+<p>
+<span class="param">details</span> This parameter is currently unused.</p>
+<pre class="source">
+Future clearDefaultFontSize([FontSettingsClearDefaultFontSizeParams details]) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _fontSettings.callMethod('clearDefaultFontSize', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="clearFont">
+<button class="show-code">Code</button>
+Future <strong>clearFont</strong>(<a href="../chrome.fontSettings/FontSettingsClearFontParams.html">FontSettingsClearFontParams</a> details) <a class="anchor-link" href="#clearFont"
+              title="Permalink to ChromeFontSettings.clearFont">#</a></h4>
+<div class="doc">
+<p>Clears the font set by this extension, if any.</p>
+<pre class="source">
+Future clearFont(FontSettingsClearFontParams details) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _fontSettings.callMethod('clearFont', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="clearMinimumFontSize">
+<button class="show-code">Code</button>
+Future <strong>clearMinimumFontSize</strong>([<a href="../chrome.fontSettings/FontSettingsClearMinimumFontSizeParams.html">FontSettingsClearMinimumFontSizeParams</a> details]) <a class="anchor-link" href="#clearMinimumFontSize"
+              title="Permalink to ChromeFontSettings.clearMinimumFontSize">#</a></h4>
+<div class="doc">
+<p>Clears the minimum font size set by this extension, if any.</p>
+<p>
+<span class="param">details</span> This parameter is currently unused.</p>
+<pre class="source">
+Future clearMinimumFontSize([FontSettingsClearMinimumFontSizeParams details]) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _fontSettings.callMethod('clearMinimumFontSize', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getDefaultFixedFontSize">
+<button class="show-code">Code</button>
+Future&lt;Map&gt; <strong>getDefaultFixedFontSize</strong>([<a href="../chrome.fontSettings/FontSettingsGetDefaultFixedFontSizeParams.html">FontSettingsGetDefaultFixedFontSizeParams</a> details]) <a class="anchor-link" href="#getDefaultFixedFontSize"
+              title="Permalink to ChromeFontSettings.getDefaultFixedFontSize">#</a></h4>
+<div class="doc">
+<p>Gets the default size for fixed width fonts.</p>
+<p>
+<span class="param">details</span> This parameter is currently unused.</p>
+<pre class="source">
+Future&lt;Map&gt; getDefaultFixedFontSize([FontSettingsGetDefaultFixedFontSizeParams details]) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+ _fontSettings.callMethod('getDefaultFixedFontSize', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getDefaultFontSize">
+<button class="show-code">Code</button>
+Future&lt;Map&gt; <strong>getDefaultFontSize</strong>([<a href="../chrome.fontSettings/FontSettingsGetDefaultFontSizeParams.html">FontSettingsGetDefaultFontSizeParams</a> details]) <a class="anchor-link" href="#getDefaultFontSize"
+              title="Permalink to ChromeFontSettings.getDefaultFontSize">#</a></h4>
+<div class="doc">
+<p>Gets the default font size.</p>
+<p>
+<span class="param">details</span> This parameter is currently unused.</p>
+<pre class="source">
+Future&lt;Map&gt; getDefaultFontSize([FontSettingsGetDefaultFontSizeParams details]) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+ _fontSettings.callMethod('getDefaultFontSize', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getFont">
+<button class="show-code">Code</button>
+Future&lt;Map&gt; <strong>getFont</strong>(<a href="../chrome.fontSettings/FontSettingsGetFontParams.html">FontSettingsGetFontParams</a> details) <a class="anchor-link" href="#getFont"
+              title="Permalink to ChromeFontSettings.getFont">#</a></h4>
+<div class="doc">
+<p>Gets the font for a given script and generic font family.</p>
+<pre class="source">
+Future&lt;Map&gt; getFont(FontSettingsGetFontParams details) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+ _fontSettings.callMethod('getFont', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getFontList">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.fontSettings/FontName.html">FontName</a>&gt;&gt; <strong>getFontList</strong>() <a class="anchor-link" href="#getFontList"
+              title="Permalink to ChromeFontSettings.getFontList">#</a></h4>
+<div class="doc">
+<p>Gets a list of fonts on the system.</p>
+<pre class="source">
+Future&lt;List&lt;FontName&gt;&gt; getFontList() {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;FontName&gt;&gt;.oneArg((e) =&gt; listify(e, _createFontName));
+ _fontSettings.callMethod('getFontList', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getMinimumFontSize">
+<button class="show-code">Code</button>
+Future&lt;Map&gt; <strong>getMinimumFontSize</strong>([<a href="../chrome.fontSettings/FontSettingsGetMinimumFontSizeParams.html">FontSettingsGetMinimumFontSizeParams</a> details]) <a class="anchor-link" href="#getMinimumFontSize"
+              title="Permalink to ChromeFontSettings.getMinimumFontSize">#</a></h4>
+<div class="doc">
+<p>Gets the minimum font size.</p>
+<p>
+<span class="param">details</span> This parameter is currently unused.</p>
+<pre class="source">
+Future&lt;Map&gt; getMinimumFontSize([FontSettingsGetMinimumFontSizeParams details]) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Map&gt;.oneArg(mapify);
+ _fontSettings.callMethod('getMinimumFontSize', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setDefaultFixedFontSize">
+<button class="show-code">Code</button>
+Future <strong>setDefaultFixedFontSize</strong>(<a href="../chrome.fontSettings/FontSettingsSetDefaultFixedFontSizeParams.html">FontSettingsSetDefaultFixedFontSizeParams</a> details) <a class="anchor-link" href="#setDefaultFixedFontSize"
+              title="Permalink to ChromeFontSettings.setDefaultFixedFontSize">#</a></h4>
+<div class="doc">
+<p>Sets the default size for fixed width fonts.</p>
+<pre class="source">
+Future setDefaultFixedFontSize(FontSettingsSetDefaultFixedFontSizeParams details) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _fontSettings.callMethod('setDefaultFixedFontSize', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setDefaultFontSize">
+<button class="show-code">Code</button>
+Future <strong>setDefaultFontSize</strong>(<a href="../chrome.fontSettings/FontSettingsSetDefaultFontSizeParams.html">FontSettingsSetDefaultFontSizeParams</a> details) <a class="anchor-link" href="#setDefaultFontSize"
+              title="Permalink to ChromeFontSettings.setDefaultFontSize">#</a></h4>
+<div class="doc">
+<p>Sets the default font size.</p>
+<pre class="source">
+Future setDefaultFontSize(FontSettingsSetDefaultFontSizeParams details) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _fontSettings.callMethod('setDefaultFontSize', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setFont">
+<button class="show-code">Code</button>
+Future <strong>setFont</strong>(<a href="../chrome.fontSettings/FontSettingsSetFontParams.html">FontSettingsSetFontParams</a> details) <a class="anchor-link" href="#setFont"
+              title="Permalink to ChromeFontSettings.setFont">#</a></h4>
+<div class="doc">
+<p>Sets the font for a given script and generic font family.</p>
+<pre class="source">
+Future setFont(FontSettingsSetFontParams details) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _fontSettings.callMethod('setFont', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setMinimumFontSize">
+<button class="show-code">Code</button>
+Future <strong>setMinimumFontSize</strong>(<a href="../chrome.fontSettings/FontSettingsSetMinimumFontSizeParams.html">FontSettingsSetMinimumFontSizeParams</a> details) <a class="anchor-link" href="#setMinimumFontSize"
+              title="Permalink to ChromeFontSettings.setMinimumFontSize">#</a></h4>
+<div class="doc">
+<p>Sets the minimum font size.</p>
+<pre class="source">
+Future setMinimumFontSize(FontSettingsSetMinimumFontSizeParams details) {
+ if (_fontSettings == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _fontSettings.callMethod('setMinimumFontSize', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

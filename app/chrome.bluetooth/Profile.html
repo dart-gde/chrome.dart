@@ -1,0 +1,307 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Profile class / chrome.bluetooth Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.bluetooth" data-type="Profile">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.bluetooth.html">chrome.bluetooth</a> &rsaquo; <a href="../chrome.bluetooth/Profile.html">Profile</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Profile</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class Profile extends ChromeObject {
+ Profile({String uuid, String name, int channel, int psm, bool requireAuthentication, bool requireAuthorization, bool autoConnect, int version, int features}) {
+   if (uuid != null) this.uuid = uuid;
+   if (name != null) this.name = name;
+   if (channel != null) this.channel = channel;
+   if (psm != null) this.psm = psm;
+   if (requireAuthentication != null) this.requireAuthentication = requireAuthentication;
+   if (requireAuthorization != null) this.requireAuthorization = requireAuthorization;
+   if (autoConnect != null) this.autoConnect = autoConnect;
+   if (version != null) this.version = version;
+   if (features != null) this.features = features;
+ }
+ Profile.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ String get uuid =&gt; jsProxy['uuid'];
+ set uuid(String value) =&gt; jsProxy['uuid'] = value;
+
+ String get name =&gt; jsProxy['name'];
+ set name(String value) =&gt; jsProxy['name'] = value;
+
+ int get channel =&gt; jsProxy['channel'];
+ set channel(int value) =&gt; jsProxy['channel'] = value;
+
+ int get psm =&gt; jsProxy['psm'];
+ set psm(int value) =&gt; jsProxy['psm'] = value;
+
+ bool get requireAuthentication =&gt; jsProxy['requireAuthentication'];
+ set requireAuthentication(bool value) =&gt; jsProxy['requireAuthentication'] = value;
+
+ bool get requireAuthorization =&gt; jsProxy['requireAuthorization'];
+ set requireAuthorization(bool value) =&gt; jsProxy['requireAuthorization'] = value;
+
+ bool get autoConnect =&gt; jsProxy['autoConnect'];
+ set autoConnect(bool value) =&gt; jsProxy['autoConnect'] = value;
+
+ int get version =&gt; jsProxy['version'];
+ set version(int value) =&gt; jsProxy['version'] = value;
+
+ int get features =&gt; jsProxy['features'];
+ set features(int value) =&gt; jsProxy['features'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>Profile</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>Profile</strong>({String uuid, String name, int channel, int psm, bool requireAuthentication, bool requireAuthorization, bool autoConnect, int version, int features}) <a class="anchor-link" href="#"
+              title="Permalink to Profile.Profile">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+Profile({String uuid, String name, int channel, int psm, bool requireAuthentication, bool requireAuthorization, bool autoConnect, int version, int features}) {
+ if (uuid != null) this.uuid = uuid;
+ if (name != null) this.name = name;
+ if (channel != null) this.channel = channel;
+ if (psm != null) this.psm = psm;
+ if (requireAuthentication != null) this.requireAuthentication = requireAuthentication;
+ if (requireAuthorization != null) this.requireAuthorization = requireAuthorization;
+ if (autoConnect != null) this.autoConnect = autoConnect;
+ if (version != null) this.version = version;
+ if (features != null) this.features = features;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>Profile.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to Profile.Profile.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+Profile.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="autoConnect">
+<button class="show-code">Code</button>
+bool         <strong>autoConnect</strong> <a class="anchor-link"
+            href="#autoConnect"
+            title="Permalink to Profile.autoConnect">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+bool get autoConnect =&gt; jsProxy['autoConnect'];
+</pre>
+<pre class="source">
+set autoConnect(bool value) =&gt; jsProxy['autoConnect'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="channel">
+<button class="show-code">Code</button>
+int         <strong>channel</strong> <a class="anchor-link"
+            href="#channel"
+            title="Permalink to Profile.channel">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+int get channel =&gt; jsProxy['channel'];
+</pre>
+<pre class="source">
+set channel(int value) =&gt; jsProxy['channel'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="features">
+<button class="show-code">Code</button>
+int         <strong>features</strong> <a class="anchor-link"
+            href="#features"
+            title="Permalink to Profile.features">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+int get features =&gt; jsProxy['features'];
+</pre>
+<pre class="source">
+set features(int value) =&gt; jsProxy['features'] = value;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to Profile.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="name">
+<button class="show-code">Code</button>
+String         <strong>name</strong> <a class="anchor-link"
+            href="#name"
+            title="Permalink to Profile.name">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+String get name =&gt; jsProxy['name'];
+</pre>
+<pre class="source">
+set name(String value) =&gt; jsProxy['name'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="psm">
+<button class="show-code">Code</button>
+int         <strong>psm</strong> <a class="anchor-link"
+            href="#psm"
+            title="Permalink to Profile.psm">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+int get psm =&gt; jsProxy['psm'];
+</pre>
+<pre class="source">
+set psm(int value) =&gt; jsProxy['psm'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="requireAuthentication">
+<button class="show-code">Code</button>
+bool         <strong>requireAuthentication</strong> <a class="anchor-link"
+            href="#requireAuthentication"
+            title="Permalink to Profile.requireAuthentication">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+bool get requireAuthentication =&gt; jsProxy['requireAuthentication'];
+</pre>
+<pre class="source">
+set requireAuthentication(bool value) =&gt; jsProxy['requireAuthentication'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="requireAuthorization">
+<button class="show-code">Code</button>
+bool         <strong>requireAuthorization</strong> <a class="anchor-link"
+            href="#requireAuthorization"
+            title="Permalink to Profile.requireAuthorization">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+bool get requireAuthorization =&gt; jsProxy['requireAuthorization'];
+</pre>
+<pre class="source">
+set requireAuthorization(bool value) =&gt; jsProxy['requireAuthorization'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="uuid">
+<button class="show-code">Code</button>
+String         <strong>uuid</strong> <a class="anchor-link"
+            href="#uuid"
+            title="Permalink to Profile.uuid">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+String get uuid =&gt; jsProxy['uuid'];
+</pre>
+<pre class="source">
+set uuid(String value) =&gt; jsProxy['uuid'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="version">
+<button class="show-code">Code</button>
+int         <strong>version</strong> <a class="anchor-link"
+            href="#version"
+            title="Permalink to Profile.version">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+int get version =&gt; jsProxy['version'];
+</pre>
+<pre class="source">
+set version(int value) =&gt; jsProxy['version'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to Profile.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to Profile.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

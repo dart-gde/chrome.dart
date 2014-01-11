@@ -1,0 +1,507 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Tab class / chrome.tabs Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.tabs" data-type="Tab">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.tabs.html">chrome.tabs</a> &rsaquo; <a href="../chrome.tabs/Tab.html">Tab</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Tab</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class Tab extends ChromeObject {
+ Tab({int id, int index, int windowId, int openerTabId, bool highlighted, bool active, bool pinned, String url, String title, String favIconUrl, String status, bool incognito, int width, int height, String sessionId}) {
+   if (id != null) this.id = id;
+   if (index != null) this.index = index;
+   if (windowId != null) this.windowId = windowId;
+   if (openerTabId != null) this.openerTabId = openerTabId;
+   if (highlighted != null) this.highlighted = highlighted;
+   if (active != null) this.active = active;
+   if (pinned != null) this.pinned = pinned;
+   if (url != null) this.url = url;
+   if (title != null) this.title = title;
+   if (favIconUrl != null) this.favIconUrl = favIconUrl;
+   if (status != null) this.status = status;
+   if (incognito != null) this.incognito = incognito;
+   if (width != null) this.width = width;
+   if (height != null) this.height = height;
+   if (sessionId != null) this.sessionId = sessionId;
+ }
+ Tab.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * The ID of the tab. Tab IDs are unique within a browser session. Under some
+  * circumstances a Tab may not be assigned an ID, for example when querying
+  * foreign tabs using the [sessions] API, in which case a session ID may be
+  * present.
+  */
+ int get id =&gt; jsProxy['id'];
+ set id(int value) =&gt; jsProxy['id'] = value;
+
+ /**
+  * The zero-based index of the tab within its window.
+  */
+ int get index =&gt; jsProxy['index'];
+ set index(int value) =&gt; jsProxy['index'] = value;
+
+ /**
+  * The ID of the window the tab is contained within.
+  */
+ int get windowId =&gt; jsProxy['windowId'];
+ set windowId(int value) =&gt; jsProxy['windowId'] = value;
+
+ /**
+  * The ID of the tab that opened this tab, if any. This property is only
+  * present if the opener tab still exists.
+  */
+ int get openerTabId =&gt; jsProxy['openerTabId'];
+ set openerTabId(int value) =&gt; jsProxy['openerTabId'] = value;
+
+ /**
+  * Whether the tab is highlighted.
+  */
+ bool get highlighted =&gt; jsProxy['highlighted'];
+ set highlighted(bool value) =&gt; jsProxy['highlighted'] = value;
+
+ /**
+  * Whether the tab is active in its window. (Does not necessarily mean the
+  * window is focused.)
+  */
+ bool get active =&gt; jsProxy['active'];
+ set active(bool value) =&gt; jsProxy['active'] = value;
+
+ /**
+  * Whether the tab is pinned.
+  */
+ bool get pinned =&gt; jsProxy['pinned'];
+ set pinned(bool value) =&gt; jsProxy['pinned'] = value;
+
+ /**
+  * The URL the tab is displaying. This property is only present if the
+  * extension's manifest includes the `"tabs"` permission.
+  */
+ String get url =&gt; jsProxy['url'];
+ set url(String value) =&gt; jsProxy['url'] = value;
+
+ /**
+  * The title of the tab. This property is only present if the extension's
+  * manifest includes the `"tabs"` permission.
+  */
+ String get title =&gt; jsProxy['title'];
+ set title(String value) =&gt; jsProxy['title'] = value;
+
+ /**
+  * The URL of the tab's favicon. This property is only present if the
+  * extension's manifest includes the `"tabs"` permission. It may also be an
+  * empty string if the tab is loading.
+  */
+ String get favIconUrl =&gt; jsProxy['favIconUrl'];
+ set favIconUrl(String value) =&gt; jsProxy['favIconUrl'] = value;
+
+ /**
+  * Either _loading_ or _complete_.
+  */
+ String get status =&gt; jsProxy['status'];
+ set status(String value) =&gt; jsProxy['status'] = value;
+
+ /**
+  * Whether the tab is in an incognito window.
+  */
+ bool get incognito =&gt; jsProxy['incognito'];
+ set incognito(bool value) =&gt; jsProxy['incognito'] = value;
+
+ /**
+  * The width of the tab in pixels.
+  */
+ int get width =&gt; jsProxy['width'];
+ set width(int value) =&gt; jsProxy['width'] = value;
+
+ /**
+  * The height of the tab in pixels.
+  */
+ int get height =&gt; jsProxy['height'];
+ set height(int value) =&gt; jsProxy['height'] = value;
+
+ /**
+  * The session ID used to uniquely identify a Tab obtained from the [sessions]
+  * API.
+  */
+ String get sessionId =&gt; jsProxy['sessionId'];
+ set sessionId(String value) =&gt; jsProxy['sessionId'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>Tab</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>Tab</strong>({int id, int index, int windowId, int openerTabId, bool highlighted, bool active, bool pinned, String url, String title, String favIconUrl, String status, bool incognito, int width, int height, String sessionId}) <a class="anchor-link" href="#"
+              title="Permalink to Tab.Tab">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+Tab({int id, int index, int windowId, int openerTabId, bool highlighted, bool active, bool pinned, String url, String title, String favIconUrl, String status, bool incognito, int width, int height, String sessionId}) {
+ if (id != null) this.id = id;
+ if (index != null) this.index = index;
+ if (windowId != null) this.windowId = windowId;
+ if (openerTabId != null) this.openerTabId = openerTabId;
+ if (highlighted != null) this.highlighted = highlighted;
+ if (active != null) this.active = active;
+ if (pinned != null) this.pinned = pinned;
+ if (url != null) this.url = url;
+ if (title != null) this.title = title;
+ if (favIconUrl != null) this.favIconUrl = favIconUrl;
+ if (status != null) this.status = status;
+ if (incognito != null) this.incognito = incognito;
+ if (width != null) this.width = width;
+ if (height != null) this.height = height;
+ if (sessionId != null) this.sessionId = sessionId;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>Tab.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to Tab.Tab.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+Tab.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="active">
+<button class="show-code">Code</button>
+bool         <strong>active</strong> <a class="anchor-link"
+            href="#active"
+            title="Permalink to Tab.active">#</a>
+        </h4>
+        <div class="doc">
+<p>Whether the tab is active in its window. (Does not necessarily mean the
+window is focused.)</p>
+<pre class="source">
+bool get active =&gt; jsProxy['active'];
+</pre>
+<pre class="source">
+set active(bool value) =&gt; jsProxy['active'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="favIconUrl">
+<button class="show-code">Code</button>
+String         <strong>favIconUrl</strong> <a class="anchor-link"
+            href="#favIconUrl"
+            title="Permalink to Tab.favIconUrl">#</a>
+        </h4>
+        <div class="doc">
+<p>The URL of the tab's favicon. This property is only present if the
+extension's manifest includes the <code>"tabs"</code> permission. It may also be an
+empty string if the tab is loading.</p>
+<pre class="source">
+String get favIconUrl =&gt; jsProxy['favIconUrl'];
+</pre>
+<pre class="source">
+set favIconUrl(String value) =&gt; jsProxy['favIconUrl'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="height">
+<button class="show-code">Code</button>
+int         <strong>height</strong> <a class="anchor-link"
+            href="#height"
+            title="Permalink to Tab.height">#</a>
+        </h4>
+        <div class="doc">
+<p>The height of the tab in pixels.</p>
+<pre class="source">
+int get height =&gt; jsProxy['height'];
+</pre>
+<pre class="source">
+set height(int value) =&gt; jsProxy['height'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="highlighted">
+<button class="show-code">Code</button>
+bool         <strong>highlighted</strong> <a class="anchor-link"
+            href="#highlighted"
+            title="Permalink to Tab.highlighted">#</a>
+        </h4>
+        <div class="doc">
+<p>Whether the tab is highlighted.</p>
+<pre class="source">
+bool get highlighted =&gt; jsProxy['highlighted'];
+</pre>
+<pre class="source">
+set highlighted(bool value) =&gt; jsProxy['highlighted'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="id">
+<button class="show-code">Code</button>
+int         <strong>id</strong> <a class="anchor-link"
+            href="#id"
+            title="Permalink to Tab.id">#</a>
+        </h4>
+        <div class="doc">
+<p>The ID of the tab. Tab IDs are unique within a browser session. Under some
+circumstances a Tab may not be assigned an ID, for example when querying
+foreign tabs using the <code>sessions</code> API, in which case a session ID may be
+present.</p>
+<pre class="source">
+int get id =&gt; jsProxy['id'];
+</pre>
+<pre class="source">
+set id(int value) =&gt; jsProxy['id'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="incognito">
+<button class="show-code">Code</button>
+bool         <strong>incognito</strong> <a class="anchor-link"
+            href="#incognito"
+            title="Permalink to Tab.incognito">#</a>
+        </h4>
+        <div class="doc">
+<p>Whether the tab is in an incognito window.</p>
+<pre class="source">
+bool get incognito =&gt; jsProxy['incognito'];
+</pre>
+<pre class="source">
+set incognito(bool value) =&gt; jsProxy['incognito'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="index">
+<button class="show-code">Code</button>
+int         <strong>index</strong> <a class="anchor-link"
+            href="#index"
+            title="Permalink to Tab.index">#</a>
+        </h4>
+        <div class="doc">
+<p>The zero-based index of the tab within its window.</p>
+<pre class="source">
+int get index =&gt; jsProxy['index'];
+</pre>
+<pre class="source">
+set index(int value) =&gt; jsProxy['index'] = value;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to Tab.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="openerTabId">
+<button class="show-code">Code</button>
+int         <strong>openerTabId</strong> <a class="anchor-link"
+            href="#openerTabId"
+            title="Permalink to Tab.openerTabId">#</a>
+        </h4>
+        <div class="doc">
+<p>The ID of the tab that opened this tab, if any. This property is only
+present if the opener tab still exists.</p>
+<pre class="source">
+int get openerTabId =&gt; jsProxy['openerTabId'];
+</pre>
+<pre class="source">
+set openerTabId(int value) =&gt; jsProxy['openerTabId'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="pinned">
+<button class="show-code">Code</button>
+bool         <strong>pinned</strong> <a class="anchor-link"
+            href="#pinned"
+            title="Permalink to Tab.pinned">#</a>
+        </h4>
+        <div class="doc">
+<p>Whether the tab is pinned.</p>
+<pre class="source">
+bool get pinned =&gt; jsProxy['pinned'];
+</pre>
+<pre class="source">
+set pinned(bool value) =&gt; jsProxy['pinned'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="sessionId">
+<button class="show-code">Code</button>
+String         <strong>sessionId</strong> <a class="anchor-link"
+            href="#sessionId"
+            title="Permalink to Tab.sessionId">#</a>
+        </h4>
+        <div class="doc">
+<p>The session ID used to uniquely identify a Tab obtained from the <code>sessions</code>
+API.</p>
+<pre class="source">
+String get sessionId =&gt; jsProxy['sessionId'];
+</pre>
+<pre class="source">
+set sessionId(String value) =&gt; jsProxy['sessionId'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="status">
+<button class="show-code">Code</button>
+String         <strong>status</strong> <a class="anchor-link"
+            href="#status"
+            title="Permalink to Tab.status">#</a>
+        </h4>
+        <div class="doc">
+<p>Either <em>loading</em> or <em>complete</em>.</p>
+<pre class="source">
+String get status =&gt; jsProxy['status'];
+</pre>
+<pre class="source">
+set status(String value) =&gt; jsProxy['status'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="title">
+<button class="show-code">Code</button>
+String         <strong>title</strong> <a class="anchor-link"
+            href="#title"
+            title="Permalink to Tab.title">#</a>
+        </h4>
+        <div class="doc">
+<p>The title of the tab. This property is only present if the extension's
+manifest includes the <code>"tabs"</code> permission.</p>
+<pre class="source">
+String get title =&gt; jsProxy['title'];
+</pre>
+<pre class="source">
+set title(String value) =&gt; jsProxy['title'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="url">
+<button class="show-code">Code</button>
+String         <strong>url</strong> <a class="anchor-link"
+            href="#url"
+            title="Permalink to Tab.url">#</a>
+        </h4>
+        <div class="doc">
+<p>The URL the tab is displaying. This property is only present if the
+extension's manifest includes the <code>"tabs"</code> permission.</p>
+<pre class="source">
+String get url =&gt; jsProxy['url'];
+</pre>
+<pre class="source">
+set url(String value) =&gt; jsProxy['url'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="width">
+<button class="show-code">Code</button>
+int         <strong>width</strong> <a class="anchor-link"
+            href="#width"
+            title="Permalink to Tab.width">#</a>
+        </h4>
+        <div class="doc">
+<p>The width of the tab in pixels.</p>
+<pre class="source">
+int get width =&gt; jsProxy['width'];
+</pre>
+<pre class="source">
+set width(int value) =&gt; jsProxy['width'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="windowId">
+<button class="show-code">Code</button>
+int         <strong>windowId</strong> <a class="anchor-link"
+            href="#windowId"
+            title="Permalink to Tab.windowId">#</a>
+        </h4>
+        <div class="doc">
+<p>The ID of the window the tab is contained within.</p>
+<pre class="source">
+int get windowId =&gt; jsProxy['windowId'];
+</pre>
+<pre class="source">
+set windowId(int value) =&gt; jsProxy['windowId'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to Tab.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to Tab.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

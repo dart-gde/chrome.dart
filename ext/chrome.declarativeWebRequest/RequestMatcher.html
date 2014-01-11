@@ -1,0 +1,424 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>RequestMatcher class / chrome.declarativeWebRequest Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.declarativeWebRequest" data-type="RequestMatcher">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.declarativeWebRequest.html">chrome.declarativeWebRequest</a> &rsaquo; <a href="../chrome.declarativeWebRequest/RequestMatcher.html">RequestMatcher</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>RequestMatcher</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Matches network events by various criteria.</p>
+<pre class="source">
+class RequestMatcher extends ChromeObject {
+ RequestMatcher({UrlFilter url, UrlFilter firstPartyForCookiesUrl, List&lt;String&gt; resourceType, List&lt;String&gt; contentType, List&lt;String&gt; excludeContentType, List&lt;HeaderFilter&gt; requestHeaders, List&lt;HeaderFilter&gt; excludeRequestHeaders, List&lt;HeaderFilter&gt; responseHeaders, List&lt;HeaderFilter&gt; excludeResponseHeaders, bool thirdPartyForCookies, List&lt;String&gt; stages}) {
+   if (url != null) this.url = url;
+   if (firstPartyForCookiesUrl != null) this.firstPartyForCookiesUrl = firstPartyForCookiesUrl;
+   if (resourceType != null) this.resourceType = resourceType;
+   if (contentType != null) this.contentType = contentType;
+   if (excludeContentType != null) this.excludeContentType = excludeContentType;
+   if (requestHeaders != null) this.requestHeaders = requestHeaders;
+   if (excludeRequestHeaders != null) this.excludeRequestHeaders = excludeRequestHeaders;
+   if (responseHeaders != null) this.responseHeaders = responseHeaders;
+   if (excludeResponseHeaders != null) this.excludeResponseHeaders = excludeResponseHeaders;
+   if (thirdPartyForCookies != null) this.thirdPartyForCookies = thirdPartyForCookies;
+   if (stages != null) this.stages = stages;
+ }
+ RequestMatcher.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * Matches if the conditions of the UrlFilter are fulfilled for the URL of the
+  * request.
+  */
+ UrlFilter get url =&gt; _createUrlFilter(jsProxy['url']);
+ set url(UrlFilter value) =&gt; jsProxy['url'] = jsify(value);
+
+ /**
+  * Matches if the conditions of the UrlFilter are fulfilled for the 'first
+  * party' URL of the request. The 'first party' URL of a request, when
+  * present, can be different from the request's target URL, and describes what
+  * is considered 'first party' for the sake of third-party checks for cookies.
+  */
+ UrlFilter get firstPartyForCookiesUrl =&gt; _createUrlFilter(jsProxy['firstPartyForCookiesUrl']);
+ set firstPartyForCookiesUrl(UrlFilter value) =&gt; jsProxy['firstPartyForCookiesUrl'] = jsify(value);
+
+ /**
+  * Matches if the request type of a request is contained in the list. Requests
+  * that cannot match any of the types will be filtered out.
+  */
+ List&lt;String&gt; get resourceType =&gt; listify(jsProxy['resourceType']);
+ set resourceType(List&lt;String&gt; value) =&gt; jsProxy['resourceType'] = jsify(value);
+
+ /**
+  * Matches if the MIME media type of a response (from the HTTP Content-Type
+  * header) is contained in the list.
+  */
+ List&lt;String&gt; get contentType =&gt; listify(jsProxy['contentType']);
+ set contentType(List&lt;String&gt; value) =&gt; jsProxy['contentType'] = jsify(value);
+
+ /**
+  * Matches if the MIME media type of a response (from the HTTP Content-Type
+  * header) is _not_ contained in the list.
+  */
+ List&lt;String&gt; get excludeContentType =&gt; listify(jsProxy['excludeContentType']);
+ set excludeContentType(List&lt;String&gt; value) =&gt; jsProxy['excludeContentType'] = jsify(value);
+
+ /**
+  * Matches if some of the request headers is matched by one of the
+  * HeaderFilters.
+  */
+ List&lt;HeaderFilter&gt; get requestHeaders =&gt; listify(jsProxy['requestHeaders'], _createHeaderFilter);
+ set requestHeaders(List&lt;HeaderFilter&gt; value) =&gt; jsProxy['requestHeaders'] = jsify(value);
+
+ /**
+  * Matches if none of the request headers is matched by any of the
+  * HeaderFilters.
+  */
+ List&lt;HeaderFilter&gt; get excludeRequestHeaders =&gt; listify(jsProxy['excludeRequestHeaders'], _createHeaderFilter);
+ set excludeRequestHeaders(List&lt;HeaderFilter&gt; value) =&gt; jsProxy['excludeRequestHeaders'] = jsify(value);
+
+ /**
+  * Matches if some of the response headers is matched by one of the
+  * HeaderFilters.
+  */
+ List&lt;HeaderFilter&gt; get responseHeaders =&gt; listify(jsProxy['responseHeaders'], _createHeaderFilter);
+ set responseHeaders(List&lt;HeaderFilter&gt; value) =&gt; jsProxy['responseHeaders'] = jsify(value);
+
+ /**
+  * Matches if none of the response headers is matched by any of the
+  * HeaderFilters.
+  */
+ List&lt;HeaderFilter&gt; get excludeResponseHeaders =&gt; listify(jsProxy['excludeResponseHeaders'], _createHeaderFilter);
+ set excludeResponseHeaders(List&lt;HeaderFilter&gt; value) =&gt; jsProxy['excludeResponseHeaders'] = jsify(value);
+
+ /**
+  * If set to true, matches requests that are subject to third-party cookie
+  * policies. If set to false, matches all other requests.
+  */
+ bool get thirdPartyForCookies =&gt; jsProxy['thirdPartyForCookies'];
+ set thirdPartyForCookies(bool value) =&gt; jsProxy['thirdPartyForCookies'] = value;
+
+ /**
+  * Contains a list of strings describing stages. Allowed values are
+  * 'onBeforeRequest', 'onBeforeSendHeaders', 'onHeadersReceived',
+  * 'onAuthRequired'. If this attribute is present, then it limits the
+  * applicable stages to those listed. Note that the whole condition is only
+  * applicable in stages compatible with all attributes.
+  */
+ List&lt;String&gt; get stages =&gt; listify(jsProxy['stages']);
+ set stages(List&lt;String&gt; value) =&gt; jsProxy['stages'] = jsify(value);
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>RequestMatcher</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>RequestMatcher</strong>({<a href="../chrome.events/UrlFilter.html">UrlFilter</a> url, <a href="../chrome.events/UrlFilter.html">UrlFilter</a> firstPartyForCookiesUrl, List&lt;String&gt; resourceType, List&lt;String&gt; contentType, List&lt;String&gt; excludeContentType, List&lt;<a href="../chrome.declarativeWebRequest/HeaderFilter.html">HeaderFilter</a>&gt; requestHeaders, List&lt;<a href="../chrome.declarativeWebRequest/HeaderFilter.html">HeaderFilter</a>&gt; excludeRequestHeaders, List&lt;<a href="../chrome.declarativeWebRequest/HeaderFilter.html">HeaderFilter</a>&gt; responseHeaders, List&lt;<a href="../chrome.declarativeWebRequest/HeaderFilter.html">HeaderFilter</a>&gt; excludeResponseHeaders, bool thirdPartyForCookies, List&lt;String&gt; stages}) <a class="anchor-link" href="#"
+              title="Permalink to RequestMatcher.RequestMatcher">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+RequestMatcher({UrlFilter url, UrlFilter firstPartyForCookiesUrl, List&lt;String&gt; resourceType, List&lt;String&gt; contentType, List&lt;String&gt; excludeContentType, List&lt;HeaderFilter&gt; requestHeaders, List&lt;HeaderFilter&gt; excludeRequestHeaders, List&lt;HeaderFilter&gt; responseHeaders, List&lt;HeaderFilter&gt; excludeResponseHeaders, bool thirdPartyForCookies, List&lt;String&gt; stages}) {
+ if (url != null) this.url = url;
+ if (firstPartyForCookiesUrl != null) this.firstPartyForCookiesUrl = firstPartyForCookiesUrl;
+ if (resourceType != null) this.resourceType = resourceType;
+ if (contentType != null) this.contentType = contentType;
+ if (excludeContentType != null) this.excludeContentType = excludeContentType;
+ if (requestHeaders != null) this.requestHeaders = requestHeaders;
+ if (excludeRequestHeaders != null) this.excludeRequestHeaders = excludeRequestHeaders;
+ if (responseHeaders != null) this.responseHeaders = responseHeaders;
+ if (excludeResponseHeaders != null) this.excludeResponseHeaders = excludeResponseHeaders;
+ if (thirdPartyForCookies != null) this.thirdPartyForCookies = thirdPartyForCookies;
+ if (stages != null) this.stages = stages;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>RequestMatcher.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to RequestMatcher.RequestMatcher.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+RequestMatcher.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="contentType">
+<button class="show-code">Code</button>
+List&lt;String&gt;         <strong>contentType</strong> <a class="anchor-link"
+            href="#contentType"
+            title="Permalink to RequestMatcher.contentType">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the MIME media type of a response (from the HTTP Content-Type
+header) is contained in the list.</p>
+<pre class="source">
+List&lt;String&gt; get contentType =&gt; listify(jsProxy['contentType']);
+</pre>
+<pre class="source">
+set contentType(List&lt;String&gt; value) =&gt; jsProxy['contentType'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="excludeContentType">
+<button class="show-code">Code</button>
+List&lt;String&gt;         <strong>excludeContentType</strong> <a class="anchor-link"
+            href="#excludeContentType"
+            title="Permalink to RequestMatcher.excludeContentType">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the MIME media type of a response (from the HTTP Content-Type
+header) is <em>not</em> contained in the list.</p>
+<pre class="source">
+List&lt;String&gt; get excludeContentType =&gt; listify(jsProxy['excludeContentType']);
+</pre>
+<pre class="source">
+set excludeContentType(List&lt;String&gt; value) =&gt; jsProxy['excludeContentType'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="excludeRequestHeaders">
+<button class="show-code">Code</button>
+List&lt;<a href="../chrome.declarativeWebRequest/HeaderFilter.html">HeaderFilter</a>&gt;         <strong>excludeRequestHeaders</strong> <a class="anchor-link"
+            href="#excludeRequestHeaders"
+            title="Permalink to RequestMatcher.excludeRequestHeaders">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if none of the request headers is matched by any of the
+HeaderFilters.</p>
+<pre class="source">
+List&lt;HeaderFilter&gt; get excludeRequestHeaders =&gt; listify(jsProxy['excludeRequestHeaders'], _createHeaderFilter);
+</pre>
+<pre class="source">
+set excludeRequestHeaders(List&lt;HeaderFilter&gt; value) =&gt; jsProxy['excludeRequestHeaders'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="excludeResponseHeaders">
+<button class="show-code">Code</button>
+List&lt;<a href="../chrome.declarativeWebRequest/HeaderFilter.html">HeaderFilter</a>&gt;         <strong>excludeResponseHeaders</strong> <a class="anchor-link"
+            href="#excludeResponseHeaders"
+            title="Permalink to RequestMatcher.excludeResponseHeaders">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if none of the response headers is matched by any of the
+HeaderFilters.</p>
+<pre class="source">
+List&lt;HeaderFilter&gt; get excludeResponseHeaders =&gt; listify(jsProxy['excludeResponseHeaders'], _createHeaderFilter);
+</pre>
+<pre class="source">
+set excludeResponseHeaders(List&lt;HeaderFilter&gt; value) =&gt; jsProxy['excludeResponseHeaders'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="firstPartyForCookiesUrl">
+<button class="show-code">Code</button>
+<a href="../chrome.events/UrlFilter.html">UrlFilter</a>         <strong>firstPartyForCookiesUrl</strong> <a class="anchor-link"
+            href="#firstPartyForCookiesUrl"
+            title="Permalink to RequestMatcher.firstPartyForCookiesUrl">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the conditions of the UrlFilter are fulfilled for the 'first
+party' URL of the request. The 'first party' URL of a request, when
+present, can be different from the request's target URL, and describes what
+is considered 'first party' for the sake of third-party checks for cookies.</p>
+<pre class="source">
+UrlFilter get firstPartyForCookiesUrl =&gt; _createUrlFilter(jsProxy['firstPartyForCookiesUrl']);
+</pre>
+<pre class="source">
+set firstPartyForCookiesUrl(UrlFilter value) =&gt; jsProxy['firstPartyForCookiesUrl'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to RequestMatcher.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="requestHeaders">
+<button class="show-code">Code</button>
+List&lt;<a href="../chrome.declarativeWebRequest/HeaderFilter.html">HeaderFilter</a>&gt;         <strong>requestHeaders</strong> <a class="anchor-link"
+            href="#requestHeaders"
+            title="Permalink to RequestMatcher.requestHeaders">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if some of the request headers is matched by one of the
+HeaderFilters.</p>
+<pre class="source">
+List&lt;HeaderFilter&gt; get requestHeaders =&gt; listify(jsProxy['requestHeaders'], _createHeaderFilter);
+</pre>
+<pre class="source">
+set requestHeaders(List&lt;HeaderFilter&gt; value) =&gt; jsProxy['requestHeaders'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="resourceType">
+<button class="show-code">Code</button>
+List&lt;String&gt;         <strong>resourceType</strong> <a class="anchor-link"
+            href="#resourceType"
+            title="Permalink to RequestMatcher.resourceType">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the request type of a request is contained in the list. Requests
+that cannot match any of the types will be filtered out.</p>
+<pre class="source">
+List&lt;String&gt; get resourceType =&gt; listify(jsProxy['resourceType']);
+</pre>
+<pre class="source">
+set resourceType(List&lt;String&gt; value) =&gt; jsProxy['resourceType'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="responseHeaders">
+<button class="show-code">Code</button>
+List&lt;<a href="../chrome.declarativeWebRequest/HeaderFilter.html">HeaderFilter</a>&gt;         <strong>responseHeaders</strong> <a class="anchor-link"
+            href="#responseHeaders"
+            title="Permalink to RequestMatcher.responseHeaders">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if some of the response headers is matched by one of the
+HeaderFilters.</p>
+<pre class="source">
+List&lt;HeaderFilter&gt; get responseHeaders =&gt; listify(jsProxy['responseHeaders'], _createHeaderFilter);
+</pre>
+<pre class="source">
+set responseHeaders(List&lt;HeaderFilter&gt; value) =&gt; jsProxy['responseHeaders'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="stages">
+<button class="show-code">Code</button>
+List&lt;String&gt;         <strong>stages</strong> <a class="anchor-link"
+            href="#stages"
+            title="Permalink to RequestMatcher.stages">#</a>
+        </h4>
+        <div class="doc">
+<p>Contains a list of strings describing stages. Allowed values are
+'onBeforeRequest', 'onBeforeSendHeaders', 'onHeadersReceived',
+'onAuthRequired'. If this attribute is present, then it limits the
+applicable stages to those listed. Note that the whole condition is only
+applicable in stages compatible with all attributes.</p>
+<pre class="source">
+List&lt;String&gt; get stages =&gt; listify(jsProxy['stages']);
+</pre>
+<pre class="source">
+set stages(List&lt;String&gt; value) =&gt; jsProxy['stages'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="thirdPartyForCookies">
+<button class="show-code">Code</button>
+bool         <strong>thirdPartyForCookies</strong> <a class="anchor-link"
+            href="#thirdPartyForCookies"
+            title="Permalink to RequestMatcher.thirdPartyForCookies">#</a>
+        </h4>
+        <div class="doc">
+<p>If set to true, matches requests that are subject to third-party cookie
+policies. If set to false, matches all other requests.</p>
+<pre class="source">
+bool get thirdPartyForCookies =&gt; jsProxy['thirdPartyForCookies'];
+</pre>
+<pre class="source">
+set thirdPartyForCookies(bool value) =&gt; jsProxy['thirdPartyForCookies'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="url">
+<button class="show-code">Code</button>
+<a href="../chrome.events/UrlFilter.html">UrlFilter</a>         <strong>url</strong> <a class="anchor-link"
+            href="#url"
+            title="Permalink to RequestMatcher.url">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the conditions of the UrlFilter are fulfilled for the URL of the
+request.</p>
+<pre class="source">
+UrlFilter get url =&gt; _createUrlFilter(jsProxy['url']);
+</pre>
+<pre class="source">
+set url(UrlFilter value) =&gt; jsProxy['url'] = jsify(value);
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to RequestMatcher.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to RequestMatcher.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

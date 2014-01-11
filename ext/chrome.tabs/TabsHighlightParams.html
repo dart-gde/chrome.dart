@@ -1,0 +1,175 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TabsHighlightParams class / chrome.tabs Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.tabs" data-type="TabsHighlightParams">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.tabs.html">chrome.tabs</a> &rsaquo; <a href="../chrome.tabs/TabsHighlightParams.html">TabsHighlightParams</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TabsHighlightParams</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class TabsHighlightParams extends ChromeObject {
+ TabsHighlightParams({int windowId, var tabs}) {
+   if (windowId != null) this.windowId = windowId;
+   if (tabs != null) this.tabs = tabs;
+ }
+ TabsHighlightParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * The window that contains the tabs.
+  */
+ int get windowId =&gt; jsProxy['windowId'];
+ set windowId(int value) =&gt; jsProxy['windowId'] = value;
+
+ /**
+  * One or more tab indices to highlight.
+  */
+ dynamic get tabs =&gt; jsProxy['tabs'];
+ set tabs(var value) =&gt; jsProxy['tabs'] = jsify(value);
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>TabsHighlightParams</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>TabsHighlightParams</strong>({int windowId, tabs}) <a class="anchor-link" href="#"
+              title="Permalink to TabsHighlightParams.TabsHighlightParams">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+TabsHighlightParams({int windowId, var tabs}) {
+ if (windowId != null) this.windowId = windowId;
+ if (tabs != null) this.tabs = tabs;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>TabsHighlightParams.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to TabsHighlightParams.TabsHighlightParams.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+TabsHighlightParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to TabsHighlightParams.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="tabs">
+<button class="show-code">Code</button>
+var         <strong>tabs</strong> <a class="anchor-link"
+            href="#tabs"
+            title="Permalink to TabsHighlightParams.tabs">#</a>
+        </h4>
+        <div class="doc">
+<p>One or more tab indices to highlight.</p>
+<pre class="source">
+dynamic get tabs =&gt; jsProxy['tabs'];
+</pre>
+<pre class="source">
+set tabs(var value) =&gt; jsProxy['tabs'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="windowId">
+<button class="show-code">Code</button>
+int         <strong>windowId</strong> <a class="anchor-link"
+            href="#windowId"
+            title="Permalink to TabsHighlightParams.windowId">#</a>
+        </h4>
+        <div class="doc">
+<p>The window that contains the tabs.</p>
+<pre class="source">
+int get windowId =&gt; jsProxy['windowId'];
+</pre>
+<pre class="source">
+set windowId(int value) =&gt; jsProxy['windowId'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to TabsHighlightParams.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to TabsHighlightParams.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

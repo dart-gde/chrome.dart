@@ -1,0 +1,171 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>InputImeSetCandidateWindowPropertiesParams class / chrome.input Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.input" data-type="InputImeSetCandidateWindowPropertiesParams">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.input.html">chrome.input</a> &rsaquo; <a href="../chrome.input/InputImeSetCandidateWindowPropertiesParams.html">InputImeSetCandidateWindowPropertiesParams</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>InputImeSetCandidateWindowPropertiesParams</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class InputImeSetCandidateWindowPropertiesParams extends ChromeObject {
+ InputImeSetCandidateWindowPropertiesParams({String engineID, PropertiesInputIme properties}) {
+   if (engineID != null) this.engineID = engineID;
+   if (properties != null) this.properties = properties;
+ }
+ InputImeSetCandidateWindowPropertiesParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * ID of the engine to set properties on.
+  */
+ String get engineID =&gt; jsProxy['engineID'];
+ set engineID(String value) =&gt; jsProxy['engineID'] = value;
+
+ PropertiesInputIme get properties =&gt; _createPropertiesInputIme(jsProxy['properties']);
+ set properties(PropertiesInputIme value) =&gt; jsProxy['properties'] = jsify(value);
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>InputImeSetCandidateWindowPropertiesParams</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>InputImeSetCandidateWindowPropertiesParams</strong>({String engineID, <a href="../chrome.input/PropertiesInputIme.html">PropertiesInputIme</a> properties}) <a class="anchor-link" href="#"
+              title="Permalink to InputImeSetCandidateWindowPropertiesParams.InputImeSetCandidateWindowPropertiesParams">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+InputImeSetCandidateWindowPropertiesParams({String engineID, PropertiesInputIme properties}) {
+ if (engineID != null) this.engineID = engineID;
+ if (properties != null) this.properties = properties;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>InputImeSetCandidateWindowPropertiesParams.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to InputImeSetCandidateWindowPropertiesParams.InputImeSetCandidateWindowPropertiesParams.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+InputImeSetCandidateWindowPropertiesParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="engineID">
+<button class="show-code">Code</button>
+String         <strong>engineID</strong> <a class="anchor-link"
+            href="#engineID"
+            title="Permalink to InputImeSetCandidateWindowPropertiesParams.engineID">#</a>
+        </h4>
+        <div class="doc">
+<p>ID of the engine to set properties on.</p>
+<pre class="source">
+String get engineID =&gt; jsProxy['engineID'];
+</pre>
+<pre class="source">
+set engineID(String value) =&gt; jsProxy['engineID'] = value;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to InputImeSetCandidateWindowPropertiesParams.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="properties">
+<button class="show-code">Code</button>
+<a href="../chrome.input/PropertiesInputIme.html">PropertiesInputIme</a>         <strong>properties</strong> <a class="anchor-link"
+            href="#properties"
+            title="Permalink to InputImeSetCandidateWindowPropertiesParams.properties">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+PropertiesInputIme get properties =&gt; _createPropertiesInputIme(jsProxy['properties']);
+</pre>
+<pre class="source">
+set properties(PropertiesInputIme value) =&gt; jsProxy['properties'] = jsify(value);
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to InputImeSetCandidateWindowPropertiesParams.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to InputImeSetCandidateWindowPropertiesParams.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

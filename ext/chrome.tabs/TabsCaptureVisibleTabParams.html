@@ -1,0 +1,183 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TabsCaptureVisibleTabParams class / chrome.tabs Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.tabs" data-type="TabsCaptureVisibleTabParams">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.tabs.html">chrome.tabs</a> &rsaquo; <a href="../chrome.tabs/TabsCaptureVisibleTabParams.html">TabsCaptureVisibleTabParams</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TabsCaptureVisibleTabParams</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class TabsCaptureVisibleTabParams extends ChromeObject {
+ TabsCaptureVisibleTabParams({String format, int quality}) {
+   if (format != null) this.format = format;
+   if (quality != null) this.quality = quality;
+ }
+ TabsCaptureVisibleTabParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * The format of the resulting image.  Default is jpeg.
+  * enum of `jpeg`, `png`
+  */
+ String get format =&gt; jsProxy['format'];
+ set format(String value) =&gt; jsProxy['format'] = value;
+
+ /**
+  * When format is 'jpeg', controls the quality of the resulting image.  This
+  * value is ignored for PNG images.  As quality is decreased, the resulting
+  * image will have more visual artifacts, and the number of bytes needed to
+  * store it will decrease.
+  */
+ int get quality =&gt; jsProxy['quality'];
+ set quality(int value) =&gt; jsProxy['quality'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>TabsCaptureVisibleTabParams</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>TabsCaptureVisibleTabParams</strong>({String format, int quality}) <a class="anchor-link" href="#"
+              title="Permalink to TabsCaptureVisibleTabParams.TabsCaptureVisibleTabParams">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+TabsCaptureVisibleTabParams({String format, int quality}) {
+ if (format != null) this.format = format;
+ if (quality != null) this.quality = quality;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>TabsCaptureVisibleTabParams.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to TabsCaptureVisibleTabParams.TabsCaptureVisibleTabParams.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+TabsCaptureVisibleTabParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="format">
+<button class="show-code">Code</button>
+String         <strong>format</strong> <a class="anchor-link"
+            href="#format"
+            title="Permalink to TabsCaptureVisibleTabParams.format">#</a>
+        </h4>
+        <div class="doc">
+<p>The format of the resulting image.  Default is jpeg.
+enum of <code>jpeg</code>, <code>png</code></p>
+<pre class="source">
+String get format =&gt; jsProxy['format'];
+</pre>
+<pre class="source">
+set format(String value) =&gt; jsProxy['format'] = value;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to TabsCaptureVisibleTabParams.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="quality">
+<button class="show-code">Code</button>
+int         <strong>quality</strong> <a class="anchor-link"
+            href="#quality"
+            title="Permalink to TabsCaptureVisibleTabParams.quality">#</a>
+        </h4>
+        <div class="doc">
+<p>When format is 'jpeg', controls the quality of the resulting image.  This
+value is ignored for PNG images.  As quality is decreased, the resulting
+image will have more visual artifacts, and the number of bytes needed to
+store it will decrease.</p>
+<pre class="source">
+int get quality =&gt; jsProxy['quality'];
+</pre>
+<pre class="source">
+set quality(int value) =&gt; jsProxy['quality'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to TabsCaptureVisibleTabParams.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to TabsCaptureVisibleTabParams.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

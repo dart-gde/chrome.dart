@@ -1,0 +1,217 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeSessions class / chrome.sessions Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.sessions" data-type="ChromeSessions">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.sessions.html">chrome.sessions</a> &rsaquo; <a href="../chrome.sessions/ChromeSessions.html">ChromeSessions</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeSessions</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeSessions extends ChromeApi {
+ static final JsObject _sessions = chrome['sessions'];
+
+ ChromeSessions._();
+
+ bool get available =&gt; _sessions != null;
+
+ /**
+  * The maximum number of [Session] that will be included in a requested list.
+  */
+ int get MAX_SESSION_RESULTS =&gt; _sessions['MAX_SESSION_RESULTS'];
+
+ /**
+  * Gets the list of recently closed tabs and/or windows.
+  * 
+  * Returns:
+  * The list of closed entries in reverse order that they were closed (the most
+  * recently closed tab or window will be at index `0`).The entries may contain
+  * either tabs or windows.
+  */
+ Future&lt;List&lt;Session&gt;&gt; getRecentlyClosed([Filter filter]) {
+   if (_sessions == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;Session&gt;&gt;.oneArg((e) =&gt; listify(e, _createSession));
+   _sessions.callMethod('getRecentlyClosed', [jsify(filter), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Retrieves all devices with synced sessions.
+  * 
+  * Returns:
+  * The list of [Device] objects for each synced session, sorted in order from
+  * device with most recently modified session to device with least recently
+  * modified session. [tabs.Tab] objects are sorted by recency in the
+  * [windows.Window] of the [Session] objects.
+  */
+ Future&lt;List&lt;Device&gt;&gt; getDevices([Filter filter]) {
+   if (_sessions == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;Device&gt;&gt;.oneArg((e) =&gt; listify(e, _createDevice));
+   _sessions.callMethod('getDevices', [jsify(filter), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Reopens a [windows.Window] or [tabs.Tab], with an optional callback to run
+  * when the entry has been restored.
+  * 
+  * [sessionId] The [windows.Window.sessionId], or [tabs.Tab.sessionId] to
+  * restore.
+  * 
+  * Returns:
+  * A [Session] containing the restored [windows.Window] or [tabs.Tab] object.
+  */
+ Future&lt;Session&gt; restore([String sessionId]) {
+   if (_sessions == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Session&gt;.oneArg(_createSession);
+   _sessions.callMethod('restore', [sessionId, completer.callback]);
+   return completer.future;
+ }
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.sessions' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeSessions</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeSessions.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _sessions != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="MAX_SESSION_RESULTS">
+<button class="show-code">Code</button>
+final int         <strong>MAX_SESSION_RESULTS</strong> <a class="anchor-link"
+            href="#MAX_SESSION_RESULTS"
+            title="Permalink to ChromeSessions.MAX_SESSION_RESULTS">#</a>
+        </h4>
+        <div class="doc">
+<p>The maximum number of <a class="crossref" href="../chrome.sessions/Session.html">Session</a> that will be included in a requested list.</p>
+<pre class="source">
+int get MAX_SESSION_RESULTS =&gt; _sessions['MAX_SESSION_RESULTS'];
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="getDevices">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.sessions/Device.html">Device</a>&gt;&gt; <strong>getDevices</strong>([<a href="../chrome.sessions/Filter.html">Filter</a> filter]) <a class="anchor-link" href="#getDevices"
+              title="Permalink to ChromeSessions.getDevices">#</a></h4>
+<div class="doc">
+<p>Retrieves all devices with synced sessions.</p>
+<p>Returns:
+The list of <a class="crossref" href="../chrome.sessions/Device.html">Device</a> objects for each synced session, sorted in order from
+device with most recently modified session to device with least recently
+modified session. <code>tabs.Tab</code> objects are sorted by recency in the
+<code>windows.Window</code> of the <a class="crossref" href="../chrome.sessions/Session.html">Session</a> objects.</p>
+<pre class="source">
+Future&lt;List&lt;Device&gt;&gt; getDevices([Filter filter]) {
+ if (_sessions == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;Device&gt;&gt;.oneArg((e) =&gt; listify(e, _createDevice));
+ _sessions.callMethod('getDevices', [jsify(filter), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getRecentlyClosed">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.sessions/Session.html">Session</a>&gt;&gt; <strong>getRecentlyClosed</strong>([<a href="../chrome.sessions/Filter.html">Filter</a> filter]) <a class="anchor-link" href="#getRecentlyClosed"
+              title="Permalink to ChromeSessions.getRecentlyClosed">#</a></h4>
+<div class="doc">
+<p>Gets the list of recently closed tabs and/or windows.</p>
+<p>Returns:
+The list of closed entries in reverse order that they were closed (the most
+recently closed tab or window will be at index <code>0</code>).The entries may contain
+either tabs or windows.</p>
+<pre class="source">
+Future&lt;List&lt;Session&gt;&gt; getRecentlyClosed([Filter filter]) {
+ if (_sessions == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;Session&gt;&gt;.oneArg((e) =&gt; listify(e, _createSession));
+ _sessions.callMethod('getRecentlyClosed', [jsify(filter), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="restore">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.sessions/Session.html">Session</a>&gt; <strong>restore</strong>([String sessionId]) <a class="anchor-link" href="#restore"
+              title="Permalink to ChromeSessions.restore">#</a></h4>
+<div class="doc">
+<p>Reopens a <code>windows.Window</code> or <code>tabs.Tab</code>, with an optional callback to run
+when the entry has been restored.</p>
+<p>
+<span class="param">sessionId</span> The <code>windows.Window.sessionId</code>, or <code>tabs.Tab.sessionId</code> to
+restore.</p>
+<p>Returns:
+A <a class="crossref" href="../chrome.sessions/Session.html">Session</a> containing the restored <code>windows.Window</code> or <code>tabs.Tab</code> object.</p>
+<pre class="source">
+Future&lt;Session&gt; restore([String sessionId]) {
+ if (_sessions == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Session&gt;.oneArg(_createSession);
+ _sessions.callMethod('restore', [sessionId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

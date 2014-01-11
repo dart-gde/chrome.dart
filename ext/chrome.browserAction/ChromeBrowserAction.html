@@ -1,0 +1,448 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeBrowserAction class / chrome.browserAction Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.browserAction" data-type="ChromeBrowserAction">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.browserAction.html">chrome.browserAction</a> &rsaquo; <a href="../chrome.browserAction/ChromeBrowserAction.html">ChromeBrowserAction</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeBrowserAction</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeBrowserAction extends ChromeApi {
+ static final JsObject _browserAction = chrome['browserAction'];
+
+ ChromeBrowserAction._();
+
+ bool get available =&gt; _browserAction != null;
+
+ /**
+  * Sets the title of the browser action. This shows up in the tooltip.
+  */
+ void setTitle(BrowserActionSetTitleParams details) {
+   if (_browserAction == null) _throwNotAvailable();
+
+   _browserAction.callMethod('setTitle', [jsify(details)]);
+ }
+
+ /**
+  * Gets the title of the browser action.
+  */
+ Future&lt;String&gt; getTitle(BrowserActionGetTitleParams details) {
+   if (_browserAction == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+   _browserAction.callMethod('getTitle', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the icon for the browser action. The icon can be specified either as
+  * the path to an image file or as the pixel data from a canvas element, or as
+  * dictionary of either one of those. Either the &lt;b&gt;path&lt;/b&gt; or the
+  * &lt;b&gt;imageData&lt;/b&gt; property must be specified.
+  */
+ Future setIcon(BrowserActionSetIconParams details) {
+   if (_browserAction == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _browserAction.callMethod('setIcon', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the html document to be opened as a popup when the user clicks on the
+  * browser action's icon.
+  */
+ void setPopup(BrowserActionSetPopupParams details) {
+   if (_browserAction == null) _throwNotAvailable();
+
+   _browserAction.callMethod('setPopup', [jsify(details)]);
+ }
+
+ /**
+  * Gets the html document set as the popup for this browser action.
+  */
+ Future&lt;String&gt; getPopup(BrowserActionGetPopupParams details) {
+   if (_browserAction == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+   _browserAction.callMethod('getPopup', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the badge text for the browser action. The badge is displayed on top
+  * of the icon.
+  */
+ void setBadgeText(BrowserActionSetBadgeTextParams details) {
+   if (_browserAction == null) _throwNotAvailable();
+
+   _browserAction.callMethod('setBadgeText', [jsify(details)]);
+ }
+
+ /**
+  * Gets the badge text of the browser action. If no tab is specified, the
+  * non-tab-specific badge text is returned.
+  */
+ Future&lt;String&gt; getBadgeText(BrowserActionGetBadgeTextParams details) {
+   if (_browserAction == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+   _browserAction.callMethod('getBadgeText', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the background color for the badge.
+  */
+ void setBadgeBackgroundColor(BrowserActionSetBadgeBackgroundColorParams details) {
+   if (_browserAction == null) _throwNotAvailable();
+
+   _browserAction.callMethod('setBadgeBackgroundColor', [jsify(details)]);
+ }
+
+ /**
+  * Gets the background color of the browser action.
+  */
+ Future&lt;ColorArray&gt; getBadgeBackgroundColor(BrowserActionGetBadgeBackgroundColorParams details) {
+   if (_browserAction == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;ColorArray&gt;.oneArg(_createColorArray);
+   _browserAction.callMethod('getBadgeBackgroundColor', [jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Enables the browser action for a tab. By default, browser actions are
+  * enabled.
+  * 
+  * [tabId] The id of the tab for which you want to modify the browser action.
+  */
+ void enable([int tabId]) {
+   if (_browserAction == null) _throwNotAvailable();
+
+   _browserAction.callMethod('enable', [tabId]);
+ }
+
+ /**
+  * Disables the browser action for a tab.
+  * 
+  * [tabId] The id of the tab for which you want to modify the browser action.
+  */
+ void disable([int tabId]) {
+   if (_browserAction == null) _throwNotAvailable();
+
+   _browserAction.callMethod('disable', [tabId]);
+ }
+
+ /**
+  * Opens the extension popup window in the active window but does not grant
+  * tab permissions.
+  * 
+  * Returns:
+  * JavaScript 'window' object for the popup window if it was succesfully
+  * opened.
+  */
+ Future&lt;Map&lt;String, dynamic&gt;&gt; openPopup() {
+   if (_browserAction == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Map&lt;String, dynamic&gt;&gt;.oneArg(mapify);
+   _browserAction.callMethod('openPopup', [completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Fired when a browser action icon is clicked.  This event will not fire if
+  * the browser action has a popup.
+  */
+ Stream&lt;Tab&gt; get onClicked =&gt; _onClicked.stream;
+
+ final ChromeStreamController&lt;Tab&gt; _onClicked =
+     new ChromeStreamController&lt;Tab&gt;.oneArg(_browserAction, 'onClicked', _createTab);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.browserAction' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeBrowserAction</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeBrowserAction.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _browserAction != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onClicked">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt;         <strong>onClicked</strong> <a class="anchor-link"
+            href="#onClicked"
+            title="Permalink to ChromeBrowserAction.onClicked">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a browser action icon is clicked.  This event will not fire if
+the browser action has a popup.</p>
+<pre class="source">
+Stream&lt;Tab&gt; get onClicked =&gt; _onClicked.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="disable">
+<button class="show-code">Code</button>
+void <strong>disable</strong>([int tabId]) <a class="anchor-link" href="#disable"
+              title="Permalink to ChromeBrowserAction.disable">#</a></h4>
+<div class="doc">
+<p>Disables the browser action for a tab.</p>
+<p>
+<span class="param">tabId</span> The id of the tab for which you want to modify the browser action.</p>
+<pre class="source">
+void disable([int tabId]) {
+ if (_browserAction == null) _throwNotAvailable();
+
+ _browserAction.callMethod('disable', [tabId]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="enable">
+<button class="show-code">Code</button>
+void <strong>enable</strong>([int tabId]) <a class="anchor-link" href="#enable"
+              title="Permalink to ChromeBrowserAction.enable">#</a></h4>
+<div class="doc">
+<p>Enables the browser action for a tab. By default, browser actions are
+enabled.</p>
+<p>
+<span class="param">tabId</span> The id of the tab for which you want to modify the browser action.</p>
+<pre class="source">
+void enable([int tabId]) {
+ if (_browserAction == null) _throwNotAvailable();
+
+ _browserAction.callMethod('enable', [tabId]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getBadgeBackgroundColor">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.browserAction/ColorArray.html">ColorArray</a>&gt; <strong>getBadgeBackgroundColor</strong>(<a href="../chrome.browserAction/BrowserActionGetBadgeBackgroundColorParams.html">BrowserActionGetBadgeBackgroundColorParams</a> details) <a class="anchor-link" href="#getBadgeBackgroundColor"
+              title="Permalink to ChromeBrowserAction.getBadgeBackgroundColor">#</a></h4>
+<div class="doc">
+<p>Gets the background color of the browser action.</p>
+<pre class="source">
+Future&lt;ColorArray&gt; getBadgeBackgroundColor(BrowserActionGetBadgeBackgroundColorParams details) {
+ if (_browserAction == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;ColorArray&gt;.oneArg(_createColorArray);
+ _browserAction.callMethod('getBadgeBackgroundColor', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getBadgeText">
+<button class="show-code">Code</button>
+Future&lt;String&gt; <strong>getBadgeText</strong>(<a href="../chrome.browserAction/BrowserActionGetBadgeTextParams.html">BrowserActionGetBadgeTextParams</a> details) <a class="anchor-link" href="#getBadgeText"
+              title="Permalink to ChromeBrowserAction.getBadgeText">#</a></h4>
+<div class="doc">
+<p>Gets the badge text of the browser action. If no tab is specified, the
+non-tab-specific badge text is returned.</p>
+<pre class="source">
+Future&lt;String&gt; getBadgeText(BrowserActionGetBadgeTextParams details) {
+ if (_browserAction == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+ _browserAction.callMethod('getBadgeText', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getPopup">
+<button class="show-code">Code</button>
+Future&lt;String&gt; <strong>getPopup</strong>(<a href="../chrome.browserAction/BrowserActionGetPopupParams.html">BrowserActionGetPopupParams</a> details) <a class="anchor-link" href="#getPopup"
+              title="Permalink to ChromeBrowserAction.getPopup">#</a></h4>
+<div class="doc">
+<p>Gets the html document set as the popup for this browser action.</p>
+<pre class="source">
+Future&lt;String&gt; getPopup(BrowserActionGetPopupParams details) {
+ if (_browserAction == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+ _browserAction.callMethod('getPopup', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getTitle">
+<button class="show-code">Code</button>
+Future&lt;String&gt; <strong>getTitle</strong>(<a href="../chrome.browserAction/BrowserActionGetTitleParams.html">BrowserActionGetTitleParams</a> details) <a class="anchor-link" href="#getTitle"
+              title="Permalink to ChromeBrowserAction.getTitle">#</a></h4>
+<div class="doc">
+<p>Gets the title of the browser action.</p>
+<pre class="source">
+Future&lt;String&gt; getTitle(BrowserActionGetTitleParams details) {
+ if (_browserAction == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+ _browserAction.callMethod('getTitle', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="openPopup">
+<button class="show-code">Code</button>
+Future&lt;Map&lt;String, dynamic&gt;&gt; <strong>openPopup</strong>() <a class="anchor-link" href="#openPopup"
+              title="Permalink to ChromeBrowserAction.openPopup">#</a></h4>
+<div class="doc">
+<p>Opens the extension popup window in the active window but does not grant
+tab permissions.</p>
+<p>Returns:
+JavaScript 'window' object for the popup window if it was succesfully
+opened.</p>
+<pre class="source">
+Future&lt;Map&lt;String, dynamic&gt;&gt; openPopup() {
+ if (_browserAction == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Map&lt;String, dynamic&gt;&gt;.oneArg(mapify);
+ _browserAction.callMethod('openPopup', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setBadgeBackgroundColor">
+<button class="show-code">Code</button>
+void <strong>setBadgeBackgroundColor</strong>(<a href="../chrome.browserAction/BrowserActionSetBadgeBackgroundColorParams.html">BrowserActionSetBadgeBackgroundColorParams</a> details) <a class="anchor-link" href="#setBadgeBackgroundColor"
+              title="Permalink to ChromeBrowserAction.setBadgeBackgroundColor">#</a></h4>
+<div class="doc">
+<p>Sets the background color for the badge.</p>
+<pre class="source">
+void setBadgeBackgroundColor(BrowserActionSetBadgeBackgroundColorParams details) {
+ if (_browserAction == null) _throwNotAvailable();
+
+ _browserAction.callMethod('setBadgeBackgroundColor', [jsify(details)]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setBadgeText">
+<button class="show-code">Code</button>
+void <strong>setBadgeText</strong>(<a href="../chrome.browserAction/BrowserActionSetBadgeTextParams.html">BrowserActionSetBadgeTextParams</a> details) <a class="anchor-link" href="#setBadgeText"
+              title="Permalink to ChromeBrowserAction.setBadgeText">#</a></h4>
+<div class="doc">
+<p>Sets the badge text for the browser action. The badge is displayed on top
+of the icon.</p>
+<pre class="source">
+void setBadgeText(BrowserActionSetBadgeTextParams details) {
+ if (_browserAction == null) _throwNotAvailable();
+
+ _browserAction.callMethod('setBadgeText', [jsify(details)]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setIcon">
+<button class="show-code">Code</button>
+Future <strong>setIcon</strong>(<a href="../chrome.browserAction/BrowserActionSetIconParams.html">BrowserActionSetIconParams</a> details) <a class="anchor-link" href="#setIcon"
+              title="Permalink to ChromeBrowserAction.setIcon">#</a></h4>
+<div class="doc">
+<p>Sets the icon for the browser action. The icon can be specified either as
+the path to an image file or as the pixel data from a canvas element, or as
+dictionary of either one of those. Either the &lt;b>path&lt;/b> or the
+&lt;b>imageData&lt;/b> property must be specified.</p>
+<pre class="source">
+Future setIcon(BrowserActionSetIconParams details) {
+ if (_browserAction == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _browserAction.callMethod('setIcon', [jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setPopup">
+<button class="show-code">Code</button>
+void <strong>setPopup</strong>(<a href="../chrome.browserAction/BrowserActionSetPopupParams.html">BrowserActionSetPopupParams</a> details) <a class="anchor-link" href="#setPopup"
+              title="Permalink to ChromeBrowserAction.setPopup">#</a></h4>
+<div class="doc">
+<p>Sets the html document to be opened as a popup when the user clicks on the
+browser action's icon.</p>
+<pre class="source">
+void setPopup(BrowserActionSetPopupParams details) {
+ if (_browserAction == null) _throwNotAvailable();
+
+ _browserAction.callMethod('setPopup', [jsify(details)]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setTitle">
+<button class="show-code">Code</button>
+void <strong>setTitle</strong>(<a href="../chrome.browserAction/BrowserActionSetTitleParams.html">BrowserActionSetTitleParams</a> details) <a class="anchor-link" href="#setTitle"
+              title="Permalink to ChromeBrowserAction.setTitle">#</a></h4>
+<div class="doc">
+<p>Sets the title of the browser action. This shows up in the tooltip.</p>
+<pre class="source">
+void setTitle(BrowserActionSetTitleParams details) {
+ if (_browserAction == null) _throwNotAvailable();
+
+ _browserAction.callMethod('setTitle', [jsify(details)]);
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

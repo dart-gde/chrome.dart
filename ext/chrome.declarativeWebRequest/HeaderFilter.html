@@ -1,0 +1,321 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>HeaderFilter class / chrome.declarativeWebRequest Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.declarativeWebRequest" data-type="HeaderFilter">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.declarativeWebRequest.html">chrome.declarativeWebRequest</a> &rsaquo; <a href="../chrome.declarativeWebRequest/HeaderFilter.html">HeaderFilter</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>HeaderFilter</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Filters request headers for various criteria. Multiple criteria are evaluated
+as a conjunction.</p>
+<pre class="source">
+class HeaderFilter extends ChromeObject {
+ HeaderFilter({String namePrefix, String nameSuffix, var nameContains, String nameEquals, String valuePrefix, String valueSuffix, var valueContains, String valueEquals}) {
+   if (namePrefix != null) this.namePrefix = namePrefix;
+   if (nameSuffix != null) this.nameSuffix = nameSuffix;
+   if (nameContains != null) this.nameContains = nameContains;
+   if (nameEquals != null) this.nameEquals = nameEquals;
+   if (valuePrefix != null) this.valuePrefix = valuePrefix;
+   if (valueSuffix != null) this.valueSuffix = valueSuffix;
+   if (valueContains != null) this.valueContains = valueContains;
+   if (valueEquals != null) this.valueEquals = valueEquals;
+ }
+ HeaderFilter.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * Matches if the header name starts with the specified string.
+  */
+ String get namePrefix =&gt; jsProxy['namePrefix'];
+ set namePrefix(String value) =&gt; jsProxy['namePrefix'] = value;
+
+ /**
+  * Matches if the header name ends with the specified string.
+  */
+ String get nameSuffix =&gt; jsProxy['nameSuffix'];
+ set nameSuffix(String value) =&gt; jsProxy['nameSuffix'] = value;
+
+ /**
+  * Matches if the header name contains all of the specified strings.
+  */
+ dynamic get nameContains =&gt; jsProxy['nameContains'];
+ set nameContains(var value) =&gt; jsProxy['nameContains'] = jsify(value);
+
+ /**
+  * Matches if the header name is equal to the specified string.
+  */
+ String get nameEquals =&gt; jsProxy['nameEquals'];
+ set nameEquals(String value) =&gt; jsProxy['nameEquals'] = value;
+
+ /**
+  * Matches if the header value starts with the specified string.
+  */
+ String get valuePrefix =&gt; jsProxy['valuePrefix'];
+ set valuePrefix(String value) =&gt; jsProxy['valuePrefix'] = value;
+
+ /**
+  * Matches if the header value ends with the specified string.
+  */
+ String get valueSuffix =&gt; jsProxy['valueSuffix'];
+ set valueSuffix(String value) =&gt; jsProxy['valueSuffix'] = value;
+
+ /**
+  * Matches if the header value contains all of the specified strings.
+  */
+ dynamic get valueContains =&gt; jsProxy['valueContains'];
+ set valueContains(var value) =&gt; jsProxy['valueContains'] = jsify(value);
+
+ /**
+  * Matches if the header value is equal to the specified string.
+  */
+ String get valueEquals =&gt; jsProxy['valueEquals'];
+ set valueEquals(String value) =&gt; jsProxy['valueEquals'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>HeaderFilter</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>HeaderFilter</strong>({String namePrefix, String nameSuffix, nameContains, String nameEquals, String valuePrefix, String valueSuffix, valueContains, String valueEquals}) <a class="anchor-link" href="#"
+              title="Permalink to HeaderFilter.HeaderFilter">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+HeaderFilter({String namePrefix, String nameSuffix, var nameContains, String nameEquals, String valuePrefix, String valueSuffix, var valueContains, String valueEquals}) {
+ if (namePrefix != null) this.namePrefix = namePrefix;
+ if (nameSuffix != null) this.nameSuffix = nameSuffix;
+ if (nameContains != null) this.nameContains = nameContains;
+ if (nameEquals != null) this.nameEquals = nameEquals;
+ if (valuePrefix != null) this.valuePrefix = valuePrefix;
+ if (valueSuffix != null) this.valueSuffix = valueSuffix;
+ if (valueContains != null) this.valueContains = valueContains;
+ if (valueEquals != null) this.valueEquals = valueEquals;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>HeaderFilter.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to HeaderFilter.HeaderFilter.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+HeaderFilter.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to HeaderFilter.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="nameContains">
+<button class="show-code">Code</button>
+var         <strong>nameContains</strong> <a class="anchor-link"
+            href="#nameContains"
+            title="Permalink to HeaderFilter.nameContains">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the header name contains all of the specified strings.</p>
+<pre class="source">
+dynamic get nameContains =&gt; jsProxy['nameContains'];
+</pre>
+<pre class="source">
+set nameContains(var value) =&gt; jsProxy['nameContains'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="nameEquals">
+<button class="show-code">Code</button>
+String         <strong>nameEquals</strong> <a class="anchor-link"
+            href="#nameEquals"
+            title="Permalink to HeaderFilter.nameEquals">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the header name is equal to the specified string.</p>
+<pre class="source">
+String get nameEquals =&gt; jsProxy['nameEquals'];
+</pre>
+<pre class="source">
+set nameEquals(String value) =&gt; jsProxy['nameEquals'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="namePrefix">
+<button class="show-code">Code</button>
+String         <strong>namePrefix</strong> <a class="anchor-link"
+            href="#namePrefix"
+            title="Permalink to HeaderFilter.namePrefix">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the header name starts with the specified string.</p>
+<pre class="source">
+String get namePrefix =&gt; jsProxy['namePrefix'];
+</pre>
+<pre class="source">
+set namePrefix(String value) =&gt; jsProxy['namePrefix'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="nameSuffix">
+<button class="show-code">Code</button>
+String         <strong>nameSuffix</strong> <a class="anchor-link"
+            href="#nameSuffix"
+            title="Permalink to HeaderFilter.nameSuffix">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the header name ends with the specified string.</p>
+<pre class="source">
+String get nameSuffix =&gt; jsProxy['nameSuffix'];
+</pre>
+<pre class="source">
+set nameSuffix(String value) =&gt; jsProxy['nameSuffix'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="valueContains">
+<button class="show-code">Code</button>
+var         <strong>valueContains</strong> <a class="anchor-link"
+            href="#valueContains"
+            title="Permalink to HeaderFilter.valueContains">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the header value contains all of the specified strings.</p>
+<pre class="source">
+dynamic get valueContains =&gt; jsProxy['valueContains'];
+</pre>
+<pre class="source">
+set valueContains(var value) =&gt; jsProxy['valueContains'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="valueEquals">
+<button class="show-code">Code</button>
+String         <strong>valueEquals</strong> <a class="anchor-link"
+            href="#valueEquals"
+            title="Permalink to HeaderFilter.valueEquals">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the header value is equal to the specified string.</p>
+<pre class="source">
+String get valueEquals =&gt; jsProxy['valueEquals'];
+</pre>
+<pre class="source">
+set valueEquals(String value) =&gt; jsProxy['valueEquals'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="valuePrefix">
+<button class="show-code">Code</button>
+String         <strong>valuePrefix</strong> <a class="anchor-link"
+            href="#valuePrefix"
+            title="Permalink to HeaderFilter.valuePrefix">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the header value starts with the specified string.</p>
+<pre class="source">
+String get valuePrefix =&gt; jsProxy['valuePrefix'];
+</pre>
+<pre class="source">
+set valuePrefix(String value) =&gt; jsProxy['valuePrefix'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="valueSuffix">
+<button class="show-code">Code</button>
+String         <strong>valueSuffix</strong> <a class="anchor-link"
+            href="#valueSuffix"
+            title="Permalink to HeaderFilter.valueSuffix">#</a>
+        </h4>
+        <div class="doc">
+<p>Matches if the header value ends with the specified string.</p>
+<pre class="source">
+String get valueSuffix =&gt; jsProxy['valueSuffix'];
+</pre>
+<pre class="source">
+set valueSuffix(String value) =&gt; jsProxy['valueSuffix'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to HeaderFilter.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to HeaderFilter.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

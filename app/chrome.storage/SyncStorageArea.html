@@ -1,0 +1,336 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>SyncStorageArea class / chrome.storage Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.storage" data-type="SyncStorageArea">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.storage.html">chrome.storage</a> &rsaquo; <a href="../chrome.storage/SyncStorageArea.html">SyncStorageArea</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>SyncStorageArea</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class SyncStorageArea extends StorageArea {
+ SyncStorageArea();
+ SyncStorageArea.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * The maximum total amount (in bytes) of data that can be stored in sync
+  * storage, as measured by the JSON stringification of every value plus every
+  * key's length. Updates that would cause this limit to be exceeded fail
+  * immediately and set [runtime.lastError.]
+  */
+ int get QUOTA_BYTES =&gt; jsProxy['QUOTA_BYTES'];
+
+ /**
+  * The maximum size (in bytes) of each individual item in sync storage, as
+  * measured by the JSON stringification of its value plus its key length.
+  * Updates containing items larger than this limit will fail immediately and
+  * set [runtime.lastError.]
+  */
+ int get QUOTA_BYTES_PER_ITEM =&gt; jsProxy['QUOTA_BYTES_PER_ITEM'];
+
+ /**
+  * The maximum number of items that can be stored in sync storage. Updates
+  * that would cause this limit to be exceeded will fail immediately and set
+  * [runtime.lastError.]
+  */
+ int get MAX_ITEMS =&gt; jsProxy['MAX_ITEMS'];
+
+ /**
+  * The maximum number of `set`, `remove`, or `clear` operations that can be
+  * performed each hour. Updates that would cause this limit to be exceeded
+  * fail immediately and set [runtime.lastError.]
+  */
+ int get MAX_WRITE_OPERATIONS_PER_HOUR =&gt; jsProxy['MAX_WRITE_OPERATIONS_PER_HOUR'];
+
+ /**
+  * The maximum number of `set`, `remove`, or `clear` operations that can be
+  * performed each minute, sustained over 10 minutes. Updates that would cause
+  * this limit to be exceeded fail immediately and set [runtime.lastError.]
+  */
+ int get MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE =&gt; jsProxy['MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE'];
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><a href="../chrome.storage/StorageArea.html">StorageArea</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>SyncStorageArea</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>SyncStorageArea</strong>() <a class="anchor-link" href="#"
+              title="Permalink to SyncStorageArea.SyncStorageArea">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+SyncStorageArea();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>SyncStorageArea.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to SyncStorageArea.SyncStorageArea.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+SyncStorageArea.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to SyncStorageArea.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="MAX_ITEMS">
+<button class="show-code">Code</button>
+final int         <strong>MAX_ITEMS</strong> <a class="anchor-link"
+            href="#MAX_ITEMS"
+            title="Permalink to SyncStorageArea.MAX_ITEMS">#</a>
+        </h4>
+        <div class="doc">
+<p>The maximum number of items that can be stored in sync storage. Updates
+that would cause this limit to be exceeded will fail immediately and set
+<code>runtime.lastError.</code></p>
+<pre class="source">
+int get MAX_ITEMS =&gt; jsProxy['MAX_ITEMS'];
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE">
+<button class="show-code">Code</button>
+final int         <strong>MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE</strong> <a class="anchor-link"
+            href="#MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE"
+            title="Permalink to SyncStorageArea.MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE">#</a>
+        </h4>
+        <div class="doc">
+<p>The maximum number of <code>set</code>, <code>remove</code>, or <code>clear</code> operations that can be
+performed each minute, sustained over 10 minutes. Updates that would cause
+this limit to be exceeded fail immediately and set <code>runtime.lastError.</code></p>
+<pre class="source">
+int get MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE =&gt; jsProxy['MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE'];
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="MAX_WRITE_OPERATIONS_PER_HOUR">
+<button class="show-code">Code</button>
+final int         <strong>MAX_WRITE_OPERATIONS_PER_HOUR</strong> <a class="anchor-link"
+            href="#MAX_WRITE_OPERATIONS_PER_HOUR"
+            title="Permalink to SyncStorageArea.MAX_WRITE_OPERATIONS_PER_HOUR">#</a>
+        </h4>
+        <div class="doc">
+<p>The maximum number of <code>set</code>, <code>remove</code>, or <code>clear</code> operations that can be
+performed each hour. Updates that would cause this limit to be exceeded
+fail immediately and set <code>runtime.lastError.</code></p>
+<pre class="source">
+int get MAX_WRITE_OPERATIONS_PER_HOUR =&gt; jsProxy['MAX_WRITE_OPERATIONS_PER_HOUR'];
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="QUOTA_BYTES">
+<button class="show-code">Code</button>
+final int         <strong>QUOTA_BYTES</strong> <a class="anchor-link"
+            href="#QUOTA_BYTES"
+            title="Permalink to SyncStorageArea.QUOTA_BYTES">#</a>
+        </h4>
+        <div class="doc">
+<p>The maximum total amount (in bytes) of data that can be stored in sync
+storage, as measured by the JSON stringification of every value plus every
+key's length. Updates that would cause this limit to be exceeded fail
+immediately and set <code>runtime.lastError.</code></p>
+<pre class="source">
+int get QUOTA_BYTES =&gt; jsProxy['QUOTA_BYTES'];
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="QUOTA_BYTES_PER_ITEM">
+<button class="show-code">Code</button>
+final int         <strong>QUOTA_BYTES_PER_ITEM</strong> <a class="anchor-link"
+            href="#QUOTA_BYTES_PER_ITEM"
+            title="Permalink to SyncStorageArea.QUOTA_BYTES_PER_ITEM">#</a>
+        </h4>
+        <div class="doc">
+<p>The maximum size (in bytes) of each individual item in sync storage, as
+measured by the JSON stringification of its value plus its key length.
+Updates containing items larger than this limit will fail immediately and
+set <code>runtime.lastError.</code></p>
+<pre class="source">
+int get QUOTA_BYTES_PER_ITEM =&gt; jsProxy['QUOTA_BYTES_PER_ITEM'];
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="clear">
+<button class="show-code">Code</button>
+Future <strong>clear</strong>() <a class="anchor-link" href="#clear"
+              title="Permalink to SyncStorageArea.clear">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.storage/StorageArea.html">StorageArea</a> </div><div class="doc">
+<p>Removes all items from storage.</p>
+<pre class="source">
+Future clear() {
+ var completer = new ChromeCompleter.noArgs();
+ jsProxy.callMethod('clear', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="get">
+<button class="show-code">Code</button>
+Future&lt;Map&lt;String, dynamic&gt;&gt; <strong>get</strong>([keys]) <a class="anchor-link" href="#get"
+              title="Permalink to SyncStorageArea.get">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.storage/StorageArea.html">StorageArea</a> </div><div class="doc">
+<p>Gets one or more items from storage.</p>
+<p>
+<span class="param">keys</span> A single key to get, list of keys to get, or a dictionary specifying
+default values (see description of the object).  An empty list or object
+will return an empty result object.  Pass in <code>null</code> to get the entire
+contents of storage.</p>
+<p>Returns:
+Object with items in their key-value mappings.</p>
+<pre class="source">
+Future&lt;Map&lt;String, dynamic&gt;&gt; get([dynamic keys]) {
+ var completer = new ChromeCompleter&lt;Map&lt;String, dynamic&gt;&gt;.oneArg(mapify);
+ jsProxy.callMethod('get', [jsify(keys), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="getBytesInUse">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>getBytesInUse</strong>([keys]) <a class="anchor-link" href="#getBytesInUse"
+              title="Permalink to SyncStorageArea.getBytesInUse">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.storage/StorageArea.html">StorageArea</a> </div><div class="doc">
+<p>Gets the amount of space (in bytes) being used by one or more items.</p>
+<p>
+<span class="param">keys</span> A single key or list of keys to get the total usage for. An empty
+list will return 0. Pass in <code>null</code> to get the total usage of all of
+storage.</p>
+<p>Returns:
+Amount of space being used in storage, in bytes.</p>
+<pre class="source">
+Future&lt;int&gt; getBytesInUse([dynamic keys]) {
+ var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+ jsProxy.callMethod('getBytesInUse', [jsify(keys), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="remove">
+<button class="show-code">Code</button>
+Future <strong>remove</strong>(keys) <a class="anchor-link" href="#remove"
+              title="Permalink to SyncStorageArea.remove">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.storage/StorageArea.html">StorageArea</a> </div><div class="doc">
+<p>Removes one or more items from storage.</p>
+<p>
+<span class="param">keys</span> A single key or a list of keys for items to remove.</p>
+<pre class="source">
+Future remove(dynamic keys) {
+ var completer = new ChromeCompleter.noArgs();
+ jsProxy.callMethod('remove', [jsify(keys), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="set">
+<button class="show-code">Code</button>
+Future <strong>set</strong>(Map&lt;String, dynamic&gt; items) <a class="anchor-link" href="#set"
+              title="Permalink to SyncStorageArea.set">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.storage/StorageArea.html">StorageArea</a> </div><div class="doc">
+<p>Sets multiple items.</p>
+<p>
+<span class="param">items</span> An object which gives each key/value pair to update storage with.
+Any other key/value pairs in storage will not be affected.</p>
+<p>Primitive values such as numbers will serialize as expected. Values with a
+<code>typeof</code> <code>"object"</code> and <code>"function"</code> will typically serialize to <code>{}</code>, with
+the exception of <code>Array</code> (serializes as expected), <code>Date</code>, and <code>Regex</code>
+(serialize using their <code>String</code> representation).</p>
+<pre class="source">
+Future set(Map&lt;String, dynamic&gt; items) {
+ var completer = new ChromeCompleter.noArgs();
+ jsProxy.callMethod('set', [jsify(items), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to SyncStorageArea.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to SyncStorageArea.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

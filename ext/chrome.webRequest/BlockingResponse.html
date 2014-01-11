@@ -1,0 +1,267 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>BlockingResponse class / chrome.webRequest Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.webRequest" data-type="BlockingResponse">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.webRequest.html">chrome.webRequest</a> &rsaquo; <a href="../chrome.webRequest/BlockingResponse.html">BlockingResponse</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>BlockingResponse</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Returns value for event handlers that have the 'blocking' extraInfoSpec
+applied. Allows the event handler to modify network requests.</p>
+<pre class="source">
+class BlockingResponse extends ChromeObject {
+ BlockingResponse({bool cancel, String redirectUrl, HttpHeaders requestHeaders, HttpHeaders responseHeaders, AuthCredentialsWebRequest authCredentials}) {
+   if (cancel != null) this.cancel = cancel;
+   if (redirectUrl != null) this.redirectUrl = redirectUrl;
+   if (requestHeaders != null) this.requestHeaders = requestHeaders;
+   if (responseHeaders != null) this.responseHeaders = responseHeaders;
+   if (authCredentials != null) this.authCredentials = authCredentials;
+ }
+ BlockingResponse.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * If true, the request is cancelled. Used in onBeforeRequest, this prevents
+  * the request from being sent.
+  */
+ bool get cancel =&gt; jsProxy['cancel'];
+ set cancel(bool value) =&gt; jsProxy['cancel'] = value;
+
+ /**
+  * Only used as a response to the onBeforeRequest event. If set, the original
+  * request is prevented from being sent and is instead redirected to the given
+  * URL.
+  */
+ String get redirectUrl =&gt; jsProxy['redirectUrl'];
+ set redirectUrl(String value) =&gt; jsProxy['redirectUrl'] = value;
+
+ /**
+  * Only used as a response to the onBeforeSendHeaders event. If set, the
+  * request is made with these request headers instead.
+  */
+ HttpHeaders get requestHeaders =&gt; _createHttpHeaders(jsProxy['requestHeaders']);
+ set requestHeaders(HttpHeaders value) =&gt; jsProxy['requestHeaders'] = jsify(value);
+
+ /**
+  * Only used as a response to the onHeadersReceived event. If set, the server
+  * is assumed to have responded with these response headers instead. Only
+  * return `responseHeaders` if you really want to modify the headers in order
+  * to limit the number of conflicts (only one extension may modify
+  * `responseHeaders` for each request).
+  */
+ HttpHeaders get responseHeaders =&gt; _createHttpHeaders(jsProxy['responseHeaders']);
+ set responseHeaders(HttpHeaders value) =&gt; jsProxy['responseHeaders'] = jsify(value);
+
+ /**
+  * Only used as a response to the onAuthRequired event. If set, the request is
+  * made using the supplied credentials.
+  */
+ AuthCredentialsWebRequest get authCredentials =&gt; _createAuthCredentialsWebRequest(jsProxy['authCredentials']);
+ set authCredentials(AuthCredentialsWebRequest value) =&gt; jsProxy['authCredentials'] = jsify(value);
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>BlockingResponse</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>BlockingResponse</strong>({bool cancel, String redirectUrl, <a href="../chrome.webRequest/HttpHeaders.html">HttpHeaders</a> requestHeaders, <a href="../chrome.webRequest/HttpHeaders.html">HttpHeaders</a> responseHeaders, <a href="../chrome.webRequest/AuthCredentialsWebRequest.html">AuthCredentialsWebRequest</a> authCredentials}) <a class="anchor-link" href="#"
+              title="Permalink to BlockingResponse.BlockingResponse">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+BlockingResponse({bool cancel, String redirectUrl, HttpHeaders requestHeaders, HttpHeaders responseHeaders, AuthCredentialsWebRequest authCredentials}) {
+ if (cancel != null) this.cancel = cancel;
+ if (redirectUrl != null) this.redirectUrl = redirectUrl;
+ if (requestHeaders != null) this.requestHeaders = requestHeaders;
+ if (responseHeaders != null) this.responseHeaders = responseHeaders;
+ if (authCredentials != null) this.authCredentials = authCredentials;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>BlockingResponse.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to BlockingResponse.BlockingResponse.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+BlockingResponse.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="authCredentials">
+<button class="show-code">Code</button>
+<a href="../chrome.webRequest/AuthCredentialsWebRequest.html">AuthCredentialsWebRequest</a>         <strong>authCredentials</strong> <a class="anchor-link"
+            href="#authCredentials"
+            title="Permalink to BlockingResponse.authCredentials">#</a>
+        </h4>
+        <div class="doc">
+<p>Only used as a response to the onAuthRequired event. If set, the request is
+made using the supplied credentials.</p>
+<pre class="source">
+AuthCredentialsWebRequest get authCredentials =&gt; _createAuthCredentialsWebRequest(jsProxy['authCredentials']);
+</pre>
+<pre class="source">
+set authCredentials(AuthCredentialsWebRequest value) =&gt; jsProxy['authCredentials'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="cancel">
+<button class="show-code">Code</button>
+bool         <strong>cancel</strong> <a class="anchor-link"
+            href="#cancel"
+            title="Permalink to BlockingResponse.cancel">#</a>
+        </h4>
+        <div class="doc">
+<p>If true, the request is cancelled. Used in onBeforeRequest, this prevents
+the request from being sent.</p>
+<pre class="source">
+bool get cancel =&gt; jsProxy['cancel'];
+</pre>
+<pre class="source">
+set cancel(bool value) =&gt; jsProxy['cancel'] = value;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to BlockingResponse.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="redirectUrl">
+<button class="show-code">Code</button>
+String         <strong>redirectUrl</strong> <a class="anchor-link"
+            href="#redirectUrl"
+            title="Permalink to BlockingResponse.redirectUrl">#</a>
+        </h4>
+        <div class="doc">
+<p>Only used as a response to the onBeforeRequest event. If set, the original
+request is prevented from being sent and is instead redirected to the given
+URL.</p>
+<pre class="source">
+String get redirectUrl =&gt; jsProxy['redirectUrl'];
+</pre>
+<pre class="source">
+set redirectUrl(String value) =&gt; jsProxy['redirectUrl'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="requestHeaders">
+<button class="show-code">Code</button>
+<a href="../chrome.webRequest/HttpHeaders.html">HttpHeaders</a>         <strong>requestHeaders</strong> <a class="anchor-link"
+            href="#requestHeaders"
+            title="Permalink to BlockingResponse.requestHeaders">#</a>
+        </h4>
+        <div class="doc">
+<p>Only used as a response to the onBeforeSendHeaders event. If set, the
+request is made with these request headers instead.</p>
+<pre class="source">
+HttpHeaders get requestHeaders =&gt; _createHttpHeaders(jsProxy['requestHeaders']);
+</pre>
+<pre class="source">
+set requestHeaders(HttpHeaders value) =&gt; jsProxy['requestHeaders'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="responseHeaders">
+<button class="show-code">Code</button>
+<a href="../chrome.webRequest/HttpHeaders.html">HttpHeaders</a>         <strong>responseHeaders</strong> <a class="anchor-link"
+            href="#responseHeaders"
+            title="Permalink to BlockingResponse.responseHeaders">#</a>
+        </h4>
+        <div class="doc">
+<p>Only used as a response to the onHeadersReceived event. If set, the server
+is assumed to have responded with these response headers instead. Only
+return <code>responseHeaders</code> if you really want to modify the headers in order
+to limit the number of conflicts (only one extension may modify
+<code>responseHeaders</code> for each request).</p>
+<pre class="source">
+HttpHeaders get responseHeaders =&gt; _createHttpHeaders(jsProxy['responseHeaders']);
+</pre>
+<pre class="source">
+set responseHeaders(HttpHeaders value) =&gt; jsProxy['responseHeaders'] = jsify(value);
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to BlockingResponse.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to BlockingResponse.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

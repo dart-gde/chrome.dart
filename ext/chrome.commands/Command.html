@@ -1,0 +1,199 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Command class / chrome.commands Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.commands" data-type="Command">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.commands.html">chrome.commands</a> &rsaquo; <a href="../chrome.commands/Command.html">Command</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Command</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class Command extends ChromeObject {
+ Command({String name, String description, String shortcut}) {
+   if (name != null) this.name = name;
+   if (description != null) this.description = description;
+   if (shortcut != null) this.shortcut = shortcut;
+ }
+ Command.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * The name of the Extension Command
+  */
+ String get name =&gt; jsProxy['name'];
+ set name(String value) =&gt; jsProxy['name'] = value;
+
+ /**
+  * The Extension Command description
+  */
+ String get description =&gt; jsProxy['description'];
+ set description(String value) =&gt; jsProxy['description'] = value;
+
+ /**
+  * The shortcut active for this command, or blank if not active.
+  */
+ String get shortcut =&gt; jsProxy['shortcut'];
+ set shortcut(String value) =&gt; jsProxy['shortcut'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>Command</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>Command</strong>({String name, String description, String shortcut}) <a class="anchor-link" href="#"
+              title="Permalink to Command.Command">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+Command({String name, String description, String shortcut}) {
+ if (name != null) this.name = name;
+ if (description != null) this.description = description;
+ if (shortcut != null) this.shortcut = shortcut;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>Command.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to Command.Command.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+Command.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="description">
+<button class="show-code">Code</button>
+String         <strong>description</strong> <a class="anchor-link"
+            href="#description"
+            title="Permalink to Command.description">#</a>
+        </h4>
+        <div class="doc">
+<p>The Extension Command description</p>
+<pre class="source">
+String get description =&gt; jsProxy['description'];
+</pre>
+<pre class="source">
+set description(String value) =&gt; jsProxy['description'] = value;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to Command.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="name">
+<button class="show-code">Code</button>
+String         <strong>name</strong> <a class="anchor-link"
+            href="#name"
+            title="Permalink to Command.name">#</a>
+        </h4>
+        <div class="doc">
+<p>The name of the Extension Command</p>
+<pre class="source">
+String get name =&gt; jsProxy['name'];
+</pre>
+<pre class="source">
+set name(String value) =&gt; jsProxy['name'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="shortcut">
+<button class="show-code">Code</button>
+String         <strong>shortcut</strong> <a class="anchor-link"
+            href="#shortcut"
+            title="Permalink to Command.shortcut">#</a>
+        </h4>
+        <div class="doc">
+<p>The shortcut active for this command, or blank if not active.</p>
+<pre class="source">
+String get shortcut =&gt; jsProxy['shortcut'];
+</pre>
+<pre class="source">
+set shortcut(String value) =&gt; jsProxy['shortcut'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to Command.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to Command.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

@@ -1,0 +1,216 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ArrayBuffer class / chrome.src.common_exp Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.src.common_exp" data-type="ArrayBuffer">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.src.common_exp.html">chrome.src.common_exp</a> &rsaquo; <a href="../chrome.src.common_exp/ArrayBuffer.html">ArrayBuffer</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ArrayBuffer</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ArrayBuffer extends ChromeObject {
+ static ArrayBuffer create(JsObject jsProxy) =&gt; new ArrayBuffer.fromProxy(jsProxy);
+
+ ArrayBuffer();
+ ArrayBuffer.fromProxy(/*JsObject*/ jsProxy): super.fromProxy(jsProxy);
+
+ factory ArrayBuffer.fromBytes(List&lt;int&gt; data) {
+   var uint8Array = new JsObject(context['Uint8Array'], [new JsObject.jsify(data)]);
+
+   return new ArrayBuffer.fromProxy(uint8Array['buffer']);
+ }
+
+ factory ArrayBuffer.fromString(String str) {
+   var uint8Array = new JsObject(context['Uint8Array'], [new JsObject.jsify(str.codeUnits)]);
+
+   return new ArrayBuffer.fromProxy(uint8Array['buffer']);
+ }
+
+ List&lt;int&gt; getBytes() {
+   var int8View = new JsObject(context['Uint8Array'], [jsProxy]);
+
+   List&lt;int&gt; result = new List&lt;int&gt;(int8View['length']);
+
+   // TODO: this is _very_ slow
+   // can we instead do: jsArray = Array.apply([], int8View);
+   for (int i = 0; i &lt; result.length; i++) {
+     result[i] = int8View[i];
+   }
+
+   return result;
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ArrayBuffer</strong></span></p>
+<div>
+<h3>Static Methods</h3>
+<div class="method"><h4 id="create">
+<button class="show-code">Code</button>
+<a href="../chrome.src.common_exp/ArrayBuffer.html">ArrayBuffer</a> <strong>create</strong>(JsObject jsProxy) <a class="anchor-link" href="#create"
+              title="Permalink to ArrayBuffer.create">#</a></h4>
+<div class="doc">
+<pre class="source">
+static ArrayBuffer create(JsObject jsProxy) =&gt; new ArrayBuffer.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>ArrayBuffer</strong>() <a class="anchor-link" href="#"
+              title="Permalink to ArrayBuffer.ArrayBuffer">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+ArrayBuffer();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromBytes">
+<button class="show-code">Code</button>
+factory <strong>ArrayBuffer.fromBytes</strong>(List&lt;int&gt; data) <a class="anchor-link" href="#fromBytes"
+              title="Permalink to ArrayBuffer.ArrayBuffer.fromBytes">#</a></h4>
+<div class="doc">
+<pre class="source">
+factory ArrayBuffer.fromBytes(List&lt;int&gt; data) {
+ var uint8Array = new JsObject(context['Uint8Array'], [new JsObject.jsify(data)]);
+
+ return new ArrayBuffer.fromProxy(uint8Array['buffer']);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>ArrayBuffer.fromProxy</strong>(jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to ArrayBuffer.ArrayBuffer.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+ArrayBuffer.fromProxy(/*JsObject*/ jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromString">
+<button class="show-code">Code</button>
+factory <strong>ArrayBuffer.fromString</strong>(String str) <a class="anchor-link" href="#fromString"
+              title="Permalink to ArrayBuffer.ArrayBuffer.fromString">#</a></h4>
+<div class="doc">
+<pre class="source">
+factory ArrayBuffer.fromString(String str) {
+ var uint8Array = new JsObject(context['Uint8Array'], [new JsObject.jsify(str.codeUnits)]);
+
+ return new ArrayBuffer.fromProxy(uint8Array['buffer']);
+}
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to ArrayBuffer.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="getBytes">
+<button class="show-code">Code</button>
+List&lt;int&gt; <strong>getBytes</strong>() <a class="anchor-link" href="#getBytes"
+              title="Permalink to ArrayBuffer.getBytes">#</a></h4>
+<div class="doc">
+<pre class="source">
+List&lt;int&gt; getBytes() {
+ var int8View = new JsObject(context['Uint8Array'], [jsProxy]);
+
+ List&lt;int&gt; result = new List&lt;int&gt;(int8View['length']);
+
+ // TODO: this is _very_ slow
+ // can we instead do: jsArray = Array.apply([], int8View);
+ for (int i = 0; i &lt; result.length; i++) {
+   result[i] = int8View[i];
+ }
+
+ return result;
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to ArrayBuffer.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to ArrayBuffer.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

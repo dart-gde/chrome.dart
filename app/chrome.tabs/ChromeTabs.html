@@ -1,0 +1,1074 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeTabs class / chrome.tabs Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.tabs" data-type="ChromeTabs">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.tabs.html">chrome.tabs</a> &rsaquo; <a href="../chrome.tabs/ChromeTabs.html">ChromeTabs</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeTabs</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeTabs extends ChromeApi {
+ static final JsObject _tabs = chrome['tabs'];
+
+ ChromeTabs._();
+
+ bool get available =&gt; _tabs != null;
+
+ /**
+  * Retrieves details about the specified tab.
+  */
+ Future&lt;Tab&gt; get(int tabId) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+   _tabs.callMethod('get', [tabId, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Gets the tab that this script call is being made from. May be undefined if
+  * called from a non-tab context (for example: a background page or popup
+  * view).
+  */
+ Future&lt;Tab&gt; getCurrent() {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+   _tabs.callMethod('getCurrent', [completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Connects to the content script(s) in the specified tab. The
+  * [runtime.onConnect] event is fired in each content script running in the
+  * specified tab for the current extension. For more details, see [Content
+  * Script Messaging](messaging.html).
+  * 
+  * Returns:
+  * A port that can be used to communicate with the content scripts running in
+  * the specified tab. The port's [runtime.Port] event is fired if the tab
+  * closes or does not exist.
+  */
+ Port connect(int tabId, [TabsConnectParams connectInfo]) {
+   if (_tabs == null) _throwNotAvailable();
+
+   return _createPort(_tabs.callMethod('connect', [tabId, jsify(connectInfo)]));
+ }
+
+ /**
+  * Deprecated: Please use sendMessage.
+  * 
+  * Returns:
+  * The JSON response object sent by the handler of the request. If an error
+  * occurs while connecting to the specified tab, the callback will be called
+  * with no arguments and [runtime.lastError] will be set to the error message.
+  */
+ Future&lt;dynamic&gt; sendRequest(int tabId, dynamic request) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;dynamic&gt;.oneArg();
+   _tabs.callMethod('sendRequest', [tabId, jsify(request), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sends a single message to the content script(s) in the specified tab, with
+  * an optional callback to run when a response is sent back.  The
+  * [runtime.onMessage] event is fired in each content script running in the
+  * specified tab for the current extension.
+  * 
+  * Returns:
+  * The JSON response object sent by the handler of the message. If an error
+  * occurs while connecting to the specified tab, the callback will be called
+  * with no arguments and [runtime.lastError] will be set to the error message.
+  */
+ Future&lt;dynamic&gt; sendMessage(int tabId, dynamic message) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;dynamic&gt;.oneArg();
+   _tabs.callMethod('sendMessage', [tabId, jsify(message), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Deprecated. Please use query({'active': true}). Gets the tab that is
+  * selected in the specified window.
+  * 
+  * [windowId] Defaults to the [current window](windows.html#current-window).
+  */
+ Future&lt;Tab&gt; getSelected([int windowId]) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+   _tabs.callMethod('getSelected', [windowId, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Deprecated. Please use query({'windowId': windowId}). Gets details about
+  * all tabs in the specified window.
+  * 
+  * [windowId] Defaults to the [current window](windows.html#current-window).
+  */
+ Future&lt;List&lt;Tab&gt;&gt; getAllInWindow([int windowId]) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;Tab&gt;&gt;.oneArg((e) =&gt; listify(e, _createTab));
+   _tabs.callMethod('getAllInWindow', [windowId, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Creates a new tab.
+  * 
+  * Returns:
+  * Details about the created tab. Will contain the ID of the new tab.
+  */
+ Future&lt;Tab&gt; create(TabsCreateParams createProperties) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+   _tabs.callMethod('create', [jsify(createProperties), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Duplicates a tab.
+  * 
+  * [tabId] The ID of the tab which is to be duplicated.
+  * 
+  * Returns:
+  * Details about the duplicated tab. The [tabs.Tab] object doesn't contain
+  * `url`, `title` and `favIconUrl` if the `"tabs"` permission has not been
+  * requested.
+  */
+ Future&lt;Tab&gt; duplicate(int tabId) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+   _tabs.callMethod('duplicate', [tabId, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Gets all tabs that have the specified properties, or all tabs if no
+  * properties are specified.
+  */
+ Future&lt;List&lt;Tab&gt;&gt; query(TabsQueryParams queryInfo) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;Tab&gt;&gt;.oneArg((e) =&gt; listify(e, _createTab));
+   _tabs.callMethod('query', [jsify(queryInfo), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Highlights the given tabs.
+  * 
+  * Returns:
+  * Contains details about the window whose tabs were highlighted.
+  */
+ Future&lt;Window&gt; highlight(TabsHighlightParams highlightInfo) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Window&gt;.oneArg(_createWindow);
+   _tabs.callMethod('highlight', [jsify(highlightInfo), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Modifies the properties of a tab. Properties that are not specified in
+  * [updateProperties] are not modified.
+  * 
+  * [tabId] Defaults to the selected tab of the [current
+  * window](windows.html#current-window).
+  * 
+  * Returns:
+  * Details about the updated tab. The [tabs.Tab] object doesn't contain `url`,
+  * `title` and `favIconUrl` if the `"tabs"` permission has not been requested.
+  */
+ Future&lt;Tab&gt; update(TabsUpdateParams updateProperties, [int tabId]) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+   _tabs.callMethod('update', [tabId, jsify(updateProperties), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Moves one or more tabs to a new position within its window, or to a new
+  * window. Note that tabs can only be moved to and from normal (window.type
+  * === "normal") windows.
+  * 
+  * [tabIds] The tab or list of tabs to move.
+  * 
+  * Returns:
+  * Details about the moved tabs.
+  */
+ Future&lt;dynamic&gt; move(dynamic tabIds, TabsMoveParams moveProperties) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;dynamic&gt;.oneArg();
+   _tabs.callMethod('move', [jsify(tabIds), jsify(moveProperties), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Reload a tab.
+  * 
+  * [tabId] The ID of the tab to reload; defaults to the selected tab of the
+  * current window.
+  */
+ Future reload([int tabId, TabsReloadParams reloadProperties]) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _tabs.callMethod('reload', [tabId, jsify(reloadProperties), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Closes one or more tabs.
+  * 
+  * [tabIds] The tab or list of tabs to close.
+  */
+ Future remove(dynamic tabIds) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _tabs.callMethod('remove', [jsify(tabIds), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Detects the primary language of the content in a tab.
+  * 
+  * [tabId] Defaults to the active tab of the [current
+  * window](windows.html#current-window).
+  * 
+  * Returns:
+  * An ISO language code such as `en` or `fr`. For a complete list of languages
+  * supported by this method, see
+  * [kLanguageInfoTable](http://src.chromium.org/viewvc/chrome/trunk/src/third_party/cld/languages/internal/languages.cc).
+  * The 2nd to 4th columns will be checked and the first non-NULL value will be
+  * returned except for Simplified Chinese for which zh-CN will be returned.
+  * For an unknown language, `und` will be returned.
+  */
+ Future&lt;String&gt; detectLanguage([int tabId]) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+   _tabs.callMethod('detectLanguage', [tabId, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Captures the visible area of the currently active tab in the specified
+  * window. You must have [host permission](declare_permissions.html) for the
+  * URL displayed by the tab.
+  * 
+  * [windowId] The target window. Defaults to the [current
+  * window](windows.html#current-window).
+  * 
+  * [options] Set parameters of image capture, such as the format of the
+  * resulting image.
+  * 
+  * Returns:
+  * A data URL which encodes an image of the visible area of the captured tab.
+  * May be assigned to the 'src' property of an HTML Image element for display.
+  */
+ Future&lt;String&gt; captureVisibleTab([int windowId, TabsCaptureVisibleTabParams options]) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+   _tabs.callMethod('captureVisibleTab', [windowId, jsify(options), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Injects JavaScript code into a page. For details, see the [programmatic
+  * injection](content_scripts.html#pi) section of the content scripts doc.
+  * 
+  * [tabId] The ID of the tab in which to run the script; defaults to the
+  * active tab of the current window.
+  * 
+  * [details] Details of the script to run.
+  * 
+  * Returns:
+  * The result of the script in every injected frame.
+  */
+ Future&lt;List&lt;dynamic&gt;&gt; executeScript(InjectDetails details, [int tabId]) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;dynamic&gt;&gt;.oneArg(listify);
+   _tabs.callMethod('executeScript', [tabId, jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Injects CSS into a page. For details, see the [programmatic
+  * injection](content_scripts.html#pi) section of the content scripts doc.
+  * 
+  * [tabId] The ID of the tab in which to insert the CSS; defaults to the
+  * active tab of the current window.
+  * 
+  * [details] Details of the CSS text to insert.
+  */
+ Future insertCSS(InjectDetails details, [int tabId]) {
+   if (_tabs == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _tabs.callMethod('insertCSS', [tabId, jsify(details), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Fired when a tab is created. Note that the tab's URL may not be set at the
+  * time this event fired, but you can listen to onUpdated events to be
+  * notified when a URL is set.
+  */
+ Stream&lt;Tab&gt; get onCreated =&gt; _onCreated.stream;
+
+ final ChromeStreamController&lt;Tab&gt; _onCreated =
+     new ChromeStreamController&lt;Tab&gt;.oneArg(_tabs, 'onCreated', _createTab);
+
+ /**
+  * Fired when a tab is updated.
+  */
+ Stream&lt;OnUpdatedEvent&gt; get onUpdated =&gt; _onUpdated.stream;
+
+ final ChromeStreamController&lt;OnUpdatedEvent&gt; _onUpdated =
+     new ChromeStreamController&lt;OnUpdatedEvent&gt;.threeArgs(_tabs, 'onUpdated', _createOnUpdatedEvent);
+
+ /**
+  * Fired when a tab is moved within a window. Only one move event is fired,
+  * representing the tab the user directly moved. Move events are not fired for
+  * the other tabs that must move in response. This event is not fired when a
+  * tab is moved between windows. For that, see [onDetached.]
+  */
+ Stream&lt;TabsOnMovedEvent&gt; get onMoved =&gt; _onMoved.stream;
+
+ final ChromeStreamController&lt;TabsOnMovedEvent&gt; _onMoved =
+     new ChromeStreamController&lt;TabsOnMovedEvent&gt;.twoArgs(_tabs, 'onMoved', _createOnMovedEvent);
+
+ /**
+  * Deprecated. Please use onActivated.
+  */
+ Stream&lt;OnSelectionChangedEvent&gt; get onSelectionChanged =&gt; _onSelectionChanged.stream;
+
+ final ChromeStreamController&lt;OnSelectionChangedEvent&gt; _onSelectionChanged =
+     new ChromeStreamController&lt;OnSelectionChangedEvent&gt;.twoArgs(_tabs, 'onSelectionChanged', _createOnSelectionChangedEvent);
+
+ /**
+  * Deprecated. Please use onActivated.
+  */
+ Stream&lt;OnActiveChangedEvent&gt; get onActiveChanged =&gt; _onActiveChanged.stream;
+
+ final ChromeStreamController&lt;OnActiveChangedEvent&gt; _onActiveChanged =
+     new ChromeStreamController&lt;OnActiveChangedEvent&gt;.twoArgs(_tabs, 'onActiveChanged', _createOnActiveChangedEvent);
+
+ /**
+  * Fires when the active tab in a window changes. Note that the tab's URL may
+  * not be set at the time this event fired, but you can listen to onUpdated
+  * events to be notified when a URL is set.
+  */
+ Stream&lt;Map&gt; get onActivated =&gt; _onActivated.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onActivated =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_tabs, 'onActivated', mapify);
+
+ /**
+  * Deprecated. Please use onHighlighted.
+  */
+ Stream&lt;Map&gt; get onHighlightChanged =&gt; _onHighlightChanged.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onHighlightChanged =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_tabs, 'onHighlightChanged', mapify);
+
+ /**
+  * Fired when the highlighted or selected tabs in a window changes.
+  */
+ Stream&lt;Map&gt; get onHighlighted =&gt; _onHighlighted.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onHighlighted =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_tabs, 'onHighlighted', mapify);
+
+ /**
+  * Fired when a tab is detached from a window, for example because it is being
+  * moved between windows.
+  */
+ Stream&lt;OnDetachedEvent&gt; get onDetached =&gt; _onDetached.stream;
+
+ final ChromeStreamController&lt;OnDetachedEvent&gt; _onDetached =
+     new ChromeStreamController&lt;OnDetachedEvent&gt;.twoArgs(_tabs, 'onDetached', _createOnDetachedEvent);
+
+ /**
+  * Fired when a tab is attached to a window, for example because it was moved
+  * between windows.
+  */
+ Stream&lt;OnAttachedEvent&gt; get onAttached =&gt; _onAttached.stream;
+
+ final ChromeStreamController&lt;OnAttachedEvent&gt; _onAttached =
+     new ChromeStreamController&lt;OnAttachedEvent&gt;.twoArgs(_tabs, 'onAttached', _createOnAttachedEvent);
+
+ /**
+  * Fired when a tab is closed.
+  */
+ Stream&lt;TabsOnRemovedEvent&gt; get onRemoved =&gt; _onRemoved.stream;
+
+ final ChromeStreamController&lt;TabsOnRemovedEvent&gt; _onRemoved =
+     new ChromeStreamController&lt;TabsOnRemovedEvent&gt;.twoArgs(_tabs, 'onRemoved', _createOnRemovedEvent);
+
+ /**
+  * Fired when a tab is replaced with another tab due to prerendering or
+  * instant.
+  */
+ Stream&lt;OnReplacedEvent&gt; get onReplaced =&gt; _onReplaced.stream;
+
+ final ChromeStreamController&lt;OnReplacedEvent&gt; _onReplaced =
+     new ChromeStreamController&lt;OnReplacedEvent&gt;.twoArgs(_tabs, 'onReplaced', _createOnReplacedEvent);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.tabs' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeTabs</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeTabs.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _tabs != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onActivated">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onActivated</strong> <a class="anchor-link"
+            href="#onActivated"
+            title="Permalink to ChromeTabs.onActivated">#</a>
+        </h4>
+        <div class="doc">
+<p>Fires when the active tab in a window changes. Note that the tab's URL may
+not be set at the time this event fired, but you can listen to onUpdated
+events to be notified when a URL is set.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onActivated =&gt; _onActivated.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onActiveChanged">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.tabs/OnActiveChangedEvent.html">OnActiveChangedEvent</a>&gt;         <strong>onActiveChanged</strong> <a class="anchor-link"
+            href="#onActiveChanged"
+            title="Permalink to ChromeTabs.onActiveChanged">#</a>
+        </h4>
+        <div class="doc">
+<p>Deprecated. Please use onActivated.</p>
+<pre class="source">
+Stream&lt;OnActiveChangedEvent&gt; get onActiveChanged =&gt; _onActiveChanged.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onAttached">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.tabs/OnAttachedEvent.html">OnAttachedEvent</a>&gt;         <strong>onAttached</strong> <a class="anchor-link"
+            href="#onAttached"
+            title="Permalink to ChromeTabs.onAttached">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a tab is attached to a window, for example because it was moved
+between windows.</p>
+<pre class="source">
+Stream&lt;OnAttachedEvent&gt; get onAttached =&gt; _onAttached.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onCreated">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt;         <strong>onCreated</strong> <a class="anchor-link"
+            href="#onCreated"
+            title="Permalink to ChromeTabs.onCreated">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a tab is created. Note that the tab's URL may not be set at the
+time this event fired, but you can listen to onUpdated events to be
+notified when a URL is set.</p>
+<pre class="source">
+Stream&lt;Tab&gt; get onCreated =&gt; _onCreated.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onDetached">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.tabs/OnDetachedEvent.html">OnDetachedEvent</a>&gt;         <strong>onDetached</strong> <a class="anchor-link"
+            href="#onDetached"
+            title="Permalink to ChromeTabs.onDetached">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a tab is detached from a window, for example because it is being
+moved between windows.</p>
+<pre class="source">
+Stream&lt;OnDetachedEvent&gt; get onDetached =&gt; _onDetached.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onHighlightChanged">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onHighlightChanged</strong> <a class="anchor-link"
+            href="#onHighlightChanged"
+            title="Permalink to ChromeTabs.onHighlightChanged">#</a>
+        </h4>
+        <div class="doc">
+<p>Deprecated. Please use onHighlighted.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onHighlightChanged =&gt; _onHighlightChanged.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onHighlighted">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onHighlighted</strong> <a class="anchor-link"
+            href="#onHighlighted"
+            title="Permalink to ChromeTabs.onHighlighted">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when the highlighted or selected tabs in a window changes.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onHighlighted =&gt; _onHighlighted.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onMoved">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.tabs/TabsOnMovedEvent.html">TabsOnMovedEvent</a>&gt;         <strong>onMoved</strong> <a class="anchor-link"
+            href="#onMoved"
+            title="Permalink to ChromeTabs.onMoved">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a tab is moved within a window. Only one move event is fired,
+representing the tab the user directly moved. Move events are not fired for
+the other tabs that must move in response. This event is not fired when a
+tab is moved between windows. For that, see <code>onDetached.</code></p>
+<pre class="source">
+Stream&lt;TabsOnMovedEvent&gt; get onMoved =&gt; _onMoved.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onRemoved">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.tabs/TabsOnRemovedEvent.html">TabsOnRemovedEvent</a>&gt;         <strong>onRemoved</strong> <a class="anchor-link"
+            href="#onRemoved"
+            title="Permalink to ChromeTabs.onRemoved">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a tab is closed.</p>
+<pre class="source">
+Stream&lt;TabsOnRemovedEvent&gt; get onRemoved =&gt; _onRemoved.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onReplaced">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.tabs/OnReplacedEvent.html">OnReplacedEvent</a>&gt;         <strong>onReplaced</strong> <a class="anchor-link"
+            href="#onReplaced"
+            title="Permalink to ChromeTabs.onReplaced">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a tab is replaced with another tab due to prerendering or
+instant.</p>
+<pre class="source">
+Stream&lt;OnReplacedEvent&gt; get onReplaced =&gt; _onReplaced.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onSelectionChanged">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.tabs/OnSelectionChangedEvent.html">OnSelectionChangedEvent</a>&gt;         <strong>onSelectionChanged</strong> <a class="anchor-link"
+            href="#onSelectionChanged"
+            title="Permalink to ChromeTabs.onSelectionChanged">#</a>
+        </h4>
+        <div class="doc">
+<p>Deprecated. Please use onActivated.</p>
+<pre class="source">
+Stream&lt;OnSelectionChangedEvent&gt; get onSelectionChanged =&gt; _onSelectionChanged.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onUpdated">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.tabs/OnUpdatedEvent.html">OnUpdatedEvent</a>&gt;         <strong>onUpdated</strong> <a class="anchor-link"
+            href="#onUpdated"
+            title="Permalink to ChromeTabs.onUpdated">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a tab is updated.</p>
+<pre class="source">
+Stream&lt;OnUpdatedEvent&gt; get onUpdated =&gt; _onUpdated.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="captureVisibleTab">
+<button class="show-code">Code</button>
+Future&lt;String&gt; <strong>captureVisibleTab</strong>([int windowId, <a href="../chrome.tabs/TabsCaptureVisibleTabParams.html">TabsCaptureVisibleTabParams</a> options]) <a class="anchor-link" href="#captureVisibleTab"
+              title="Permalink to ChromeTabs.captureVisibleTab">#</a></h4>
+<div class="doc">
+<p>Captures the visible area of the currently active tab in the specified
+window. You must have <a href="declare_permissions.html">host permission</a> for the
+URL displayed by the tab.</p>
+<p>
+<span class="param">windowId</span> The target window. Defaults to the <a href="windows.html#current-window">current
+window</a>.</p>
+<p>
+<span class="param">options</span> Set parameters of image capture, such as the format of the
+resulting image.</p>
+<p>Returns:
+A data URL which encodes an image of the visible area of the captured tab.
+May be assigned to the 'src' property of an HTML Image element for display.</p>
+<pre class="source">
+Future&lt;String&gt; captureVisibleTab([int windowId, TabsCaptureVisibleTabParams options]) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+ _tabs.callMethod('captureVisibleTab', [windowId, jsify(options), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="connect">
+<button class="show-code">Code</button>
+<a href="../chrome.runtime/Port.html">Port</a> <strong>connect</strong>(int tabId, [<a href="../chrome.tabs/TabsConnectParams.html">TabsConnectParams</a> connectInfo]) <a class="anchor-link" href="#connect"
+              title="Permalink to ChromeTabs.connect">#</a></h4>
+<div class="doc">
+<p>Connects to the content script(s) in the specified tab. The
+<code>runtime.onConnect</code> event is fired in each content script running in the
+specified tab for the current extension. For more details, see <a href="messaging.html">Content
+Script Messaging</a>.</p>
+<p>Returns:
+A port that can be used to communicate with the content scripts running in
+the specified tab. The port's <code>runtime.Port</code> event is fired if the tab
+closes or does not exist.</p>
+<pre class="source">
+Port connect(int tabId, [TabsConnectParams connectInfo]) {
+ if (_tabs == null) _throwNotAvailable();
+
+ return _createPort(_tabs.callMethod('connect', [tabId, jsify(connectInfo)]));
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="create">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt; <strong>create</strong>(<a href="../chrome.tabs/TabsCreateParams.html">TabsCreateParams</a> createProperties) <a class="anchor-link" href="#create"
+              title="Permalink to ChromeTabs.create">#</a></h4>
+<div class="doc">
+<p>Creates a new tab.</p>
+<p>Returns:
+Details about the created tab. Will contain the ID of the new tab.</p>
+<pre class="source">
+Future&lt;Tab&gt; create(TabsCreateParams createProperties) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+ _tabs.callMethod('create', [jsify(createProperties), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="detectLanguage">
+<button class="show-code">Code</button>
+Future&lt;String&gt; <strong>detectLanguage</strong>([int tabId]) <a class="anchor-link" href="#detectLanguage"
+              title="Permalink to ChromeTabs.detectLanguage">#</a></h4>
+<div class="doc">
+<p>Detects the primary language of the content in a tab.</p>
+<p>
+<span class="param">tabId</span> Defaults to the active tab of the <a href="windows.html#current-window">current
+window</a>.</p>
+<p>Returns:
+An ISO language code such as <code>en</code> or <code>fr</code>. For a complete list of languages
+supported by this method, see
+<a href="http://src.chromium.org/viewvc/chrome/trunk/src/third_party/cld/languages/internal/languages.cc">kLanguageInfoTable</a>.
+The 2nd to 4th columns will be checked and the first non-NULL value will be
+returned except for Simplified Chinese for which zh-CN will be returned.
+For an unknown language, <code>und</code> will be returned.</p>
+<pre class="source">
+Future&lt;String&gt; detectLanguage([int tabId]) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;String&gt;.oneArg();
+ _tabs.callMethod('detectLanguage', [tabId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="duplicate">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt; <strong>duplicate</strong>(int tabId) <a class="anchor-link" href="#duplicate"
+              title="Permalink to ChromeTabs.duplicate">#</a></h4>
+<div class="doc">
+<p>Duplicates a tab.</p>
+<p>
+<span class="param">tabId</span> The ID of the tab which is to be duplicated.</p>
+<p>Returns:
+Details about the duplicated tab. The <code>tabs.Tab</code> object doesn't contain
+<code>url</code>, <code>title</code> and <code>favIconUrl</code> if the <code>"tabs"</code> permission has not been
+requested.</p>
+<pre class="source">
+Future&lt;Tab&gt; duplicate(int tabId) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+ _tabs.callMethod('duplicate', [tabId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="executeScript">
+<button class="show-code">Code</button>
+Future&lt;List&lt;dynamic&gt;&gt; <strong>executeScript</strong>(<a href="../chrome.tabs/InjectDetails.html">InjectDetails</a> details, [int tabId]) <a class="anchor-link" href="#executeScript"
+              title="Permalink to ChromeTabs.executeScript">#</a></h4>
+<div class="doc">
+<p>Injects JavaScript code into a page. For details, see the <a href="content_scripts.html#pi">programmatic
+injection</a> section of the content scripts doc.</p>
+<p>
+<span class="param">tabId</span> The ID of the tab in which to run the script; defaults to the
+active tab of the current window.</p>
+<p>
+<span class="param">details</span> Details of the script to run.</p>
+<p>Returns:
+The result of the script in every injected frame.</p>
+<pre class="source">
+Future&lt;List&lt;dynamic&gt;&gt; executeScript(InjectDetails details, [int tabId]) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;dynamic&gt;&gt;.oneArg(listify);
+ _tabs.callMethod('executeScript', [tabId, jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="get">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt; <strong>get</strong>(int tabId) <a class="anchor-link" href="#get"
+              title="Permalink to ChromeTabs.get">#</a></h4>
+<div class="doc">
+<p>Retrieves details about the specified tab.</p>
+<pre class="source">
+Future&lt;Tab&gt; get(int tabId) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+ _tabs.callMethod('get', [tabId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getAllInWindow">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt;&gt; <strong>getAllInWindow</strong>([int windowId]) <a class="anchor-link" href="#getAllInWindow"
+              title="Permalink to ChromeTabs.getAllInWindow">#</a></h4>
+<div class="doc">
+<p>Deprecated. Please use query({'windowId': windowId}). Gets details about
+all tabs in the specified window.</p>
+<p>
+<span class="param">windowId</span> Defaults to the <a href="windows.html#current-window">current window</a>.</p>
+<pre class="source">
+Future&lt;List&lt;Tab&gt;&gt; getAllInWindow([int windowId]) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;Tab&gt;&gt;.oneArg((e) =&gt; listify(e, _createTab));
+ _tabs.callMethod('getAllInWindow', [windowId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getCurrent">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt; <strong>getCurrent</strong>() <a class="anchor-link" href="#getCurrent"
+              title="Permalink to ChromeTabs.getCurrent">#</a></h4>
+<div class="doc">
+<p>Gets the tab that this script call is being made from. May be undefined if
+called from a non-tab context (for example: a background page or popup
+view).</p>
+<pre class="source">
+Future&lt;Tab&gt; getCurrent() {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+ _tabs.callMethod('getCurrent', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getSelected">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt; <strong>getSelected</strong>([int windowId]) <a class="anchor-link" href="#getSelected"
+              title="Permalink to ChromeTabs.getSelected">#</a></h4>
+<div class="doc">
+<p>Deprecated. Please use query({'active': true}). Gets the tab that is
+selected in the specified window.</p>
+<p>
+<span class="param">windowId</span> Defaults to the <a href="windows.html#current-window">current window</a>.</p>
+<pre class="source">
+Future&lt;Tab&gt; getSelected([int windowId]) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+ _tabs.callMethod('getSelected', [windowId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="highlight">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.windows/Window.html">Window</a>&gt; <strong>highlight</strong>(<a href="../chrome.tabs/TabsHighlightParams.html">TabsHighlightParams</a> highlightInfo) <a class="anchor-link" href="#highlight"
+              title="Permalink to ChromeTabs.highlight">#</a></h4>
+<div class="doc">
+<p>Highlights the given tabs.</p>
+<p>Returns:
+Contains details about the window whose tabs were highlighted.</p>
+<pre class="source">
+Future&lt;Window&gt; highlight(TabsHighlightParams highlightInfo) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Window&gt;.oneArg(_createWindow);
+ _tabs.callMethod('highlight', [jsify(highlightInfo), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="insertCSS">
+<button class="show-code">Code</button>
+Future <strong>insertCSS</strong>(<a href="../chrome.tabs/InjectDetails.html">InjectDetails</a> details, [int tabId]) <a class="anchor-link" href="#insertCSS"
+              title="Permalink to ChromeTabs.insertCSS">#</a></h4>
+<div class="doc">
+<p>Injects CSS into a page. For details, see the <a href="content_scripts.html#pi">programmatic
+injection</a> section of the content scripts doc.</p>
+<p>
+<span class="param">tabId</span> The ID of the tab in which to insert the CSS; defaults to the
+active tab of the current window.</p>
+<p>
+<span class="param">details</span> Details of the CSS text to insert.</p>
+<pre class="source">
+Future insertCSS(InjectDetails details, [int tabId]) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _tabs.callMethod('insertCSS', [tabId, jsify(details), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="move">
+<button class="show-code">Code</button>
+Future&lt;dynamic&gt; <strong>move</strong>(tabIds, <a href="../chrome.tabs/TabsMoveParams.html">TabsMoveParams</a> moveProperties) <a class="anchor-link" href="#move"
+              title="Permalink to ChromeTabs.move">#</a></h4>
+<div class="doc">
+<p>Moves one or more tabs to a new position within its window, or to a new
+window. Note that tabs can only be moved to and from normal (window.type
+=== "normal") windows.</p>
+<p>
+<span class="param">tabIds</span> The tab or list of tabs to move.</p>
+<p>Returns:
+Details about the moved tabs.</p>
+<pre class="source">
+Future&lt;dynamic&gt; move(dynamic tabIds, TabsMoveParams moveProperties) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;dynamic&gt;.oneArg();
+ _tabs.callMethod('move', [jsify(tabIds), jsify(moveProperties), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="query">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt;&gt; <strong>query</strong>(<a href="../chrome.tabs/TabsQueryParams.html">TabsQueryParams</a> queryInfo) <a class="anchor-link" href="#query"
+              title="Permalink to ChromeTabs.query">#</a></h4>
+<div class="doc">
+<p>Gets all tabs that have the specified properties, or all tabs if no
+properties are specified.</p>
+<pre class="source">
+Future&lt;List&lt;Tab&gt;&gt; query(TabsQueryParams queryInfo) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;Tab&gt;&gt;.oneArg((e) =&gt; listify(e, _createTab));
+ _tabs.callMethod('query', [jsify(queryInfo), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="reload">
+<button class="show-code">Code</button>
+Future <strong>reload</strong>([int tabId, <a href="../chrome.tabs/TabsReloadParams.html">TabsReloadParams</a> reloadProperties]) <a class="anchor-link" href="#reload"
+              title="Permalink to ChromeTabs.reload">#</a></h4>
+<div class="doc">
+<p>Reload a tab.</p>
+<p>
+<span class="param">tabId</span> The ID of the tab to reload; defaults to the selected tab of the
+current window.</p>
+<pre class="source">
+Future reload([int tabId, TabsReloadParams reloadProperties]) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _tabs.callMethod('reload', [tabId, jsify(reloadProperties), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="remove">
+<button class="show-code">Code</button>
+Future <strong>remove</strong>(tabIds) <a class="anchor-link" href="#remove"
+              title="Permalink to ChromeTabs.remove">#</a></h4>
+<div class="doc">
+<p>Closes one or more tabs.</p>
+<p>
+<span class="param">tabIds</span> The tab or list of tabs to close.</p>
+<pre class="source">
+Future remove(dynamic tabIds) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _tabs.callMethod('remove', [jsify(tabIds), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="sendMessage">
+<button class="show-code">Code</button>
+Future&lt;dynamic&gt; <strong>sendMessage</strong>(int tabId, message) <a class="anchor-link" href="#sendMessage"
+              title="Permalink to ChromeTabs.sendMessage">#</a></h4>
+<div class="doc">
+<p>Sends a single message to the content script(s) in the specified tab, with
+an optional callback to run when a response is sent back.  The
+<code>runtime.onMessage</code> event is fired in each content script running in the
+specified tab for the current extension.</p>
+<p>Returns:
+The JSON response object sent by the handler of the message. If an error
+occurs while connecting to the specified tab, the callback will be called
+with no arguments and <code>runtime.lastError</code> will be set to the error message.</p>
+<pre class="source">
+Future&lt;dynamic&gt; sendMessage(int tabId, dynamic message) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;dynamic&gt;.oneArg();
+ _tabs.callMethod('sendMessage', [tabId, jsify(message), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="sendRequest">
+<button class="show-code">Code</button>
+Future&lt;dynamic&gt; <strong>sendRequest</strong>(int tabId, request) <a class="anchor-link" href="#sendRequest"
+              title="Permalink to ChromeTabs.sendRequest">#</a></h4>
+<div class="doc">
+<p>Deprecated: Please use sendMessage.</p>
+<p>Returns:
+The JSON response object sent by the handler of the request. If an error
+occurs while connecting to the specified tab, the callback will be called
+with no arguments and <code>runtime.lastError</code> will be set to the error message.</p>
+<pre class="source">
+Future&lt;dynamic&gt; sendRequest(int tabId, dynamic request) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;dynamic&gt;.oneArg();
+ _tabs.callMethod('sendRequest', [tabId, jsify(request), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="update">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.tabs/Tab.html">Tab</a>&gt; <strong>update</strong>(<a href="../chrome.tabs/TabsUpdateParams.html">TabsUpdateParams</a> updateProperties, [int tabId]) <a class="anchor-link" href="#update"
+              title="Permalink to ChromeTabs.update">#</a></h4>
+<div class="doc">
+<p>Modifies the properties of a tab. Properties that are not specified in
+
+<span class="param">updateProperties</span> are not modified.</p>
+<p>
+<span class="param">tabId</span> Defaults to the selected tab of the <a href="windows.html#current-window">current
+window</a>.</p>
+<p>Returns:
+Details about the updated tab. The <code>tabs.Tab</code> object doesn't contain <code>url</code>,
+<code>title</code> and <code>favIconUrl</code> if the <code>"tabs"</code> permission has not been requested.</p>
+<pre class="source">
+Future&lt;Tab&gt; update(TabsUpdateParams updateProperties, [int tabId]) {
+ if (_tabs == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Tab&gt;.oneArg(_createTab);
+ _tabs.callMethod('update', [tabId, jsify(updateProperties), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

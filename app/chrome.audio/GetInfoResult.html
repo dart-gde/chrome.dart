@@ -1,0 +1,84 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>GetInfoResult class / chrome.audio Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.audio" data-type="GetInfoResult">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.audio.html">chrome.audio</a> &rsaquo; <a href="../chrome.audio/GetInfoResult.html">GetInfoResult</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>GetInfoResult</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>The return type for <code>getInfo</code>.</p>
+<pre class="source">
+class GetInfoResult {
+ static GetInfoResult _create(outputInfo, inputInfo) {
+   return new GetInfoResult._(listify(outputInfo, _createOutputDeviceInfo), listify(inputInfo, _createInputDeviceInfo));
+ }
+
+ List&lt;OutputDeviceInfo&gt; outputInfo;
+ List&lt;InputDeviceInfo&gt; inputInfo;
+
+ GetInfoResult._(this.outputInfo, this.inputInfo);
+}
+</pre>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="inputInfo">
+<button class="show-code">Code</button>
+List&lt;<a href="../chrome.audio/InputDeviceInfo.html">InputDeviceInfo</a>&gt;         <strong>inputInfo</strong> <a class="anchor-link"
+            href="#inputInfo"
+            title="Permalink to GetInfoResult.inputInfo">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+List&lt;InputDeviceInfo&gt; inputInfo
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="outputInfo">
+<button class="show-code">Code</button>
+List&lt;<a href="../chrome.audio/OutputDeviceInfo.html">OutputDeviceInfo</a>&gt;         <strong>outputInfo</strong> <a class="anchor-link"
+            href="#outputInfo"
+            title="Permalink to GetInfoResult.outputInfo">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+List&lt;OutputDeviceInfo&gt; outputInfo
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

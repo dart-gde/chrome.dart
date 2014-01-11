@@ -1,0 +1,609 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeInputIme class / chrome.input Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.input" data-type="ChromeInputIme">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.input.html">chrome.input</a> &rsaquo; <a href="../chrome.input/ChromeInputIme.html">ChromeInputIme</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeInputIme</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Use the <code>chrome.input.ime</code> API to implement a custom IME for Chrome OS. This
+allows your extension to handle keystrokes, set the composition, and manage
+the candidate window.</p>
+<pre class="source">
+class ChromeInputIme extends ChromeApi {
+ static final JsObject _input_ime = chrome['input']['ime'];
+
+ ChromeInputIme._();
+
+ bool get available =&gt; _input_ime != null;
+
+ /**
+  * Set the current composition. If this extension does not own the active IME,
+  * this fails.
+  */
+ Future&lt;bool&gt; setComposition(InputImeSetCompositionParams parameters) {
+   if (_input_ime == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+   _input_ime.callMethod('setComposition', [jsify(parameters), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Clear the current composition. If this extension does not own the active
+  * IME, this fails.
+  */
+ Future&lt;bool&gt; clearComposition(InputImeClearCompositionParams parameters) {
+   if (_input_ime == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+   _input_ime.callMethod('clearComposition', [jsify(parameters), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Commits the provided text to the current input.
+  */
+ Future&lt;bool&gt; commitText(InputImeCommitTextParams parameters) {
+   if (_input_ime == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+   _input_ime.callMethod('commitText', [jsify(parameters), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the properties of the candidate window. This fails if the extension
+  * doesn’t own the active IME
+  */
+ Future&lt;bool&gt; setCandidateWindowProperties(InputImeSetCandidateWindowPropertiesParams parameters) {
+   if (_input_ime == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+   _input_ime.callMethod('setCandidateWindowProperties', [jsify(parameters), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the current candidate list. This fails if this extension doesn’t own
+  * the active IME
+  */
+ Future&lt;bool&gt; setCandidates(InputImeSetCandidatesParams parameters) {
+   if (_input_ime == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+   _input_ime.callMethod('setCandidates', [jsify(parameters), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Set the position of the cursor in the candidate window. This is a no-op if
+  * this extension does not own the active IME.
+  */
+ Future&lt;bool&gt; setCursorPosition(InputImeSetCursorPositionParams parameters) {
+   if (_input_ime == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+   _input_ime.callMethod('setCursorPosition', [jsify(parameters), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Adds the provided menu items to the language menu when this IME is active.
+  */
+ Future setMenuItems(InputImeSetMenuItemsParams parameters) {
+   if (_input_ime == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _input_ime.callMethod('setMenuItems', [jsify(parameters), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Updates the state of the MenuItems specified
+  */
+ Future updateMenuItems(InputImeUpdateMenuItemsParams parameters) {
+   if (_input_ime == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _input_ime.callMethod('updateMenuItems', [jsify(parameters), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Deletes the text around the caret.
+  */
+ Future deleteSurroundingText(InputImeDeleteSurroundingTextParams parameters) {
+   if (_input_ime == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _input_ime.callMethod('deleteSurroundingText', [jsify(parameters), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Indicates that the key event received by onKeyEvent is handled.  This
+  * should only be called if the onKeyEvent listener is asynchronous.
+  * 
+  * [requestId] Request id of the event that was handled.  This should come
+  * from keyEvent.requestId
+  * 
+  * [response] True if the keystroke was handled, false if not
+  */
+ void keyEventHandled(String requestId, bool response) {
+   if (_input_ime == null) _throwNotAvailable();
+
+   _input_ime.callMethod('keyEventHandled', [requestId, response]);
+ }
+
+ /**
+  * This event is sent when an IME is activated. It signals that the IME will
+  * be receiving onKeyPress events.
+  */
+ Stream&lt;String&gt; get onActivate =&gt; _onActivate.stream;
+
+ final ChromeStreamController&lt;String&gt; _onActivate =
+     new ChromeStreamController&lt;String&gt;.oneArg(_input_ime, 'onActivate', selfConverter);
+
+ /**
+  * This event is sent when an IME is deactivated. It signals that the IME will
+  * no longer be receiving onKeyPress events.
+  */
+ Stream&lt;String&gt; get onDeactivated =&gt; _onDeactivated.stream;
+
+ final ChromeStreamController&lt;String&gt; _onDeactivated =
+     new ChromeStreamController&lt;String&gt;.oneArg(_input_ime, 'onDeactivated', selfConverter);
+
+ /**
+  * This event is sent when focus enters a text box. It is sent to all
+  * extensions that are listening to this event, and enabled by the user.
+  */
+ Stream&lt;InputContext&gt; get onFocus =&gt; _onFocus.stream;
+
+ final ChromeStreamController&lt;InputContext&gt; _onFocus =
+     new ChromeStreamController&lt;InputContext&gt;.oneArg(_input_ime, 'onFocus', _createInputContext);
+
+ /**
+  * This event is sent when focus leaves a text box. It is sent to all
+  * extensions that are listening to this event, and enabled by the user.
+  */
+ Stream&lt;int&gt; get onBlur =&gt; _onBlur.stream;
+
+ final ChromeStreamController&lt;int&gt; _onBlur =
+     new ChromeStreamController&lt;int&gt;.oneArg(_input_ime, 'onBlur', selfConverter);
+
+ /**
+  * This event is sent when the properties of the current InputContext change,
+  * such as the the type. It is sent to all extensions that are listening to
+  * this event, and enabled by the user.
+  */
+ Stream&lt;InputContext&gt; get onInputContextUpdate =&gt; _onInputContextUpdate.stream;
+
+ final ChromeStreamController&lt;InputContext&gt; _onInputContextUpdate =
+     new ChromeStreamController&lt;InputContext&gt;.oneArg(_input_ime, 'onInputContextUpdate', _createInputContext);
+
+ /**
+  * This event is sent if this extension owns the active IME.
+  */
+ Stream&lt;OnKeyEventEvent&gt; get onKeyEvent =&gt; _onKeyEvent.stream;
+
+ final ChromeStreamController&lt;OnKeyEventEvent&gt; _onKeyEvent =
+     new ChromeStreamController&lt;OnKeyEventEvent&gt;.twoArgs(_input_ime, 'onKeyEvent', _createOnKeyEventEvent);
+
+ /**
+  * This event is sent if this extension owns the active IME.
+  */
+ Stream&lt;OnCandidateClickedEvent&gt; get onCandidateClicked =&gt; _onCandidateClicked.stream;
+
+ final ChromeStreamController&lt;OnCandidateClickedEvent&gt; _onCandidateClicked =
+     new ChromeStreamController&lt;OnCandidateClickedEvent&gt;.threeArgs(_input_ime, 'onCandidateClicked', _createOnCandidateClickedEvent);
+
+ /**
+  * Called when the user selects a menu item
+  */
+ Stream&lt;OnMenuItemActivatedEvent&gt; get onMenuItemActivated =&gt; _onMenuItemActivated.stream;
+
+ final ChromeStreamController&lt;OnMenuItemActivatedEvent&gt; _onMenuItemActivated =
+     new ChromeStreamController&lt;OnMenuItemActivatedEvent&gt;.twoArgs(_input_ime, 'onMenuItemActivated', _createOnMenuItemActivatedEvent);
+
+ /**
+  * Called when the editable string around caret is changed or when the caret
+  * position is moved. The text length is limited to 100 characters for each
+  * back and forth direction.
+  */
+ Stream&lt;OnSurroundingTextChangedEvent&gt; get onSurroundingTextChanged =&gt; _onSurroundingTextChanged.stream;
+
+ final ChromeStreamController&lt;OnSurroundingTextChangedEvent&gt; _onSurroundingTextChanged =
+     new ChromeStreamController&lt;OnSurroundingTextChangedEvent&gt;.twoArgs(_input_ime, 'onSurroundingTextChanged', _createOnSurroundingTextChangedEvent);
+
+ /**
+  * This event is sent when chrome terminates ongoing text input session.
+  */
+ Stream&lt;String&gt; get onReset =&gt; _onReset.stream;
+
+ final ChromeStreamController&lt;String&gt; _onReset =
+     new ChromeStreamController&lt;String&gt;.oneArg(_input_ime, 'onReset', selfConverter);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.input.ime' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeInputIme</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeInputIme.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _input_ime != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onActivate">
+<button class="show-code">Code</button>
+final Stream&lt;String&gt;         <strong>onActivate</strong> <a class="anchor-link"
+            href="#onActivate"
+            title="Permalink to ChromeInputIme.onActivate">#</a>
+        </h4>
+        <div class="doc">
+<p>This event is sent when an IME is activated. It signals that the IME will
+be receiving onKeyPress events.</p>
+<pre class="source">
+Stream&lt;String&gt; get onActivate =&gt; _onActivate.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onBlur">
+<button class="show-code">Code</button>
+final Stream&lt;int&gt;         <strong>onBlur</strong> <a class="anchor-link"
+            href="#onBlur"
+            title="Permalink to ChromeInputIme.onBlur">#</a>
+        </h4>
+        <div class="doc">
+<p>This event is sent when focus leaves a text box. It is sent to all
+extensions that are listening to this event, and enabled by the user.</p>
+<pre class="source">
+Stream&lt;int&gt; get onBlur =&gt; _onBlur.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onCandidateClicked">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.input/OnCandidateClickedEvent.html">OnCandidateClickedEvent</a>&gt;         <strong>onCandidateClicked</strong> <a class="anchor-link"
+            href="#onCandidateClicked"
+            title="Permalink to ChromeInputIme.onCandidateClicked">#</a>
+        </h4>
+        <div class="doc">
+<p>This event is sent if this extension owns the active IME.</p>
+<pre class="source">
+Stream&lt;OnCandidateClickedEvent&gt; get onCandidateClicked =&gt; _onCandidateClicked.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onDeactivated">
+<button class="show-code">Code</button>
+final Stream&lt;String&gt;         <strong>onDeactivated</strong> <a class="anchor-link"
+            href="#onDeactivated"
+            title="Permalink to ChromeInputIme.onDeactivated">#</a>
+        </h4>
+        <div class="doc">
+<p>This event is sent when an IME is deactivated. It signals that the IME will
+no longer be receiving onKeyPress events.</p>
+<pre class="source">
+Stream&lt;String&gt; get onDeactivated =&gt; _onDeactivated.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onFocus">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.input/InputContext.html">InputContext</a>&gt;         <strong>onFocus</strong> <a class="anchor-link"
+            href="#onFocus"
+            title="Permalink to ChromeInputIme.onFocus">#</a>
+        </h4>
+        <div class="doc">
+<p>This event is sent when focus enters a text box. It is sent to all
+extensions that are listening to this event, and enabled by the user.</p>
+<pre class="source">
+Stream&lt;InputContext&gt; get onFocus =&gt; _onFocus.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onInputContextUpdate">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.input/InputContext.html">InputContext</a>&gt;         <strong>onInputContextUpdate</strong> <a class="anchor-link"
+            href="#onInputContextUpdate"
+            title="Permalink to ChromeInputIme.onInputContextUpdate">#</a>
+        </h4>
+        <div class="doc">
+<p>This event is sent when the properties of the current InputContext change,
+such as the the type. It is sent to all extensions that are listening to
+this event, and enabled by the user.</p>
+<pre class="source">
+Stream&lt;InputContext&gt; get onInputContextUpdate =&gt; _onInputContextUpdate.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onKeyEvent">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.input/OnKeyEventEvent.html">OnKeyEventEvent</a>&gt;         <strong>onKeyEvent</strong> <a class="anchor-link"
+            href="#onKeyEvent"
+            title="Permalink to ChromeInputIme.onKeyEvent">#</a>
+        </h4>
+        <div class="doc">
+<p>This event is sent if this extension owns the active IME.</p>
+<pre class="source">
+Stream&lt;OnKeyEventEvent&gt; get onKeyEvent =&gt; _onKeyEvent.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onMenuItemActivated">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.input/OnMenuItemActivatedEvent.html">OnMenuItemActivatedEvent</a>&gt;         <strong>onMenuItemActivated</strong> <a class="anchor-link"
+            href="#onMenuItemActivated"
+            title="Permalink to ChromeInputIme.onMenuItemActivated">#</a>
+        </h4>
+        <div class="doc">
+<p>Called when the user selects a menu item</p>
+<pre class="source">
+Stream&lt;OnMenuItemActivatedEvent&gt; get onMenuItemActivated =&gt; _onMenuItemActivated.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onReset">
+<button class="show-code">Code</button>
+final Stream&lt;String&gt;         <strong>onReset</strong> <a class="anchor-link"
+            href="#onReset"
+            title="Permalink to ChromeInputIme.onReset">#</a>
+        </h4>
+        <div class="doc">
+<p>This event is sent when chrome terminates ongoing text input session.</p>
+<pre class="source">
+Stream&lt;String&gt; get onReset =&gt; _onReset.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onSurroundingTextChanged">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.input/OnSurroundingTextChangedEvent.html">OnSurroundingTextChangedEvent</a>&gt;         <strong>onSurroundingTextChanged</strong> <a class="anchor-link"
+            href="#onSurroundingTextChanged"
+            title="Permalink to ChromeInputIme.onSurroundingTextChanged">#</a>
+        </h4>
+        <div class="doc">
+<p>Called when the editable string around caret is changed or when the caret
+position is moved. The text length is limited to 100 characters for each
+back and forth direction.</p>
+<pre class="source">
+Stream&lt;OnSurroundingTextChangedEvent&gt; get onSurroundingTextChanged =&gt; _onSurroundingTextChanged.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="clearComposition">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>clearComposition</strong>(<a href="../chrome.input/InputImeClearCompositionParams.html">InputImeClearCompositionParams</a> parameters) <a class="anchor-link" href="#clearComposition"
+              title="Permalink to ChromeInputIme.clearComposition">#</a></h4>
+<div class="doc">
+<p>Clear the current composition. If this extension does not own the active
+IME, this fails.</p>
+<pre class="source">
+Future&lt;bool&gt; clearComposition(InputImeClearCompositionParams parameters) {
+ if (_input_ime == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+ _input_ime.callMethod('clearComposition', [jsify(parameters), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="commitText">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>commitText</strong>(<a href="../chrome.input/InputImeCommitTextParams.html">InputImeCommitTextParams</a> parameters) <a class="anchor-link" href="#commitText"
+              title="Permalink to ChromeInputIme.commitText">#</a></h4>
+<div class="doc">
+<p>Commits the provided text to the current input.</p>
+<pre class="source">
+Future&lt;bool&gt; commitText(InputImeCommitTextParams parameters) {
+ if (_input_ime == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+ _input_ime.callMethod('commitText', [jsify(parameters), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="deleteSurroundingText">
+<button class="show-code">Code</button>
+Future <strong>deleteSurroundingText</strong>(<a href="../chrome.input/InputImeDeleteSurroundingTextParams.html">InputImeDeleteSurroundingTextParams</a> parameters) <a class="anchor-link" href="#deleteSurroundingText"
+              title="Permalink to ChromeInputIme.deleteSurroundingText">#</a></h4>
+<div class="doc">
+<p>Deletes the text around the caret.</p>
+<pre class="source">
+Future deleteSurroundingText(InputImeDeleteSurroundingTextParams parameters) {
+ if (_input_ime == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _input_ime.callMethod('deleteSurroundingText', [jsify(parameters), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="keyEventHandled">
+<button class="show-code">Code</button>
+void <strong>keyEventHandled</strong>(String requestId, bool response) <a class="anchor-link" href="#keyEventHandled"
+              title="Permalink to ChromeInputIme.keyEventHandled">#</a></h4>
+<div class="doc">
+<p>Indicates that the key event received by onKeyEvent is handled.  This
+should only be called if the onKeyEvent listener is asynchronous.</p>
+<p>
+<span class="param">requestId</span> Request id of the event that was handled.  This should come
+from keyEvent.requestId</p>
+<p>
+<span class="param">response</span> True if the keystroke was handled, false if not</p>
+<pre class="source">
+void keyEventHandled(String requestId, bool response) {
+ if (_input_ime == null) _throwNotAvailable();
+
+ _input_ime.callMethod('keyEventHandled', [requestId, response]);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setCandidates">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>setCandidates</strong>(<a href="../chrome.input/InputImeSetCandidatesParams.html">InputImeSetCandidatesParams</a> parameters) <a class="anchor-link" href="#setCandidates"
+              title="Permalink to ChromeInputIme.setCandidates">#</a></h4>
+<div class="doc">
+<p>Sets the current candidate list. This fails if this extension doesn’t own
+the active IME</p>
+<pre class="source">
+Future&lt;bool&gt; setCandidates(InputImeSetCandidatesParams parameters) {
+ if (_input_ime == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+ _input_ime.callMethod('setCandidates', [jsify(parameters), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setCandidateWindowProperties">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>setCandidateWindowProperties</strong>(<a href="../chrome.input/InputImeSetCandidateWindowPropertiesParams.html">InputImeSetCandidateWindowPropertiesParams</a> parameters) <a class="anchor-link" href="#setCandidateWindowProperties"
+              title="Permalink to ChromeInputIme.setCandidateWindowProperties">#</a></h4>
+<div class="doc">
+<p>Sets the properties of the candidate window. This fails if the extension
+doesn’t own the active IME</p>
+<pre class="source">
+Future&lt;bool&gt; setCandidateWindowProperties(InputImeSetCandidateWindowPropertiesParams parameters) {
+ if (_input_ime == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+ _input_ime.callMethod('setCandidateWindowProperties', [jsify(parameters), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setComposition">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>setComposition</strong>(<a href="../chrome.input/InputImeSetCompositionParams.html">InputImeSetCompositionParams</a> parameters) <a class="anchor-link" href="#setComposition"
+              title="Permalink to ChromeInputIme.setComposition">#</a></h4>
+<div class="doc">
+<p>Set the current composition. If this extension does not own the active IME,
+this fails.</p>
+<pre class="source">
+Future&lt;bool&gt; setComposition(InputImeSetCompositionParams parameters) {
+ if (_input_ime == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+ _input_ime.callMethod('setComposition', [jsify(parameters), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setCursorPosition">
+<button class="show-code">Code</button>
+Future&lt;bool&gt; <strong>setCursorPosition</strong>(<a href="../chrome.input/InputImeSetCursorPositionParams.html">InputImeSetCursorPositionParams</a> parameters) <a class="anchor-link" href="#setCursorPosition"
+              title="Permalink to ChromeInputIme.setCursorPosition">#</a></h4>
+<div class="doc">
+<p>Set the position of the cursor in the candidate window. This is a no-op if
+this extension does not own the active IME.</p>
+<pre class="source">
+Future&lt;bool&gt; setCursorPosition(InputImeSetCursorPositionParams parameters) {
+ if (_input_ime == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;bool&gt;.oneArg();
+ _input_ime.callMethod('setCursorPosition', [jsify(parameters), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setMenuItems">
+<button class="show-code">Code</button>
+Future <strong>setMenuItems</strong>(<a href="../chrome.input/InputImeSetMenuItemsParams.html">InputImeSetMenuItemsParams</a> parameters) <a class="anchor-link" href="#setMenuItems"
+              title="Permalink to ChromeInputIme.setMenuItems">#</a></h4>
+<div class="doc">
+<p>Adds the provided menu items to the language menu when this IME is active.</p>
+<pre class="source">
+Future setMenuItems(InputImeSetMenuItemsParams parameters) {
+ if (_input_ime == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _input_ime.callMethod('setMenuItems', [jsify(parameters), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="updateMenuItems">
+<button class="show-code">Code</button>
+Future <strong>updateMenuItems</strong>(<a href="../chrome.input/InputImeUpdateMenuItemsParams.html">InputImeUpdateMenuItemsParams</a> parameters) <a class="anchor-link" href="#updateMenuItems"
+              title="Permalink to ChromeInputIme.updateMenuItems">#</a></h4>
+<div class="doc">
+<p>Updates the state of the MenuItems specified</p>
+<pre class="source">
+Future updateMenuItems(InputImeUpdateMenuItemsParams parameters) {
+ if (_input_ime == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _input_ime.callMethod('updateMenuItems', [jsify(parameters), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

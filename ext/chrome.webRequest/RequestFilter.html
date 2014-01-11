@@ -1,0 +1,220 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>RequestFilter class / chrome.webRequest Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.webRequest" data-type="RequestFilter">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.webRequest.html">chrome.webRequest</a> &rsaquo; <a href="../chrome.webRequest/RequestFilter.html">RequestFilter</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>RequestFilter</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>An object describing filters to apply to webRequest events.</p>
+<pre class="source">
+class RequestFilter extends ChromeObject {
+ RequestFilter({List&lt;String&gt; urls, List&lt;String&gt; types, int tabId, int windowId}) {
+   if (urls != null) this.urls = urls;
+   if (types != null) this.types = types;
+   if (tabId != null) this.tabId = tabId;
+   if (windowId != null) this.windowId = windowId;
+ }
+ RequestFilter.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * A list of URLs or URL patterns. Requests that cannot match any of the URLs
+  * will be filtered out.
+  */
+ List&lt;String&gt; get urls =&gt; listify(jsProxy['urls']);
+ set urls(List&lt;String&gt; value) =&gt; jsProxy['urls'] = jsify(value);
+
+ /**
+  * A list of request types. Requests that cannot match any of the types will
+  * be filtered out.
+  */
+ List&lt;String&gt; get types =&gt; listify(jsProxy['types']);
+ set types(List&lt;String&gt; value) =&gt; jsProxy['types'] = jsify(value);
+
+ int get tabId =&gt; jsProxy['tabId'];
+ set tabId(int value) =&gt; jsProxy['tabId'] = value;
+
+ int get windowId =&gt; jsProxy['windowId'];
+ set windowId(int value) =&gt; jsProxy['windowId'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>RequestFilter</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>RequestFilter</strong>({List&lt;String&gt; urls, List&lt;String&gt; types, int tabId, int windowId}) <a class="anchor-link" href="#"
+              title="Permalink to RequestFilter.RequestFilter">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+RequestFilter({List&lt;String&gt; urls, List&lt;String&gt; types, int tabId, int windowId}) {
+ if (urls != null) this.urls = urls;
+ if (types != null) this.types = types;
+ if (tabId != null) this.tabId = tabId;
+ if (windowId != null) this.windowId = windowId;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>RequestFilter.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to RequestFilter.RequestFilter.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+RequestFilter.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to RequestFilter.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="tabId">
+<button class="show-code">Code</button>
+int         <strong>tabId</strong> <a class="anchor-link"
+            href="#tabId"
+            title="Permalink to RequestFilter.tabId">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+int get tabId =&gt; jsProxy['tabId'];
+</pre>
+<pre class="source">
+set tabId(int value) =&gt; jsProxy['tabId'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="types">
+<button class="show-code">Code</button>
+List&lt;String&gt;         <strong>types</strong> <a class="anchor-link"
+            href="#types"
+            title="Permalink to RequestFilter.types">#</a>
+        </h4>
+        <div class="doc">
+<p>A list of request types. Requests that cannot match any of the types will
+be filtered out.</p>
+<pre class="source">
+List&lt;String&gt; get types =&gt; listify(jsProxy['types']);
+</pre>
+<pre class="source">
+set types(List&lt;String&gt; value) =&gt; jsProxy['types'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="urls">
+<button class="show-code">Code</button>
+List&lt;String&gt;         <strong>urls</strong> <a class="anchor-link"
+            href="#urls"
+            title="Permalink to RequestFilter.urls">#</a>
+        </h4>
+        <div class="doc">
+<p>A list of URLs or URL patterns. Requests that cannot match any of the URLs
+will be filtered out.</p>
+<pre class="source">
+List&lt;String&gt; get urls =&gt; listify(jsProxy['urls']);
+</pre>
+<pre class="source">
+set urls(List&lt;String&gt; value) =&gt; jsProxy['urls'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="windowId">
+<button class="show-code">Code</button>
+int         <strong>windowId</strong> <a class="anchor-link"
+            href="#windowId"
+            title="Permalink to RequestFilter.windowId">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+int get windowId =&gt; jsProxy['windowId'];
+</pre>
+<pre class="source">
+set windowId(int value) =&gt; jsProxy['windowId'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to RequestFilter.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to RequestFilter.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

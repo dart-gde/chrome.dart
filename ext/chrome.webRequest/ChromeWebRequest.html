@@ -1,0 +1,345 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeWebRequest class / chrome.webRequest Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.webRequest" data-type="ChromeWebRequest">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.webRequest.html">chrome.webRequest</a> &rsaquo; <a href="../chrome.webRequest/ChromeWebRequest.html">ChromeWebRequest</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeWebRequest</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class ChromeWebRequest extends ChromeApi {
+ static final JsObject _webRequest = chrome['webRequest'];
+
+ ChromeWebRequest._();
+
+ bool get available =&gt; _webRequest != null;
+
+ /**
+  * The maximum number of times that `handlerBehaviorChanged` can be called per
+  * 10 minute sustained interval. `handlerBehaviorChanged` is an expensive
+  * function call that shouldn't be called often.
+  */
+ int get MAX_HANDLER_BEHAVIOR_CHANGED_CALLS_PER_10_MINUTES =&gt; _webRequest['MAX_HANDLER_BEHAVIOR_CHANGED_CALLS_PER_10_MINUTES'];
+
+ /**
+  * Needs to be called when the behavior of the webRequest handlers has changed
+  * to prevent incorrect handling due to caching. This function call is
+  * expensive. Don't call it often.
+  */
+ Future handlerBehaviorChanged() {
+   if (_webRequest == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _webRequest.callMethod('handlerBehaviorChanged', [completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Fired when a request is about to occur.
+  */
+ Stream&lt;Map&gt; get onBeforeRequest =&gt; _onBeforeRequest.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onBeforeRequest =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_webRequest, 'onBeforeRequest', mapify);
+
+ /**
+  * Fired before sending an HTTP request, once the request headers are
+  * available. This may occur after a TCP connection is made to the server, but
+  * before any HTTP data is sent.
+  */
+ Stream&lt;Map&gt; get onBeforeSendHeaders =&gt; _onBeforeSendHeaders.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onBeforeSendHeaders =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_webRequest, 'onBeforeSendHeaders', mapify);
+
+ /**
+  * Fired just before a request is going to be sent to the server
+  * (modifications of previous onBeforeSendHeaders callbacks are visible by the
+  * time onSendHeaders is fired).
+  */
+ Stream&lt;Map&gt; get onSendHeaders =&gt; _onSendHeaders.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onSendHeaders =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_webRequest, 'onSendHeaders', mapify);
+
+ /**
+  * Fired when HTTP response headers of a request have been received.
+  */
+ Stream&lt;Map&gt; get onHeadersReceived =&gt; _onHeadersReceived.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onHeadersReceived =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_webRequest, 'onHeadersReceived', mapify);
+
+ /**
+  * Fired when an authentication failure is received. The listener has three
+  * options: it can provide authentication credentials, it can cancel the
+  * request and display the error page, or it can take no action on the
+  * challenge. If bad user credentials are provided, this may be called
+  * multiple times for the same request.
+  */
+ Stream&lt;OnAuthRequiredEvent&gt; get onAuthRequired =&gt; _onAuthRequired.stream;
+
+ final ChromeStreamController&lt;OnAuthRequiredEvent&gt; _onAuthRequired =
+     new ChromeStreamController&lt;OnAuthRequiredEvent&gt;.twoArgs(_webRequest, 'onAuthRequired', _createOnAuthRequiredEvent);
+
+ /**
+  * Fired when the first byte of the response body is received. For HTTP
+  * requests, this means that the status line and response headers are
+  * available.
+  */
+ Stream&lt;Map&gt; get onResponseStarted =&gt; _onResponseStarted.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onResponseStarted =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_webRequest, 'onResponseStarted', mapify);
+
+ /**
+  * Fired when a server-initiated redirect is about to occur.
+  */
+ Stream&lt;Map&gt; get onBeforeRedirect =&gt; _onBeforeRedirect.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onBeforeRedirect =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_webRequest, 'onBeforeRedirect', mapify);
+
+ /**
+  * Fired when a request is completed.
+  */
+ Stream&lt;Map&gt; get onCompleted =&gt; _onCompleted.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onCompleted =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_webRequest, 'onCompleted', mapify);
+
+ /**
+  * Fired when an error occurs.
+  */
+ Stream&lt;Map&gt; get onErrorOccurred =&gt; _onErrorOccurred.stream;
+
+ final ChromeStreamController&lt;Map&gt; _onErrorOccurred =
+     new ChromeStreamController&lt;Map&gt;.oneArg(_webRequest, 'onErrorOccurred', mapify);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.webRequest' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeWebRequest</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeWebRequest.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _webRequest != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="MAX_HANDLER_BEHAVIOR_CHANGED_CALLS_PER_10_MINUTES">
+<button class="show-code">Code</button>
+final int         <strong>MAX_HANDLER_BEHAVIOR_CHANGED_CALLS_PER_10_MINUTES</strong> <a class="anchor-link"
+            href="#MAX_HANDLER_BEHAVIOR_CHANGED_CALLS_PER_10_MINUTES"
+            title="Permalink to ChromeWebRequest.MAX_HANDLER_BEHAVIOR_CHANGED_CALLS_PER_10_MINUTES">#</a>
+        </h4>
+        <div class="doc">
+<p>The maximum number of times that <code>handlerBehaviorChanged</code> can be called per
+10 minute sustained interval. <code>handlerBehaviorChanged</code> is an expensive
+function call that shouldn't be called often.</p>
+<pre class="source">
+int get MAX_HANDLER_BEHAVIOR_CHANGED_CALLS_PER_10_MINUTES =&gt; _webRequest['MAX_HANDLER_BEHAVIOR_CHANGED_CALLS_PER_10_MINUTES'];
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onAuthRequired">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.webRequest/OnAuthRequiredEvent.html">OnAuthRequiredEvent</a>&gt;         <strong>onAuthRequired</strong> <a class="anchor-link"
+            href="#onAuthRequired"
+            title="Permalink to ChromeWebRequest.onAuthRequired">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when an authentication failure is received. The listener has three
+options: it can provide authentication credentials, it can cancel the
+request and display the error page, or it can take no action on the
+challenge. If bad user credentials are provided, this may be called
+multiple times for the same request.</p>
+<pre class="source">
+Stream&lt;OnAuthRequiredEvent&gt; get onAuthRequired =&gt; _onAuthRequired.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onBeforeRedirect">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onBeforeRedirect</strong> <a class="anchor-link"
+            href="#onBeforeRedirect"
+            title="Permalink to ChromeWebRequest.onBeforeRedirect">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a server-initiated redirect is about to occur.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onBeforeRedirect =&gt; _onBeforeRedirect.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onBeforeRequest">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onBeforeRequest</strong> <a class="anchor-link"
+            href="#onBeforeRequest"
+            title="Permalink to ChromeWebRequest.onBeforeRequest">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a request is about to occur.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onBeforeRequest =&gt; _onBeforeRequest.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onBeforeSendHeaders">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onBeforeSendHeaders</strong> <a class="anchor-link"
+            href="#onBeforeSendHeaders"
+            title="Permalink to ChromeWebRequest.onBeforeSendHeaders">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired before sending an HTTP request, once the request headers are
+available. This may occur after a TCP connection is made to the server, but
+before any HTTP data is sent.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onBeforeSendHeaders =&gt; _onBeforeSendHeaders.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onCompleted">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onCompleted</strong> <a class="anchor-link"
+            href="#onCompleted"
+            title="Permalink to ChromeWebRequest.onCompleted">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when a request is completed.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onCompleted =&gt; _onCompleted.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onErrorOccurred">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onErrorOccurred</strong> <a class="anchor-link"
+            href="#onErrorOccurred"
+            title="Permalink to ChromeWebRequest.onErrorOccurred">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when an error occurs.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onErrorOccurred =&gt; _onErrorOccurred.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onHeadersReceived">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onHeadersReceived</strong> <a class="anchor-link"
+            href="#onHeadersReceived"
+            title="Permalink to ChromeWebRequest.onHeadersReceived">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when HTTP response headers of a request have been received.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onHeadersReceived =&gt; _onHeadersReceived.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onResponseStarted">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onResponseStarted</strong> <a class="anchor-link"
+            href="#onResponseStarted"
+            title="Permalink to ChromeWebRequest.onResponseStarted">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired when the first byte of the response body is received. For HTTP
+requests, this means that the status line and response headers are
+available.</p>
+<pre class="source">
+Stream&lt;Map&gt; get onResponseStarted =&gt; _onResponseStarted.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onSendHeaders">
+<button class="show-code">Code</button>
+final Stream&lt;Map&gt;         <strong>onSendHeaders</strong> <a class="anchor-link"
+            href="#onSendHeaders"
+            title="Permalink to ChromeWebRequest.onSendHeaders">#</a>
+        </h4>
+        <div class="doc">
+<p>Fired just before a request is going to be sent to the server
+(modifications of previous onBeforeSendHeaders callbacks are visible by the
+time onSendHeaders is fired).</p>
+<pre class="source">
+Stream&lt;Map&gt; get onSendHeaders =&gt; _onSendHeaders.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="handlerBehaviorChanged">
+<button class="show-code">Code</button>
+Future <strong>handlerBehaviorChanged</strong>() <a class="anchor-link" href="#handlerBehaviorChanged"
+              title="Permalink to ChromeWebRequest.handlerBehaviorChanged">#</a></h4>
+<div class="doc">
+<p>Needs to be called when the behavior of the webRequest handlers has changed
+to prevent incorrect handling due to caching. This function call is
+expensive. Don't call it often.</p>
+<pre class="source">
+Future handlerBehaviorChanged() {
+ if (_webRequest == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _webRequest.callMethod('handlerBehaviorChanged', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

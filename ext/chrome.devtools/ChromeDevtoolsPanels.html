@@ -1,0 +1,191 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeDevtoolsPanels class / chrome.devtools Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.devtools" data-type="ChromeDevtoolsPanels">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.devtools.html">chrome.devtools</a> &rsaquo; <a href="../chrome.devtools/ChromeDevtoolsPanels.html">ChromeDevtoolsPanels</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeDevtoolsPanels</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Use the <code>chrome.devtools.panels</code> API to integrate your extension into
+Developer Tools window UI: create your own panels, access existing panels,
+and add sidebars.</p>
+<pre class="source">
+class ChromeDevtoolsPanels extends ChromeApi {
+ static final JsObject _devtools_panels = chrome['devtools']['panels'];
+
+ ChromeDevtoolsPanels._();
+
+ bool get available =&gt; _devtools_panels != null;
+
+ /**
+  * Elements panel.
+  */
+ ElementsPanel get elements =&gt; _createElementsPanel(_devtools_panels['elements']);
+
+ /**
+  * Creates an extension panel.
+  * 
+  * [title] Title that is displayed next to the extension icon in the Developer
+  * Tools toolbar.
+  * 
+  * [iconPath] Path of the panel's icon relative to the extension directory.
+  * 
+  * [pagePath] Path of the panel's HTML page relative to the extension
+  * directory.
+  * 
+  * Returns:
+  * An ExtensionPanel object representing the created panel.
+  */
+ Future&lt;ExtensionPanel&gt; create(String title, String iconPath, String pagePath) {
+   if (_devtools_panels == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;ExtensionPanel&gt;.oneArg(_createExtensionPanel);
+   _devtools_panels.callMethod('create', [title, iconPath, pagePath, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Specifies the function to be called when the user clicks a resource link in
+  * the Developer Tools window. To unset the handler, either call the method
+  * with no parameters or pass null as the parameter.
+  * 
+  * Returns:
+  * A [devtools.inspectedWindow.Resource] object for the resource that was
+  * clicked.
+  */
+ Future&lt;Resource&gt; setOpenResourceHandler() {
+   if (_devtools_panels == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;Resource&gt;.oneArg(_createResource);
+   _devtools_panels.callMethod('setOpenResourceHandler', [completer.callback]);
+   return completer.future;
+ }
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.devtools.panels' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeDevtoolsPanels</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeDevtoolsPanels.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _devtools_panels != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="elements">
+<button class="show-code">Code</button>
+final <a href="../chrome.devtools/ElementsPanel.html">ElementsPanel</a>         <strong>elements</strong> <a class="anchor-link"
+            href="#elements"
+            title="Permalink to ChromeDevtoolsPanels.elements">#</a>
+        </h4>
+        <div class="doc">
+<p>Elements panel.</p>
+<pre class="source">
+ElementsPanel get elements =&gt; _createElementsPanel(_devtools_panels['elements']);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="create">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.devtools/ExtensionPanel.html">ExtensionPanel</a>&gt; <strong>create</strong>(String title, String iconPath, String pagePath) <a class="anchor-link" href="#create"
+              title="Permalink to ChromeDevtoolsPanels.create">#</a></h4>
+<div class="doc">
+<p>Creates an extension panel.</p>
+<p>
+<span class="param">title</span> Title that is displayed next to the extension icon in the Developer
+Tools toolbar.</p>
+<p>
+<span class="param">iconPath</span> Path of the panel's icon relative to the extension directory.</p>
+<p>
+<span class="param">pagePath</span> Path of the panel's HTML page relative to the extension
+directory.</p>
+<p>Returns:
+An ExtensionPanel object representing the created panel.</p>
+<pre class="source">
+Future&lt;ExtensionPanel&gt; create(String title, String iconPath, String pagePath) {
+ if (_devtools_panels == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;ExtensionPanel&gt;.oneArg(_createExtensionPanel);
+ _devtools_panels.callMethod('create', [title, iconPath, pagePath, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setOpenResourceHandler">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.devtools/Resource.html">Resource</a>&gt; <strong>setOpenResourceHandler</strong>() <a class="anchor-link" href="#setOpenResourceHandler"
+              title="Permalink to ChromeDevtoolsPanels.setOpenResourceHandler">#</a></h4>
+<div class="doc">
+<p>Specifies the function to be called when the user clicks a resource link in
+the Developer Tools window. To unset the handler, either call the method
+with no parameters or pass null as the parameter.</p>
+<p>Returns:
+A <code>devtools.inspectedWindow.Resource</code> object for the resource that was
+clicked.</p>
+<pre class="source">
+Future&lt;Resource&gt; setOpenResourceHandler() {
+ if (_devtools_panels == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;Resource&gt;.oneArg(_createResource);
+ _devtools_panels.callMethod('setOpenResourceHandler', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

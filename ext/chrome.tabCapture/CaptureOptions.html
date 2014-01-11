@@ -1,0 +1,209 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>CaptureOptions class / chrome.tabCapture Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.tabCapture" data-type="CaptureOptions">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.tabCapture.html">chrome.tabCapture</a> &rsaquo; <a href="../chrome.tabCapture/CaptureOptions.html">CaptureOptions</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>CaptureOptions</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Whether we are requesting tab video and/or audio and the
+MediaTrackConstraints that should be set for these streams.</p>
+<pre class="source">
+class CaptureOptions extends ChromeObject {
+ CaptureOptions({bool audio, bool video, MediaStreamConstraint audioConstraints, MediaStreamConstraint videoConstraints}) {
+   if (audio != null) this.audio = audio;
+   if (video != null) this.video = video;
+   if (audioConstraints != null) this.audioConstraints = audioConstraints;
+   if (videoConstraints != null) this.videoConstraints = videoConstraints;
+ }
+ CaptureOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ bool get audio =&gt; jsProxy['audio'];
+ set audio(bool value) =&gt; jsProxy['audio'] = value;
+
+ bool get video =&gt; jsProxy['video'];
+ set video(bool value) =&gt; jsProxy['video'] = value;
+
+ MediaStreamConstraint get audioConstraints =&gt; _createMediaStreamConstraint(jsProxy['audioConstraints']);
+ set audioConstraints(MediaStreamConstraint value) =&gt; jsProxy['audioConstraints'] = jsify(value);
+
+ MediaStreamConstraint get videoConstraints =&gt; _createMediaStreamConstraint(jsProxy['videoConstraints']);
+ set videoConstraints(MediaStreamConstraint value) =&gt; jsProxy['videoConstraints'] = jsify(value);
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>CaptureOptions</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>CaptureOptions</strong>({bool audio, bool video, <a href="../chrome.tabCapture/MediaStreamConstraint.html">MediaStreamConstraint</a> audioConstraints, <a href="../chrome.tabCapture/MediaStreamConstraint.html">MediaStreamConstraint</a> videoConstraints}) <a class="anchor-link" href="#"
+              title="Permalink to CaptureOptions.CaptureOptions">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+CaptureOptions({bool audio, bool video, MediaStreamConstraint audioConstraints, MediaStreamConstraint videoConstraints}) {
+ if (audio != null) this.audio = audio;
+ if (video != null) this.video = video;
+ if (audioConstraints != null) this.audioConstraints = audioConstraints;
+ if (videoConstraints != null) this.videoConstraints = videoConstraints;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>CaptureOptions.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to CaptureOptions.CaptureOptions.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+CaptureOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="audio">
+<button class="show-code">Code</button>
+bool         <strong>audio</strong> <a class="anchor-link"
+            href="#audio"
+            title="Permalink to CaptureOptions.audio">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+bool get audio =&gt; jsProxy['audio'];
+</pre>
+<pre class="source">
+set audio(bool value) =&gt; jsProxy['audio'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="audioConstraints">
+<button class="show-code">Code</button>
+<a href="../chrome.tabCapture/MediaStreamConstraint.html">MediaStreamConstraint</a>         <strong>audioConstraints</strong> <a class="anchor-link"
+            href="#audioConstraints"
+            title="Permalink to CaptureOptions.audioConstraints">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+MediaStreamConstraint get audioConstraints =&gt; _createMediaStreamConstraint(jsProxy['audioConstraints']);
+</pre>
+<pre class="source">
+set audioConstraints(MediaStreamConstraint value) =&gt; jsProxy['audioConstraints'] = jsify(value);
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to CaptureOptions.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="video">
+<button class="show-code">Code</button>
+bool         <strong>video</strong> <a class="anchor-link"
+            href="#video"
+            title="Permalink to CaptureOptions.video">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+bool get video =&gt; jsProxy['video'];
+</pre>
+<pre class="source">
+set video(bool value) =&gt; jsProxy['video'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="videoConstraints">
+<button class="show-code">Code</button>
+<a href="../chrome.tabCapture/MediaStreamConstraint.html">MediaStreamConstraint</a>         <strong>videoConstraints</strong> <a class="anchor-link"
+            href="#videoConstraints"
+            title="Permalink to CaptureOptions.videoConstraints">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+MediaStreamConstraint get videoConstraints =&gt; _createMediaStreamConstraint(jsProxy['videoConstraints']);
+</pre>
+<pre class="source">
+set videoConstraints(MediaStreamConstraint value) =&gt; jsProxy['videoConstraints'] = jsify(value);
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to CaptureOptions.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to CaptureOptions.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

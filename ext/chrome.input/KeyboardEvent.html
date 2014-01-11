@@ -1,0 +1,324 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>KeyboardEvent class / chrome.input Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.input" data-type="KeyboardEvent">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.input.html">chrome.input</a> &rsaquo; <a href="../chrome.input/KeyboardEvent.html">KeyboardEvent</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>KeyboardEvent</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>See http://www.w3.org/TR/DOM-Level-3-Events/#events-KeyboardEvent</p>
+<pre class="source">
+class KeyboardEvent extends ChromeObject {
+ KeyboardEvent({String type, String requestId, String key, String code, bool altKey, bool ctrlKey, bool shiftKey, bool capsLock}) {
+   if (type != null) this.type = type;
+   if (requestId != null) this.requestId = requestId;
+   if (key != null) this.key = key;
+   if (code != null) this.code = code;
+   if (altKey != null) this.altKey = altKey;
+   if (ctrlKey != null) this.ctrlKey = ctrlKey;
+   if (shiftKey != null) this.shiftKey = shiftKey;
+   if (capsLock != null) this.capsLock = capsLock;
+ }
+ KeyboardEvent.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * One of keyup or keydown.
+  * enum of `keyup`, `keydown`
+  */
+ String get type =&gt; jsProxy['type'];
+ set type(String value) =&gt; jsProxy['type'] = value;
+
+ /**
+  * The ID of the request.
+  */
+ String get requestId =&gt; jsProxy['requestId'];
+ set requestId(String value) =&gt; jsProxy['requestId'] = value;
+
+ /**
+  * Value of the key being pressed
+  */
+ String get key =&gt; jsProxy['key'];
+ set key(String value) =&gt; jsProxy['key'] = value;
+
+ /**
+  * Value of the physical key being pressed. The value is not affected by
+  * current keyboard layout or modifier state.
+  */
+ String get code =&gt; jsProxy['code'];
+ set code(String value) =&gt; jsProxy['code'] = value;
+
+ /**
+  * Whether or not the ALT key is pressed.
+  */
+ bool get altKey =&gt; jsProxy['altKey'];
+ set altKey(bool value) =&gt; jsProxy['altKey'] = value;
+
+ /**
+  * Whether or not the CTRL key is pressed.
+  */
+ bool get ctrlKey =&gt; jsProxy['ctrlKey'];
+ set ctrlKey(bool value) =&gt; jsProxy['ctrlKey'] = value;
+
+ /**
+  * Whether or not the SHIFT key is pressed.
+  */
+ bool get shiftKey =&gt; jsProxy['shiftKey'];
+ set shiftKey(bool value) =&gt; jsProxy['shiftKey'] = value;
+
+ /**
+  * Whether or not the CAPS_LOCK is enabled.
+  */
+ bool get capsLock =&gt; jsProxy['capsLock'];
+ set capsLock(bool value) =&gt; jsProxy['capsLock'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>KeyboardEvent</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>KeyboardEvent</strong>({String type, String requestId, String key, String code, bool altKey, bool ctrlKey, bool shiftKey, bool capsLock}) <a class="anchor-link" href="#"
+              title="Permalink to KeyboardEvent.KeyboardEvent">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+KeyboardEvent({String type, String requestId, String key, String code, bool altKey, bool ctrlKey, bool shiftKey, bool capsLock}) {
+ if (type != null) this.type = type;
+ if (requestId != null) this.requestId = requestId;
+ if (key != null) this.key = key;
+ if (code != null) this.code = code;
+ if (altKey != null) this.altKey = altKey;
+ if (ctrlKey != null) this.ctrlKey = ctrlKey;
+ if (shiftKey != null) this.shiftKey = shiftKey;
+ if (capsLock != null) this.capsLock = capsLock;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>KeyboardEvent.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to KeyboardEvent.KeyboardEvent.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+KeyboardEvent.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="altKey">
+<button class="show-code">Code</button>
+bool         <strong>altKey</strong> <a class="anchor-link"
+            href="#altKey"
+            title="Permalink to KeyboardEvent.altKey">#</a>
+        </h4>
+        <div class="doc">
+<p>Whether or not the ALT key is pressed.</p>
+<pre class="source">
+bool get altKey =&gt; jsProxy['altKey'];
+</pre>
+<pre class="source">
+set altKey(bool value) =&gt; jsProxy['altKey'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="capsLock">
+<button class="show-code">Code</button>
+bool         <strong>capsLock</strong> <a class="anchor-link"
+            href="#capsLock"
+            title="Permalink to KeyboardEvent.capsLock">#</a>
+        </h4>
+        <div class="doc">
+<p>Whether or not the CAPS_LOCK is enabled.</p>
+<pre class="source">
+bool get capsLock =&gt; jsProxy['capsLock'];
+</pre>
+<pre class="source">
+set capsLock(bool value) =&gt; jsProxy['capsLock'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="code">
+<button class="show-code">Code</button>
+String         <strong>code</strong> <a class="anchor-link"
+            href="#code"
+            title="Permalink to KeyboardEvent.code">#</a>
+        </h4>
+        <div class="doc">
+<p>Value of the physical key being pressed. The value is not affected by
+current keyboard layout or modifier state.</p>
+<pre class="source">
+String get code =&gt; jsProxy['code'];
+</pre>
+<pre class="source">
+set code(String value) =&gt; jsProxy['code'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="ctrlKey">
+<button class="show-code">Code</button>
+bool         <strong>ctrlKey</strong> <a class="anchor-link"
+            href="#ctrlKey"
+            title="Permalink to KeyboardEvent.ctrlKey">#</a>
+        </h4>
+        <div class="doc">
+<p>Whether or not the CTRL key is pressed.</p>
+<pre class="source">
+bool get ctrlKey =&gt; jsProxy['ctrlKey'];
+</pre>
+<pre class="source">
+set ctrlKey(bool value) =&gt; jsProxy['ctrlKey'] = value;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to KeyboardEvent.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="key">
+<button class="show-code">Code</button>
+String         <strong>key</strong> <a class="anchor-link"
+            href="#key"
+            title="Permalink to KeyboardEvent.key">#</a>
+        </h4>
+        <div class="doc">
+<p>Value of the key being pressed</p>
+<pre class="source">
+String get key =&gt; jsProxy['key'];
+</pre>
+<pre class="source">
+set key(String value) =&gt; jsProxy['key'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="requestId">
+<button class="show-code">Code</button>
+String         <strong>requestId</strong> <a class="anchor-link"
+            href="#requestId"
+            title="Permalink to KeyboardEvent.requestId">#</a>
+        </h4>
+        <div class="doc">
+<p>The ID of the request.</p>
+<pre class="source">
+String get requestId =&gt; jsProxy['requestId'];
+</pre>
+<pre class="source">
+set requestId(String value) =&gt; jsProxy['requestId'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="shiftKey">
+<button class="show-code">Code</button>
+bool         <strong>shiftKey</strong> <a class="anchor-link"
+            href="#shiftKey"
+            title="Permalink to KeyboardEvent.shiftKey">#</a>
+        </h4>
+        <div class="doc">
+<p>Whether or not the SHIFT key is pressed.</p>
+<pre class="source">
+bool get shiftKey =&gt; jsProxy['shiftKey'];
+</pre>
+<pre class="source">
+set shiftKey(bool value) =&gt; jsProxy['shiftKey'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="type">
+<button class="show-code">Code</button>
+String         <strong>type</strong> <a class="anchor-link"
+            href="#type"
+            title="Permalink to KeyboardEvent.type">#</a>
+        </h4>
+        <div class="doc">
+<p>One of keyup or keydown.
+enum of <code>keyup</code>, <code>keydown</code></p>
+<pre class="source">
+String get type =&gt; jsProxy['type'];
+</pre>
+<pre class="source">
+set type(String value) =&gt; jsProxy['type'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to KeyboardEvent.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to KeyboardEvent.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        
