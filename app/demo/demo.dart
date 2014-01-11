@@ -20,6 +20,11 @@ void main() {
   action("getInfo()", handleAudioGetInfo);
   br();
 
+  label('bluetooth');
+  action('available', handleBluetoothAvailable);
+  action('getAdapterState()', handleBluetoothGetAdapterState);
+  br();
+
   label('files');
   action("read contents", handleFileRead);
   action("read contents (bytes)", handleFileReadBytes);
@@ -44,6 +49,10 @@ void main() {
   label('i18n');
   action("message()", handleI18NMessage);
   action("languages()", handleI18NLanguages);
+  br();
+
+  label('identity');
+  action("getAuthToken()", handleIdentityGetAuthToken);
   br();
 
   label('idle');
@@ -441,4 +450,39 @@ void handleFileDelete() {
   });
 
   summaryFuture(f);
+}
+
+void handleBluetoothAvailable() {
+  summary("available = ${chrome.bluetooth.available}");
+}
+
+void handleBluetoothGetAdapterState() {
+  if (chrome.bluetooth.available) {
+    Future f = chrome.bluetooth.getAdapterState()
+        .then((chrome.AdapterState adapterState) {
+          return "adapterState.address = ${adapterState.address}, "
+          "adapterState.available = ${adapterState.available}, "
+          "adapterState.discovering = ${adapterState.discovering}, "
+          "adapterState.powered = ${adapterState.powered}";
+        });
+
+    summaryFuture(f);
+  } else {
+    summary("not available");
+  }
+
+}
+
+void handleIdentityGetAuthToken()  {
+  if (chrome.identity.available) {
+    Future f = chrome.identity.getAuthToken()
+        .then((String token) {
+          return "token = ${token}, ";
+        });
+
+    summaryFuture(f);
+  } else {
+    summary("not available");
+  }
+
 }
