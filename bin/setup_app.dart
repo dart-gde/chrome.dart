@@ -4,14 +4,13 @@ import 'package:path/path.dart';
 import 'package:unscripted/unscripted.dart';
 import 'package:chrome/build/build.dart' as build;
 
-void main(List<String> arguments) => sketch(buildApp).execute(arguments);
+void main(List<String> arguments) => declare(buildApp).execute(arguments);
 
 @Command(help: 'Copies and builds a chrome application or extension')
 @ArgExample('app/test_ext harness.dart',
   help: 'Copies the packages folder to "app/test_ext" and builds "harness.dart"')
-buildApp(String directory, String main) => buildAppCommand(directory, main);
+buildApp(String directory, String main) {
 
-buildAppCommand(String directory, String main) {
   // verify execution location
   if (!new Directory(directory).existsSync()) {
     print('This script must be run from the project root.');
