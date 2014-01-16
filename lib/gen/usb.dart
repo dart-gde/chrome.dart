@@ -266,11 +266,11 @@ class Direction extends ChromeEnum {
 
 class Recipient extends ChromeEnum {
   static const Recipient DEVICE = const Recipient._('device');
-  static const Recipient _INTERFACE = const Recipient._('_interface');
+  static const Recipient INTERFACE = const Recipient._('interface');
   static const Recipient ENDPOINT = const Recipient._('endpoint');
   static const Recipient OTHER = const Recipient._('other');
 
-  static const List<Recipient> VALUES = const[DEVICE, _INTERFACE, ENDPOINT, OTHER];
+  static const List<Recipient> VALUES = const[DEVICE, INTERFACE, ENDPOINT, OTHER];
 
   const Recipient._(String str): super(str);
 }

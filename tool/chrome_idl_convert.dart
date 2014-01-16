@@ -171,6 +171,10 @@ class IDLConverter {
     idlEnumDeclaration.enums.forEach((IDLEnumValue value) {
       ChromeEnumEntry chromeEnumEntry = new ChromeEnumEntry();
       chromeEnumEntry.name = value.name;
+      // This fixes an odd value for the chrome.Recipient._INTERFACE enum (#124).
+      if (chromeEnumEntry.name == '_interface') {
+        chromeEnumEntry.name = 'interface';
+      }
       chromeEnumType.values.add(chromeEnumEntry);
     });
     return chromeEnumType;
