@@ -97,7 +97,7 @@ abstract class CrEntry extends ChromeObject implements Entry {
 <span class="type-box"><span class="icon-class"></span><a href="../chrome.src.files/CrDirectoryEntry.html">CrDirectoryEntry</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../chrome.src.files/CrFileEntry.html">CrFileEntry</a></span></p>
 <h3>Implements</h3>
 <p>
-<span class="type-box"><span class="icon-class"></span><a href="../dart_html/Entry.html">Entry</a></span></p>
+<span class="type-box"><span class="icon-class"></span>Entry</span></p>
 <div>
 <h3>Constructors</h3>
 <div class="method"><h4 id="fromProxy">
@@ -149,28 +149,6 @@ final String fullPath
 </pre>
 </div>
 </div>
-<div class="field inherited"><h4 id="hashCode">
-<button class="show-code">Code</button>
-final int         <strong>hashCode</strong> <a class="anchor-link"
-            href="#hashCode"
-            title="Permalink to CrEntry.hashCode">#</a>
-        </h4>
-        <div class="inherited-from">inherited from Interceptor </div><div class="doc">
-<div class="inherited">
-<p>Get a hash code for this object.</p>
-<p>All objects have hash codes. Hash codes are guaranteed to be the
-same for objects that are equal when compared using the equality
-operator <code>==</code>. Other than that there are no guarantees about
-the hash codes. They will not be consistent between runs and
-there are no distribution guarantees.</p>
-<p>If a subclass overrides <a class="crossref" href="../dart__interceptors/Interceptor.html#hashCode">hashCode</a> it should override the
-equality operator as well to maintain consistency.</p>
-<div class="docs-inherited-from">docs inherited from Object </div></div>
-<pre class="source">
-int get hashCode =&gt; Primitives.objectHashCode(this);
-</pre>
-</div>
-</div>
 <div class="field inherited"><h4 id="isDirectory">
 <button class="show-code">Code</button>
 final bool         <strong>isDirectory</strong> <a class="anchor-link"
@@ -216,55 +194,6 @@ final String         <strong>name</strong> <a class="anchor-link"
         <div class="inherited-from">inherited from Entry </div><div class="doc">
 <pre class="source">
 final String name
-</pre>
-</div>
-</div>
-<div class="field inherited"><h4 id="runtimeType">
-<button class="show-code">Code</button>
-final Type         <strong>runtimeType</strong> <a class="anchor-link"
-            href="#runtimeType"
-            title="Permalink to CrEntry.runtimeType">#</a>
-        </h4>
-        <div class="inherited-from">inherited from Interceptor </div><div class="doc">
-<div class="inherited">
-<p>A representation of the runtime type of the object.</p>
-<div class="docs-inherited-from">docs inherited from Object </div></div>
-<pre class="source">
-Type get runtimeType =&gt; getRuntimeType(this);
-</pre>
-</div>
-</div>
-</div>
-<div class="inherited">
-<h3>Operators</h3>
-<div class="method inherited"><h4 id="==">
-<button class="show-code">Code</button>
-bool <strong>operator ==</strong>(other) <a class="anchor-link" href="#=="
-              title="Permalink to CrEntry.operator ==">#</a></h4>
-<div class="inherited-from">inherited from Interceptor </div><div class="doc">
-<div class="inherited">
-<p>The equality operator.</p>
-<p>The default behavior for all <a class="crossref" href="../dart_core/Object.html">Object</a>s is to return true if and
-only if <code>this</code> and 
-<span class="param">other</span> are the same object.</p>
-<p>Override this method to specify a different equality relation on
-a class. The overriding method must still be an equivalence relation.
-That is, it must be:</p><ul><li>
-<p>Total: It must return a boolean for all arguments. It should never throw
-   or return <code>null</code>.</p></li><li>
-<p>Reflexive: For all objects <code>o</code>, <code>o == o</code> must be true.</p></li><li>
-<p>Symmetric: For all objects <code>o1</code> and <code>o2</code>, <code>o1 == o2</code> and <code>o2 == o1</code> must
-   either both be true, or both be false.</p></li><li>
-<p>Transitive: For all objects <code>o1</code>, <code>o2</code>, and <code>o3</code>, if <code>o1 == o2</code> and
-   <code>o2 == o3</code> are true, then <code>o1 == o3</code> must be true.</p></li></ul>
-<p>The method should also be consistent over time, so equality of two objects
-should not change over time, or at least only change if one of the objects
-was modified.</p>
-<p>If a subclass overrides the equality operator it should override
-the <a class="crossref" href="../dart__interceptors/Interceptor.html#hashCode">hashCode</a> method as well to maintain consistency.</p>
-<div class="docs-inherited-from">docs inherited from Object </div></div>
-<pre class="source">
-bool operator ==(other) =&gt; identical(this, other);
 </pre>
 </div>
 </div>
@@ -323,31 +252,6 @@ Future&lt;Entry&gt; moveTo(DirectoryEntry parent, {String name}) {
  var completer = new _ChromeCompleterWithError&lt;Entry&gt;.oneArg((obj) =&gt; new CrEntry.fromProxy(obj));
  jsProxy.callMethod('moveTo', [(parent as ChromeObject).jsProxy, name, completer.callback, completer.errorCallback]);
  return completer.future;
-}
-</pre>
-</div>
-</div>
-<div class="method inherited"><h4 id="noSuchMethod">
-<button class="show-code">Code</button>
-dynamic <strong>noSuchMethod</strong>(Invocation invocation) <a class="anchor-link" href="#noSuchMethod"
-              title="Permalink to CrEntry.noSuchMethod">#</a></h4>
-<div class="inherited-from">inherited from Interceptor </div><div class="doc">
-<div class="inherited">
-<p><a class="crossref" href="../dart__interceptors/Interceptor.html#noSuchMethod">noSuchMethod</a> is invoked when users invoke a non-existent method
-on an object. The name of the method and the arguments of the
-invocation are passed to <a class="crossref" href="../dart__interceptors/Interceptor.html#noSuchMethod">noSuchMethod</a> in an <a class="crossref" href="../dart_core/Invocation.html">Invocation</a>.
-If <a class="crossref" href="../dart__interceptors/Interceptor.html#noSuchMethod">noSuchMethod</a> returns a value, that value becomes the result of
-the original invocation.</p>
-<p>The default behavior of <a class="crossref" href="../dart__interceptors/Interceptor.html#noSuchMethod">noSuchMethod</a> is to throw a
-<a class="crossref" href="../dart_core/NoSuchMethodError.html">NoSuchMethodError</a>.</p>
-<div class="docs-inherited-from">docs inherited from Object </div></div>
-<pre class="source">
-dynamic noSuchMethod(Invocation invocation) {
- throw new NoSuchMethodError(
-     this,
-     invocation.memberName,
-     invocation.positionalArguments,
-     invocation.namedArguments);
 }
 </pre>
 </div>
