@@ -35,11 +35,11 @@
 <pre class="source">
 class Recipient extends ChromeEnum {
  static const Recipient DEVICE = const Recipient._('device');
- static const Recipient _INTERFACE = const Recipient._('_interface');
+ static const Recipient INTERFACE = const Recipient._('interface');
  static const Recipient ENDPOINT = const Recipient._('endpoint');
  static const Recipient OTHER = const Recipient._('other');
 
- static const List&lt;Recipient&gt; VALUES = const[DEVICE, _INTERFACE, ENDPOINT, OTHER];
+ static const List&lt;Recipient&gt; VALUES = const[DEVICE, INTERFACE, ENDPOINT, OTHER];
 
  const Recipient._(String str): super(str);
 }
@@ -74,6 +74,18 @@ static const Recipient ENDPOINT = const Recipient._('endpoint')
 </pre>
 </div>
 </div>
+<div class="field"><h4 id="INTERFACE">
+<button class="show-code">Code</button>
+const <a href="../chrome.usb/Recipient.html">Recipient</a>         <strong>INTERFACE</strong> <a class="anchor-link"
+            href="#INTERFACE"
+            title="Permalink to Recipient.INTERFACE">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+static const Recipient INTERFACE = const Recipient._('interface')
+</pre>
+</div>
+</div>
 <div class="field"><h4 id="OTHER">
 <button class="show-code">Code</button>
 const <a href="../chrome.usb/Recipient.html">Recipient</a>         <strong>OTHER</strong> <a class="anchor-link"
@@ -94,7 +106,7 @@ const List&lt;<a href="../chrome.usb/Recipient.html">Recipient</a>&gt;         <
         </h4>
         <div class="doc">
 <pre class="source">
-static const List&lt;Recipient&gt; VALUES = const[DEVICE, _INTERFACE, ENDPOINT, OTHER]
+static const List&lt;Recipient&gt; VALUES = const[DEVICE, INTERFACE, ENDPOINT, OTHER]
 </pre>
 </div>
 </div>
