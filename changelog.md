@@ -1,5 +1,14 @@
 # Changelog - chrome.dart
 
+## 0.4.2 2014-01-18 (SDK 1.1.0-dev.5.11 r31818)
+
+- Fix performance issues with converting array buffers to lists
+
+## 0.4.1 2014-01-16 (SDK 1.1.0-dev.5.11 r31818)
+
+- Unscripted updated to `>=0.3.0 <0.4.0`
+- USB bug found and fixed with naming of `_interface` in the chrome idl.
+
 ## 0.4.0 2014-01-13 (SDK 1.1.0-dev.5.6 r31661)
 
 - Merge from [chrome_gen.dart](https://github.com/dart-gde/chrome_gen.dart) completed
