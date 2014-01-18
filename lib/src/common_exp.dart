@@ -78,13 +78,13 @@ class ArrayBuffer extends ChromeObject {
   ArrayBuffer.fromProxy(/*JsObject*/ jsProxy): super.fromProxy(jsProxy);
 
   factory ArrayBuffer.fromBytes(List<int> data) {
-    var uint8Array = new JsObject(context['Uint8Array'], [new JsObject.jsify(data)]);
+    var uint8Array = new JsObject(context['Uint8Array'], [new JsArray.from(data)]);
 
     return new ArrayBuffer.fromProxy(uint8Array['buffer']);
   }
 
   factory ArrayBuffer.fromString(String str) {
-    var uint8Array = new JsObject(context['Uint8Array'], [new JsObject.jsify(str.codeUnits)]);
+    var uint8Array = new JsObject(context['Uint8Array'], [new JsArray.from(str.codeUnits)]);
 
     return new ArrayBuffer.fromProxy(uint8Array['buffer']);
   }
