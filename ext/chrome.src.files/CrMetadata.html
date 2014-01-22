@@ -38,7 +38,10 @@ class CrMetadata extends ChromeObject implements Metadata {
 
  int get size =&gt; jsProxy['size'];
  DateTime get modificationTime {
-   return DateTime.parse(jsProxy['modificationTime'].callMethod('toISOString'));
+   var modTime = jsProxy['modificationTime'];
+   if (modTime is DateTime) return modTime;
+   return new DateTime.fromMillisecondsSinceEpoch(
+       new JsObject.fromBrowserObject(modTime).callMethod('getTime'));
  }
 }
 </pre>
@@ -89,7 +92,10 @@ final DateTime         <strong>modificationTime</strong> <a class="anchor-link"
         <div class="doc">
 <pre class="source">
 DateTime get modificationTime {
- return DateTime.parse(jsProxy['modificationTime'].callMethod('toISOString'));
+ var modTime = jsProxy['modificationTime'];
+ if (modTime is DateTime) return modTime;
+ return new DateTime.fromMillisecondsSinceEpoch(
+     new JsObject.fromBrowserObject(modTime).callMethod('getTime'));
 }
 </pre>
 </div>

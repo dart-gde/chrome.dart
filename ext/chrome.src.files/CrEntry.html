@@ -68,13 +68,14 @@ abstract class CrEntry extends ChromeObject implements Entry {
  }
 
  Future remove() {
-   var completer = new _ChromeCompleterWithError&lt;Metadata&gt;.noArgs();
+   var completer = new _ChromeCompleterWithError.noArgs();
    jsProxy.callMethod('remove', [completer.callback, completer.errorCallback]);
    return completer.future;
  }
 
  Future&lt;Metadata&gt; getMetadata() {
-   var completer = new _ChromeCompleterWithError&lt;Metadata&gt;.oneArg((obj) =&gt; new CrMetadata.fromProxy(obj));
+   var completer = new _ChromeCompleterWithError&lt;Metadata&gt;.oneArg(
+       (obj) =&gt; (obj is Metadata ? obj : new CrMetadata.fromProxy(obj)));
    jsProxy.callMethod('getMetadata', [completer.callback, completer.errorCallback]);
    return completer.future;
  }
@@ -221,7 +222,8 @@ Future&lt;Metadata&gt; <strong>getMetadata</strong>() <a class="anchor-link" hre
 <div class="doc">
 <pre class="source">
 Future&lt;Metadata&gt; getMetadata() {
- var completer = new _ChromeCompleterWithError&lt;Metadata&gt;.oneArg((obj) =&gt; new CrMetadata.fromProxy(obj));
+ var completer = new _ChromeCompleterWithError&lt;Metadata&gt;.oneArg(
+     (obj) =&gt; (obj is Metadata ? obj : new CrMetadata.fromProxy(obj)));
  jsProxy.callMethod('getMetadata', [completer.callback, completer.errorCallback]);
  return completer.future;
 }
@@ -263,7 +265,7 @@ Future <strong>remove</strong>() <a class="anchor-link" href="#remove"
 <div class="doc">
 <pre class="source">
 Future remove() {
- var completer = new _ChromeCompleterWithError&lt;Metadata&gt;.noArgs();
+ var completer = new _ChromeCompleterWithError.noArgs();
  jsProxy.callMethod('remove', [completer.callback, completer.errorCallback]);
  return completer.future;
 }

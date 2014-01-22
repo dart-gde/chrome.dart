@@ -69,7 +69,7 @@ class CrDirectoryEntry extends CrEntry implements DirectoryEntry {
  }
 
  Future removeRecursively() {
-   var completer = new _ChromeCompleterWithError&lt;Metadata&gt;.noArgs();
+   var completer = new _ChromeCompleterWithError.noArgs();
    jsProxy.callMethod('removeRecursively', [completer.callback, completer.errorCallback]);
    return completer.future;
  }
@@ -352,7 +352,8 @@ Future&lt;Metadata&gt; <strong>getMetadata</strong>() <a class="anchor-link" hre
 <div class="inherited-from">inherited from <a href="../chrome.src.files/CrEntry.html">CrEntry</a> </div><div class="doc">
 <pre class="source">
 Future&lt;Metadata&gt; getMetadata() {
- var completer = new _ChromeCompleterWithError&lt;Metadata&gt;.oneArg((obj) =&gt; new CrMetadata.fromProxy(obj));
+ var completer = new _ChromeCompleterWithError&lt;Metadata&gt;.oneArg(
+     (obj) =&gt; (obj is Metadata ? obj : new CrMetadata.fromProxy(obj)));
  jsProxy.callMethod('getMetadata', [completer.callback, completer.errorCallback]);
  return completer.future;
 }
@@ -394,7 +395,7 @@ Future <strong>remove</strong>() <a class="anchor-link" href="#remove"
 <div class="inherited-from">inherited from <a href="../chrome.src.files/CrEntry.html">CrEntry</a> </div><div class="doc">
 <pre class="source">
 Future remove() {
- var completer = new _ChromeCompleterWithError&lt;Metadata&gt;.noArgs();
+ var completer = new _ChromeCompleterWithError.noArgs();
  jsProxy.callMethod('remove', [completer.callback, completer.errorCallback]);
  return completer.future;
 }
@@ -408,7 +409,7 @@ Future <strong>removeRecursively</strong>() <a class="anchor-link" href="#remove
 <div class="doc">
 <pre class="source">
 Future removeRecursively() {
- var completer = new _ChromeCompleterWithError&lt;Metadata&gt;.noArgs();
+ var completer = new _ChromeCompleterWithError.noArgs();
  jsProxy.callMethod('removeRecursively', [completer.callback, completer.errorCallback]);
  return completer.future;
 }
