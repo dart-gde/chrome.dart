@@ -44,12 +44,9 @@ class CrMetadata extends ChromeObject implements Metadata {
   int get size => jsProxy['size'];
   DateTime get modificationTime {
     var modTime = jsProxy['modificationTime'];
-
-    if (modTime is DateTime) {
-      return modTime;
-    } else {
-      return new DateTime.fromMillisecondsSinceEpoch(modTime.callMethod('getTime'));
-    }
+    if (modTime is DateTime) return modTime;
+    return new DateTime.fromMillisecondsSinceEpoch(
+        new JsObject.fromBrowserObject(modTime).callMethod('getTime'));
   }
 }
 
@@ -94,7 +91,8 @@ abstract class CrEntry extends ChromeObject implements Entry {
   }
 
   Future<Metadata> getMetadata() {
-    var completer = new _ChromeCompleterWithError<Metadata>.oneArg((obj) => new CrMetadata.fromProxy(obj));
+    var completer = new _ChromeCompleterWithError<Metadata>.oneArg(
+        (obj) => (obj is Metadata ? obj : new CrMetadata.fromProxy(obj)));
     jsProxy.callMethod('getMetadata', [completer.callback, completer.errorCallback]);
     return completer.future;
   }
@@ -144,7 +142,7 @@ class CrDirectoryEntry extends CrEntry implements DirectoryEntry {
   }
 
   Future removeRecursively() {
-    var completer = new _ChromeCompleterWithError<Metadata>.noArgs();
+    var completer = new _ChromeCompleterWithError.noArgs();
     jsProxy.callMethod('removeRecursively', [completer.callback, completer.errorCallback]);
     return completer.future;
   }

@@ -375,7 +375,8 @@ void handleGetFileMetaData() {
   chrome.runtime.getPackageDirectoryEntry().then((chrome.DirectoryEntry dir) {
     dir.getFile('manifest.json').then((Entry entry) {
       entry.getMetadata().then((chrome.Metadata meta) {
-        summary("file mod: ${meta.modificationTime}, file size: ${meta.size}");
+        summary("file mod: ${meta.modificationTime}, file size: ${meta.size}"
+            ",timezone=${meta.modificationTime.timeZoneName}");
       });
     });
   });
