@@ -1,5 +1,9 @@
 # Changelog - chrome.dart
 
+## 0.4.3 2014-01-21 (SDK 1.2.0-dev.1.0 r31918)
+
+- Fixed bug with `entry.metaData.timeStamp`
+
 ## 0.4.2 2014-01-18 (SDK 1.1.0-dev.5.11 r31818)
 
 - Fix performance issues with converting array buffers to lists
