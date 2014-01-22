@@ -29,6 +29,7 @@ void main() {
   action("read contents", handleFileRead);
   action("read contents (bytes)", handleFileReadBytes);
   action("get file", handleDirGetFile);
+  action("metaData", handleGetFileMetaData);
   action("dir info", handleDirInfo);
   action("dir listings", handleDirListings);
   br();
@@ -366,6 +367,16 @@ void handleDirGetFile() {
   chrome.runtime.getPackageDirectoryEntry().then((chrome.DirectoryEntry dir) {
     dir.getFile('manifest.json').then((Entry entry) {
       summary("file: ${entry}");
+    });
+  });
+}
+
+void handleGetFileMetaData() {
+  chrome.runtime.getPackageDirectoryEntry().then((chrome.DirectoryEntry dir) {
+    dir.getFile('manifest.json').then((Entry entry) {
+      entry.getMetadata().then((chrome.Metadata meta) {
+        summary("file mod: ${meta.modificationTime}, file size: ${meta.size}");
+      });
     });
   });
 }

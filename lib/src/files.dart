@@ -43,7 +43,13 @@ class CrMetadata extends ChromeObject implements Metadata {
 
   int get size => jsProxy['size'];
   DateTime get modificationTime {
-    return DateTime.parse(jsProxy['modificationTime'].callMethod('toISOString'));
+    var modTime = jsProxy['modificationTime'];
+
+    if (modTime is DateTime) {
+      return modTime;
+    } else {
+      return new DateTime.fromMillisecondsSinceEpoch(modTime.callMethod('getTime'));
+    }
   }
 }
 
@@ -82,7 +88,7 @@ abstract class CrEntry extends ChromeObject implements Entry {
   }
 
   Future remove() {
-    var completer = new _ChromeCompleterWithError<Metadata>.noArgs();
+    var completer = new _ChromeCompleterWithError.noArgs();
     jsProxy.callMethod('remove', [completer.callback, completer.errorCallback]);
     return completer.future;
   }
