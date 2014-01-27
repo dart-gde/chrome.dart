@@ -119,9 +119,7 @@ class _Uint8ListArrayBuffer implements ArrayBuffer {
   _Uint8ListArrayBuffer(this.list);
 
   List<int> getBytes() => list;
-
   get jsProxy => null;
-
   JsObject toJs() => jsProxy;
 }
 
