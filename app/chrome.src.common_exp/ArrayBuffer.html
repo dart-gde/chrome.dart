@@ -40,11 +40,12 @@ class ArrayBuffer extends ChromeObject {
  ArrayBuffer._proxy(jsProxy) : super.fromProxy(jsProxy);
 
  factory ArrayBuffer.fromProxy(/*JsObject*/ jsProxy) {
-   if (jsProxy is typed_data.Uint8List) {
-     return new _Uint8ListArrayBuffer(jsProxy);
-   } else {
+   // TODO: investigate and fix
+//    if (jsProxy is typed_data.Uint8List) {
+//      return new _Uint8ListArrayBuffer(jsProxy);
+//    } else {
      return new ArrayBuffer._proxy(jsProxy);
-   }
+//    }
  }
 
  factory ArrayBuffer.fromBytes(List&lt;int&gt; data) {
@@ -132,11 +133,12 @@ JsObject proxy.</p>
 <div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
 <pre class="source">
 factory ArrayBuffer.fromProxy(/*JsObject*/ jsProxy) {
- if (jsProxy is typed_data.Uint8List) {
-   return new _Uint8ListArrayBuffer(jsProxy);
- } else {
+ // TODO: investigate and fix
+//    if (jsProxy is typed_data.Uint8List) {
+//      return new _Uint8ListArrayBuffer(jsProxy);
+//    } else {
    return new ArrayBuffer._proxy(jsProxy);
- }
+//    }
 }
 </pre>
 </div>
