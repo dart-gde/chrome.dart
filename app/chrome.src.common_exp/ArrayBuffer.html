@@ -34,10 +34,18 @@
 <div class="doc">
 <pre class="source">
 class ArrayBuffer extends ChromeObject {
- static ArrayBuffer create(JsObject jsProxy) =&gt; new ArrayBuffer.fromProxy(jsProxy);
+ static ArrayBuffer create(/*JsObject*/ jsProxy) =&gt; new ArrayBuffer.fromProxy(jsProxy);
 
  ArrayBuffer();
- ArrayBuffer.fromProxy(/*JsObject*/ jsProxy): super.fromProxy(jsProxy);
+ ArrayBuffer._proxy(jsProxy) : super.fromProxy(jsProxy);
+
+ factory ArrayBuffer.fromProxy(/*JsObject*/ jsProxy) {
+   if (jsProxy is typed_data.Uint8List) {
+     return new _Uint8ListArrayBuffer(jsProxy);
+   } else {
+     return new ArrayBuffer._proxy(jsProxy);
+   }
+ }
 
  factory ArrayBuffer.fromBytes(List&lt;int&gt; data) {
    var uint8Array = new JsObject(context['Uint8Array'], [new JsArray.from(data)]);
@@ -74,11 +82,11 @@ class ArrayBuffer extends ChromeObject {
 <h3>Static Methods</h3>
 <div class="method"><h4 id="create">
 <button class="show-code">Code</button>
-<a href="../chrome.src.common_exp/ArrayBuffer.html">ArrayBuffer</a> <strong>create</strong>(JsObject jsProxy) <a class="anchor-link" href="#create"
+<a href="../chrome.src.common_exp/ArrayBuffer.html">ArrayBuffer</a> <strong>create</strong>(jsProxy) <a class="anchor-link" href="#create"
               title="Permalink to ArrayBuffer.create">#</a></h4>
 <div class="doc">
 <pre class="source">
-static ArrayBuffer create(JsObject jsProxy) =&gt; new ArrayBuffer.fromProxy(jsProxy);
+static ArrayBuffer create(/*JsObject*/ jsProxy) =&gt; new ArrayBuffer.fromProxy(jsProxy);
 </pre>
 </div>
 </div>
@@ -115,7 +123,7 @@ factory ArrayBuffer.fromBytes(List&lt;int&gt; data) {
 </div>
 <div class="method"><h4 id="fromProxy">
 <button class="show-code">Code</button>
-new <strong>ArrayBuffer.fromProxy</strong>(jsProxy) <a class="anchor-link" href="#fromProxy"
+factory <strong>ArrayBuffer.fromProxy</strong>(jsProxy) <a class="anchor-link" href="#fromProxy"
               title="Permalink to ArrayBuffer.ArrayBuffer.fromProxy">#</a></h4>
 <div class="doc">
 <div class="inherited">
@@ -123,7 +131,13 @@ new <strong>ArrayBuffer.fromProxy</strong>(jsProxy) <a class="anchor-link" href=
 JsObject proxy.</p>
 <div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
 <pre class="source">
-ArrayBuffer.fromProxy(/*JsObject*/ jsProxy): super.fromProxy(jsProxy);
+factory ArrayBuffer.fromProxy(/*JsObject*/ jsProxy) {
+ if (jsProxy is typed_data.Uint8List) {
+   return new _Uint8ListArrayBuffer(jsProxy);
+ } else {
+   return new ArrayBuffer._proxy(jsProxy);
+ }
+}
 </pre>
 </div>
 </div>

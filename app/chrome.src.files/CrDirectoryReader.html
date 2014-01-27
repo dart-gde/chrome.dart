@@ -46,7 +46,7 @@ class CrDirectoryReader extends ChromeObject implements DirectoryReader {
 
    Function entriesCallback = null;
    Function errorCallback = (var domError) {
-     completer.completeError(domError);
+     completer.completeError(_translateError(domError));
    };
 
    entriesCallback = (/*Entry[]*/ result) {
@@ -119,7 +119,7 @@ Future&lt;List&lt;Entry&gt;&gt; readEntries() {
 
  Function entriesCallback = null;
  Function errorCallback = (var domError) {
-   completer.completeError(domError);
+   completer.completeError(_translateError(domError));
  };
 
  entriesCallback = (/*Entry[]*/ result) {

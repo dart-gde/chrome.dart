@@ -49,7 +49,7 @@ class ChromeFileEntry extends CrFileEntry {
        completer.complete(reader['result']);
      };
      reader['onerror'] = (var domError) {
-       completer.completeError(domError);
+       completer.completeError(_translateError(domError));
      };
      reader.callMethod('readAsText', [file]);
 
@@ -70,7 +70,7 @@ class ChromeFileEntry extends CrFileEntry {
        completer.complete(new ArrayBuffer.fromProxy(reader['result']));
      };
      reader['onerror'] = (var domError) {
-       completer.completeError(domError);
+       completer.completeError(_translateError(domError));
      };
      reader.callMethod('readAsArrayBuffer', [file]);
 
@@ -96,7 +96,7 @@ class ChromeFileEntry extends CrFileEntry {
        completer.complete(this);
      };
      writer['onerror'] = (var event) {
-       completer.completeError(event);
+       completer.completeError(_translateError(event));
      };
      writer.callMethod(
          'write', [blob, new JsObject.jsify({'type': 'text/plain'})]);
@@ -127,7 +127,7 @@ class ChromeFileEntry extends CrFileEntry {
        completer.complete(this);
      };
      writer['onerror'] = (var event) {
-       completer.completeError(event);
+       completer.completeError(_translateError(event));
      };
      writer.callMethod('write', [blob]);
 
@@ -399,7 +399,7 @@ Future&lt;ArrayBuffer&gt; readBytes() {
      completer.complete(new ArrayBuffer.fromProxy(reader['result']));
    };
    reader['onerror'] = (var domError) {
-     completer.completeError(domError);
+     completer.completeError(_translateError(domError));
    };
    reader.callMethod('readAsArrayBuffer', [file]);
 
@@ -425,7 +425,7 @@ Future&lt;String&gt; readText() {
      completer.complete(reader['result']);
    };
    reader['onerror'] = (var domError) {
-     completer.completeError(domError);
+     completer.completeError(_translateError(domError));
    };
    reader.callMethod('readAsText', [file]);
 
@@ -508,7 +508,7 @@ Future writeBytes(ArrayBuffer data) {
      completer.complete(this);
    };
    writer['onerror'] = (var event) {
-     completer.completeError(event);
+     completer.completeError(_translateError(event));
    };
    writer.callMethod('write', [blob]);
 
@@ -540,7 +540,7 @@ Future writeText(String text) {
      completer.complete(this);
    };
    writer['onerror'] = (var event) {
-     completer.completeError(event);
+     completer.completeError(_translateError(event));
    };
    writer.callMethod(
        'write', [blob, new JsObject.jsify({'type': 'text/plain'})]);
