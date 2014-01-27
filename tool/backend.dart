@@ -445,6 +445,8 @@ class DefaultBackend extends Backend {
 
     if (enumType != null) {
       creatorTemplate = "%s _create%s(String value) => %s.VALUES.singleWhere((ChromeEnum e) => e.value == value);";
+    } else if (creator == 'ArrayBuffer') {
+      creatorTemplate = "%s _create%s(/*JsObject*/ jsProxy) => jsProxy == null ? null : new %t.fromProxy(jsProxy);";
     } else {
       creatorTemplate = "%s _create%s(JsObject jsProxy) => jsProxy == null ? null : new %t.fromProxy(jsProxy);";
     }

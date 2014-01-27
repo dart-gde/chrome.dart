@@ -596,5 +596,5 @@ UsageType _createUsageType(String value) => UsageType.VALUES.singleWhere((Chrome
 EndpointDescriptor _createEndpointDescriptor(JsObject jsProxy) => jsProxy == null ? null : new EndpointDescriptor.fromProxy(jsProxy);
 Recipient _createRecipient(String value) => Recipient.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 RequestType _createRequestType(String value) => RequestType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
-ArrayBuffer _createArrayBuffer(JsObject jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
+ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
 GenericTransferInfo _createGenericTransferInfo(JsObject jsProxy) => jsProxy == null ? null : new GenericTransferInfo.fromProxy(jsProxy);
