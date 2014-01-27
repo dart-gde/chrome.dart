@@ -167,7 +167,7 @@ class CrDirectoryReader extends ChromeObject implements DirectoryReader {
 
     Function entriesCallback = null;
     Function errorCallback = (var domError) {
-      completer.completeError(domError);
+      completer.completeError(_translateError(domError));
     };
 
     entriesCallback = (/*Entry[]*/ result) {
@@ -224,7 +224,7 @@ class ChromeFileEntry extends CrFileEntry {
         completer.complete(reader['result']);
       };
       reader['onerror'] = (var domError) {
-        completer.completeError(domError);
+        completer.completeError(_translateError(domError));
       };
       reader.callMethod('readAsText', [file]);
 
@@ -245,7 +245,7 @@ class ChromeFileEntry extends CrFileEntry {
         completer.complete(new ArrayBuffer.fromProxy(reader['result']));
       };
       reader['onerror'] = (var domError) {
-        completer.completeError(domError);
+        completer.completeError(_translateError(domError));
       };
       reader.callMethod('readAsArrayBuffer', [file]);
 
@@ -271,7 +271,7 @@ class ChromeFileEntry extends CrFileEntry {
         completer.complete(this);
       };
       writer['onerror'] = (var event) {
-        completer.completeError(event);
+        completer.completeError(_translateError(event));
       };
       writer.callMethod(
           'write', [blob, new JsObject.jsify({'type': 'text/plain'})]);
@@ -302,7 +302,7 @@ class ChromeFileEntry extends CrFileEntry {
         completer.complete(this);
       };
       writer['onerror'] = (var event) {
-        completer.completeError(event);
+        completer.completeError(_translateError(event));
       };
       writer.callMethod('write', [blob]);
 
@@ -412,6 +412,35 @@ class _ChromeCompleterWithError<T> {
   Function get callback => _callback;
 
   void errorCallback(dynamic domError) {
-    _completer.completeError(domError);
+    _completer.completeError(_translateError(domError));
+  }
+}
+
+class CrFileError extends ChromeObject implements FileError {
+  CrFileError.fromProxy(JsObject jsProxy) : super.fromProxy(jsProxy);
+
+  int get code => jsProxy['code'];
+  String get message => jsProxy['message'];
+  String get name => jsProxy['name'];
+
+  static bool _isFileError(error) {
+    if (error is JsObject) {
+      // TODO: static JsFunction errorType = context['FileError'];
+      return error.toString().contains('FileError');
+    } else {
+      return false;
+    }
+  }
+}
+
+/**
+ * If the given error is a Javascript FileError, convert it to a dart:html
+ * FileError.
+ */
+dynamic _translateError(var error) {
+  if (CrFileError._isFileError(error)) {
+    return new CrFileError.fromProxy(error);
+  } else {
+    return error;
   }
 }

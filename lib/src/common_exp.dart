@@ -2,6 +2,7 @@
 library chrome.src.common_exp;
 
 import 'dart:js';
+import 'dart:typed_data' as typed_data;
 
 /**
  * The abstract superclass of objects that can hold [JsObject] proxies.
@@ -72,10 +73,18 @@ class Bounds extends ChromeObject {
 }
 
 class ArrayBuffer extends ChromeObject {
-  static ArrayBuffer create(JsObject jsProxy) => new ArrayBuffer.fromProxy(jsProxy);
+  static ArrayBuffer create(/*JsObject*/ jsProxy) => new ArrayBuffer.fromProxy(jsProxy);
 
   ArrayBuffer();
-  ArrayBuffer.fromProxy(/*JsObject*/ jsProxy): super.fromProxy(jsProxy);
+  ArrayBuffer._proxy(jsProxy) : super.fromProxy(jsProxy);
+
+  factory ArrayBuffer.fromProxy(/*JsObject*/ jsProxy) {
+    if (jsProxy is typed_data.Uint8List) {
+      return new _Uint8ListArrayBuffer(jsProxy);
+    } else {
+      return new ArrayBuffer._proxy(jsProxy);
+    }
+  }
 
   factory ArrayBuffer.fromBytes(List<int> data) {
     var uint8Array = new JsObject(context['Uint8Array'], [new JsArray.from(data)]);
@@ -102,6 +111,18 @@ class ArrayBuffer extends ChromeObject {
 
     return result;
   }
+}
+
+class _Uint8ListArrayBuffer implements ArrayBuffer {
+  final typed_data.Uint8List list;
+
+  _Uint8ListArrayBuffer(this.list);
+
+  List<int> getBytes() => list;
+
+  get jsProxy => null;
+
+  JsObject toJs() => jsProxy;
 }
 
 // TODO: this is a hack, to eliminate analysis warnings. remove as soon as possible

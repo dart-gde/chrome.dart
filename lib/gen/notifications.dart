@@ -273,7 +273,7 @@ OnClosedEvent _createOnClosedEvent(String notificationId, bool byUser) =>
     new OnClosedEvent(notificationId, byUser);
 OnButtonClickedEvent _createOnButtonClickedEvent(String notificationId, int buttonIndex) =>
     new OnButtonClickedEvent(notificationId, buttonIndex);
-ArrayBuffer _createArrayBuffer(JsObject jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
+ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
 NotificationBitmap _createNotificationBitmap(JsObject jsProxy) => jsProxy == null ? null : new NotificationBitmap.fromProxy(jsProxy);
 TemplateType _createTemplateType(String value) => TemplateType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 NotificationButton _createNotificationButton(JsObject jsProxy) => jsProxy == null ? null : new NotificationButton.fromProxy(jsProxy);

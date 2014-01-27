@@ -253,4 +253,4 @@ ControlSignalOptions _createControlSignalOptions(JsObject jsProxy) => jsProxy ==
 DataBit _createDataBit(String value) => DataBit.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ParityBit _createParityBit(String value) => ParityBit.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 StopBit _createStopBit(String value) => StopBit.VALUES.singleWhere((ChromeEnum e) => e.value == value);
-ArrayBuffer _createArrayBuffer(JsObject jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
+ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);

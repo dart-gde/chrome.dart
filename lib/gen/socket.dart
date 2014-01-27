@@ -479,5 +479,5 @@ RecvFromInfo _createRecvFromInfo(JsObject jsProxy) => jsProxy == null ? null : n
 AcceptInfo _createAcceptInfo(JsObject jsProxy) => jsProxy == null ? null : new AcceptInfo.fromProxy(jsProxy);
 SocketInfo _createSocketInfo(JsObject jsProxy) => jsProxy == null ? null : new SocketInfo.fromProxy(jsProxy);
 NetworkInterface _createNetworkInterface(JsObject jsProxy) => jsProxy == null ? null : new NetworkInterface.fromProxy(jsProxy);
-ArrayBuffer _createArrayBuffer(JsObject jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
+ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
 SocketType _createSocketType(String value) => SocketType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

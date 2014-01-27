@@ -5,7 +5,7 @@ export 'dart:html' show
     Blob,
     DirectoryEntry, DirectoryReader,
     Entry, EventTarget,
-    File, FileEntry, FileReader, FileSystem, FileWriter,
+    File, FileEntry, FileError, FileReader, FileSystem, FileWriter,
     Metadata,
     ProgressEvent;
 

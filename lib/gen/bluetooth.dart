@@ -490,7 +490,7 @@ class StartDiscoveryOptions extends ChromeObject {
 AdapterState _createAdapterState(JsObject jsProxy) => jsProxy == null ? null : new AdapterState.fromProxy(jsProxy);
 Profile _createProfile(JsObject jsProxy) => jsProxy == null ? null : new Profile.fromProxy(jsProxy);
 ServiceRecord _createServiceRecord(JsObject jsProxy) => jsProxy == null ? null : new ServiceRecord.fromProxy(jsProxy);
-ArrayBuffer _createArrayBuffer(JsObject jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
+ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
 OutOfBandPairingData _createOutOfBandPairingData(JsObject jsProxy) => jsProxy == null ? null : new OutOfBandPairingData.fromProxy(jsProxy);
 Socket _createSocket(JsObject jsProxy) => jsProxy == null ? null : new Socket.fromProxy(jsProxy);
 BluetoothDevice _createDevice(JsObject jsProxy) => jsProxy == null ? null : new BluetoothDevice.fromProxy(jsProxy);
