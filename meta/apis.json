@@ -20,15 +20,20 @@
     "runtime",
     "serial",
     "socket",
+    "sockets.tcp",
+    "sockets.tcpServer",
+    "sockets.udp",
     "storage",
     "syncFileSystem",
     "system.cpu",
     "system.display",
     "system.memory",
+    "system.network",
     "system.storage",
     "tts",
     "types",
-    "usb"
+    "usb",
+    "wallpaper"
   ],
 
   "extension" : [
@@ -75,7 +80,9 @@
     "sessions",
     "storage",
     "system.cpu",
+    "system.display",
     "system.memory",
+    "system.network",
     "system.storage",
     "tabCapture",
     "tabs",

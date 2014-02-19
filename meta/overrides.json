@@ -34,7 +34,12 @@
     "mediaGalleries.DOMFileSystem": "FileSystem",
 
     "events.Event": "ChromeEvent",
-    "runtime.Event": "ChromeEvent"
+    "runtime.Event": "ChromeEvent",
+
+    "socket.AcceptInfo": "SocketAcceptInfo",
+    "socket.SocketInfo": "SockSocketInfo",
+    "socket.NetworkInterface": "SocketNetworkInterface",
+    "socket.CreateInfo": "SocketCreateInfo"
   }
 
 }

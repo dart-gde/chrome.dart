@@ -15,9 +15,19 @@ class ChromeSystem {
   final ChromeSystemCpu cpu = new ChromeSystemCpu._();
 
   /**
+   * Accessor for the `chrome.system.display` namespace.
+   */
+  final ChromeSystemDisplay display = new ChromeSystemDisplay._();
+
+  /**
    * Accessor for the `chrome.system.memory` namespace.
    */
   final ChromeSystemMemory memory = new ChromeSystemMemory._();
+
+  /**
+   * Accessor for the `chrome.system.network` namespace.
+   */
+  final ChromeSystemNetwork network = new ChromeSystemNetwork._();
 
   /**
    * Accessor for the `chrome.system.storage` namespace.
@@ -72,6 +82,165 @@ class CpuInfo extends ChromeObject {
 CpuInfo _createCpuInfo(JsObject jsProxy) => jsProxy == null ? null : new CpuInfo.fromProxy(jsProxy);
 
 /**
+ * Use the `system.display` API to query display metadata.
+ */
+class ChromeSystemDisplay extends ChromeApi {
+  static final JsObject _system_display = chrome['system']['display'];
+
+  ChromeSystemDisplay._();
+
+  bool get available => _system_display != null;
+
+  /**
+   * Get the information of all attached display devices.
+   */
+  Future<List<DisplayUnitInfo>> getInfo() {
+    if (_system_display == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<List<DisplayUnitInfo>>.oneArg((e) => listify(e, _createDisplayUnitInfo));
+    _system_display.callMethod('getInfo', [completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Updates the properties for the display specified by [id], according to the
+   * information provided in [info]. On failure, [runtime.lastError] will be
+   * set.
+   * [id]: The display's unique identifier.
+   * [info]: The information about display properties that should be changed. A
+   * property will be changed only if a new value for it is specified in [info].
+   * [callback]: Empty function called when the function finishes. To find out
+   * whether the function succeeded, [runtime.lastError] should be queried.
+   */
+  Future setDisplayProperties(String id, DisplayProperties info) {
+    if (_system_display == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _system_display.callMethod('setDisplayProperties', [id, jsify(info), completer.callback]);
+    return completer.future;
+  }
+
+  Stream get onDisplayChanged => _onDisplayChanged.stream;
+
+  final ChromeStreamController _onDisplayChanged =
+      new ChromeStreamController.noArgs(_system_display, 'onDisplayChanged');
+
+  void _throwNotAvailable() {
+    throw new UnsupportedError("'chrome.system.display' is not available");
+  }
+}
+
+class Insets extends ChromeObject {
+  Insets({int left, int top, int right, int bottom}) {
+    if (left != null) this.left = left;
+    if (top != null) this.top = top;
+    if (right != null) this.right = right;
+    if (bottom != null) this.bottom = bottom;
+  }
+  Insets.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get left => jsProxy['left'];
+  set left(int value) => jsProxy['left'] = value;
+
+  int get top => jsProxy['top'];
+  set top(int value) => jsProxy['top'] = value;
+
+  int get right => jsProxy['right'];
+  set right(int value) => jsProxy['right'] = value;
+
+  int get bottom => jsProxy['bottom'];
+  set bottom(int value) => jsProxy['bottom'] = value;
+}
+
+class DisplayUnitInfo extends ChromeObject {
+  DisplayUnitInfo({String id, String name, String mirroringSourceId, bool isPrimary, bool isInternal, bool isEnabled, num dpiX, num dpiY, int rotation, Bounds bounds, Insets overscan, Bounds workArea}) {
+    if (id != null) this.id = id;
+    if (name != null) this.name = name;
+    if (mirroringSourceId != null) this.mirroringSourceId = mirroringSourceId;
+    if (isPrimary != null) this.isPrimary = isPrimary;
+    if (isInternal != null) this.isInternal = isInternal;
+    if (isEnabled != null) this.isEnabled = isEnabled;
+    if (dpiX != null) this.dpiX = dpiX;
+    if (dpiY != null) this.dpiY = dpiY;
+    if (rotation != null) this.rotation = rotation;
+    if (bounds != null) this.bounds = bounds;
+    if (overscan != null) this.overscan = overscan;
+    if (workArea != null) this.workArea = workArea;
+  }
+  DisplayUnitInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get id => jsProxy['id'];
+  set id(String value) => jsProxy['id'] = value;
+
+  String get name => jsProxy['name'];
+  set name(String value) => jsProxy['name'] = value;
+
+  String get mirroringSourceId => jsProxy['mirroringSourceId'];
+  set mirroringSourceId(String value) => jsProxy['mirroringSourceId'] = value;
+
+  bool get isPrimary => jsProxy['isPrimary'];
+  set isPrimary(bool value) => jsProxy['isPrimary'] = value;
+
+  bool get isInternal => jsProxy['isInternal'];
+  set isInternal(bool value) => jsProxy['isInternal'] = value;
+
+  bool get isEnabled => jsProxy['isEnabled'];
+  set isEnabled(bool value) => jsProxy['isEnabled'] = value;
+
+  num get dpiX => jsProxy['dpiX'];
+  set dpiX(num value) => jsProxy['dpiX'] = jsify(value);
+
+  num get dpiY => jsProxy['dpiY'];
+  set dpiY(num value) => jsProxy['dpiY'] = jsify(value);
+
+  int get rotation => jsProxy['rotation'];
+  set rotation(int value) => jsProxy['rotation'] = value;
+
+  Bounds get bounds => _createBounds(jsProxy['bounds']);
+  set bounds(Bounds value) => jsProxy['bounds'] = jsify(value);
+
+  Insets get overscan => _createInsets(jsProxy['overscan']);
+  set overscan(Insets value) => jsProxy['overscan'] = jsify(value);
+
+  Bounds get workArea => _createBounds(jsProxy['workArea']);
+  set workArea(Bounds value) => jsProxy['workArea'] = jsify(value);
+}
+
+class DisplayProperties extends ChromeObject {
+  DisplayProperties({String mirroringSourceId, bool isPrimary, Insets overscan, int rotation, int boundsOriginX, int boundsOriginY}) {
+    if (mirroringSourceId != null) this.mirroringSourceId = mirroringSourceId;
+    if (isPrimary != null) this.isPrimary = isPrimary;
+    if (overscan != null) this.overscan = overscan;
+    if (rotation != null) this.rotation = rotation;
+    if (boundsOriginX != null) this.boundsOriginX = boundsOriginX;
+    if (boundsOriginY != null) this.boundsOriginY = boundsOriginY;
+  }
+  DisplayProperties.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get mirroringSourceId => jsProxy['mirroringSourceId'];
+  set mirroringSourceId(String value) => jsProxy['mirroringSourceId'] = value;
+
+  bool get isPrimary => jsProxy['isPrimary'];
+  set isPrimary(bool value) => jsProxy['isPrimary'] = value;
+
+  Insets get overscan => _createInsets(jsProxy['overscan']);
+  set overscan(Insets value) => jsProxy['overscan'] = jsify(value);
+
+  int get rotation => jsProxy['rotation'];
+  set rotation(int value) => jsProxy['rotation'] = value;
+
+  int get boundsOriginX => jsProxy['boundsOriginX'];
+  set boundsOriginX(int value) => jsProxy['boundsOriginX'] = value;
+
+  int get boundsOriginY => jsProxy['boundsOriginY'];
+  set boundsOriginY(int value) => jsProxy['boundsOriginY'] = value;
+}
+
+DisplayUnitInfo _createDisplayUnitInfo(JsObject jsProxy) => jsProxy == null ? null : new DisplayUnitInfo.fromProxy(jsProxy);
+Bounds _createBounds(JsObject jsProxy) => jsProxy == null ? null : new Bounds.fromProxy(jsProxy);
+Insets _createInsets(JsObject jsProxy) => jsProxy == null ? null : new Insets.fromProxy(jsProxy);
+
+/**
  * The `chrome.system.memory` API.
  */
 class ChromeSystemMemory extends ChromeApi {
@@ -112,6 +281,58 @@ class MemoryInfo extends ChromeObject {
 }
 
 MemoryInfo _createMemoryInfo(JsObject jsProxy) => jsProxy == null ? null : new MemoryInfo.fromProxy(jsProxy);
+
+/**
+ * Use the `chrome.system.network` API.
+ */
+class ChromeSystemNetwork extends ChromeApi {
+  static final JsObject _system_network = chrome['system']['network'];
+
+  ChromeSystemNetwork._();
+
+  bool get available => _system_network != null;
+
+  /**
+   * Retrieves information about local adapters on this system.
+   * [callback]: Called when local adapter information is available.
+   * 
+   * Returns:
+   * Callback from the `getNetworkInterfaces` method.
+   * [networkInterfaces]: Array of object containing network interfaces
+   * information.
+   */
+  Future<List<NetworkInterface>> getNetworkInterfaces() {
+    if (_system_network == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<List<NetworkInterface>>.oneArg((e) => listify(e, _createNetworkInterface));
+    _system_network.callMethod('getNetworkInterfaces', [completer.callback]);
+    return completer.future;
+  }
+
+  void _throwNotAvailable() {
+    throw new UnsupportedError("'chrome.system.network' is not available");
+  }
+}
+
+class NetworkInterface extends ChromeObject {
+  NetworkInterface({String name, String address, int prefixLength}) {
+    if (name != null) this.name = name;
+    if (address != null) this.address = address;
+    if (prefixLength != null) this.prefixLength = prefixLength;
+  }
+  NetworkInterface.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get name => jsProxy['name'];
+  set name(String value) => jsProxy['name'] = value;
+
+  String get address => jsProxy['address'];
+  set address(String value) => jsProxy['address'] = value;
+
+  int get prefixLength => jsProxy['prefixLength'];
+  set prefixLength(int value) => jsProxy['prefixLength'] = value;
+}
+
+NetworkInterface _createNetworkInterface(JsObject jsProxy) => jsProxy == null ? null : new NetworkInterface.fromProxy(jsProxy);
 
 /**
  * Use the `chrome.system.storage` API to query storage device information and

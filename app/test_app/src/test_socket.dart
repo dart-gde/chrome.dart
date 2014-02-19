@@ -10,7 +10,7 @@ void main() {
   group('chrome.socket', () {
     test('create', () {
       chrome.socket.create(chrome.SocketType.TCP)
-        .then(expectAsync1((chrome.CreateInfo createInfo) {
+        .then(expectAsync1((chrome.SocketCreateInfo createInfo) {
           expect(createInfo.socketId, greaterThan(0));
           expect(() => chrome.socket.destroy(createInfo.socketId), returnsNormally);
         }));
@@ -18,7 +18,7 @@ void main() {
 
     test('connect', () {
       chrome.socket.create(chrome.SocketType.TCP)
-      .then(expectAsync1((chrome.CreateInfo createInfo) {
+      .then(expectAsync1((chrome.SocketCreateInfo createInfo) {
         expect(createInfo.socketId, greaterThan(0));
         chrome.socket.connect(createInfo.socketId, "google.com", 80)
           .then(expectAsync1((int connected) {
@@ -32,7 +32,7 @@ void main() {
 
     test('disconnect', () {
       chrome.socket.create(chrome.SocketType.TCP)
-      .then(expectAsync1((chrome.CreateInfo createInfo) {
+      .then(expectAsync1((chrome.SocketCreateInfo createInfo) {
         expect(createInfo.socketId, greaterThan(0));
         chrome.socket.connect(createInfo.socketId, "google.com", 80)
           .then(expectAsync1((int connected) {
@@ -45,7 +45,7 @@ void main() {
 
     test('read', () {
       chrome.socket.create(chrome.SocketType.TCP)
-        .then(expectAsync1((chrome.CreateInfo createInfo) {
+        .then(expectAsync1((chrome.SocketCreateInfo createInfo) {
         expect(createInfo.socketId, greaterThan(0));
         chrome.socket.connect(createInfo.socketId, "128.138.140.44", 13)
           .then(expectAsync1((int connected) {
@@ -65,7 +65,7 @@ void main() {
 
     test('write', () {
       chrome.socket.create(chrome.SocketType.TCP)
-        .then(expectAsync1((chrome.CreateInfo createInfo) {
+        .then(expectAsync1((chrome.SocketCreateInfo createInfo) {
         expect(createInfo.socketId, greaterThan(0));
         chrome.socket.connect(createInfo.socketId, "google.com", 80)
           .then(expectAsync1((int connected) {
@@ -92,13 +92,13 @@ void main() {
 
     test('getInfo', () {
       chrome.socket.create(chrome.SocketType.TCP)
-        .then(expectAsync1((chrome.CreateInfo createInfo) {
+        .then(expectAsync1((chrome.SocketCreateInfo createInfo) {
         expect(createInfo.socketId, greaterThan(0));
         chrome.socket.connect(createInfo.socketId, "google.com", 80)
           .then(expectAsync1((int connected) {
           expect(connected, isZero);
           chrome.socket.getInfo(createInfo.socketId)
-            .then(expectAsync1((chrome.SocketInfo socketInfo) {
+            .then(expectAsync1((chrome.SockSocketInfo socketInfo) {
             expect(socketInfo.socketType, equals(chrome.SocketType.TCP));
             expect(socketInfo.localPort, greaterThan(0));
             expect(socketInfo.peerAddress.isEmpty, isFalse);
@@ -113,16 +113,15 @@ void main() {
     });
 
     test('getNetworkList', () {
-      chrome.socket.getNetworkList().then(
-          expectAsync1((List<chrome.NetworkInterface> networklist) {
-            logMessage("networklist = $networklist");
-            expect(networklist is List, isTrue);
-            networklist.forEach((i) {
-              logMessage("i.name = ${i.name}");
-              logMessage("i.address = ${i.address}");
-              expect(i is chrome.NetworkInterface, isTrue);
-            });
-       }));
+      return chrome.socket.getNetworkList().then((List networklist) {
+          logMessage("networklist = $networklist");
+          expect(networklist is List, isTrue);
+          networklist.forEach((i) {
+            logMessage("i.name = ${i.name}");
+            logMessage("i.address = ${i.address}");
+            expect(i is chrome.SocketNetworkInterface, isTrue);
+          });
+       });
     });
   });
 }

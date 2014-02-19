@@ -24,12 +24,14 @@ export 'gen/push_messaging.dart';
 export 'gen/runtime.dart';
 export 'gen/serial.dart';
 export 'gen/socket.dart';
+export 'gen/sockets.dart';
 export 'gen/storage.dart';
 export 'gen/sync_file_system.dart';
 export 'gen/system.dart';
 export 'gen/tts.dart';
 export 'gen/types.dart';
 export 'gen/usb.dart';
+export 'gen/wallpaper.dart';
 
 export 'src/common_exp.dart';
 export 'src/files_exp.dart';

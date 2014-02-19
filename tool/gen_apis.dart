@@ -171,7 +171,8 @@ class GenApis {
     apis.forEach((api) => api.generateAccessor());
     generator.writeln("}");
     var createdFactories = new Set<String>();
-    apis.forEach((api) => api.generateContent(true, createdFactories));
+    var createdClasses = new Set<String>();
+    apis.forEach((api) => api.generateContent(true, createdFactories, createdClasses));
 
     outFile.writeAsStringSync(generator.toString());
   }

@@ -257,7 +257,7 @@ void handleSocketRead() {
 
   int socketId = 0;
 
-  chrome.socket.create(chrome.SocketType.TCP).then((chrome.CreateInfo info) {
+  chrome.socket.create(chrome.SocketType.TCP).then((chrome.SocketCreateInfo info) {
     socketId = info.socketId;
     print("socketId: ${socketId}");
     return chrome.socket.connect(socketId, 'www.google.com', 80);
@@ -281,7 +281,7 @@ void handleSocketRead() {
 void handleSocketReadError() {
   int socketId = 0;
 
-  chrome.socket.create(chrome.SocketType.TCP).then((chrome.CreateInfo info) {
+  chrome.socket.create(chrome.SocketType.TCP).then((chrome.SocketCreateInfo info) {
     socketId = info.socketId;
     print("socketId: ${socketId}");
     return chrome.socket.connect(socketId, 'www.google.com', 80);
