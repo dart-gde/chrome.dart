@@ -1,5 +1,15 @@
 # Changelog - chrome.dart
 
+## 0.5.0 2014-02-xx
+
+- added `chrome.sockets` API (`chrome.socket` is now ~deprecated)
+- some classes in `chrome.socket` were renamed to avoid conflicted with the `sockets` API classes
+- added `chrome.gcm`; exposes Google Cloud Messaging
+- added `chrome.signedInDevices`
+- added `chrome.wallpaper`
+- added `chrome.system.display`
+- added `chrome.system.network`
+
 ## 0.4.3 2014-01-21 (SDK 1.2.0-dev.1.0 r31918)
 
 - Fixed bug with `entry.metaData.timeStamp`

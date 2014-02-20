@@ -12,6 +12,7 @@ export 'gen/bluetooth.dart';
 export 'gen/context_menus.dart';
 export 'gen/events.dart';
 export 'gen/file_system.dart';
+export 'gen/gcm.dart';
 export 'gen/i18n.dart';
 export 'gen/identity.dart';
 export 'gen/idle.dart';
