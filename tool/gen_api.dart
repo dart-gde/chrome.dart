@@ -95,8 +95,8 @@ class GenApiFile {
     return _chromeLib.imports;
   }
 
-  void generateContent(bool printClassDocs, Set createdFactories) {
-    _backend.generateContent(printClassDocs, createdFactories);
+  void generateContent(bool printClassDocs, Set createdFactories, Set createdClasses) {
+    _backend.generateContent(printClassDocs, createdFactories, createdClasses);
   }
 }
 

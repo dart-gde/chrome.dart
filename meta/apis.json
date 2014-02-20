@@ -8,6 +8,7 @@
     "contextMenus",
     "events",
     "fileSystem",
+    "gcm",
     "i18n",
     "identity",
     "idle",
@@ -19,16 +20,20 @@
     "pushMessaging",
     "runtime",
     "serial",
-    "socket",
+    "sockets.tcp",
+    "sockets.tcpServer",
+    "sockets.udp",
     "storage",
     "syncFileSystem",
     "system.cpu",
     "system.display",
     "system.memory",
+    "system.network",
     "system.storage",
     "tts",
     "types",
-    "usb"
+    "usb",
+    "wallpaper"
   ],
 
   "extension" : [
@@ -52,6 +57,7 @@
     "extension",
     "fileBrowserHandler",
     "fontSettings",
+    "gcm",
     "history",
     "i18n",
     "identity",
@@ -73,9 +79,12 @@
     "runtime",
     "scriptBadge",
     "sessions",
+    "signedInDevices",
     "storage",
     "system.cpu",
+    "system.display",
     "system.memory",
+    "system.network",
     "system.storage",
     "tabCapture",
     "tabs",
@@ -86,5 +95,9 @@
     "webNavigation",
     "webRequest",
     "windows"
+  ],
+
+  "other" : [
+    "socket"
   ]
 }

@@ -29,13 +29,11 @@ Documentation is available at:
 * [Chrome Apps API](http://dart-gde.github.io/chrome.dart/app/)
 * [Chrome Extensions API](http://dart-gde.github.io/chrome.dart/ext/)
 
-## Re-generating the library
-From the project directory, run:
+## Breaking Changes
 
-`dart tool/gen_apis.dart`
+For version 0.5.0, we removed the older `chrome.socket` API in favor of the new
+`chrome.sockets` API. In order to continue using the older API, you can
+reference it directly via an import:
 
-This will:
+    import 'package:chrome/gen/socket.dart';
 
-* read `meta/apis.json` and `meta/overrides.json`
-* parse the cooresponding `idl/*.json` and `idl/*.idl` files
-* generate `lib/chrome_app.dart`, `lib/chrome_ext.dart`, and `lib/gen/*.dart`.

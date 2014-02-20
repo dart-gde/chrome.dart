@@ -21,7 +21,7 @@ abstract class Backend {
   }
 
   void generateAccessor();
-  void generateContent(bool printClassDocs, Set createdFactories);
+  void generateContent(bool printClassDocs, Set createdFactories, Set createdClasses);
 
   String generate({String license, String sourceFileName});
 }
@@ -88,12 +88,12 @@ class DefaultBackend extends Backend {
 
     generateAccessor();
 
-    generateContent(false, new Set<String>());
+    generateContent(false, new Set<String>(), new Set<String>());
 
     return generator.toString();
   }
 
-  void generateContent(bool printClassDocs, Set createdFactories) {
+  void generateContent(bool printClassDocs, Set createdFactories, Set createdClasses) {
     generator.writeln();
     if (printClassDocs) {
       generator.writeDocs(library.documentation);
@@ -102,7 +102,10 @@ class DefaultBackend extends Backend {
 
     library.eventTypes.forEach(_printEventType);
     library.enumTypes.forEach(_printEnumType);
-    library.types.forEach(_printDeclaredType);
+    library.types..where((t) => !createdClasses.contains(t.name)).forEach((t) {
+      createdClasses.add(t.name);
+      _printDeclaredType(t);
+    });
     library.returnTypes.forEach(_printReturnType);
 
     if (_neededFactories.isNotEmpty) {

@@ -1,6 +1,5 @@
 library harness_app;
 
-import 'dart:async';
 import 'dart:html' as html;
 
 import 'package:unittest/html_enhanced_config.dart';
