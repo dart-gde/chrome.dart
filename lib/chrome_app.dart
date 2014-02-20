@@ -24,7 +24,6 @@ export 'gen/power.dart';
 export 'gen/push_messaging.dart';
 export 'gen/runtime.dart';
 export 'gen/serial.dart';
-export 'gen/socket.dart';
 export 'gen/sockets.dart';
 export 'gen/storage.dart';
 export 'gen/sync_file_system.dart';

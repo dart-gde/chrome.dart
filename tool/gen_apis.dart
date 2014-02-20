@@ -53,6 +53,14 @@ class GenApis {
 
     _generateApi('app', apisInfo['packaged_app'], includeAppSrc: true);
     _generateApi('ext', apisInfo['extension'], alreadyWritten: apisInfo['packaged_app']);
+
+    // Generate orphaned libraries.
+    _logger.info("writing loose libraries...");
+    Overrides overrides = new Overrides.fromFile(overridesFile);
+
+    for (String libName in apisInfo['other']) {
+      _generateFile(overrides, libName);
+    }
   }
 
   void _generateApi(String name, List<String> libraryNames,

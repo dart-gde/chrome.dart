@@ -1,9 +1,11 @@
 # Changelog - chrome.dart
 
-## 0.5.0 2014-02-xx
+## 0.5.0 2014-02-20
 
-- added `chrome.sockets` API (`chrome.socket` is now ~deprecated)
-- some classes in `chrome.socket` were renamed to avoid conflicted with the `sockets` API classes
+- added the new `chrome.sockets` API
+- the existing `chrome.socket` API has been removed from the chrome_app.dart
+  library. In order to continue using it, you can reference it directly
+  (`import 'package:chrome/gen/socket.dart';`)
 - added `chrome.gcm`; exposes Google Cloud Messaging
 - added `chrome.signedInDevices`
 - added `chrome.wallpaper`

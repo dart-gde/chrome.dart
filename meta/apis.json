@@ -20,7 +20,6 @@
     "pushMessaging",
     "runtime",
     "serial",
-    "socket",
     "sockets.tcp",
     "sockets.tcpServer",
     "sockets.udp",
@@ -96,5 +95,9 @@
     "webNavigation",
     "webRequest",
     "windows"
+  ],
+
+  "other" : [
+    "socket"
   ]
 }
