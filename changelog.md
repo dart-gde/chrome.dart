@@ -1,6 +1,6 @@
 # Changelog - chrome.dart
 
-## 0.5.0 2014-02-20
+## 0.5.0 2014-02-20 (SDK 1.2.0-dev.5.12 r32844)
 
 - added the new `chrome.sockets` API
 - the existing `chrome.socket` API has been removed from the chrome_app.dart
