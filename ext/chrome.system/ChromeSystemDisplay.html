@@ -1,0 +1,175 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeSystemDisplay class / chrome.system Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.system" data-type="ChromeSystemDisplay">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.system.html">chrome.system</a> &rsaquo; <a href="../chrome.system/ChromeSystemDisplay.html">ChromeSystemDisplay</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeSystemDisplay</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Use the <code>system.display</code> API to query display metadata.</p>
+<pre class="source">
+class ChromeSystemDisplay extends ChromeApi {
+ static final JsObject _system_display = chrome['system']['display'];
+
+ ChromeSystemDisplay._();
+
+ bool get available =&gt; _system_display != null;
+
+ /**
+  * Get the information of all attached display devices.
+  */
+ Future&lt;List&lt;DisplayUnitInfo&gt;&gt; getInfo() {
+   if (_system_display == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;DisplayUnitInfo&gt;&gt;.oneArg((e) =&gt; listify(e, _createDisplayUnitInfo));
+   _system_display.callMethod('getInfo', [completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Updates the properties for the display specified by [id], according to the
+  * information provided in [info]. On failure, [runtime.lastError] will be
+  * set.
+  * [id]: The display's unique identifier.
+  * [info]: The information about display properties that should be changed. A
+  * property will be changed only if a new value for it is specified in [info].
+  * [callback]: Empty function called when the function finishes. To find out
+  * whether the function succeeded, [runtime.lastError] should be queried.
+  */
+ Future setDisplayProperties(String id, DisplayProperties info) {
+   if (_system_display == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _system_display.callMethod('setDisplayProperties', [id, jsify(info), completer.callback]);
+   return completer.future;
+ }
+
+ Stream get onDisplayChanged =&gt; _onDisplayChanged.stream;
+
+ final ChromeStreamController _onDisplayChanged =
+     new ChromeStreamController.noArgs(_system_display, 'onDisplayChanged');
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.system.display' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeSystemDisplay</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeSystemDisplay.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _system_display != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onDisplayChanged">
+<button class="show-code">Code</button>
+final Stream         <strong>onDisplayChanged</strong> <a class="anchor-link"
+            href="#onDisplayChanged"
+            title="Permalink to ChromeSystemDisplay.onDisplayChanged">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Stream get onDisplayChanged =&gt; _onDisplayChanged.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="getInfo">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.system/DisplayUnitInfo.html">DisplayUnitInfo</a>&gt;&gt; <strong>getInfo</strong>() <a class="anchor-link" href="#getInfo"
+              title="Permalink to ChromeSystemDisplay.getInfo">#</a></h4>
+<div class="doc">
+<p>Get the information of all attached display devices.</p>
+<pre class="source">
+Future&lt;List&lt;DisplayUnitInfo&gt;&gt; getInfo() {
+ if (_system_display == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;DisplayUnitInfo&gt;&gt;.oneArg((e) =&gt; listify(e, _createDisplayUnitInfo));
+ _system_display.callMethod('getInfo', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setDisplayProperties">
+<button class="show-code">Code</button>
+Future <strong>setDisplayProperties</strong>(String id, <a href="../chrome.system/DisplayProperties.html">DisplayProperties</a> info) <a class="anchor-link" href="#setDisplayProperties"
+              title="Permalink to ChromeSystemDisplay.setDisplayProperties">#</a></h4>
+<div class="doc">
+<p>Updates the properties for the display specified by 
+<span class="param">id</span>, according to the
+information provided in 
+<span class="param">info</span>. On failure, <code>runtime.lastError</code> will be
+set.
+
+<span class="param">id</span>: The display's unique identifier.
+
+<span class="param">info</span>: The information about display properties that should be changed. A
+property will be changed only if a new value for it is specified in 
+<span class="param">info</span>.
+<code>callback</code>: Empty function called when the function finishes. To find out
+whether the function succeeded, <code>runtime.lastError</code> should be queried.</p>
+<pre class="source">
+Future setDisplayProperties(String id, DisplayProperties info) {
+ if (_system_display == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _system_display.callMethod('setDisplayProperties', [id, jsify(info), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

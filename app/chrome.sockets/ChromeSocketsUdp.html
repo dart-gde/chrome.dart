@@ -1,0 +1,682 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeSocketsUdp class / chrome.sockets Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.sockets" data-type="ChromeSocketsUdp">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.sockets.html">chrome.sockets</a> &rsaquo; <a href="../chrome.sockets/ChromeSocketsUdp.html">ChromeSocketsUdp</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeSocketsUdp</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Use the <code>chrome.sockets.udp</code> API to send and receive data over the network
+using UDP connections. This API supersedes the UDP functionality previously
+found in the "socket" API. Note that the socket ids created from this
+namespace are not compatible with ids created in other namespaces.</p>
+<pre class="source">
+class ChromeSocketsUdp extends ChromeApi {
+ static final JsObject _sockets_udp = chrome['sockets']['udp'];
+
+ ChromeSocketsUdp._();
+
+ bool get available =&gt; _sockets_udp != null;
+
+ /**
+  * Creates a UDP socket.
+  * [properties]: The socket properties (optional).
+  * [callback]: Called when the socket has been created.
+  * 
+  * Returns:
+  * Callback from the `create` method.
+  * [createInfo]: The result of the socket creation.
+  */
+ Future&lt;CreateInfo&gt; create([SocketProperties properties]) {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;CreateInfo&gt;.oneArg(_createCreateInfo);
+   _sockets_udp.callMethod('create', [jsify(properties), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Updates the socket properties.
+  * [socketId]: The socket ID.
+  * [properties]: The properties to update.
+  * [callback]: Called when the properties are updated.
+  */
+ Future update(int socketId, SocketProperties properties) {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _sockets_udp.callMethod('update', [socketId, jsify(properties), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Binds the local address for socket. When the `bind` operation completes
+  * successfully, `onReceive` events are raised when UDP packets arrive on the
+  * address/port specified. If a network error occurs while the runtime is
+  * receiving packets, an `onReceiveError` event is raised, at which point no
+  * more `onReceive` events will be raised for this socket.
+  * [socketId]: The socket ID.
+  * [address]: The address of the local machine. DNS name, IPv4 and IPv6
+  * formats are supported. Use "0.0.0.0" to accept packets from all local
+  * available network interfaces.
+  * [port]: The port of the local machine. Use "0" to bind to a free port.
+  * [callback]: Called when the `bind` operation completes.
+  * 
+  * Returns:
+  * Callback from the `bind` method.
+  * [result]: The result code returned from the underlying network call. A
+  * negative value indicates an error.
+  */
+ Future&lt;int&gt; bind(int socketId, String address, int port) {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+   _sockets_udp.callMethod('bind', [socketId, address, port, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sends data on the given UDP socket to the given address and port.
+  * [socketId]: The socket ID.
+  * [data]: The data to send.
+  * [address]: The address of the remote machine.
+  * [port]: The port of the remote machine.
+  * [callback]: Called when the `send` operation completes.
+  * 
+  * Returns:
+  * Callback from the `send` method.
+  * [sendInfo]: Result of the `send` method.
+  */
+ Future&lt;SendInfo&gt; send(int socketId, ArrayBuffer data, String address, int port) {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;SendInfo&gt;.oneArg(_createSendInfo);
+   _sockets_udp.callMethod('send', [socketId, jsify(data), address, port, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Closes the socket and releases the address/port the socket is bound to.
+  * Each socket created should be closed after use. The socket id is no no
+  * longer valid as soon at the function is called. However, the socket is
+  * guaranteed to be closed only when the callback is invoked.
+  * [socketId]: The socket ID.
+  * [callback]: Called when the `close` operation completes.
+  */
+ Future close(int socketId) {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _sockets_udp.callMethod('close', [socketId, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Retrieves the state of the given socket.
+  * [socketId]: The socket ID.
+  * [callback]: Called when the socket state is available.
+  * 
+  * Returns:
+  * Callback from the `getInfo` method.
+  * [socketInfo]: Object containing the socket information.
+  */
+ Future&lt;SocketInfo&gt; getInfo(int socketId) {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;SocketInfo&gt;.oneArg(_createSocketInfo);
+   _sockets_udp.callMethod('getInfo', [socketId, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Retrieves the list of currently opened sockets owned by the application.
+  * [callback]: Called when the list of sockets is available.
+  * 
+  * Returns:
+  * Callback from the `getSockets` method.
+  * [socketInfos]: Array of object containing socket information.
+  */
+ Future&lt;List&lt;SocketInfo&gt;&gt; getSockets() {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;SocketInfo&gt;&gt;.oneArg((e) =&gt; listify(e, _createSocketInfo));
+   _sockets_udp.callMethod('getSockets', [completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Joins the multicast group and starts to receive packets from that group.
+  * The socket must be bound to a local port before calling this method.
+  * [socketId]: The socket ID.
+  * [address]: The group address to join. Domain names are not supported.
+  * [callback]: Called when the `joinGroup` operation completes.
+  * 
+  * Returns:
+  * Callback from the `joinGroup` method.
+  * [result]: The result code returned from the underlying network call. A
+  * negative value indicates an error.
+  */
+ Future&lt;int&gt; joinGroup(int socketId, String address) {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+   _sockets_udp.callMethod('joinGroup', [socketId, address, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Leaves the multicast group previously joined using `joinGroup`. This is
+  * only necessary to call if you plan to keep using the socketafterwards,
+  * since it will be done automatically by the OS when the socket is closed.
+  * 
+  * Leaving the group will prevent the router from sending multicast datagrams
+  * to the local host, presuming no other process on the host is still joined
+  * to the group.
+  * 
+  * [socketId]: The socket ID.
+  * [address]: The group address to leave. Domain names are not supported.
+  * [callback]: Called when the `leaveGroup` operation completes.
+  * 
+  * Returns:
+  * Callback from the `leaveGroup` method.
+  * [result]: The result code returned from the underlying network call. A
+  * negative value indicates an error.
+  */
+ Future&lt;int&gt; leaveGroup(int socketId, String address) {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+   _sockets_udp.callMethod('leaveGroup', [socketId, address, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets the time-to-live of multicast packets sent to the multicast group.
+  * 
+  * Calling this method does not require multicast permissions.
+  * 
+  * [socketId]: The socket ID.
+  * [ttl]: The time-to-live value.
+  * [callback]: Called when the configuration operation completes.
+  * 
+  * Returns:
+  * Callback from the `setMulticastTimeToLive` method.
+  * [result]: The result code returned from the underlying network call. A
+  * negative value indicates an error.
+  */
+ Future&lt;int&gt; setMulticastTimeToLive(int socketId, int ttl) {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+   _sockets_udp.callMethod('setMulticastTimeToLive', [socketId, ttl, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets whether multicast packets sent from the host to the multicast group
+  * will be looped back to the host.
+  * 
+  * Note: the behavior of `setMulticastLoopbackMode` is slightly different
+  * between Windows and Unix-like systems. The inconsistency happens only when
+  * there is more than one application on the same host joined to the same
+  * multicast group while having different settings on multicast loopback mode.
+  * On Windows, the applications with loopback off will not RECEIVE the
+  * loopback packets; while on Unix-like systems, the applications with
+  * loopback off will not SEND the loopback packets to other applications on
+  * the same host. See MSDN: http://goo.gl/6vqbj
+  * 
+  * Calling this method does not require multicast permissions.
+  * 
+  * [socketId]: The socket ID.
+  * [enabled]: Indicate whether to enable loopback mode.
+  * [callback]: Called when the configuration operation completes.
+  * 
+  * Returns:
+  * Callback from the `setMulticastLoopbackMode` method.
+  * [result]: The result code returned from the underlying network call. A
+  * negative value indicates an error.
+  */
+ Future&lt;int&gt; setMulticastLoopbackMode(int socketId, bool enabled) {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+   _sockets_udp.callMethod('setMulticastLoopbackMode', [socketId, enabled, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Gets the multicast group addresses the socket is currently joined to.
+  * [socketId]: The socket ID.
+  * [callback]: Called with an array of strings of the result.
+  * 
+  * Returns:
+  * Callback from the `getJoinedGroupsCallback` method.
+  * [groups]: Array of groups the socket joined.
+  */
+ Future&lt;List&lt;String&gt;&gt; getJoinedGroups(int socketId) {
+   if (_sockets_udp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;String&gt;&gt;.oneArg(listify);
+   _sockets_udp.callMethod('getJoinedGroups', [socketId, completer.callback]);
+   return completer.future;
+ }
+
+ Stream&lt;ReceiveInfo&gt; get onReceive =&gt; _onReceive.stream;
+
+ final ChromeStreamController&lt;ReceiveInfo&gt; _onReceive =
+     new ChromeStreamController&lt;ReceiveInfo&gt;.oneArg(_sockets_udp, 'onReceive', _createReceiveInfo);
+
+ Stream&lt;ReceiveErrorInfo&gt; get onReceiveError =&gt; _onReceiveError.stream;
+
+ final ChromeStreamController&lt;ReceiveErrorInfo&gt; _onReceiveError =
+     new ChromeStreamController&lt;ReceiveErrorInfo&gt;.oneArg(_sockets_udp, 'onReceiveError', _createReceiveErrorInfo);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.sockets.udp' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeSocketsUdp</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeSocketsUdp.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _sockets_udp != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onReceive">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.sockets/ReceiveInfo.html">ReceiveInfo</a>&gt;         <strong>onReceive</strong> <a class="anchor-link"
+            href="#onReceive"
+            title="Permalink to ChromeSocketsUdp.onReceive">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Stream&lt;ReceiveInfo&gt; get onReceive =&gt; _onReceive.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onReceiveError">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.sockets/ReceiveErrorInfo.html">ReceiveErrorInfo</a>&gt;         <strong>onReceiveError</strong> <a class="anchor-link"
+            href="#onReceiveError"
+            title="Permalink to ChromeSocketsUdp.onReceiveError">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Stream&lt;ReceiveErrorInfo&gt; get onReceiveError =&gt; _onReceiveError.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="bind">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>bind</strong>(int socketId, String address, int port) <a class="anchor-link" href="#bind"
+              title="Permalink to ChromeSocketsUdp.bind">#</a></h4>
+<div class="doc">
+<p>Binds the local address for socket. When the <code>bind</code> operation completes
+successfully, <code>onReceive</code> events are raised when UDP packets arrive on the
+address/port specified. If a network error occurs while the runtime is
+receiving packets, an <code>onReceiveError</code> event is raised, at which point no
+more <code>onReceive</code> events will be raised for this socket.
+
+<span class="param">socketId</span>: The socket ID.
+
+<span class="param">address</span>: The address of the local machine. DNS name, IPv4 and IPv6
+formats are supported. Use "0.0.0.0" to accept packets from all local
+available network interfaces.
+
+<span class="param">port</span>: The port of the local machine. Use "0" to bind to a free port.
+<code>callback</code>: Called when the <code>bind</code> operation completes.</p>
+<p>Returns:
+Callback from the <code>bind</code> method.
+<code>result</code>: The result code returned from the underlying network call. A
+negative value indicates an error.</p>
+<pre class="source">
+Future&lt;int&gt; bind(int socketId, String address, int port) {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+ _sockets_udp.callMethod('bind', [socketId, address, port, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="close">
+<button class="show-code">Code</button>
+Future <strong>close</strong>(int socketId) <a class="anchor-link" href="#close"
+              title="Permalink to ChromeSocketsUdp.close">#</a></h4>
+<div class="doc">
+<p>Closes the socket and releases the address/port the socket is bound to.
+Each socket created should be closed after use. The socket id is no no
+longer valid as soon at the function is called. However, the socket is
+guaranteed to be closed only when the callback is invoked.
+
+<span class="param">socketId</span>: The socket ID.
+<code>callback</code>: Called when the <code>close</code> operation completes.</p>
+<pre class="source">
+Future close(int socketId) {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _sockets_udp.callMethod('close', [socketId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="create">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.sockets/CreateInfo.html">CreateInfo</a>&gt; <strong>create</strong>([<a href="../chrome.sockets/SocketProperties.html">SocketProperties</a> properties]) <a class="anchor-link" href="#create"
+              title="Permalink to ChromeSocketsUdp.create">#</a></h4>
+<div class="doc">
+<p>Creates a UDP socket.
+
+<span class="param">properties</span>: The socket properties (optional).
+<code>callback</code>: Called when the socket has been created.</p>
+<p>Returns:
+Callback from the <code>create</code> method.
+<code>createInfo</code>: The result of the socket creation.</p>
+<pre class="source">
+Future&lt;CreateInfo&gt; create([SocketProperties properties]) {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;CreateInfo&gt;.oneArg(_createCreateInfo);
+ _sockets_udp.callMethod('create', [jsify(properties), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getInfo">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.sockets/SocketInfo.html">SocketInfo</a>&gt; <strong>getInfo</strong>(int socketId) <a class="anchor-link" href="#getInfo"
+              title="Permalink to ChromeSocketsUdp.getInfo">#</a></h4>
+<div class="doc">
+<p>Retrieves the state of the given socket.
+
+<span class="param">socketId</span>: The socket ID.
+<code>callback</code>: Called when the socket state is available.</p>
+<p>Returns:
+Callback from the <code>getInfo</code> method.
+<code>socketInfo</code>: Object containing the socket information.</p>
+<pre class="source">
+Future&lt;SocketInfo&gt; getInfo(int socketId) {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;SocketInfo&gt;.oneArg(_createSocketInfo);
+ _sockets_udp.callMethod('getInfo', [socketId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getJoinedGroups">
+<button class="show-code">Code</button>
+Future&lt;List&lt;String&gt;&gt; <strong>getJoinedGroups</strong>(int socketId) <a class="anchor-link" href="#getJoinedGroups"
+              title="Permalink to ChromeSocketsUdp.getJoinedGroups">#</a></h4>
+<div class="doc">
+<p>Gets the multicast group addresses the socket is currently joined to.
+
+<span class="param">socketId</span>: The socket ID.
+<code>callback</code>: Called with an array of strings of the result.</p>
+<p>Returns:
+Callback from the <code>getJoinedGroupsCallback</code> method.
+<code>groups</code>: Array of groups the socket joined.</p>
+<pre class="source">
+Future&lt;List&lt;String&gt;&gt; getJoinedGroups(int socketId) {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;String&gt;&gt;.oneArg(listify);
+ _sockets_udp.callMethod('getJoinedGroups', [socketId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getSockets">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.sockets/SocketInfo.html">SocketInfo</a>&gt;&gt; <strong>getSockets</strong>() <a class="anchor-link" href="#getSockets"
+              title="Permalink to ChromeSocketsUdp.getSockets">#</a></h4>
+<div class="doc">
+<p>Retrieves the list of currently opened sockets owned by the application.
+<code>callback</code>: Called when the list of sockets is available.</p>
+<p>Returns:
+Callback from the <code>getSockets</code> method.
+<code>socketInfos</code>: Array of object containing socket information.</p>
+<pre class="source">
+Future&lt;List&lt;SocketInfo&gt;&gt; getSockets() {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;SocketInfo&gt;&gt;.oneArg((e) =&gt; listify(e, _createSocketInfo));
+ _sockets_udp.callMethod('getSockets', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="joinGroup">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>joinGroup</strong>(int socketId, String address) <a class="anchor-link" href="#joinGroup"
+              title="Permalink to ChromeSocketsUdp.joinGroup">#</a></h4>
+<div class="doc">
+<p>Joins the multicast group and starts to receive packets from that group.
+The socket must be bound to a local port before calling this method.
+
+<span class="param">socketId</span>: The socket ID.
+
+<span class="param">address</span>: The group address to join. Domain names are not supported.
+<code>callback</code>: Called when the <code>joinGroup</code> operation completes.</p>
+<p>Returns:
+Callback from the <code>joinGroup</code> method.
+<code>result</code>: The result code returned from the underlying network call. A
+negative value indicates an error.</p>
+<pre class="source">
+Future&lt;int&gt; joinGroup(int socketId, String address) {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+ _sockets_udp.callMethod('joinGroup', [socketId, address, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="leaveGroup">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>leaveGroup</strong>(int socketId, String address) <a class="anchor-link" href="#leaveGroup"
+              title="Permalink to ChromeSocketsUdp.leaveGroup">#</a></h4>
+<div class="doc">
+<p>Leaves the multicast group previously joined using <code>joinGroup</code>. This is
+only necessary to call if you plan to keep using the socketafterwards,
+since it will be done automatically by the OS when the socket is closed.</p>
+<p>Leaving the group will prevent the router from sending multicast datagrams
+to the local host, presuming no other process on the host is still joined
+to the group.</p>
+<p>
+<span class="param">socketId</span>: The socket ID.
+
+<span class="param">address</span>: The group address to leave. Domain names are not supported.
+<code>callback</code>: Called when the <code>leaveGroup</code> operation completes.</p>
+<p>Returns:
+Callback from the <code>leaveGroup</code> method.
+<code>result</code>: The result code returned from the underlying network call. A
+negative value indicates an error.</p>
+<pre class="source">
+Future&lt;int&gt; leaveGroup(int socketId, String address) {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+ _sockets_udp.callMethod('leaveGroup', [socketId, address, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="send">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.sockets/SendInfo.html">SendInfo</a>&gt; <strong>send</strong>(int socketId, <a href="../chrome.src.common_exp/ArrayBuffer.html">ArrayBuffer</a> data, String address, int port) <a class="anchor-link" href="#send"
+              title="Permalink to ChromeSocketsUdp.send">#</a></h4>
+<div class="doc">
+<p>Sends data on the given UDP socket to the given address and port.
+
+<span class="param">socketId</span>: The socket ID.
+
+<span class="param">data</span>: The data to send.
+
+<span class="param">address</span>: The address of the remote machine.
+
+<span class="param">port</span>: The port of the remote machine.
+<code>callback</code>: Called when the <code>send</code> operation completes.</p>
+<p>Returns:
+Callback from the <code>send</code> method.
+<code>sendInfo</code>: Result of the <code>send</code> method.</p>
+<pre class="source">
+Future&lt;SendInfo&gt; send(int socketId, ArrayBuffer data, String address, int port) {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;SendInfo&gt;.oneArg(_createSendInfo);
+ _sockets_udp.callMethod('send', [socketId, jsify(data), address, port, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setMulticastLoopbackMode">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>setMulticastLoopbackMode</strong>(int socketId, bool enabled) <a class="anchor-link" href="#setMulticastLoopbackMode"
+              title="Permalink to ChromeSocketsUdp.setMulticastLoopbackMode">#</a></h4>
+<div class="doc">
+<p>Sets whether multicast packets sent from the host to the multicast group
+will be looped back to the host.</p>
+<p>Note: the behavior of <code>setMulticastLoopbackMode</code> is slightly different
+between Windows and Unix-like systems. The inconsistency happens only when
+there is more than one application on the same host joined to the same
+multicast group while having different settings on multicast loopback mode.
+On Windows, the applications with loopback off will not RECEIVE the
+loopback packets; while on Unix-like systems, the applications with
+loopback off will not SEND the loopback packets to other applications on
+the same host. See MSDN: http://goo.gl/6vqbj</p>
+<p>Calling this method does not require multicast permissions.</p>
+<p>
+<span class="param">socketId</span>: The socket ID.
+
+<span class="param">enabled</span>: Indicate whether to enable loopback mode.
+<code>callback</code>: Called when the configuration operation completes.</p>
+<p>Returns:
+Callback from the <code>setMulticastLoopbackMode</code> method.
+<code>result</code>: The result code returned from the underlying network call. A
+negative value indicates an error.</p>
+<pre class="source">
+Future&lt;int&gt; setMulticastLoopbackMode(int socketId, bool enabled) {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+ _sockets_udp.callMethod('setMulticastLoopbackMode', [socketId, enabled, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setMulticastTimeToLive">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>setMulticastTimeToLive</strong>(int socketId, int ttl) <a class="anchor-link" href="#setMulticastTimeToLive"
+              title="Permalink to ChromeSocketsUdp.setMulticastTimeToLive">#</a></h4>
+<div class="doc">
+<p>Sets the time-to-live of multicast packets sent to the multicast group.</p>
+<p>Calling this method does not require multicast permissions.</p>
+<p>
+<span class="param">socketId</span>: The socket ID.
+
+<span class="param">ttl</span>: The time-to-live value.
+<code>callback</code>: Called when the configuration operation completes.</p>
+<p>Returns:
+Callback from the <code>setMulticastTimeToLive</code> method.
+<code>result</code>: The result code returned from the underlying network call. A
+negative value indicates an error.</p>
+<pre class="source">
+Future&lt;int&gt; setMulticastTimeToLive(int socketId, int ttl) {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+ _sockets_udp.callMethod('setMulticastTimeToLive', [socketId, ttl, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="update">
+<button class="show-code">Code</button>
+Future <strong>update</strong>(int socketId, <a href="../chrome.sockets/SocketProperties.html">SocketProperties</a> properties) <a class="anchor-link" href="#update"
+              title="Permalink to ChromeSocketsUdp.update">#</a></h4>
+<div class="doc">
+<p>Updates the socket properties.
+
+<span class="param">socketId</span>: The socket ID.
+
+<span class="param">properties</span>: The properties to update.
+<code>callback</code>: Called when the properties are updated.</p>
+<pre class="source">
+Future update(int socketId, SocketProperties properties) {
+ if (_sockets_udp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _sockets_udp.callMethod('update', [socketId, jsify(properties), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

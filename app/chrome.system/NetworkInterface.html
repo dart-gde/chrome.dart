@@ -1,0 +1,187 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>NetworkInterface class / chrome.system Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.system" data-type="NetworkInterface">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.system.html">chrome.system</a> &rsaquo; <a href="../chrome.system/NetworkInterface.html">NetworkInterface</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>NetworkInterface</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class NetworkInterface extends ChromeObject {
+ NetworkInterface({String name, String address, int prefixLength}) {
+   if (name != null) this.name = name;
+   if (address != null) this.address = address;
+   if (prefixLength != null) this.prefixLength = prefixLength;
+ }
+ NetworkInterface.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ String get name =&gt; jsProxy['name'];
+ set name(String value) =&gt; jsProxy['name'] = value;
+
+ String get address =&gt; jsProxy['address'];
+ set address(String value) =&gt; jsProxy['address'] = value;
+
+ int get prefixLength =&gt; jsProxy['prefixLength'];
+ set prefixLength(int value) =&gt; jsProxy['prefixLength'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>NetworkInterface</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>NetworkInterface</strong>({String name, String address, int prefixLength}) <a class="anchor-link" href="#"
+              title="Permalink to NetworkInterface.NetworkInterface">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+NetworkInterface({String name, String address, int prefixLength}) {
+ if (name != null) this.name = name;
+ if (address != null) this.address = address;
+ if (prefixLength != null) this.prefixLength = prefixLength;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>NetworkInterface.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to NetworkInterface.NetworkInterface.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+NetworkInterface.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="address">
+<button class="show-code">Code</button>
+String         <strong>address</strong> <a class="anchor-link"
+            href="#address"
+            title="Permalink to NetworkInterface.address">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+String get address =&gt; jsProxy['address'];
+</pre>
+<pre class="source">
+set address(String value) =&gt; jsProxy['address'] = value;
+</pre>
+</div>
+</div>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to NetworkInterface.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="name">
+<button class="show-code">Code</button>
+String         <strong>name</strong> <a class="anchor-link"
+            href="#name"
+            title="Permalink to NetworkInterface.name">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+String get name =&gt; jsProxy['name'];
+</pre>
+<pre class="source">
+set name(String value) =&gt; jsProxy['name'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="prefixLength">
+<button class="show-code">Code</button>
+int         <strong>prefixLength</strong> <a class="anchor-link"
+            href="#prefixLength"
+            title="Permalink to NetworkInterface.prefixLength">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+int get prefixLength =&gt; jsProxy['prefixLength'];
+</pre>
+<pre class="source">
+set prefixLength(int value) =&gt; jsProxy['prefixLength'] = value;
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to NetworkInterface.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to NetworkInterface.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

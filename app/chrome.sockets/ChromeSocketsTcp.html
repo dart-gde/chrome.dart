@@ -1,0 +1,581 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>ChromeSocketsTcp class / chrome.sockets Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.sockets" data-type="ChromeSocketsTcp">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.sockets.html">chrome.sockets</a> &rsaquo; <a href="../chrome.sockets/ChromeSocketsTcp.html">ChromeSocketsTcp</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>ChromeSocketsTcp</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<p>Use the <code>chrome.sockets.tcp</code> API to send and receive data over the network
+using TCP connections. This API supersedes the TCP functionality previously
+found in the <code>chrome.socket</code> API. Note that the socket ids created from this
+namespace are not compatible with ids created in other namespaces.</p>
+<pre class="source">
+class ChromeSocketsTcp extends ChromeApi {
+ static final JsObject _sockets_tcp = chrome['sockets']['tcp'];
+
+ ChromeSocketsTcp._();
+
+ bool get available =&gt; _sockets_tcp != null;
+
+ /**
+  * Creates a TCP socket.
+  * [properties]: The socket properties (optional).
+  * [callback]: Called when the socket has been created.
+  * 
+  * Returns:
+  * Callback from the `create` method.
+  * [createInfo]: The result of the socket creation.
+  */
+ Future&lt;CreateInfo&gt; create([SocketProperties properties]) {
+   if (_sockets_tcp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;CreateInfo&gt;.oneArg(_createCreateInfo);
+   _sockets_tcp.callMethod('create', [jsify(properties), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Updates the socket properties.
+  * [socketId]: The socket identifier.
+  * [properties]: The properties to update.
+  * [callback]: Called when the properties are updated.
+  */
+ Future update(int socketId, SocketProperties properties) {
+   if (_sockets_tcp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _sockets_tcp.callMethod('update', [socketId, jsify(properties), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Enables or disables the application from receiving messages from its peer.
+  * The default value is "false". Pausing a socket is typically used by an
+  * application to throttle data sent by its peer. When a socket is paused, no
+  * `onReceive` event is raised. When a socket is connected and un-paused,
+  * `onReceive` events are raised again when messages are received.
+  */
+ Future setPaused(int socketId, bool paused) {
+   if (_sockets_tcp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _sockets_tcp.callMethod('setPaused', [socketId, paused, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Enables or disables the keep-alive functionality for a TCP connection.
+  * [socketId]: The socket identifier.
+  * [enable]: If true, enable keep-alive functionality.
+  * [delay]: Set the delay seconds between the last data packet received and
+  * the first keepalive probe. Default is 0.
+  * [callback]: Called when the setKeepAlive attempt is complete.
+  * 
+  * Returns:
+  * Callback from the `setKeepAliveCallback` method.
+  * [result]: The result code returned from the underlying network call. A
+  * negative value indicates an error.
+  */
+ Future&lt;int&gt; setKeepAlive(int socketId, bool enable, [int delay]) {
+   if (_sockets_tcp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+   _sockets_tcp.callMethod('setKeepAlive', [socketId, enable, delay, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sets or clears `TCP_NODELAY` for a TCP connection. Nagle's algorithm will
+  * be disabled when `TCP_NODELAY` is set.
+  * [socketId]: The socket identifier.
+  * [noDelay]: If true, disables Nagle's algorithm.
+  * [callback]: Called when the setNoDelay attempt is complete.
+  * 
+  * Returns:
+  * Callback from the `setNodeDelay` method.
+  * [result]: The result code returned from the underlying network call. A
+  * negative value indicates an error.
+  */
+ Future&lt;int&gt; setNoDelay(int socketId, bool noDelay) {
+   if (_sockets_tcp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+   _sockets_tcp.callMethod('setNoDelay', [socketId, noDelay, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Connects the socket to a remote machine. When the `connect` operation
+  * completes successfully, `onReceive` events are raised when data is received
+  * from the peer. If a network error occurs while the runtime is receiving
+  * packets, a `onReceiveError` event is raised, at which point no more
+  * `onReceive` event will be raised for this socket until the `resume` method
+  * is called.
+  * [socketId]: The socket identifier.
+  * [peerAddress]: The address of the remote machine. DNS name, IPv4 and IPv6
+  * formats are supported.
+  * [peerPort]: The port of the remote machine.
+  * [callback]: Called when the connect attempt is complete.
+  * 
+  * Returns:
+  * Callback from the `connect` method.
+  * [result]: The result code returned from the underlying network call. A
+  * negative value indicates an error.
+  */
+ Future&lt;int&gt; connect(int socketId, String peerAddress, int peerPort) {
+   if (_sockets_tcp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+   _sockets_tcp.callMethod('connect', [socketId, peerAddress, peerPort, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Disconnects the socket.
+  * [socketId]: The socket identifier.
+  * [callback]: Called when the disconnect attempt is complete.
+  */
+ Future disconnect(int socketId) {
+   if (_sockets_tcp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _sockets_tcp.callMethod('disconnect', [socketId, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Sends data on the given TCP socket.
+  * [socketId]: The socket identifier.
+  * [data]: The data to send.
+  * [callback]: Called when the `send` operation completes.
+  * 
+  * Returns:
+  * Callback from the `send` method.
+  * [sendInfo]: Result of the `send` method.
+  */
+ Future&lt;SendInfo&gt; send(int socketId, ArrayBuffer data) {
+   if (_sockets_tcp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;SendInfo&gt;.oneArg(_createSendInfo);
+   _sockets_tcp.callMethod('send', [socketId, jsify(data), completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Closes the socket and releases the address/port the socket is bound to.
+  * Each socket created should be closed after use. The socket id is no no
+  * longer valid as soon at the function is called. However, the socket is
+  * guaranteed to be closed only when the callback is invoked.
+  * [socketId]: The socket identifier.
+  * [callback]: Called when the `close` operation completes.
+  */
+ Future close(int socketId) {
+   if (_sockets_tcp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter.noArgs();
+   _sockets_tcp.callMethod('close', [socketId, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Retrieves the state of the given socket.
+  * [socketId]: The socket identifier.
+  * [callback]: Called when the socket state is available.
+  * 
+  * Returns:
+  * Callback from the `getInfo` method.
+  * [socketInfo]: Object containing the socket information.
+  */
+ Future&lt;SocketInfo&gt; getInfo(int socketId) {
+   if (_sockets_tcp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;SocketInfo&gt;.oneArg(_createSocketInfo);
+   _sockets_tcp.callMethod('getInfo', [socketId, completer.callback]);
+   return completer.future;
+ }
+
+ /**
+  * Retrieves the list of currently opened sockets owned by the application.
+  * [callback]: Called when the list of sockets is available.
+  * 
+  * Returns:
+  * Callback from the `getSockets` method.
+  * [socketInfos]: Array of object containing socket information.
+  */
+ Future&lt;List&lt;SocketInfo&gt;&gt; getSockets() {
+   if (_sockets_tcp == null) _throwNotAvailable();
+
+   var completer = new ChromeCompleter&lt;List&lt;SocketInfo&gt;&gt;.oneArg((e) =&gt; listify(e, _createSocketInfo));
+   _sockets_tcp.callMethod('getSockets', [completer.callback]);
+   return completer.future;
+ }
+
+ Stream&lt;ReceiveInfo&gt; get onReceive =&gt; _onReceive.stream;
+
+ final ChromeStreamController&lt;ReceiveInfo&gt; _onReceive =
+     new ChromeStreamController&lt;ReceiveInfo&gt;.oneArg(_sockets_tcp, 'onReceive', _createReceiveInfo);
+
+ Stream&lt;ReceiveErrorInfo&gt; get onReceiveError =&gt; _onReceiveError.stream;
+
+ final ChromeStreamController&lt;ReceiveErrorInfo&gt; _onReceiveError =
+     new ChromeStreamController&lt;ReceiveErrorInfo&gt;.oneArg(_sockets_tcp, 'onReceiveError', _createReceiveErrorInfo);
+
+ void _throwNotAvailable() {
+   throw new UnsupportedError("'chrome.sockets.tcp' is not available");
+ }
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>ChromeSocketsTcp</strong></span></p>
+<div>
+<h3>Properties</h3>
+<div class="field"><h4 id="available">
+<button class="show-code">Code</button>
+final bool         <strong>available</strong> <a class="anchor-link"
+            href="#available"
+            title="Permalink to ChromeSocketsTcp.available">#</a>
+        </h4>
+        <div class="doc">
+<div class="inherited">
+<p>Returns true if the API is available. The common causes of an API not being
+avilable are:</p><ul><li>a permission is missing in the application's manifest.json file</li><li>the API is defined on a newer version of Chrome then the current runtime</li></ul>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeApi.html">ChromeApi</a> </div></div>
+<pre class="source">
+bool get available =&gt; _sockets_tcp != null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onReceive">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.sockets/ReceiveInfo.html">ReceiveInfo</a>&gt;         <strong>onReceive</strong> <a class="anchor-link"
+            href="#onReceive"
+            title="Permalink to ChromeSocketsTcp.onReceive">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Stream&lt;ReceiveInfo&gt; get onReceive =&gt; _onReceive.stream;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="onReceiveError">
+<button class="show-code">Code</button>
+final Stream&lt;<a href="../chrome.sockets/ReceiveErrorInfo.html">ReceiveErrorInfo</a>&gt;         <strong>onReceiveError</strong> <a class="anchor-link"
+            href="#onReceiveError"
+            title="Permalink to ChromeSocketsTcp.onReceiveError">#</a>
+        </h4>
+        <div class="doc">
+<pre class="source">
+Stream&lt;ReceiveErrorInfo&gt; get onReceiveError =&gt; _onReceiveError.stream;
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Methods</h3>
+<div class="method"><h4 id="close">
+<button class="show-code">Code</button>
+Future <strong>close</strong>(int socketId) <a class="anchor-link" href="#close"
+              title="Permalink to ChromeSocketsTcp.close">#</a></h4>
+<div class="doc">
+<p>Closes the socket and releases the address/port the socket is bound to.
+Each socket created should be closed after use. The socket id is no no
+longer valid as soon at the function is called. However, the socket is
+guaranteed to be closed only when the callback is invoked.
+
+<span class="param">socketId</span>: The socket identifier.
+<code>callback</code>: Called when the <code>close</code> operation completes.</p>
+<pre class="source">
+Future close(int socketId) {
+ if (_sockets_tcp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _sockets_tcp.callMethod('close', [socketId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="connect">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>connect</strong>(int socketId, String peerAddress, int peerPort) <a class="anchor-link" href="#connect"
+              title="Permalink to ChromeSocketsTcp.connect">#</a></h4>
+<div class="doc">
+<p>Connects the socket to a remote machine. When the <code>connect</code> operation
+completes successfully, <code>onReceive</code> events are raised when data is received
+from the peer. If a network error occurs while the runtime is receiving
+packets, a <code>onReceiveError</code> event is raised, at which point no more
+<code>onReceive</code> event will be raised for this socket until the <code>resume</code> method
+is called.
+
+<span class="param">socketId</span>: The socket identifier.
+
+<span class="param">peerAddress</span>: The address of the remote machine. DNS name, IPv4 and IPv6
+formats are supported.
+
+<span class="param">peerPort</span>: The port of the remote machine.
+<code>callback</code>: Called when the connect attempt is complete.</p>
+<p>Returns:
+Callback from the <code>connect</code> method.
+<code>result</code>: The result code returned from the underlying network call. A
+negative value indicates an error.</p>
+<pre class="source">
+Future&lt;int&gt; connect(int socketId, String peerAddress, int peerPort) {
+ if (_sockets_tcp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+ _sockets_tcp.callMethod('connect', [socketId, peerAddress, peerPort, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="create">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.sockets/CreateInfo.html">CreateInfo</a>&gt; <strong>create</strong>([<a href="../chrome.sockets/SocketProperties.html">SocketProperties</a> properties]) <a class="anchor-link" href="#create"
+              title="Permalink to ChromeSocketsTcp.create">#</a></h4>
+<div class="doc">
+<p>Creates a TCP socket.
+
+<span class="param">properties</span>: The socket properties (optional).
+<code>callback</code>: Called when the socket has been created.</p>
+<p>Returns:
+Callback from the <code>create</code> method.
+<code>createInfo</code>: The result of the socket creation.</p>
+<pre class="source">
+Future&lt;CreateInfo&gt; create([SocketProperties properties]) {
+ if (_sockets_tcp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;CreateInfo&gt;.oneArg(_createCreateInfo);
+ _sockets_tcp.callMethod('create', [jsify(properties), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="disconnect">
+<button class="show-code">Code</button>
+Future <strong>disconnect</strong>(int socketId) <a class="anchor-link" href="#disconnect"
+              title="Permalink to ChromeSocketsTcp.disconnect">#</a></h4>
+<div class="doc">
+<p>Disconnects the socket.
+
+<span class="param">socketId</span>: The socket identifier.
+<code>callback</code>: Called when the disconnect attempt is complete.</p>
+<pre class="source">
+Future disconnect(int socketId) {
+ if (_sockets_tcp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _sockets_tcp.callMethod('disconnect', [socketId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getInfo">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.sockets/SocketInfo.html">SocketInfo</a>&gt; <strong>getInfo</strong>(int socketId) <a class="anchor-link" href="#getInfo"
+              title="Permalink to ChromeSocketsTcp.getInfo">#</a></h4>
+<div class="doc">
+<p>Retrieves the state of the given socket.
+
+<span class="param">socketId</span>: The socket identifier.
+<code>callback</code>: Called when the socket state is available.</p>
+<p>Returns:
+Callback from the <code>getInfo</code> method.
+<code>socketInfo</code>: Object containing the socket information.</p>
+<pre class="source">
+Future&lt;SocketInfo&gt; getInfo(int socketId) {
+ if (_sockets_tcp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;SocketInfo&gt;.oneArg(_createSocketInfo);
+ _sockets_tcp.callMethod('getInfo', [socketId, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="getSockets">
+<button class="show-code">Code</button>
+Future&lt;List&lt;<a href="../chrome.sockets/SocketInfo.html">SocketInfo</a>&gt;&gt; <strong>getSockets</strong>() <a class="anchor-link" href="#getSockets"
+              title="Permalink to ChromeSocketsTcp.getSockets">#</a></h4>
+<div class="doc">
+<p>Retrieves the list of currently opened sockets owned by the application.
+<code>callback</code>: Called when the list of sockets is available.</p>
+<p>Returns:
+Callback from the <code>getSockets</code> method.
+<code>socketInfos</code>: Array of object containing socket information.</p>
+<pre class="source">
+Future&lt;List&lt;SocketInfo&gt;&gt; getSockets() {
+ if (_sockets_tcp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;List&lt;SocketInfo&gt;&gt;.oneArg((e) =&gt; listify(e, _createSocketInfo));
+ _sockets_tcp.callMethod('getSockets', [completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="send">
+<button class="show-code">Code</button>
+Future&lt;<a href="../chrome.sockets/SendInfo.html">SendInfo</a>&gt; <strong>send</strong>(int socketId, <a href="../chrome.src.common_exp/ArrayBuffer.html">ArrayBuffer</a> data) <a class="anchor-link" href="#send"
+              title="Permalink to ChromeSocketsTcp.send">#</a></h4>
+<div class="doc">
+<p>Sends data on the given TCP socket.
+
+<span class="param">socketId</span>: The socket identifier.
+
+<span class="param">data</span>: The data to send.
+<code>callback</code>: Called when the <code>send</code> operation completes.</p>
+<p>Returns:
+Callback from the <code>send</code> method.
+<code>sendInfo</code>: Result of the <code>send</code> method.</p>
+<pre class="source">
+Future&lt;SendInfo&gt; send(int socketId, ArrayBuffer data) {
+ if (_sockets_tcp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;SendInfo&gt;.oneArg(_createSendInfo);
+ _sockets_tcp.callMethod('send', [socketId, jsify(data), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setKeepAlive">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>setKeepAlive</strong>(int socketId, bool enable, [int delay]) <a class="anchor-link" href="#setKeepAlive"
+              title="Permalink to ChromeSocketsTcp.setKeepAlive">#</a></h4>
+<div class="doc">
+<p>Enables or disables the keep-alive functionality for a TCP connection.
+
+<span class="param">socketId</span>: The socket identifier.
+
+<span class="param">enable</span>: If true, enable keep-alive functionality.
+
+<span class="param">delay</span>: Set the delay seconds between the last data packet received and
+the first keepalive probe. Default is 0.
+<code>callback</code>: Called when the setKeepAlive attempt is complete.</p>
+<p>Returns:
+Callback from the <code>setKeepAliveCallback</code> method.
+<code>result</code>: The result code returned from the underlying network call. A
+negative value indicates an error.</p>
+<pre class="source">
+Future&lt;int&gt; setKeepAlive(int socketId, bool enable, [int delay]) {
+ if (_sockets_tcp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+ _sockets_tcp.callMethod('setKeepAlive', [socketId, enable, delay, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setNoDelay">
+<button class="show-code">Code</button>
+Future&lt;int&gt; <strong>setNoDelay</strong>(int socketId, bool noDelay) <a class="anchor-link" href="#setNoDelay"
+              title="Permalink to ChromeSocketsTcp.setNoDelay">#</a></h4>
+<div class="doc">
+<p>Sets or clears <code>TCP_NODELAY</code> for a TCP connection. Nagle's algorithm will
+be disabled when <code>TCP_NODELAY</code> is set.
+
+<span class="param">socketId</span>: The socket identifier.
+
+<span class="param">noDelay</span>: If true, disables Nagle's algorithm.
+<code>callback</code>: Called when the setNoDelay attempt is complete.</p>
+<p>Returns:
+Callback from the <code>setNodeDelay</code> method.
+<code>result</code>: The result code returned from the underlying network call. A
+negative value indicates an error.</p>
+<pre class="source">
+Future&lt;int&gt; setNoDelay(int socketId, bool noDelay) {
+ if (_sockets_tcp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter&lt;int&gt;.oneArg();
+ _sockets_tcp.callMethod('setNoDelay', [socketId, noDelay, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setPaused">
+<button class="show-code">Code</button>
+Future <strong>setPaused</strong>(int socketId, bool paused) <a class="anchor-link" href="#setPaused"
+              title="Permalink to ChromeSocketsTcp.setPaused">#</a></h4>
+<div class="doc">
+<p>Enables or disables the application from receiving messages from its peer.
+The default value is "false". Pausing a socket is typically used by an
+application to throttle data sent by its peer. When a socket is paused, no
+<code>onReceive</code> event is raised. When a socket is connected and un-paused,
+<code>onReceive</code> events are raised again when messages are received.</p>
+<pre class="source">
+Future setPaused(int socketId, bool paused) {
+ if (_sockets_tcp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _sockets_tcp.callMethod('setPaused', [socketId, paused, completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="update">
+<button class="show-code">Code</button>
+Future <strong>update</strong>(int socketId, <a href="../chrome.sockets/SocketProperties.html">SocketProperties</a> properties) <a class="anchor-link" href="#update"
+              title="Permalink to ChromeSocketsTcp.update">#</a></h4>
+<div class="doc">
+<p>Updates the socket properties.
+
+<span class="param">socketId</span>: The socket identifier.
+
+<span class="param">properties</span>: The properties to update.
+<code>callback</code>: Called when the properties are updated.</p>
+<pre class="source">
+Future update(int socketId, SocketProperties properties) {
+ if (_sockets_tcp == null) _throwNotAvailable();
+
+ var completer = new ChromeCompleter.noArgs();
+ _sockets_tcp.callMethod('update', [socketId, jsify(properties), completer.callback]);
+ return completer.future;
+}
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

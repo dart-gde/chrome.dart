@@ -1,0 +1,249 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>WallpaperSetWallpaperParams class / chrome.wallpaper Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="chrome.wallpaper" data-type="WallpaperSetWallpaperParams">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../chrome.wallpaper.html">chrome.wallpaper</a> &rsaquo; <a href="../chrome.wallpaper/WallpaperSetWallpaperParams.html">WallpaperSetWallpaperParams</a>        <div id="search-box">
+          <input type="search" name="q" id="q" autocomplete="off"
+              class="search-input" placeholder="Search API">
+        </div>
+        
+      </div>
+      <div class="drop-down" id="drop-down"></div>
+      
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>WallpaperSetWallpaperParams</strong>
+          class
+        </h2>
+        
+<button id="show-inherited" class="show-inherited">Hide inherited</button>
+<div class="doc">
+<pre class="source">
+class WallpaperSetWallpaperParams extends ChromeObject {
+ WallpaperSetWallpaperParams({var wallpaperData, String url, String layout, String name, bool thumbnail}) {
+   if (wallpaperData != null) this.wallpaperData = wallpaperData;
+   if (url != null) this.url = url;
+   if (layout != null) this.layout = layout;
+   if (name != null) this.name = name;
+   if (thumbnail != null) this.thumbnail = thumbnail;
+ }
+ WallpaperSetWallpaperParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+ /**
+  * The jpeg or png encoded wallpaper image.
+  */
+ dynamic get wallpaperData =&gt; jsProxy['wallpaperData'];
+ set wallpaperData(var value) =&gt; jsProxy['wallpaperData'] = jsify(value);
+
+ /**
+  * The url of online wallpaper.
+  */
+ String get url =&gt; jsProxy['url'];
+ set url(String value) =&gt; jsProxy['url'] = value;
+
+ /**
+  * The supported wallpaper layouts.
+  * enum of `STRETCH`, `CENTER`, `CENTER_CROPPED`
+  */
+ String get layout =&gt; jsProxy['layout'];
+ set layout(String value) =&gt; jsProxy['layout'] = value;
+
+ /**
+  * The file name of saved wallpaper.
+  */
+ String get name =&gt; jsProxy['name'];
+ set name(String value) =&gt; jsProxy['name'] = value;
+
+ /**
+  * True if a 128x60 thumbnail should be generated.
+  */
+ bool get thumbnail =&gt; jsProxy['thumbnail'];
+ set thumbnail(bool value) =&gt; jsProxy['thumbnail'] = value;
+}
+</pre>
+</div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>WallpaperSetWallpaperParams</strong></span></p>
+<div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="">
+<button class="show-code">Code</button>
+new <strong>WallpaperSetWallpaperParams</strong>({wallpaperData, String url, String layout, String name, bool thumbnail}) <a class="anchor-link" href="#"
+              title="Permalink to WallpaperSetWallpaperParams.WallpaperSetWallpaperParams">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which creates and delegates to
+a JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+WallpaperSetWallpaperParams({var wallpaperData, String url, String layout, String name, bool thumbnail}) {
+ if (wallpaperData != null) this.wallpaperData = wallpaperData;
+ if (url != null) this.url = url;
+ if (layout != null) this.layout = layout;
+ if (name != null) this.name = name;
+ if (thumbnail != null) this.thumbnail = thumbnail;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="fromProxy">
+<button class="show-code">Code</button>
+new <strong>WallpaperSetWallpaperParams.fromProxy</strong>(JsObject jsProxy) <a class="anchor-link" href="#fromProxy"
+              title="Permalink to WallpaperSetWallpaperParams.WallpaperSetWallpaperParams.fromProxy">#</a></h4>
+<div class="doc">
+<div class="inherited">
+<p>Create a new instance of a <code>ChromeObject</code>, which delegates to the given
+JsObject proxy.</p>
+<div class="docs-inherited-from">docs inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div></div>
+<pre class="source">
+WallpaperSetWallpaperParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+</pre>
+</div>
+</div>
+</div>
+<div>
+<h3>Properties</h3>
+<div class="field inherited"><h4 id="jsProxy">
+<button class="show-code">Code</button>
+final         <strong>jsProxy</strong> <a class="anchor-link"
+            href="#jsProxy"
+            title="Permalink to WallpaperSetWallpaperParams.jsProxy">#</a>
+        </h4>
+        <div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+final dynamic jsProxy
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="layout">
+<button class="show-code">Code</button>
+String         <strong>layout</strong> <a class="anchor-link"
+            href="#layout"
+            title="Permalink to WallpaperSetWallpaperParams.layout">#</a>
+        </h4>
+        <div class="doc">
+<p>The supported wallpaper layouts.
+enum of <code>STRETCH</code>, <code>CENTER</code>, <code>CENTER_CROPPED</code></p>
+<pre class="source">
+String get layout =&gt; jsProxy['layout'];
+</pre>
+<pre class="source">
+set layout(String value) =&gt; jsProxy['layout'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="name">
+<button class="show-code">Code</button>
+String         <strong>name</strong> <a class="anchor-link"
+            href="#name"
+            title="Permalink to WallpaperSetWallpaperParams.name">#</a>
+        </h4>
+        <div class="doc">
+<p>The file name of saved wallpaper.</p>
+<pre class="source">
+String get name =&gt; jsProxy['name'];
+</pre>
+<pre class="source">
+set name(String value) =&gt; jsProxy['name'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="thumbnail">
+<button class="show-code">Code</button>
+bool         <strong>thumbnail</strong> <a class="anchor-link"
+            href="#thumbnail"
+            title="Permalink to WallpaperSetWallpaperParams.thumbnail">#</a>
+        </h4>
+        <div class="doc">
+<p>True if a 128x60 thumbnail should be generated.</p>
+<pre class="source">
+bool get thumbnail =&gt; jsProxy['thumbnail'];
+</pre>
+<pre class="source">
+set thumbnail(bool value) =&gt; jsProxy['thumbnail'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="url">
+<button class="show-code">Code</button>
+String         <strong>url</strong> <a class="anchor-link"
+            href="#url"
+            title="Permalink to WallpaperSetWallpaperParams.url">#</a>
+        </h4>
+        <div class="doc">
+<p>The url of online wallpaper.</p>
+<pre class="source">
+String get url =&gt; jsProxy['url'];
+</pre>
+<pre class="source">
+set url(String value) =&gt; jsProxy['url'] = value;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="wallpaperData">
+<button class="show-code">Code</button>
+var         <strong>wallpaperData</strong> <a class="anchor-link"
+            href="#wallpaperData"
+            title="Permalink to WallpaperSetWallpaperParams.wallpaperData">#</a>
+        </h4>
+        <div class="doc">
+<p>The jpeg or png encoded wallpaper image.</p>
+<pre class="source">
+dynamic get wallpaperData =&gt; jsProxy['wallpaperData'];
+</pre>
+<pre class="source">
+set wallpaperData(var value) =&gt; jsProxy['wallpaperData'] = jsify(value);
+</pre>
+</div>
+</div>
+</div>
+<div class="inherited">
+<h3>Methods</h3>
+<div class="method inherited"><h4 id="toJs">
+<button class="show-code">Code</button>
+JsObject <strong>toJs</strong>() <a class="anchor-link" href="#toJs"
+              title="Permalink to WallpaperSetWallpaperParams.toJs">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<pre class="source">
+JsObject toJs() =&gt; jsProxy;
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="toString">
+<button class="show-code">Code</button>
+String <strong>toString</strong>() <a class="anchor-link" href="#toString"
+              title="Permalink to WallpaperSetWallpaperParams.toString">#</a></h4>
+<div class="inherited-from">inherited from <a href="../chrome.src.common_exp/ChromeObject.html">ChromeObject</a> </div><div class="doc">
+<div class="inherited">
+<p>Returns a string representation of this object.</p>
+<div class="docs-inherited-from">docs inherited from Object </div></div>
+<pre class="source">
+String toString() =&gt; jsProxy.toString();
+</pre>
+</div>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        <div class="footer">
+          
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

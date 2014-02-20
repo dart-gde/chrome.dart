@@ -47,10 +47,10 @@ class ChromeSocket extends ChromeApi {
   * [options]: The socket options.
   * [callback]: Called when the socket has been created.
   */
- Future&lt;CreateInfo&gt; create(SocketType type, [CreateOptions options]) {
+ Future&lt;SocketCreateInfo&gt; create(SocketType type, [CreateOptions options]) {
    if (_socket == null) _throwNotAvailable();
 
-   var completer = new ChromeCompleter&lt;CreateInfo&gt;.oneArg(_createCreateInfo);
+   var completer = new ChromeCompleter&lt;SocketCreateInfo&gt;.oneArg(_createCreateInfo);
    _socket.callMethod('create', [jsify(type), jsify(options), completer.callback]);
    return completer.future;
  }
@@ -196,10 +196,10 @@ class ChromeSocket extends ChromeApi {
   * [socketId]: The socketId.
   * [callback]: The callback is invoked when a new socket is accepted.
   */
- Future&lt;AcceptInfo&gt; accept(int socketId) {
+ Future&lt;SocketAcceptInfo&gt; accept(int socketId) {
    if (_socket == null) _throwNotAvailable();
 
-   var completer = new ChromeCompleter&lt;AcceptInfo&gt;.oneArg(_createAcceptInfo);
+   var completer = new ChromeCompleter&lt;SocketAcceptInfo&gt;.oneArg(_createAcceptInfo);
    _socket.callMethod('accept', [socketId, completer.callback]);
    return completer.future;
  }
@@ -240,10 +240,10 @@ class ChromeSocket extends ChromeApi {
   * [socketId]: The socketId.
   * [callback]: Called when the state is available.
   */
- Future&lt;SocketInfo&gt; getInfo(int socketId) {
+ Future&lt;SockSocketInfo&gt; getInfo(int socketId) {
    if (_socket == null) _throwNotAvailable();
 
-   var completer = new ChromeCompleter&lt;SocketInfo&gt;.oneArg(_createSocketInfo);
+   var completer = new ChromeCompleter&lt;SockSocketInfo&gt;.oneArg(_createSocketInfo);
    _socket.callMethod('getInfo', [socketId, completer.callback]);
    return completer.future;
  }
@@ -252,10 +252,10 @@ class ChromeSocket extends ChromeApi {
   * Retrieves information about local adapters on this system.
   * [callback]: Called when local adapter information is available.
   */
- Future&lt;List&lt;NetworkInterface&gt;&gt; getNetworkList() {
+ Future&lt;List&lt;SocketNetworkInterface&gt;&gt; getNetworkList() {
    if (_socket == null) _throwNotAvailable();
 
-   var completer = new ChromeCompleter&lt;List&lt;NetworkInterface&gt;&gt;.oneArg((e) =&gt; listify(e, _createNetworkInterface));
+   var completer = new ChromeCompleter&lt;List&lt;SocketNetworkInterface&gt;&gt;.oneArg((e) =&gt; listify(e, _createNetworkInterface));
    _socket.callMethod('getNetworkList', [completer.callback]);
    return completer.future;
  }
@@ -388,7 +388,7 @@ bool get available =&gt; _socket != null;
 <h3>Methods</h3>
 <div class="method"><h4 id="accept">
 <button class="show-code">Code</button>
-Future&lt;<a href="../chrome.socket/AcceptInfo.html">AcceptInfo</a>&gt; <strong>accept</strong>(int socketId) <a class="anchor-link" href="#accept"
+Future&lt;<a href="../chrome.socket/SocketAcceptInfo.html">SocketAcceptInfo</a>&gt; <strong>accept</strong>(int socketId) <a class="anchor-link" href="#accept"
               title="Permalink to ChromeSocket.accept">#</a></h4>
 <div class="doc">
 <p>This method applies to TCP sockets only. Registers a callback function to
@@ -399,10 +399,10 @@ this callback will be invoked immediately with an error as the resultCode.
 <span class="param">socketId</span>: The socketId.
 <code>callback</code>: The callback is invoked when a new socket is accepted.</p>
 <pre class="source">
-Future&lt;AcceptInfo&gt; accept(int socketId) {
+Future&lt;SocketAcceptInfo&gt; accept(int socketId) {
  if (_socket == null) _throwNotAvailable();
 
- var completer = new ChromeCompleter&lt;AcceptInfo&gt;.oneArg(_createAcceptInfo);
+ var completer = new ChromeCompleter&lt;SocketAcceptInfo&gt;.oneArg(_createAcceptInfo);
  _socket.callMethod('accept', [socketId, completer.callback]);
  return completer.future;
 }
@@ -462,7 +462,7 @@ Future&lt;int&gt; connect(int socketId, String hostname, int port) {
 </div>
 <div class="method"><h4 id="create">
 <button class="show-code">Code</button>
-Future&lt;<a href="../chrome.socket/CreateInfo.html">CreateInfo</a>&gt; <strong>create</strong>(<a href="../chrome.socket/SocketType.html">SocketType</a> type, [<a href="../chrome.socket/CreateOptions.html">CreateOptions</a> options]) <a class="anchor-link" href="#create"
+Future&lt;<a href="../chrome.socket/SocketCreateInfo.html">SocketCreateInfo</a>&gt; <strong>create</strong>(<a href="../chrome.socket/SocketType.html">SocketType</a> type, [<a href="../chrome.socket/CreateOptions.html">CreateOptions</a> options]) <a class="anchor-link" href="#create"
               title="Permalink to ChromeSocket.create">#</a></h4>
 <div class="doc">
 <p>Creates a socket of the specified type that will connect to the specified
@@ -473,10 +473,10 @@ remote machine.
 <span class="param">options</span>: The socket options.
 <code>callback</code>: Called when the socket has been created.</p>
 <pre class="source">
-Future&lt;CreateInfo&gt; create(SocketType type, [CreateOptions options]) {
+Future&lt;SocketCreateInfo&gt; create(SocketType type, [CreateOptions options]) {
  if (_socket == null) _throwNotAvailable();
 
- var completer = new ChromeCompleter&lt;CreateInfo&gt;.oneArg(_createCreateInfo);
+ var completer = new ChromeCompleter&lt;SocketCreateInfo&gt;.oneArg(_createCreateInfo);
  _socket.callMethod('create', [jsify(type), jsify(options), completer.callback]);
  return completer.future;
 }
@@ -520,7 +520,7 @@ void disconnect(int socketId) {
 </div>
 <div class="method"><h4 id="getInfo">
 <button class="show-code">Code</button>
-Future&lt;<a href="../chrome.socket/SocketInfo.html">SocketInfo</a>&gt; <strong>getInfo</strong>(int socketId) <a class="anchor-link" href="#getInfo"
+Future&lt;<a href="../chrome.socket/SockSocketInfo.html">SockSocketInfo</a>&gt; <strong>getInfo</strong>(int socketId) <a class="anchor-link" href="#getInfo"
               title="Permalink to ChromeSocket.getInfo">#</a></h4>
 <div class="doc">
 <p>Retrieves the state of the given socket.
@@ -528,10 +528,10 @@ Future&lt;<a href="../chrome.socket/SocketInfo.html">SocketInfo</a>&gt; <strong>
 <span class="param">socketId</span>: The socketId.
 <code>callback</code>: Called when the state is available.</p>
 <pre class="source">
-Future&lt;SocketInfo&gt; getInfo(int socketId) {
+Future&lt;SockSocketInfo&gt; getInfo(int socketId) {
  if (_socket == null) _throwNotAvailable();
 
- var completer = new ChromeCompleter&lt;SocketInfo&gt;.oneArg(_createSocketInfo);
+ var completer = new ChromeCompleter&lt;SockSocketInfo&gt;.oneArg(_createSocketInfo);
  _socket.callMethod('getInfo', [socketId, completer.callback]);
  return completer.future;
 }
@@ -560,16 +560,16 @@ Future&lt;List&lt;String&gt;&gt; getJoinedGroups(int socketId) {
 </div>
 <div class="method"><h4 id="getNetworkList">
 <button class="show-code">Code</button>
-Future&lt;List&lt;<a href="../chrome.socket/NetworkInterface.html">NetworkInterface</a>&gt;&gt; <strong>getNetworkList</strong>() <a class="anchor-link" href="#getNetworkList"
+Future&lt;List&lt;<a href="../chrome.socket/SocketNetworkInterface.html">SocketNetworkInterface</a>&gt;&gt; <strong>getNetworkList</strong>() <a class="anchor-link" href="#getNetworkList"
               title="Permalink to ChromeSocket.getNetworkList">#</a></h4>
 <div class="doc">
 <p>Retrieves information about local adapters on this system.
 <code>callback</code>: Called when local adapter information is available.</p>
 <pre class="source">
-Future&lt;List&lt;NetworkInterface&gt;&gt; getNetworkList() {
+Future&lt;List&lt;SocketNetworkInterface&gt;&gt; getNetworkList() {
  if (_socket == null) _throwNotAvailable();
 
- var completer = new ChromeCompleter&lt;List&lt;NetworkInterface&gt;&gt;.oneArg((e) =&gt; listify(e, _createNetworkInterface));
+ var completer = new ChromeCompleter&lt;List&lt;SocketNetworkInterface&gt;&gt;.oneArg((e) =&gt; listify(e, _createNetworkInterface));
  _socket.callMethod('getNetworkList', [completer.callback]);
  return completer.future;
 }
