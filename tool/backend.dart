@@ -150,11 +150,13 @@ class DefaultBackend extends Backend {
   void _printClass() {
     List sections = library.name.split('.');
 
-    generator.writeln("class ${className} extends ChromeApi {");
+    String name = overrides.overrideClass(className);
+
+    generator.writeln("class ${name} extends ChromeApi {");
     generator.write("static final JsObject ${contextReference} = ");
     generator.writeln("chrome['${sections.join('\'][\'')}'];");
     generator.writeln();
-    generator.writeln("${className}._();");
+    generator.writeln("${name}._();");
     generator.writeln();
     generator.writeln("bool get available => ${contextReference} != null;");
 
@@ -356,6 +358,8 @@ class DefaultBackend extends Backend {
     }
 
     String className = type.name;
+    className = overrides.overrideClass(className);
+
     List<ChromeProperty> props =
         type.filteredProperties.toList(growable: false);
 
