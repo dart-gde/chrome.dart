@@ -1,5 +1,4 @@
 {
-
   "renameNamespace": {
     "i18n": "I18N"
   },
@@ -8,6 +7,11 @@
     "pageAction.ImageDataType",
     "app.window.Bounds",
     "system.display.Bounds"
+  ],
+
+  "overrideClass": [
+    "ChromeAppWindow",
+    "AppWindow"
   ],
 
   "renameClass": {
@@ -36,5 +40,4 @@
     "events.Event": "ChromeEvent",
     "runtime.Event": "ChromeEvent"
   }
-
 }

@@ -107,12 +107,13 @@ void main() {
     notes('onAlarm: ${e}');
   });
 
-  chrome.app.window.onFullscreened.listen((e) => print(e));
-  chrome.app.window.onBoundsChanged.listen((e) => print(e));
-  chrome.app.window.onClosed.listen((e) => print(e));
-  chrome.app.window.onMaximized.listen((e) => print(e));
-  chrome.app.window.onMinimized.listen((e) => print(e));
-  chrome.app.window.onRestored.listen((e) => print(e));
+  chrome.app.window.onFullscreened.listen((_) => print('window fullscreen'));
+  // This prints a lot.
+  //chrome.app.window.onBoundsChanged.listen((_) => print('window bounds changed'));
+  chrome.app.window.onClosed.listen((_) => print('window closed'));
+  chrome.app.window.onMaximized.listen((_) => print('window maximized'));
+  chrome.app.window.onMinimized.listen((_) => print('window minimized'));
+  chrome.app.window.onRestored.listen((_) => print('window restored'));
 }
 
 void label(String str) {

@@ -128,6 +128,7 @@ class GenApis {
   void _generateCombinedFile(Overrides overrides, String shortName, List<String> libNames) {
     String fileName = _convertJSLibNameToFileName(shortName);
     File outFile = new File(pathos.join(outDirPath, 'gen', "${fileName}.dart"));
+    File patchFile = new File(pathos.join(outDirPath, 'gen', "${fileName}_patch.dart"));
 
     DartGenerator generator = new DartGenerator();
 
@@ -167,6 +168,11 @@ class GenApis {
       }
     });
     generator.writeln();
+
+    if (patchFile.existsSync()) {
+      generator.writeln("part '${fileName}_patch.dart';");
+      generator.writeln();
+    }
 
     // create the combined reference
     String className = 'Chrome${titleCase(shortName)}';

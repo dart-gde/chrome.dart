@@ -9,11 +9,12 @@ import 'dart:convert';
 import 'dart:io';
 
 class Overrides {
-
   Map renameNamespaceMap;
 
   List<String> suppressClassList;
   Map renameClassMap;
+
+  List<String> overrideClasses;
 
   Overrides() {
     _init({});
@@ -38,6 +39,8 @@ class Overrides {
     if (renameClassMap == null) {
       renameClassMap = {};
     }
+
+    overrideClasses = m['overrideClass'] == null ? [] : m['overrideClass'];
   }
 
   String namespaceRename(String name) {
@@ -69,4 +72,7 @@ class Overrides {
     }).toList();
   }
 
+  String overrideClass(String className) {
+    return overrideClasses.contains(className) ? '_${className}': className;
+  }
 }

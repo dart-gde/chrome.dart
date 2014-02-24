@@ -6,6 +6,8 @@ import '../src/common.dart';
 import '../src/files.dart';
 import 'windows.dart';
 
+part 'app_patch.dart';
+
 final ChromeApp app = new ChromeApp._();
 
 class ChromeApp {
@@ -102,10 +104,10 @@ LaunchItem _createLaunchItem(JsObject jsProxy) => jsProxy == null ? null : new L
  * frame with title bar and size controls. They are not associated with any
  * Chrome browser windows.
  */
-class ChromeAppWindow extends ChromeApi {
+class _ChromeAppWindow extends ChromeApi {
   static final JsObject _app_window = chrome['app']['window'];
 
-  ChromeAppWindow._();
+  _ChromeAppWindow._();
 
   bool get available => _app_window != null;
 
@@ -320,11 +322,11 @@ class CreateWindowOptions extends ChromeObject {
   set alwaysOnTop(bool value) => jsProxy['alwaysOnTop'] = value;
 }
 
-class AppWindow extends ChromeObject {
-  AppWindow({Window contentWindow}) {
+class _AppWindow extends ChromeObject {
+  _AppWindow({Window contentWindow}) {
     if (contentWindow != null) this.contentWindow = contentWindow;
   }
-  AppWindow.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  _AppWindow.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   Window get contentWindow => _createWindow(jsProxy['contentWindow']);
   set contentWindow(Window value) => jsProxy['contentWindow'] = jsify(value);
