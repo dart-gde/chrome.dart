@@ -1,5 +1,11 @@
 # Changelog - chrome.dart
 
+## 0.5.1 2014-02-24 (SDK 1.2.0-dev.5.15 r32954)
+
+- added a `toString()` to the `FileError` implementation
+- added ability to override generated code with hand-written methods
+- implemented window events override for `ChromeAppWindow` class
+
 ## 0.5.0 2014-02-20 (SDK 1.2.0-dev.5.12 r32844)
 
 - added the new `chrome.sockets` API
