@@ -423,6 +423,14 @@ class CrFileError extends ChromeObject implements FileError {
   String get message => jsProxy['message'];
   String get name => jsProxy['name'];
 
+  String toString() {
+    if (message != null && message.isNotEmpty) {
+      return '${name}: ${message}';
+    } else {
+      return name;
+    }
+  }
+  
   static bool _isFileError(error) {
     if (error is JsObject) {
       // TODO: static JsFunction errorType = context['FileError'];
