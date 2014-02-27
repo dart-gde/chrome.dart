@@ -15,7 +15,7 @@ import '../src/common.dart';
 final ChromeDesktopCapture desktopCapture = new ChromeDesktopCapture._();
 
 class ChromeDesktopCapture extends ChromeApi {
-  static final JsObject _desktopCapture = chrome['desktopCapture'];
+  JsObject get _desktopCapture => chrome['desktopCapture'];
 
   ChromeDesktopCapture._();
 

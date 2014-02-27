@@ -13,7 +13,7 @@ import '../src/common.dart';
 final ChromeEvents events = new ChromeEvents._();
 
 class ChromeEvents extends ChromeApi {
-  static final JsObject _events = chrome['events'];
+  JsObject get _events => chrome['events'];
 
   ChromeEvents._();
 

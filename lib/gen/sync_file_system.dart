@@ -18,9 +18,21 @@ import '../src/common.dart';
 final ChromeSyncFileSystem syncFileSystem = new ChromeSyncFileSystem._();
 
 class ChromeSyncFileSystem extends ChromeApi {
-  static final JsObject _syncFileSystem = chrome['syncFileSystem'];
+  JsObject get _syncFileSystem => chrome['syncFileSystem'];
 
-  ChromeSyncFileSystem._();
+  Stream<ServiceInfo> get onServiceStatusChanged => _onServiceStatusChanged.stream;
+  ChromeStreamController<ServiceInfo> _onServiceStatusChanged;
+
+  Stream<FileInfo> get onFileStatusChanged => _onFileStatusChanged.stream;
+  ChromeStreamController<FileInfo> _onFileStatusChanged;
+
+  ChromeSyncFileSystem._() {
+    var getApi = () => _syncFileSystem;
+    _onServiceStatusChanged =
+        new ChromeStreamController<ServiceInfo>.oneArg(getApi, 'onServiceStatusChanged', _createServiceInfo);
+    _onFileStatusChanged =
+        new ChromeStreamController<FileInfo>.oneArg(getApi, 'onFileStatusChanged', _createFileInfo);
+  }
 
   bool get available => _syncFileSystem != null;
 
@@ -133,16 +145,6 @@ class ChromeSyncFileSystem extends ChromeApi {
     _syncFileSystem.callMethod('getServiceStatus', [completer.callback]);
     return completer.future;
   }
-
-  Stream<ServiceInfo> get onServiceStatusChanged => _onServiceStatusChanged.stream;
-
-  final ChromeStreamController<ServiceInfo> _onServiceStatusChanged =
-      new ChromeStreamController<ServiceInfo>.oneArg(_syncFileSystem, 'onServiceStatusChanged', _createServiceInfo);
-
-  Stream<FileInfo> get onFileStatusChanged => _onFileStatusChanged.stream;
-
-  final ChromeStreamController<FileInfo> _onFileStatusChanged =
-      new ChromeStreamController<FileInfo>.oneArg(_syncFileSystem, 'onFileStatusChanged', _createFileInfo);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.syncFileSystem' is not available");
@@ -267,14 +269,14 @@ class ServiceInfo extends ChromeObject {
   set description(String value) => jsProxy['description'] = value;
 }
 
+ServiceInfo _createServiceInfo(JsObject jsProxy) => jsProxy == null ? null : new ServiceInfo.fromProxy(jsProxy);
+FileInfo _createFileInfo(JsObject jsProxy) => jsProxy == null ? null : new FileInfo.fromProxy(jsProxy);
 FileSystem _createDOMFileSystem(JsObject jsProxy) => jsProxy == null ? null : new CrFileSystem.fromProxy(jsProxy);
 ConflictResolutionPolicy _createConflictResolutionPolicy(String value) => ConflictResolutionPolicy.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 StorageInfo _createStorageInfo(JsObject jsProxy) => jsProxy == null ? null : new StorageInfo.fromProxy(jsProxy);
 FileStatus _createFileStatus(String value) => FileStatus.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 FileStatusInfo _createFileStatusInfo(JsObject jsProxy) => jsProxy == null ? null : new FileStatusInfo.fromProxy(jsProxy);
 ServiceStatus _createServiceStatus(String value) => ServiceStatus.VALUES.singleWhere((ChromeEnum e) => e.value == value);
-ServiceInfo _createServiceInfo(JsObject jsProxy) => jsProxy == null ? null : new ServiceInfo.fromProxy(jsProxy);
-FileInfo _createFileInfo(JsObject jsProxy) => jsProxy == null ? null : new FileInfo.fromProxy(jsProxy);
 Entry _createEntry(JsObject jsProxy) => jsProxy == null ? null : new CrEntry.fromProxy(jsProxy);
 SyncAction _createSyncAction(String value) => SyncAction.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 SyncDirection _createSyncDirection(String value) => SyncDirection.VALUES.singleWhere((ChromeEnum e) => e.value == value);

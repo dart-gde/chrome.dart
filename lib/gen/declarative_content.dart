@@ -15,16 +15,18 @@ import '../src/common.dart';
 final ChromeDeclarativeContent declarativeContent = new ChromeDeclarativeContent._();
 
 class ChromeDeclarativeContent extends ChromeApi {
-  static final JsObject _declarativeContent = chrome['declarativeContent'];
-
-  ChromeDeclarativeContent._();
-
-  bool get available => _declarativeContent != null;
+  JsObject get _declarativeContent => chrome['declarativeContent'];
 
   Stream get onPageChanged => _onPageChanged.stream;
+  ChromeStreamController _onPageChanged;
 
-  final ChromeStreamController _onPageChanged =
-      new ChromeStreamController.noArgs(_declarativeContent, 'onPageChanged');
+  ChromeDeclarativeContent._() {
+    var getApi = () => _declarativeContent;
+    _onPageChanged =
+        new ChromeStreamController.noArgs(getApi, 'onPageChanged');
+  }
+
+  bool get available => _declarativeContent != null;
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.declarativeContent' is not available");

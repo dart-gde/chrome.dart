@@ -39,7 +39,7 @@ class ChromeSystem {
  * Use the `system.cpu` API to query CPU metadata.
  */
 class ChromeSystemCpu extends ChromeApi {
-  static final JsObject _system_cpu = chrome['system']['cpu'];
+  JsObject get _system_cpu => chrome['system']['cpu'];
 
   ChromeSystemCpu._();
 
@@ -85,9 +85,16 @@ CpuInfo _createCpuInfo(JsObject jsProxy) => jsProxy == null ? null : new CpuInfo
  * Use the `system.display` API to query display metadata.
  */
 class ChromeSystemDisplay extends ChromeApi {
-  static final JsObject _system_display = chrome['system']['display'];
+  JsObject get _system_display => chrome['system']['display'];
 
-  ChromeSystemDisplay._();
+  Stream get onDisplayChanged => _onDisplayChanged.stream;
+  ChromeStreamController _onDisplayChanged;
+
+  ChromeSystemDisplay._() {
+    var getApi = () => _system_display;
+    _onDisplayChanged =
+        new ChromeStreamController.noArgs(getApi, 'onDisplayChanged');
+  }
 
   bool get available => _system_display != null;
 
@@ -119,11 +126,6 @@ class ChromeSystemDisplay extends ChromeApi {
     _system_display.callMethod('setDisplayProperties', [id, jsify(info), completer.callback]);
     return completer.future;
   }
-
-  Stream get onDisplayChanged => _onDisplayChanged.stream;
-
-  final ChromeStreamController _onDisplayChanged =
-      new ChromeStreamController.noArgs(_system_display, 'onDisplayChanged');
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.system.display' is not available");
@@ -244,7 +246,7 @@ Insets _createInsets(JsObject jsProxy) => jsProxy == null ? null : new Insets.fr
  * The `chrome.system.memory` API.
  */
 class ChromeSystemMemory extends ChromeApi {
-  static final JsObject _system_memory = chrome['system']['memory'];
+  JsObject get _system_memory => chrome['system']['memory'];
 
   ChromeSystemMemory._();
 
@@ -286,7 +288,7 @@ MemoryInfo _createMemoryInfo(JsObject jsProxy) => jsProxy == null ? null : new M
  * Use the `chrome.system.network` API.
  */
 class ChromeSystemNetwork extends ChromeApi {
-  static final JsObject _system_network = chrome['system']['network'];
+  JsObject get _system_network => chrome['system']['network'];
 
   ChromeSystemNetwork._();
 
@@ -339,9 +341,21 @@ NetworkInterface _createNetworkInterface(JsObject jsProxy) => jsProxy == null ? 
  * be notified when a removable storage device is attached and detached.
  */
 class ChromeSystemStorage extends ChromeApi {
-  static final JsObject _system_storage = chrome['system']['storage'];
+  JsObject get _system_storage => chrome['system']['storage'];
 
-  ChromeSystemStorage._();
+  Stream<StorageUnitInfo> get onAttached => _onAttached.stream;
+  ChromeStreamController<StorageUnitInfo> _onAttached;
+
+  Stream<String> get onDetached => _onDetached.stream;
+  ChromeStreamController<String> _onDetached;
+
+  ChromeSystemStorage._() {
+    var getApi = () => _system_storage;
+    _onAttached =
+        new ChromeStreamController<StorageUnitInfo>.oneArg(getApi, 'onAttached', _createStorageUnitInfo);
+    _onDetached =
+        new ChromeStreamController<String>.oneArg(getApi, 'onDetached', selfConverter);
+  }
 
   bool get available => _system_storage != null;
 
@@ -379,16 +393,6 @@ class ChromeSystemStorage extends ChromeApi {
     _system_storage.callMethod('getAvailableCapacity', [id, completer.callback]);
     return completer.future;
   }
-
-  Stream<StorageUnitInfo> get onAttached => _onAttached.stream;
-
-  final ChromeStreamController<StorageUnitInfo> _onAttached =
-      new ChromeStreamController<StorageUnitInfo>.oneArg(_system_storage, 'onAttached', _createStorageUnitInfo);
-
-  Stream<String> get onDetached => _onDetached.stream;
-
-  final ChromeStreamController<String> _onDetached =
-      new ChromeStreamController<String>.oneArg(_system_storage, 'onDetached', selfConverter);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.system.storage' is not available");

@@ -16,9 +16,27 @@ import '../src/common.dart';
 final ChromePermissions permissions = new ChromePermissions._();
 
 class ChromePermissions extends ChromeApi {
-  static final JsObject _permissions = chrome['permissions'];
+  JsObject get _permissions => chrome['permissions'];
 
-  ChromePermissions._();
+  /**
+   * Fired when the extension acquires new permissions.
+   */
+  Stream<Permissions> get onAdded => _onAdded.stream;
+  ChromeStreamController<Permissions> _onAdded;
+
+  /**
+   * Fired when access to permissions has been removed from the extension.
+   */
+  Stream<Permissions> get onRemoved => _onRemoved.stream;
+  ChromeStreamController<Permissions> _onRemoved;
+
+  ChromePermissions._() {
+    var getApi = () => _permissions;
+    _onAdded =
+        new ChromeStreamController<Permissions>.oneArg(getApi, 'onAdded', _createPermissions);
+    _onRemoved =
+        new ChromeStreamController<Permissions>.oneArg(getApi, 'onRemoved', _createPermissions);
+  }
 
   bool get available => _permissions != null;
 
@@ -80,22 +98,6 @@ class ChromePermissions extends ChromeApi {
     _permissions.callMethod('remove', [jsify(permissions), completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when the extension acquires new permissions.
-   */
-  Stream<Permissions> get onAdded => _onAdded.stream;
-
-  final ChromeStreamController<Permissions> _onAdded =
-      new ChromeStreamController<Permissions>.oneArg(_permissions, 'onAdded', _createPermissions);
-
-  /**
-   * Fired when access to permissions has been removed from the extension.
-   */
-  Stream<Permissions> get onRemoved => _onRemoved.stream;
-
-  final ChromeStreamController<Permissions> _onRemoved =
-      new ChromeStreamController<Permissions>.oneArg(_permissions, 'onRemoved', _createPermissions);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.permissions' is not available");

@@ -16,7 +16,7 @@ import '../src/common.dart';
 final ChromeContentSettings contentSettings = new ChromeContentSettings._();
 
 class ChromeContentSettings extends ChromeApi {
-  static final JsObject _contentSettings = chrome['contentSettings'];
+  JsObject get _contentSettings => chrome['contentSettings'];
 
   ChromeContentSettings._();
 

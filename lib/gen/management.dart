@@ -15,9 +15,43 @@ import '../src/common.dart';
 final ChromeManagement management = new ChromeManagement._();
 
 class ChromeManagement extends ChromeApi {
-  static final JsObject _management = chrome['management'];
+  JsObject get _management => chrome['management'];
 
-  ChromeManagement._();
+  /**
+   * Fired when an app or extension has been installed.
+   */
+  Stream<ExtensionInfo> get onInstalled => _onInstalled.stream;
+  ChromeStreamController<ExtensionInfo> _onInstalled;
+
+  /**
+   * Fired when an app or extension has been uninstalled.
+   */
+  Stream<String> get onUninstalled => _onUninstalled.stream;
+  ChromeStreamController<String> _onUninstalled;
+
+  /**
+   * Fired when an app or extension has been enabled.
+   */
+  Stream<ExtensionInfo> get onEnabled => _onEnabled.stream;
+  ChromeStreamController<ExtensionInfo> _onEnabled;
+
+  /**
+   * Fired when an app or extension has been disabled.
+   */
+  Stream<ExtensionInfo> get onDisabled => _onDisabled.stream;
+  ChromeStreamController<ExtensionInfo> _onDisabled;
+
+  ChromeManagement._() {
+    var getApi = () => _management;
+    _onInstalled =
+        new ChromeStreamController<ExtensionInfo>.oneArg(getApi, 'onInstalled', _createExtensionInfo);
+    _onUninstalled =
+        new ChromeStreamController<String>.oneArg(getApi, 'onUninstalled', selfConverter);
+    _onEnabled =
+        new ChromeStreamController<ExtensionInfo>.oneArg(getApi, 'onEnabled', _createExtensionInfo);
+    _onDisabled =
+        new ChromeStreamController<ExtensionInfo>.oneArg(getApi, 'onDisabled', _createExtensionInfo);
+  }
 
   bool get available => _management != null;
 
@@ -127,38 +161,6 @@ class ChromeManagement extends ChromeApi {
     _management.callMethod('launchApp', [id, completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when an app or extension has been installed.
-   */
-  Stream<ExtensionInfo> get onInstalled => _onInstalled.stream;
-
-  final ChromeStreamController<ExtensionInfo> _onInstalled =
-      new ChromeStreamController<ExtensionInfo>.oneArg(_management, 'onInstalled', _createExtensionInfo);
-
-  /**
-   * Fired when an app or extension has been uninstalled.
-   */
-  Stream<String> get onUninstalled => _onUninstalled.stream;
-
-  final ChromeStreamController<String> _onUninstalled =
-      new ChromeStreamController<String>.oneArg(_management, 'onUninstalled', selfConverter);
-
-  /**
-   * Fired when an app or extension has been enabled.
-   */
-  Stream<ExtensionInfo> get onEnabled => _onEnabled.stream;
-
-  final ChromeStreamController<ExtensionInfo> _onEnabled =
-      new ChromeStreamController<ExtensionInfo>.oneArg(_management, 'onEnabled', _createExtensionInfo);
-
-  /**
-   * Fired when an app or extension has been disabled.
-   */
-  Stream<ExtensionInfo> get onDisabled => _onDisabled.stream;
-
-  final ChromeStreamController<ExtensionInfo> _onDisabled =
-      new ChromeStreamController<ExtensionInfo>.oneArg(_management, 'onDisabled', _createExtensionInfo);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.management' is not available");

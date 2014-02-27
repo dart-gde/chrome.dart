@@ -14,7 +14,7 @@ import '../src/common.dart';
 final ChromeI18N i18n = new ChromeI18N._();
 
 class ChromeI18N extends ChromeApi {
-  static final JsObject _i18n = chrome['i18n'];
+  JsObject get _i18n => chrome['i18n'];
 
   ChromeI18N._();
 

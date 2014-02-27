@@ -13,9 +13,16 @@ import '../src/common.dart';
 final ChromeTabCapture tabCapture = new ChromeTabCapture._();
 
 class ChromeTabCapture extends ChromeApi {
-  static final JsObject _tabCapture = chrome['tabCapture'];
+  JsObject get _tabCapture => chrome['tabCapture'];
 
-  ChromeTabCapture._();
+  Stream<CaptureInfo> get onStatusChanged => _onStatusChanged.stream;
+  ChromeStreamController<CaptureInfo> _onStatusChanged;
+
+  ChromeTabCapture._() {
+    var getApi = () => _tabCapture;
+    _onStatusChanged =
+        new ChromeStreamController<CaptureInfo>.oneArg(getApi, 'onStatusChanged', _createCaptureInfo);
+  }
 
   bool get available => _tabCapture != null;
 
@@ -49,11 +56,6 @@ class ChromeTabCapture extends ChromeApi {
     _tabCapture.callMethod('getCapturedTabs', [completer.callback]);
     return completer.future;
   }
-
-  Stream<CaptureInfo> get onStatusChanged => _onStatusChanged.stream;
-
-  final ChromeStreamController<CaptureInfo> _onStatusChanged =
-      new ChromeStreamController<CaptureInfo>.oneArg(_tabCapture, 'onStatusChanged', _createCaptureInfo);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.tabCapture' is not available");
@@ -134,7 +136,7 @@ class CaptureOptions extends ChromeObject {
   set videoConstraints(MediaStreamConstraint value) => jsProxy['videoConstraints'] = jsify(value);
 }
 
-LocalMediaStream _createLocalMediaStream(JsObject jsProxy) => jsProxy == null ? null : new LocalMediaStream.fromProxy(jsProxy);
 CaptureInfo _createCaptureInfo(JsObject jsProxy) => jsProxy == null ? null : new CaptureInfo.fromProxy(jsProxy);
+LocalMediaStream _createLocalMediaStream(JsObject jsProxy) => jsProxy == null ? null : new LocalMediaStream.fromProxy(jsProxy);
 TabCaptureState _createTabCaptureState(String value) => TabCaptureState.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 MediaStreamConstraint _createMediaStreamConstraint(JsObject jsProxy) => jsProxy == null ? null : new MediaStreamConstraint.fromProxy(jsProxy);

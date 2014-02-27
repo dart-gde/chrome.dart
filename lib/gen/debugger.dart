@@ -19,9 +19,29 @@ import '../src/common.dart';
 final ChromeDebugger debugger = new ChromeDebugger._();
 
 class ChromeDebugger extends ChromeApi {
-  static final JsObject _debugger = chrome['debugger'];
+  JsObject get _debugger => chrome['debugger'];
 
-  ChromeDebugger._();
+  /**
+   * Fired whenever debugging target issues instrumentation event.
+   */
+  Stream<OnEventEvent> get onEvent => _onEvent.stream;
+  ChromeStreamController<OnEventEvent> _onEvent;
+
+  /**
+   * Fired when browser terminates debugging session for the tab. This happens
+   * when either the tab is being closed or Chrome DevTools is being invoked for
+   * the attached tab.
+   */
+  Stream<OnDetachEvent> get onDetach => _onDetach.stream;
+  ChromeStreamController<OnDetachEvent> _onDetach;
+
+  ChromeDebugger._() {
+    var getApi = () => _debugger;
+    _onEvent =
+        new ChromeStreamController<OnEventEvent>.threeArgs(getApi, 'onEvent', _createOnEventEvent);
+    _onDetach =
+        new ChromeStreamController<OnDetachEvent>.twoArgs(getApi, 'onDetach', _createOnDetachEvent);
+  }
 
   bool get available => _debugger != null;
 
@@ -93,24 +113,6 @@ class ChromeDebugger extends ChromeApi {
     _debugger.callMethod('getTargets', [completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired whenever debugging target issues instrumentation event.
-   */
-  Stream<OnEventEvent> get onEvent => _onEvent.stream;
-
-  final ChromeStreamController<OnEventEvent> _onEvent =
-      new ChromeStreamController<OnEventEvent>.threeArgs(_debugger, 'onEvent', _createOnEventEvent);
-
-  /**
-   * Fired when browser terminates debugging session for the tab. This happens
-   * when either the tab is being closed or Chrome DevTools is being invoked for
-   * the attached tab.
-   */
-  Stream<OnDetachEvent> get onDetach => _onDetach.stream;
-
-  final ChromeStreamController<OnDetachEvent> _onDetach =
-      new ChromeStreamController<OnDetachEvent>.twoArgs(_debugger, 'onDetach', _createOnDetachEvent);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.debugger' is not available");
@@ -264,9 +266,9 @@ class TargetInfo extends ChromeObject {
   set faviconUrl(String value) => jsProxy['faviconUrl'] = value;
 }
 
-TargetInfo _createTargetInfo(JsObject jsProxy) => jsProxy == null ? null : new TargetInfo.fromProxy(jsProxy);
 OnEventEvent _createOnEventEvent(JsObject source, String method, JsObject params) =>
     new OnEventEvent(_createDebuggee(source), method, mapify(params));
 OnDetachEvent _createOnDetachEvent(JsObject source, String reason) =>
     new OnDetachEvent(_createDebuggee(source), reason);
+TargetInfo _createTargetInfo(JsObject jsProxy) => jsProxy == null ? null : new TargetInfo.fromProxy(jsProxy);
 Debuggee _createDebuggee(JsObject jsProxy) => jsProxy == null ? null : new Debuggee.fromProxy(jsProxy);

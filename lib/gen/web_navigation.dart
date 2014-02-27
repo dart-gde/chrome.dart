@@ -14,9 +14,93 @@ import '../src/common.dart';
 final ChromeWebNavigation webNavigation = new ChromeWebNavigation._();
 
 class ChromeWebNavigation extends ChromeApi {
-  static final JsObject _webNavigation = chrome['webNavigation'];
+  JsObject get _webNavigation => chrome['webNavigation'];
 
-  ChromeWebNavigation._();
+  /**
+   * Fired when a navigation is about to occur.
+   */
+  Stream<Map> get onBeforeNavigate => _onBeforeNavigate.stream;
+  ChromeStreamController<Map> _onBeforeNavigate;
+
+  /**
+   * Fired when a navigation is committed. The document (and the resources it
+   * refers to, such as images and subframes) might still be downloading, but at
+   * least part of the document has been received from the server and the
+   * browser has decided to switch to the new document.
+   */
+  Stream<Map> get onCommitted => _onCommitted.stream;
+  ChromeStreamController<Map> _onCommitted;
+
+  /**
+   * Fired when the page's DOM is fully constructed, but the referenced
+   * resources may not finish loading.
+   */
+  Stream<Map> get onDOMContentLoaded => _onDOMContentLoaded.stream;
+  ChromeStreamController<Map> _onDOMContentLoaded;
+
+  /**
+   * Fired when a document, including the resources it refers to, is completely
+   * loaded and initialized.
+   */
+  Stream<Map> get onCompleted => _onCompleted.stream;
+  ChromeStreamController<Map> _onCompleted;
+
+  /**
+   * Fired when an error occurs and the navigation is aborted. This can happen
+   * if either a network error occurred, or the user aborted the navigation.
+   */
+  Stream<Map> get onErrorOccurred => _onErrorOccurred.stream;
+  ChromeStreamController<Map> _onErrorOccurred;
+
+  /**
+   * Fired when a new window, or a new tab in an existing window, is created to
+   * host a navigation.
+   */
+  Stream<Map> get onCreatedNavigationTarget => _onCreatedNavigationTarget.stream;
+  ChromeStreamController<Map> _onCreatedNavigationTarget;
+
+  /**
+   * Fired when the reference fragment of a frame was updated. All future events
+   * for that frame will use the updated URL.
+   */
+  Stream<Map> get onReferenceFragmentUpdated => _onReferenceFragmentUpdated.stream;
+  ChromeStreamController<Map> _onReferenceFragmentUpdated;
+
+  /**
+   * Fired when the contents of the tab is replaced by a different (usually
+   * previously pre-rendered) tab.
+   */
+  Stream<Map> get onTabReplaced => _onTabReplaced.stream;
+  ChromeStreamController<Map> _onTabReplaced;
+
+  /**
+   * Fired when the frame's history was updated to a new URL. All future events
+   * for that frame will use the updated URL.
+   */
+  Stream<Map> get onHistoryStateUpdated => _onHistoryStateUpdated.stream;
+  ChromeStreamController<Map> _onHistoryStateUpdated;
+
+  ChromeWebNavigation._() {
+    var getApi = () => _webNavigation;
+    _onBeforeNavigate =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onBeforeNavigate', mapify);
+    _onCommitted =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onCommitted', mapify);
+    _onDOMContentLoaded =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onDOMContentLoaded', mapify);
+    _onCompleted =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onCompleted', mapify);
+    _onErrorOccurred =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onErrorOccurred', mapify);
+    _onCreatedNavigationTarget =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onCreatedNavigationTarget', mapify);
+    _onReferenceFragmentUpdated =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onReferenceFragmentUpdated', mapify);
+    _onTabReplaced =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onTabReplaced', mapify);
+    _onHistoryStateUpdated =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onHistoryStateUpdated', mapify);
+  }
 
   bool get available => _webNavigation != null;
 
@@ -54,88 +138,6 @@ class ChromeWebNavigation extends ChromeApi {
     _webNavigation.callMethod('getAllFrames', [jsify(details), completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a navigation is about to occur.
-   */
-  Stream<Map> get onBeforeNavigate => _onBeforeNavigate.stream;
-
-  final ChromeStreamController<Map> _onBeforeNavigate =
-      new ChromeStreamController<Map>.oneArg(_webNavigation, 'onBeforeNavigate', mapify);
-
-  /**
-   * Fired when a navigation is committed. The document (and the resources it
-   * refers to, such as images and subframes) might still be downloading, but at
-   * least part of the document has been received from the server and the
-   * browser has decided to switch to the new document.
-   */
-  Stream<Map> get onCommitted => _onCommitted.stream;
-
-  final ChromeStreamController<Map> _onCommitted =
-      new ChromeStreamController<Map>.oneArg(_webNavigation, 'onCommitted', mapify);
-
-  /**
-   * Fired when the page's DOM is fully constructed, but the referenced
-   * resources may not finish loading.
-   */
-  Stream<Map> get onDOMContentLoaded => _onDOMContentLoaded.stream;
-
-  final ChromeStreamController<Map> _onDOMContentLoaded =
-      new ChromeStreamController<Map>.oneArg(_webNavigation, 'onDOMContentLoaded', mapify);
-
-  /**
-   * Fired when a document, including the resources it refers to, is completely
-   * loaded and initialized.
-   */
-  Stream<Map> get onCompleted => _onCompleted.stream;
-
-  final ChromeStreamController<Map> _onCompleted =
-      new ChromeStreamController<Map>.oneArg(_webNavigation, 'onCompleted', mapify);
-
-  /**
-   * Fired when an error occurs and the navigation is aborted. This can happen
-   * if either a network error occurred, or the user aborted the navigation.
-   */
-  Stream<Map> get onErrorOccurred => _onErrorOccurred.stream;
-
-  final ChromeStreamController<Map> _onErrorOccurred =
-      new ChromeStreamController<Map>.oneArg(_webNavigation, 'onErrorOccurred', mapify);
-
-  /**
-   * Fired when a new window, or a new tab in an existing window, is created to
-   * host a navigation.
-   */
-  Stream<Map> get onCreatedNavigationTarget => _onCreatedNavigationTarget.stream;
-
-  final ChromeStreamController<Map> _onCreatedNavigationTarget =
-      new ChromeStreamController<Map>.oneArg(_webNavigation, 'onCreatedNavigationTarget', mapify);
-
-  /**
-   * Fired when the reference fragment of a frame was updated. All future events
-   * for that frame will use the updated URL.
-   */
-  Stream<Map> get onReferenceFragmentUpdated => _onReferenceFragmentUpdated.stream;
-
-  final ChromeStreamController<Map> _onReferenceFragmentUpdated =
-      new ChromeStreamController<Map>.oneArg(_webNavigation, 'onReferenceFragmentUpdated', mapify);
-
-  /**
-   * Fired when the contents of the tab is replaced by a different (usually
-   * previously pre-rendered) tab.
-   */
-  Stream<Map> get onTabReplaced => _onTabReplaced.stream;
-
-  final ChromeStreamController<Map> _onTabReplaced =
-      new ChromeStreamController<Map>.oneArg(_webNavigation, 'onTabReplaced', mapify);
-
-  /**
-   * Fired when the frame's history was updated to a new URL. All future events
-   * for that frame will use the updated URL.
-   */
-  Stream<Map> get onHistoryStateUpdated => _onHistoryStateUpdated.stream;
-
-  final ChromeStreamController<Map> _onHistoryStateUpdated =
-      new ChromeStreamController<Map>.oneArg(_webNavigation, 'onHistoryStateUpdated', mapify);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.webNavigation' is not available");

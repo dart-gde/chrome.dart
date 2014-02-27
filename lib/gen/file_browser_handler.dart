@@ -15,9 +15,19 @@ import '../src/common.dart';
 final ChromeFileBrowserHandler fileBrowserHandler = new ChromeFileBrowserHandler._();
 
 class ChromeFileBrowserHandler extends ChromeApi {
-  static final JsObject _fileBrowserHandler = chrome['fileBrowserHandler'];
+  JsObject get _fileBrowserHandler => chrome['fileBrowserHandler'];
 
-  ChromeFileBrowserHandler._();
+  /**
+   * Fired when file system action is executed from ChromeOS file browser.
+   */
+  Stream<OnExecuteEvent> get onExecute => _onExecute.stream;
+  ChromeStreamController<OnExecuteEvent> _onExecute;
+
+  ChromeFileBrowserHandler._() {
+    var getApi = () => _fileBrowserHandler;
+    _onExecute =
+        new ChromeStreamController<OnExecuteEvent>.twoArgs(getApi, 'onExecute', _createOnExecuteEvent);
+  }
 
   bool get available => _fileBrowserHandler != null;
 
@@ -41,14 +51,6 @@ class ChromeFileBrowserHandler extends ChromeApi {
     _fileBrowserHandler.callMethod('selectFile', [jsify(selectionParams), completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when file system action is executed from ChromeOS file browser.
-   */
-  Stream<OnExecuteEvent> get onExecute => _onExecute.stream;
-
-  final ChromeStreamController<OnExecuteEvent> _onExecute =
-      new ChromeStreamController<OnExecuteEvent>.twoArgs(_fileBrowserHandler, 'onExecute', _createOnExecuteEvent);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.fileBrowserHandler' is not available");

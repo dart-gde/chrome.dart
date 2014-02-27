@@ -13,7 +13,7 @@ import '../src/common.dart';
 final ChromeWallpaper wallpaper = new ChromeWallpaper._();
 
 class ChromeWallpaper extends ChromeApi {
-  static final JsObject _wallpaper = chrome['wallpaper'];
+  JsObject get _wallpaper => chrome['wallpaper'];
 
   ChromeWallpaper._();
 

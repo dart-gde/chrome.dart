@@ -15,7 +15,7 @@ import '../src/common.dart';
 final ChromeInfobars infobars = new ChromeInfobars._();
 
 class ChromeInfobars extends ChromeApi {
-  static final JsObject _infobars = chrome['infobars'];
+  JsObject get _infobars => chrome['infobars'];
 
   ChromeInfobars._();
 

@@ -20,9 +20,51 @@ import '../src/common.dart';
 final ChromeTtsEngine ttsEngine = new ChromeTtsEngine._();
 
 class ChromeTtsEngine extends ChromeApi {
-  static final JsObject _ttsEngine = chrome['ttsEngine'];
+  JsObject get _ttsEngine => chrome['ttsEngine'];
 
-  ChromeTtsEngine._();
+  /**
+   * Called when the user makes a call to tts.speak() and one of the voices from
+   * this extension's manifest is the first to match the options object.
+   */
+  Stream<OnSpeakEvent> get onSpeak => _onSpeak.stream;
+  ChromeStreamController<OnSpeakEvent> _onSpeak;
+
+  /**
+   * Fired when a call is made to tts.stop and this extension may be in the
+   * middle of speaking. If an extension receives a call to onStop and speech is
+   * already stopped, it should do nothing (not raise an error). If speech is in
+   * the paused state, this should cancel the paused state.
+   */
+  Stream get onStop => _onStop.stream;
+  ChromeStreamController _onStop;
+
+  /**
+   * Optional: if an engine supports the pause event, it should pause the
+   * current utterance being spoken, if any, until it receives a resume event or
+   * stop event. Note that a stop event should also clear the paused state.
+   */
+  Stream get onPause => _onPause.stream;
+  ChromeStreamController _onPause;
+
+  /**
+   * Optional: if an engine supports the pause event, it should also support the
+   * resume event, to continue speaking the current utterance, if any. Note that
+   * a stop event should also clear the paused state.
+   */
+  Stream get onResume => _onResume.stream;
+  ChromeStreamController _onResume;
+
+  ChromeTtsEngine._() {
+    var getApi = () => _ttsEngine;
+    _onSpeak =
+        new ChromeStreamController<OnSpeakEvent>.threeArgs(getApi, 'onSpeak', _createOnSpeakEvent);
+    _onStop =
+        new ChromeStreamController.noArgs(getApi, 'onStop');
+    _onPause =
+        new ChromeStreamController.noArgs(getApi, 'onPause');
+    _onResume =
+        new ChromeStreamController.noArgs(getApi, 'onResume');
+  }
 
   bool get available => _ttsEngine != null;
 
@@ -37,46 +79,6 @@ class ChromeTtsEngine extends ChromeApi {
 
     _ttsEngine.callMethod('sendTtsEvent', [requestId, jsify(event)]);
   }
-
-  /**
-   * Called when the user makes a call to tts.speak() and one of the voices from
-   * this extension's manifest is the first to match the options object.
-   */
-  Stream<OnSpeakEvent> get onSpeak => _onSpeak.stream;
-
-  final ChromeStreamController<OnSpeakEvent> _onSpeak =
-      new ChromeStreamController<OnSpeakEvent>.threeArgs(_ttsEngine, 'onSpeak', _createOnSpeakEvent);
-
-  /**
-   * Fired when a call is made to tts.stop and this extension may be in the
-   * middle of speaking. If an extension receives a call to onStop and speech is
-   * already stopped, it should do nothing (not raise an error). If speech is in
-   * the paused state, this should cancel the paused state.
-   */
-  Stream get onStop => _onStop.stream;
-
-  final ChromeStreamController _onStop =
-      new ChromeStreamController.noArgs(_ttsEngine, 'onStop');
-
-  /**
-   * Optional: if an engine supports the pause event, it should pause the
-   * current utterance being spoken, if any, until it receives a resume event or
-   * stop event. Note that a stop event should also clear the paused state.
-   */
-  Stream get onPause => _onPause.stream;
-
-  final ChromeStreamController _onPause =
-      new ChromeStreamController.noArgs(_ttsEngine, 'onPause');
-
-  /**
-   * Optional: if an engine supports the pause event, it should also support the
-   * resume event, to continue speaking the current utterance, if any. Note that
-   * a stop event should also clear the paused state.
-   */
-  Stream get onResume => _onResume.stream;
-
-  final ChromeStreamController _onResume =
-      new ChromeStreamController.noArgs(_ttsEngine, 'onResume');
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.ttsEngine' is not available");

@@ -15,9 +15,37 @@ import '../src/common.dart';
 final ChromeGcm gcm = new ChromeGcm._();
 
 class ChromeGcm extends ChromeApi {
-  static final JsObject _gcm = chrome['gcm'];
+  JsObject get _gcm => chrome['gcm'];
 
-  ChromeGcm._();
+  /**
+   * Fired when a message is received through GCM.
+   */
+  Stream<Map> get onMessage => _onMessage.stream;
+  ChromeStreamController<Map> _onMessage;
+
+  /**
+   * Fired when a GCM server had to delete messages to the application from its
+   * queue in order to manage its size. The app is expected to handle that case
+   * gracefully, e.g. by running a full sync with its server.
+   */
+  Stream get onMessagesDeleted => _onMessagesDeleted.stream;
+  ChromeStreamController _onMessagesDeleted;
+
+  /**
+   * Fired when it was not possible to send a message to the GCM server.
+   */
+  Stream<Map> get onSendError => _onSendError.stream;
+  ChromeStreamController<Map> _onSendError;
+
+  ChromeGcm._() {
+    var getApi = () => _gcm;
+    _onMessage =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onMessage', mapify);
+    _onMessagesDeleted =
+        new ChromeStreamController.noArgs(getApi, 'onMessagesDeleted');
+    _onSendError =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onSendError', mapify);
+  }
 
   bool get available => _gcm != null;
 
@@ -61,32 +89,6 @@ class ChromeGcm extends ChromeApi {
     _gcm.callMethod('send', [jsify(message), completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a message is received through GCM.
-   */
-  Stream<Map> get onMessage => _onMessage.stream;
-
-  final ChromeStreamController<Map> _onMessage =
-      new ChromeStreamController<Map>.oneArg(_gcm, 'onMessage', mapify);
-
-  /**
-   * Fired when a GCM server had to delete messages to the application from its
-   * queue in order to manage its size. The app is expected to handle that case
-   * gracefully, e.g. by running a full sync with its server.
-   */
-  Stream get onMessagesDeleted => _onMessagesDeleted.stream;
-
-  final ChromeStreamController _onMessagesDeleted =
-      new ChromeStreamController.noArgs(_gcm, 'onMessagesDeleted');
-
-  /**
-   * Fired when it was not possible to send a message to the GCM server.
-   */
-  Stream<Map> get onSendError => _onSendError.stream;
-
-  final ChromeStreamController<Map> _onSendError =
-      new ChromeStreamController<Map>.oneArg(_gcm, 'onSendError', mapify);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.gcm' is not available");

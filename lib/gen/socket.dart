@@ -14,7 +14,7 @@ import '../src/common.dart';
 final ChromeSocket socket = new ChromeSocket._();
 
 class ChromeSocket extends ChromeApi {
-  static final JsObject _socket = chrome['socket'];
+  JsObject get _socket => chrome['socket'];
 
   ChromeSocket._();
 

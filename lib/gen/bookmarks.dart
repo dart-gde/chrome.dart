@@ -15,9 +15,73 @@ import '../src/common.dart';
 final ChromeBookmarks bookmarks = new ChromeBookmarks._();
 
 class ChromeBookmarks extends ChromeApi {
-  static final JsObject _bookmarks = chrome['bookmarks'];
+  JsObject get _bookmarks => chrome['bookmarks'];
 
-  ChromeBookmarks._();
+  /**
+   * Fired when a bookmark or folder is created.
+   */
+  Stream<OnCreatedEvent> get onCreated => _onCreated.stream;
+  ChromeStreamController<OnCreatedEvent> _onCreated;
+
+  /**
+   * Fired when a bookmark or folder is removed.  When a folder is removed
+   * recursively, a single notification is fired for the folder, and none for
+   * its contents.
+   */
+  Stream<BookmarksOnRemovedEvent> get onRemoved => _onRemoved.stream;
+  ChromeStreamController<BookmarksOnRemovedEvent> _onRemoved;
+
+  /**
+   * Fired when a bookmark or folder changes.  <b>Note:</b> Currently, only
+   * title and url changes trigger this.
+   */
+  Stream<BookmarksOnChangedEvent> get onChanged => _onChanged.stream;
+  ChromeStreamController<BookmarksOnChangedEvent> _onChanged;
+
+  /**
+   * Fired when a bookmark or folder is moved to a different parent folder.
+   */
+  Stream<BookmarksOnMovedEvent> get onMoved => _onMoved.stream;
+  ChromeStreamController<BookmarksOnMovedEvent> _onMoved;
+
+  /**
+   * Fired when the children of a folder have changed their order due to the
+   * order being sorted in the UI.  This is not called as a result of a move().
+   */
+  Stream<OnChildrenReorderedEvent> get onChildrenReordered => _onChildrenReordered.stream;
+  ChromeStreamController<OnChildrenReorderedEvent> _onChildrenReordered;
+
+  /**
+   * Fired when a bookmark import session is begun.  Expensive observers should
+   * ignore onCreated updates until onImportEnded is fired.  Observers should
+   * still handle other notifications immediately.
+   */
+  Stream get onImportBegan => _onImportBegan.stream;
+  ChromeStreamController _onImportBegan;
+
+  /**
+   * Fired when a bookmark import session is ended.
+   */
+  Stream get onImportEnded => _onImportEnded.stream;
+  ChromeStreamController _onImportEnded;
+
+  ChromeBookmarks._() {
+    var getApi = () => _bookmarks;
+    _onCreated =
+        new ChromeStreamController<OnCreatedEvent>.twoArgs(getApi, 'onCreated', _createOnCreatedEvent);
+    _onRemoved =
+        new ChromeStreamController<BookmarksOnRemovedEvent>.twoArgs(getApi, 'onRemoved', _createOnRemovedEvent);
+    _onChanged =
+        new ChromeStreamController<BookmarksOnChangedEvent>.twoArgs(getApi, 'onChanged', _createOnChangedEvent);
+    _onMoved =
+        new ChromeStreamController<BookmarksOnMovedEvent>.twoArgs(getApi, 'onMoved', _createOnMovedEvent);
+    _onChildrenReordered =
+        new ChromeStreamController<OnChildrenReorderedEvent>.twoArgs(getApi, 'onChildrenReordered', _createOnChildrenReorderedEvent);
+    _onImportBegan =
+        new ChromeStreamController.noArgs(getApi, 'onImportBegan');
+    _onImportEnded =
+        new ChromeStreamController.noArgs(getApi, 'onImportEnded');
+  }
 
   bool get available => _bookmarks != null;
 
@@ -186,68 +250,6 @@ class ChromeBookmarks extends ChromeApi {
     _bookmarks.callMethod('export', [completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a bookmark or folder is created.
-   */
-  Stream<OnCreatedEvent> get onCreated => _onCreated.stream;
-
-  final ChromeStreamController<OnCreatedEvent> _onCreated =
-      new ChromeStreamController<OnCreatedEvent>.twoArgs(_bookmarks, 'onCreated', _createOnCreatedEvent);
-
-  /**
-   * Fired when a bookmark or folder is removed.  When a folder is removed
-   * recursively, a single notification is fired for the folder, and none for
-   * its contents.
-   */
-  Stream<BookmarksOnRemovedEvent> get onRemoved => _onRemoved.stream;
-
-  final ChromeStreamController<BookmarksOnRemovedEvent> _onRemoved =
-      new ChromeStreamController<BookmarksOnRemovedEvent>.twoArgs(_bookmarks, 'onRemoved', _createOnRemovedEvent);
-
-  /**
-   * Fired when a bookmark or folder changes.  <b>Note:</b> Currently, only
-   * title and url changes trigger this.
-   */
-  Stream<BookmarksOnChangedEvent> get onChanged => _onChanged.stream;
-
-  final ChromeStreamController<BookmarksOnChangedEvent> _onChanged =
-      new ChromeStreamController<BookmarksOnChangedEvent>.twoArgs(_bookmarks, 'onChanged', _createOnChangedEvent);
-
-  /**
-   * Fired when a bookmark or folder is moved to a different parent folder.
-   */
-  Stream<BookmarksOnMovedEvent> get onMoved => _onMoved.stream;
-
-  final ChromeStreamController<BookmarksOnMovedEvent> _onMoved =
-      new ChromeStreamController<BookmarksOnMovedEvent>.twoArgs(_bookmarks, 'onMoved', _createOnMovedEvent);
-
-  /**
-   * Fired when the children of a folder have changed their order due to the
-   * order being sorted in the UI.  This is not called as a result of a move().
-   */
-  Stream<OnChildrenReorderedEvent> get onChildrenReordered => _onChildrenReordered.stream;
-
-  final ChromeStreamController<OnChildrenReorderedEvent> _onChildrenReordered =
-      new ChromeStreamController<OnChildrenReorderedEvent>.twoArgs(_bookmarks, 'onChildrenReordered', _createOnChildrenReorderedEvent);
-
-  /**
-   * Fired when a bookmark import session is begun.  Expensive observers should
-   * ignore onCreated updates until onImportEnded is fired.  Observers should
-   * still handle other notifications immediately.
-   */
-  Stream get onImportBegan => _onImportBegan.stream;
-
-  final ChromeStreamController _onImportBegan =
-      new ChromeStreamController.noArgs(_bookmarks, 'onImportBegan');
-
-  /**
-   * Fired when a bookmark import session is ended.
-   */
-  Stream get onImportEnded => _onImportEnded.stream;
-
-  final ChromeStreamController _onImportEnded =
-      new ChromeStreamController.noArgs(_bookmarks, 'onImportEnded');
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.bookmarks' is not available");
@@ -435,7 +437,6 @@ class BookmarksUpdateParams extends ChromeObject {
   set url(String value) => jsProxy['url'] = value;
 }
 
-BookmarkTreeNode _createBookmarkTreeNode(JsObject jsProxy) => jsProxy == null ? null : new BookmarkTreeNode.fromProxy(jsProxy);
 OnCreatedEvent _createOnCreatedEvent(String id, JsObject bookmark) =>
     new OnCreatedEvent(id, _createBookmarkTreeNode(bookmark));
 BookmarksOnRemovedEvent _createOnRemovedEvent(String id, JsObject removeInfo) =>
@@ -446,3 +447,4 @@ BookmarksOnMovedEvent _createOnMovedEvent(String id, JsObject moveInfo) =>
     new BookmarksOnMovedEvent(id, mapify(moveInfo));
 OnChildrenReorderedEvent _createOnChildrenReorderedEvent(String id, JsObject reorderInfo) =>
     new OnChildrenReorderedEvent(id, mapify(reorderInfo));
+BookmarkTreeNode _createBookmarkTreeNode(JsObject jsProxy) => jsProxy == null ? null : new BookmarkTreeNode.fromProxy(jsProxy);

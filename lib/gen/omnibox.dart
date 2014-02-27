@@ -14,9 +14,45 @@ import '../src/common.dart';
 final ChromeOmnibox omnibox = new ChromeOmnibox._();
 
 class ChromeOmnibox extends ChromeApi {
-  static final JsObject _omnibox = chrome['omnibox'];
+  JsObject get _omnibox => chrome['omnibox'];
 
-  ChromeOmnibox._();
+  /**
+   * User has started a keyword input session by typing the extension's keyword.
+   * This is guaranteed to be sent exactly once per input session, and before
+   * any onInputChanged events.
+   */
+  Stream get onInputStarted => _onInputStarted.stream;
+  ChromeStreamController _onInputStarted;
+
+  /**
+   * User has changed what is typed into the omnibox.
+   */
+  Stream<OnInputChangedEvent> get onInputChanged => _onInputChanged.stream;
+  ChromeStreamController<OnInputChangedEvent> _onInputChanged;
+
+  /**
+   * User has accepted what is typed into the omnibox.
+   */
+  Stream<OnInputEnteredEvent> get onInputEntered => _onInputEntered.stream;
+  ChromeStreamController<OnInputEnteredEvent> _onInputEntered;
+
+  /**
+   * User has ended the keyword input session without accepting the input.
+   */
+  Stream get onInputCancelled => _onInputCancelled.stream;
+  ChromeStreamController _onInputCancelled;
+
+  ChromeOmnibox._() {
+    var getApi = () => _omnibox;
+    _onInputStarted =
+        new ChromeStreamController.noArgs(getApi, 'onInputStarted');
+    _onInputChanged =
+        new ChromeStreamController<OnInputChangedEvent>.twoArgs(getApi, 'onInputChanged', _createOnInputChangedEvent);
+    _onInputEntered =
+        new ChromeStreamController<OnInputEnteredEvent>.twoArgs(getApi, 'onInputEntered', _createOnInputEnteredEvent);
+    _onInputCancelled =
+        new ChromeStreamController.noArgs(getApi, 'onInputCancelled');
+  }
 
   bool get available => _omnibox != null;
 
@@ -45,40 +81,6 @@ class ChromeOmnibox extends ChromeApi {
 
     _omnibox.callMethod('setDefaultSuggestion', [jsify(suggestion)]);
   }
-
-  /**
-   * User has started a keyword input session by typing the extension's keyword.
-   * This is guaranteed to be sent exactly once per input session, and before
-   * any onInputChanged events.
-   */
-  Stream get onInputStarted => _onInputStarted.stream;
-
-  final ChromeStreamController _onInputStarted =
-      new ChromeStreamController.noArgs(_omnibox, 'onInputStarted');
-
-  /**
-   * User has changed what is typed into the omnibox.
-   */
-  Stream<OnInputChangedEvent> get onInputChanged => _onInputChanged.stream;
-
-  final ChromeStreamController<OnInputChangedEvent> _onInputChanged =
-      new ChromeStreamController<OnInputChangedEvent>.twoArgs(_omnibox, 'onInputChanged', _createOnInputChangedEvent);
-
-  /**
-   * User has accepted what is typed into the omnibox.
-   */
-  Stream<OnInputEnteredEvent> get onInputEntered => _onInputEntered.stream;
-
-  final ChromeStreamController<OnInputEnteredEvent> _onInputEntered =
-      new ChromeStreamController<OnInputEnteredEvent>.twoArgs(_omnibox, 'onInputEntered', _createOnInputEnteredEvent);
-
-  /**
-   * User has ended the keyword input session without accepting the input.
-   */
-  Stream get onInputCancelled => _onInputCancelled.stream;
-
-  final ChromeStreamController _onInputCancelled =
-      new ChromeStreamController.noArgs(_omnibox, 'onInputCancelled');
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.omnibox' is not available");

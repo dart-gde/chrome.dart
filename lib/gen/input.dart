@@ -21,9 +21,99 @@ class ChromeInput {
  * the candidate window.
  */
 class ChromeInputIme extends ChromeApi {
-  static final JsObject _input_ime = chrome['input']['ime'];
+  JsObject get _input_ime => chrome['input']['ime'];
 
-  ChromeInputIme._();
+  /**
+   * This event is sent when an IME is activated. It signals that the IME will
+   * be receiving onKeyPress events.
+   */
+  Stream<String> get onActivate => _onActivate.stream;
+  ChromeStreamController<String> _onActivate;
+
+  /**
+   * This event is sent when an IME is deactivated. It signals that the IME will
+   * no longer be receiving onKeyPress events.
+   */
+  Stream<String> get onDeactivated => _onDeactivated.stream;
+  ChromeStreamController<String> _onDeactivated;
+
+  /**
+   * This event is sent when focus enters a text box. It is sent to all
+   * extensions that are listening to this event, and enabled by the user.
+   */
+  Stream<InputContext> get onFocus => _onFocus.stream;
+  ChromeStreamController<InputContext> _onFocus;
+
+  /**
+   * This event is sent when focus leaves a text box. It is sent to all
+   * extensions that are listening to this event, and enabled by the user.
+   */
+  Stream<int> get onBlur => _onBlur.stream;
+  ChromeStreamController<int> _onBlur;
+
+  /**
+   * This event is sent when the properties of the current InputContext change,
+   * such as the the type. It is sent to all extensions that are listening to
+   * this event, and enabled by the user.
+   */
+  Stream<InputContext> get onInputContextUpdate => _onInputContextUpdate.stream;
+  ChromeStreamController<InputContext> _onInputContextUpdate;
+
+  /**
+   * This event is sent if this extension owns the active IME.
+   */
+  Stream<OnKeyEventEvent> get onKeyEvent => _onKeyEvent.stream;
+  ChromeStreamController<OnKeyEventEvent> _onKeyEvent;
+
+  /**
+   * This event is sent if this extension owns the active IME.
+   */
+  Stream<OnCandidateClickedEvent> get onCandidateClicked => _onCandidateClicked.stream;
+  ChromeStreamController<OnCandidateClickedEvent> _onCandidateClicked;
+
+  /**
+   * Called when the user selects a menu item
+   */
+  Stream<OnMenuItemActivatedEvent> get onMenuItemActivated => _onMenuItemActivated.stream;
+  ChromeStreamController<OnMenuItemActivatedEvent> _onMenuItemActivated;
+
+  /**
+   * Called when the editable string around caret is changed or when the caret
+   * position is moved. The text length is limited to 100 characters for each
+   * back and forth direction.
+   */
+  Stream<OnSurroundingTextChangedEvent> get onSurroundingTextChanged => _onSurroundingTextChanged.stream;
+  ChromeStreamController<OnSurroundingTextChangedEvent> _onSurroundingTextChanged;
+
+  /**
+   * This event is sent when chrome terminates ongoing text input session.
+   */
+  Stream<String> get onReset => _onReset.stream;
+  ChromeStreamController<String> _onReset;
+
+  ChromeInputIme._() {
+    var getApi = () => _input_ime;
+    _onActivate =
+        new ChromeStreamController<String>.oneArg(getApi, 'onActivate', selfConverter);
+    _onDeactivated =
+        new ChromeStreamController<String>.oneArg(getApi, 'onDeactivated', selfConverter);
+    _onFocus =
+        new ChromeStreamController<InputContext>.oneArg(getApi, 'onFocus', _createInputContext);
+    _onBlur =
+        new ChromeStreamController<int>.oneArg(getApi, 'onBlur', selfConverter);
+    _onInputContextUpdate =
+        new ChromeStreamController<InputContext>.oneArg(getApi, 'onInputContextUpdate', _createInputContext);
+    _onKeyEvent =
+        new ChromeStreamController<OnKeyEventEvent>.twoArgs(getApi, 'onKeyEvent', _createOnKeyEventEvent);
+    _onCandidateClicked =
+        new ChromeStreamController<OnCandidateClickedEvent>.threeArgs(getApi, 'onCandidateClicked', _createOnCandidateClickedEvent);
+    _onMenuItemActivated =
+        new ChromeStreamController<OnMenuItemActivatedEvent>.twoArgs(getApi, 'onMenuItemActivated', _createOnMenuItemActivatedEvent);
+    _onSurroundingTextChanged =
+        new ChromeStreamController<OnSurroundingTextChangedEvent>.twoArgs(getApi, 'onSurroundingTextChanged', _createOnSurroundingTextChangedEvent);
+    _onReset =
+        new ChromeStreamController<String>.oneArg(getApi, 'onReset', selfConverter);
+  }
 
   bool get available => _input_ime != null;
 
@@ -145,94 +235,6 @@ class ChromeInputIme extends ChromeApi {
 
     _input_ime.callMethod('keyEventHandled', [requestId, response]);
   }
-
-  /**
-   * This event is sent when an IME is activated. It signals that the IME will
-   * be receiving onKeyPress events.
-   */
-  Stream<String> get onActivate => _onActivate.stream;
-
-  final ChromeStreamController<String> _onActivate =
-      new ChromeStreamController<String>.oneArg(_input_ime, 'onActivate', selfConverter);
-
-  /**
-   * This event is sent when an IME is deactivated. It signals that the IME will
-   * no longer be receiving onKeyPress events.
-   */
-  Stream<String> get onDeactivated => _onDeactivated.stream;
-
-  final ChromeStreamController<String> _onDeactivated =
-      new ChromeStreamController<String>.oneArg(_input_ime, 'onDeactivated', selfConverter);
-
-  /**
-   * This event is sent when focus enters a text box. It is sent to all
-   * extensions that are listening to this event, and enabled by the user.
-   */
-  Stream<InputContext> get onFocus => _onFocus.stream;
-
-  final ChromeStreamController<InputContext> _onFocus =
-      new ChromeStreamController<InputContext>.oneArg(_input_ime, 'onFocus', _createInputContext);
-
-  /**
-   * This event is sent when focus leaves a text box. It is sent to all
-   * extensions that are listening to this event, and enabled by the user.
-   */
-  Stream<int> get onBlur => _onBlur.stream;
-
-  final ChromeStreamController<int> _onBlur =
-      new ChromeStreamController<int>.oneArg(_input_ime, 'onBlur', selfConverter);
-
-  /**
-   * This event is sent when the properties of the current InputContext change,
-   * such as the the type. It is sent to all extensions that are listening to
-   * this event, and enabled by the user.
-   */
-  Stream<InputContext> get onInputContextUpdate => _onInputContextUpdate.stream;
-
-  final ChromeStreamController<InputContext> _onInputContextUpdate =
-      new ChromeStreamController<InputContext>.oneArg(_input_ime, 'onInputContextUpdate', _createInputContext);
-
-  /**
-   * This event is sent if this extension owns the active IME.
-   */
-  Stream<OnKeyEventEvent> get onKeyEvent => _onKeyEvent.stream;
-
-  final ChromeStreamController<OnKeyEventEvent> _onKeyEvent =
-      new ChromeStreamController<OnKeyEventEvent>.twoArgs(_input_ime, 'onKeyEvent', _createOnKeyEventEvent);
-
-  /**
-   * This event is sent if this extension owns the active IME.
-   */
-  Stream<OnCandidateClickedEvent> get onCandidateClicked => _onCandidateClicked.stream;
-
-  final ChromeStreamController<OnCandidateClickedEvent> _onCandidateClicked =
-      new ChromeStreamController<OnCandidateClickedEvent>.threeArgs(_input_ime, 'onCandidateClicked', _createOnCandidateClickedEvent);
-
-  /**
-   * Called when the user selects a menu item
-   */
-  Stream<OnMenuItemActivatedEvent> get onMenuItemActivated => _onMenuItemActivated.stream;
-
-  final ChromeStreamController<OnMenuItemActivatedEvent> _onMenuItemActivated =
-      new ChromeStreamController<OnMenuItemActivatedEvent>.twoArgs(_input_ime, 'onMenuItemActivated', _createOnMenuItemActivatedEvent);
-
-  /**
-   * Called when the editable string around caret is changed or when the caret
-   * position is moved. The text length is limited to 100 characters for each
-   * back and forth direction.
-   */
-  Stream<OnSurroundingTextChangedEvent> get onSurroundingTextChanged => _onSurroundingTextChanged.stream;
-
-  final ChromeStreamController<OnSurroundingTextChangedEvent> _onSurroundingTextChanged =
-      new ChromeStreamController<OnSurroundingTextChangedEvent>.twoArgs(_input_ime, 'onSurroundingTextChanged', _createOnSurroundingTextChangedEvent);
-
-  /**
-   * This event is sent when chrome terminates ongoing text input session.
-   */
-  Stream<String> get onReset => _onReset.stream;
-
-  final ChromeStreamController<String> _onReset =
-      new ChromeStreamController<String>.oneArg(_input_ime, 'onReset', selfConverter);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.input.ime' is not available");

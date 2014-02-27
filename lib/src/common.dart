@@ -119,13 +119,14 @@ class ChromeCompleter<T> {
 }
 
 class ChromeStreamController<T> {
-  final JsObject _api;
+  JsObject get _api => _apiProvider();
+  final Function _apiProvider;
   final String _eventName;
   StreamController<T> _controller = new StreamController<T>.broadcast();
   bool _handlerAdded = false;
   Function _listener;
 
-  ChromeStreamController.noArgs(this._api, this._eventName) {
+  ChromeStreamController.noArgs(this._apiProvider, this._eventName) {
     _controller = new StreamController<T>.broadcast(
         onListen: _ensureHandlerAdded, onCancel: _removeHandler);
     _listener = () {
@@ -133,7 +134,7 @@ class ChromeStreamController<T> {
     };
   }
 
-  ChromeStreamController.oneArg(this._api, this._eventName, Function transformer, [returnVal])  {
+  ChromeStreamController.oneArg(this._apiProvider, this._eventName, Function transformer, [returnVal])  {
     _controller = new StreamController<T>.broadcast(
         onListen: _ensureHandlerAdded, onCancel: _removeHandler);
     _listener = ([arg1]) {
@@ -142,7 +143,7 @@ class ChromeStreamController<T> {
     };
   }
 
-  ChromeStreamController.twoArgs(this._api, this._eventName, Function transformer, [returnVal]) {
+  ChromeStreamController.twoArgs(this._apiProvider, this._eventName, Function transformer, [returnVal]) {
     _controller = new StreamController<T>.broadcast(
         onListen: _ensureHandlerAdded, onCancel: _removeHandler);
     _listener = ([arg1, arg2]) {
@@ -151,7 +152,7 @@ class ChromeStreamController<T> {
     };
   }
 
-  ChromeStreamController.threeArgs(this._api, this._eventName, Function transformer, [returnVal]) {
+  ChromeStreamController.threeArgs(this._apiProvider, this._eventName, Function transformer, [returnVal]) {
     _controller = new StreamController<T>.broadcast(
         onListen: _ensureHandlerAdded, onCancel: _removeHandler);
     _listener = ([arg1, arg2, arg3]) {

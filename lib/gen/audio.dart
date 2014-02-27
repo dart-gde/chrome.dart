@@ -15,9 +15,16 @@ import '../src/common.dart';
 final ChromeAudio audio = new ChromeAudio._();
 
 class ChromeAudio extends ChromeApi {
-  static final JsObject _audio = chrome['audio'];
+  JsObject get _audio => chrome['audio'];
 
-  ChromeAudio._();
+  Stream get onDeviceChanged => _onDeviceChanged.stream;
+  ChromeStreamController _onDeviceChanged;
+
+  ChromeAudio._() {
+    var getApi = () => _audio;
+    _onDeviceChanged =
+        new ChromeStreamController.noArgs(getApi, 'onDeviceChanged');
+  }
 
   bool get available => _audio != null;
 
@@ -57,11 +64,6 @@ class ChromeAudio extends ChromeApi {
     _audio.callMethod('setProperties', [id, jsify(properties), completer.callback]);
     return completer.future;
   }
-
-  Stream get onDeviceChanged => _onDeviceChanged.stream;
-
-  final ChromeStreamController _onDeviceChanged =
-      new ChromeStreamController.noArgs(_audio, 'onDeviceChanged');
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.audio' is not available");

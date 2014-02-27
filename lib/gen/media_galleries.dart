@@ -15,7 +15,7 @@ import '../src/common.dart';
 final ChromeMediaGalleries mediaGalleries = new ChromeMediaGalleries._();
 
 class ChromeMediaGalleries extends ChromeApi {
-  static final JsObject _mediaGalleries = chrome['mediaGalleries'];
+  JsObject get _mediaGalleries => chrome['mediaGalleries'];
 
   ChromeMediaGalleries._();
 

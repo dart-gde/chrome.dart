@@ -14,7 +14,7 @@ import '../src/common.dart';
 final ChromeSerial serial = new ChromeSerial._();
 
 class ChromeSerial extends ChromeApi {
-  static final JsObject _serial = chrome['serial'];
+  JsObject get _serial => chrome['serial'];
 
   ChromeSerial._();
 

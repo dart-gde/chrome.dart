@@ -32,9 +32,28 @@ class ChromeDevtools {
  * resources within the page.
  */
 class ChromeDevtoolsInspectedWindow extends ChromeApi {
-  static final JsObject _devtools_inspectedWindow = chrome['devtools']['inspectedWindow'];
+  JsObject get _devtools_inspectedWindow => chrome['devtools']['inspectedWindow'];
 
-  ChromeDevtoolsInspectedWindow._();
+  /**
+   * Fired when a new resource is added to the inspected page.
+   */
+  Stream<Resource> get onResourceAdded => _onResourceAdded.stream;
+  ChromeStreamController<Resource> _onResourceAdded;
+
+  /**
+   * Fired when a new revision of the resource is committed (e.g. user saves an
+   * edited version of the resource in the Developer Tools).
+   */
+  Stream<OnResourceContentCommittedEvent> get onResourceContentCommitted => _onResourceContentCommitted.stream;
+  ChromeStreamController<OnResourceContentCommittedEvent> _onResourceContentCommitted;
+
+  ChromeDevtoolsInspectedWindow._() {
+    var getApi = () => _devtools_inspectedWindow;
+    _onResourceAdded =
+        new ChromeStreamController<Resource>.oneArg(getApi, 'onResourceAdded', _createResource);
+    _onResourceContentCommitted =
+        new ChromeStreamController<OnResourceContentCommittedEvent>.twoArgs(getApi, 'onResourceContentCommitted', _createOnResourceContentCommittedEvent);
+  }
 
   bool get available => _devtools_inspectedWindow != null;
 
@@ -86,23 +105,6 @@ class ChromeDevtoolsInspectedWindow extends ChromeApi {
     _devtools_inspectedWindow.callMethod('getResources', [completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a new resource is added to the inspected page.
-   */
-  Stream<Resource> get onResourceAdded => _onResourceAdded.stream;
-
-  final ChromeStreamController<Resource> _onResourceAdded =
-      new ChromeStreamController<Resource>.oneArg(_devtools_inspectedWindow, 'onResourceAdded', _createResource);
-
-  /**
-   * Fired when a new revision of the resource is committed (e.g. user saves an
-   * edited version of the resource in the Developer Tools).
-   */
-  Stream<OnResourceContentCommittedEvent> get onResourceContentCommitted => _onResourceContentCommitted.stream;
-
-  final ChromeStreamController<OnResourceContentCommittedEvent> _onResourceContentCommitted =
-      new ChromeStreamController<OnResourceContentCommittedEvent>.twoArgs(_devtools_inspectedWindow, 'onResourceContentCommitted', _createOnResourceContentCommittedEvent);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.devtools.inspectedWindow' is not available");
@@ -248,9 +250,28 @@ OnResourceContentCommittedEvent _createOnResourceContentCommittedEvent(JsObject 
  * network requests displayed by the Developer Tools in the Network panel.
  */
 class ChromeDevtoolsNetwork extends ChromeApi {
-  static final JsObject _devtools_network = chrome['devtools']['network'];
+  JsObject get _devtools_network => chrome['devtools']['network'];
 
-  ChromeDevtoolsNetwork._();
+  /**
+   * Fired when a network request is finished and all request data are
+   * available.
+   */
+  Stream<Request> get onRequestFinished => _onRequestFinished.stream;
+  ChromeStreamController<Request> _onRequestFinished;
+
+  /**
+   * Fired when the inspected window navigates to a new page.
+   */
+  Stream<String> get onNavigated => _onNavigated.stream;
+  ChromeStreamController<String> _onNavigated;
+
+  ChromeDevtoolsNetwork._() {
+    var getApi = () => _devtools_network;
+    _onRequestFinished =
+        new ChromeStreamController<Request>.oneArg(getApi, 'onRequestFinished', _createRequest);
+    _onNavigated =
+        new ChromeStreamController<String>.oneArg(getApi, 'onNavigated', selfConverter);
+  }
 
   bool get available => _devtools_network != null;
 
@@ -267,23 +288,6 @@ class ChromeDevtoolsNetwork extends ChromeApi {
     _devtools_network.callMethod('getHAR', [completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a network request is finished and all request data are
-   * available.
-   */
-  Stream<Request> get onRequestFinished => _onRequestFinished.stream;
-
-  final ChromeStreamController<Request> _onRequestFinished =
-      new ChromeStreamController<Request>.oneArg(_devtools_network, 'onRequestFinished', _createRequest);
-
-  /**
-   * Fired when the inspected window navigates to a new page.
-   */
-  Stream<String> get onNavigated => _onNavigated.stream;
-
-  final ChromeStreamController<String> _onNavigated =
-      new ChromeStreamController<String>.oneArg(_devtools_network, 'onNavigated', selfConverter);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.devtools.network' is not available");
@@ -335,7 +339,7 @@ Request _createRequest(JsObject jsProxy) => jsProxy == null ? null : new Request
  * and add sidebars.
  */
 class ChromeDevtoolsPanels extends ChromeApi {
-  static final JsObject _devtools_panels = chrome['devtools']['panels'];
+  JsObject get _devtools_panels => chrome['devtools']['panels'];
 
   ChromeDevtoolsPanels._();
 

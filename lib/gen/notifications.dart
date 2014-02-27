@@ -14,9 +14,31 @@ import '../src/common.dart';
 final ChromeNotifications notifications = new ChromeNotifications._();
 
 class ChromeNotifications extends ChromeApi {
-  static final JsObject _notifications = chrome['notifications'];
+  JsObject get _notifications => chrome['notifications'];
 
-  ChromeNotifications._();
+  Stream<OnClosedEvent> get onClosed => _onClosed.stream;
+  ChromeStreamController<OnClosedEvent> _onClosed;
+
+  Stream<String> get onClicked => _onClicked.stream;
+  ChromeStreamController<String> _onClicked;
+
+  Stream<OnButtonClickedEvent> get onButtonClicked => _onButtonClicked.stream;
+  ChromeStreamController<OnButtonClickedEvent> _onButtonClicked;
+
+  Stream<PermissionLevel> get onPermissionLevelChanged => _onPermissionLevelChanged.stream;
+  ChromeStreamController<PermissionLevel> _onPermissionLevelChanged;
+
+  ChromeNotifications._() {
+    var getApi = () => _notifications;
+    _onClosed =
+        new ChromeStreamController<OnClosedEvent>.twoArgs(getApi, 'onClosed', _createOnClosedEvent);
+    _onClicked =
+        new ChromeStreamController<String>.oneArg(getApi, 'onClicked', selfConverter);
+    _onButtonClicked =
+        new ChromeStreamController<OnButtonClickedEvent>.twoArgs(getApi, 'onButtonClicked', _createOnButtonClickedEvent);
+    _onPermissionLevelChanged =
+        new ChromeStreamController<PermissionLevel>.oneArg(getApi, 'onPermissionLevelChanged', _createPermissionLevel);
+  }
 
   bool get available => _notifications != null;
 
@@ -90,26 +112,6 @@ class ChromeNotifications extends ChromeApi {
     _notifications.callMethod('getPermissionLevel', [completer.callback]);
     return completer.future;
   }
-
-  Stream<OnClosedEvent> get onClosed => _onClosed.stream;
-
-  final ChromeStreamController<OnClosedEvent> _onClosed =
-      new ChromeStreamController<OnClosedEvent>.twoArgs(_notifications, 'onClosed', _createOnClosedEvent);
-
-  Stream<String> get onClicked => _onClicked.stream;
-
-  final ChromeStreamController<String> _onClicked =
-      new ChromeStreamController<String>.oneArg(_notifications, 'onClicked', selfConverter);
-
-  Stream<OnButtonClickedEvent> get onButtonClicked => _onButtonClicked.stream;
-
-  final ChromeStreamController<OnButtonClickedEvent> _onButtonClicked =
-      new ChromeStreamController<OnButtonClickedEvent>.twoArgs(_notifications, 'onButtonClicked', _createOnButtonClickedEvent);
-
-  Stream<PermissionLevel> get onPermissionLevelChanged => _onPermissionLevelChanged.stream;
-
-  final ChromeStreamController<PermissionLevel> _onPermissionLevelChanged =
-      new ChromeStreamController<PermissionLevel>.oneArg(_notifications, 'onPermissionLevelChanged', _createPermissionLevel);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.notifications' is not available");
@@ -268,11 +270,11 @@ class NotificationOptions extends ChromeObject {
   set isClickable(bool value) => jsProxy['isClickable'] = value;
 }
 
-PermissionLevel _createPermissionLevel(String value) => PermissionLevel.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 OnClosedEvent _createOnClosedEvent(String notificationId, bool byUser) =>
     new OnClosedEvent(notificationId, byUser);
 OnButtonClickedEvent _createOnButtonClickedEvent(String notificationId, int buttonIndex) =>
     new OnButtonClickedEvent(notificationId, buttonIndex);
+PermissionLevel _createPermissionLevel(String value) => PermissionLevel.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
 NotificationBitmap _createNotificationBitmap(JsObject jsProxy) => jsProxy == null ? null : new NotificationBitmap.fromProxy(jsProxy);
 TemplateType _createTemplateType(String value) => TemplateType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

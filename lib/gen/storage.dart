@@ -14,9 +14,19 @@ import '../src/common.dart';
 final ChromeStorage storage = new ChromeStorage._();
 
 class ChromeStorage extends ChromeApi {
-  static final JsObject _storage = chrome['storage'];
+  JsObject get _storage => chrome['storage'];
 
-  ChromeStorage._();
+  /**
+   * Fired when one or more items change.
+   */
+  Stream<StorageOnChangedEvent> get onChanged => _onChanged.stream;
+  ChromeStreamController<StorageOnChangedEvent> _onChanged;
+
+  ChromeStorage._() {
+    var getApi = () => _storage;
+    _onChanged =
+        new ChromeStreamController<StorageOnChangedEvent>.twoArgs(getApi, 'onChanged', _createOnChangedEvent);
+  }
 
   bool get available => _storage != null;
 
@@ -29,14 +39,6 @@ class ChromeStorage extends ChromeApi {
    * Items in the `local` storage area are local to each machine.
    */
   LocalStorageArea get local => _createLocalStorageArea(_storage['local']);
-
-  /**
-   * Fired when one or more items change.
-   */
-  Stream<StorageOnChangedEvent> get onChanged => _onChanged.stream;
-
-  final ChromeStreamController<StorageOnChangedEvent> _onChanged =
-      new ChromeStreamController<StorageOnChangedEvent>.twoArgs(_storage, 'onChanged', _createOnChangedEvent);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.storage' is not available");
@@ -212,7 +214,7 @@ class StorageArea extends ChromeObject {
   }
 }
 
-SyncStorageArea _createSyncStorageArea(JsObject jsProxy) => jsProxy == null ? null : new SyncStorageArea.fromProxy(jsProxy);
-LocalStorageArea _createLocalStorageArea(JsObject jsProxy) => jsProxy == null ? null : new LocalStorageArea.fromProxy(jsProxy);
 StorageOnChangedEvent _createOnChangedEvent(JsObject changes, String areaName) =>
     new StorageOnChangedEvent(mapify(changes), areaName);
+SyncStorageArea _createSyncStorageArea(JsObject jsProxy) => jsProxy == null ? null : new SyncStorageArea.fromProxy(jsProxy);
+LocalStorageArea _createLocalStorageArea(JsObject jsProxy) => jsProxy == null ? null : new LocalStorageArea.fromProxy(jsProxy);

@@ -14,7 +14,7 @@ import '../src/common.dart';
 final ChromePower power = new ChromePower._();
 
 class ChromePower extends ChromeApi {
-  static final JsObject _power = chrome['power'];
+  JsObject get _power => chrome['power'];
 
   ChromePower._();
 

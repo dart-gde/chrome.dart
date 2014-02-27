@@ -14,9 +14,16 @@ import '../src/common.dart';
 final ChromeAlarms alarms = new ChromeAlarms._();
 
 class ChromeAlarms extends ChromeApi {
-  static final JsObject _alarms = chrome['alarms'];
+  JsObject get _alarms => chrome['alarms'];
 
-  ChromeAlarms._();
+  Stream<Alarm> get onAlarm => _onAlarm.stream;
+  ChromeStreamController<Alarm> _onAlarm;
+
+  ChromeAlarms._() {
+    var getApi = () => _alarms;
+    _onAlarm =
+        new ChromeStreamController<Alarm>.oneArg(getApi, 'onAlarm', _createAlarm);
+  }
 
   bool get available => _alarms != null;
 
@@ -91,11 +98,6 @@ class ChromeAlarms extends ChromeApi {
 
     _alarms.callMethod('clearAll');
   }
-
-  Stream<Alarm> get onAlarm => _onAlarm.stream;
-
-  final ChromeStreamController<Alarm> _onAlarm =
-      new ChromeStreamController<Alarm>.oneArg(_alarms, 'onAlarm', _createAlarm);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.alarms' is not available");

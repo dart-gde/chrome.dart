@@ -14,9 +14,23 @@ import '../src/common.dart';
 final ChromeCookies cookies = new ChromeCookies._();
 
 class ChromeCookies extends ChromeApi {
-  static final JsObject _cookies = chrome['cookies'];
+  JsObject get _cookies => chrome['cookies'];
 
-  ChromeCookies._();
+  /**
+   * Fired when a cookie is set or removed. As a special case, note that
+   * updating a cookie's properties is implemented as a two step process: the
+   * cookie to be updated is first removed entirely, generating a notification
+   * with "cause" of "overwrite" .  Afterwards, a new cookie is written with the
+   * updated values, generating a second notification with "cause" "explicit".
+   */
+  Stream<Map> get onChanged => _onChanged.stream;
+  ChromeStreamController<Map> _onChanged;
+
+  ChromeCookies._() {
+    var getApi = () => _cookies;
+    _onChanged =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onChanged', mapify);
+  }
 
   bool get available => _cookies != null;
 
@@ -109,18 +123,6 @@ class ChromeCookies extends ChromeApi {
     _cookies.callMethod('getAllCookieStores', [completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a cookie is set or removed. As a special case, note that
-   * updating a cookie's properties is implemented as a two step process: the
-   * cookie to be updated is first removed entirely, generating a notification
-   * with "cause" of "overwrite" .  Afterwards, a new cookie is written with the
-   * updated values, generating a second notification with "cause" "explicit".
-   */
-  Stream<Map> get onChanged => _onChanged.stream;
-
-  final ChromeStreamController<Map> _onChanged =
-      new ChromeStreamController<Map>.oneArg(_cookies, 'onChanged', mapify);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.cookies' is not available");

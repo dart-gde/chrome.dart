@@ -14,9 +14,16 @@ import '../src/common.dart';
 final ChromeSignedInDevices signedInDevices = new ChromeSignedInDevices._();
 
 class ChromeSignedInDevices extends ChromeApi {
-  static final JsObject _signedInDevices = chrome['signedInDevices'];
+  JsObject get _signedInDevices => chrome['signedInDevices'];
 
-  ChromeSignedInDevices._();
+  Stream<List<DeviceInfo>> get onDeviceInfoChange => _onDeviceInfoChange.stream;
+  ChromeStreamController<List<DeviceInfo>> _onDeviceInfoChange;
+
+  ChromeSignedInDevices._() {
+    var getApi = () => _signedInDevices;
+    _onDeviceInfoChange =
+        new ChromeStreamController<List<DeviceInfo>>.oneArg(getApi, 'onDeviceInfoChange', (e) => listify(e, _createDeviceInfo));
+  }
 
   bool get available => _signedInDevices != null;
 
@@ -35,11 +42,6 @@ class ChromeSignedInDevices extends ChromeApi {
     _signedInDevices.callMethod('get', [isLocal, completer.callback]);
     return completer.future;
   }
-
-  Stream<List<DeviceInfo>> get onDeviceInfoChange => _onDeviceInfoChange.stream;
-
-  final ChromeStreamController<List<DeviceInfo>> _onDeviceInfoChange =
-      new ChromeStreamController<List<DeviceInfo>>.oneArg(_signedInDevices, 'onDeviceInfoChange', (e) => listify(e, _createDeviceInfo));
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.signedInDevices' is not available");
