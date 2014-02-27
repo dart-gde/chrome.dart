@@ -14,7 +14,7 @@ import '../src/common.dart';
 final ChromeTopSites topSites = new ChromeTopSites._();
 
 class ChromeTopSites extends ChromeApi {
-  static final JsObject _topSites = chrome['topSites'];
+  JsObject get _topSites => chrome['topSites'];
 
   ChromeTopSites._();
 

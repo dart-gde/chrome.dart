@@ -153,16 +153,23 @@ class DefaultBackend extends Backend {
     String name = overrides.overrideClass(className);
 
     generator.writeln("class ${name} extends ChromeApi {");
-    generator.write("static final JsObject ${contextReference} = ");
-    generator.writeln("chrome['${sections.join('\'][\'')}'];");
+    generator.writeln("JsObject get ${contextReference} => chrome['${sections.join('\'][\'')}'];");
+    library.events.forEach(_printEventDecl);
     generator.writeln();
-    generator.writeln("${name}._();");
+    if (library.events.length == 0) {
+       // There are no events, so don't print an empty code block
+       generator.writeln("${name}._();");
+    } else {
+       generator.writeln("${name}._() {");
+       generator.writeln("var getApi = () => ${contextReference};");
+       library.events.forEach(_printEventAssign);
+       generator.writeln("}");
+    }
     generator.writeln();
     generator.writeln("bool get available => ${contextReference} != null;");
 
     library.filteredProperties.forEach((p) => _printPropertyRef(p, contextReference));
     library.methods.forEach(_printMethod);
-    library.events.forEach(_printEvent);
 
     generator.writeln();
     generator.writeln('void _throwNotAvailable() {');
@@ -270,37 +277,44 @@ class DefaultBackend extends Backend {
     generator.writeln("}");
   }
 
-  void _printEvent(ChromeEvent event) {
-    ChromeType type = event.calculateType(library);
+  void _printEventDecl(ChromeEvent event) {
+     ChromeType type = event.calculateType(library);
+     String typeName = type == null ? null : type.toReturnString();
 
-    generator.writeln();
-    generator.writeDocs(event.documentation);
+     generator.writeln();
+     generator.writeDocs(event.documentation);
 
-    String typeName = type == null ? null : type.toReturnString();
+     if (type != null) {
+       generator.writeln("Stream<${typeName}> get ${event.name} => _${event.name}.stream;");
+     } else {
+       generator.writeln("Stream get ${event.name} => _${event.name}.stream;");
+     }
+     if (type != null) {
+       generator.writeln("ChromeStreamController<${typeName}> _${event.name};");
+     } else {
+       generator.writeln("ChromeStreamController _${event.name};");
+     }
+  }
 
-    if (type != null) {
-      generator.writeln("Stream<${typeName}> get ${event.name} => _${event.name}.stream;");
-    } else {
-      generator.writeln("Stream get ${event.name} => _${event.name}.stream;");
-    }
+  void _printEventAssign(ChromeEvent event) {
+     ChromeType type = event.calculateType(library);
+     String typeName = type == null ? null : type.toReturnString();
 
-    generator.writeln();
+     if (type != null) {
+       generator.writeln("_${event.name} =");
+       String converter = getCallbackConverter(type);
+       if (converter == null) {
+         converter = 'selfConverter';
+       }
 
-    if (type != null) {
-      generator.writeln("final ChromeStreamController<${typeName}> _${event.name} =");
-      String converter = getCallbackConverter(type);
-      if (converter == null) {
-        converter = 'selfConverter';
-      }
-
-      String argCallArity = ['noArgs', 'oneArg', 'twoArgs', 'threeArgs'][type.arity];
-      generator.writeln("    new ChromeStreamController<${typeName}>.${argCallArity}("
-          "${contextReference}, '${event.name}', ${converter});");
-    } else {
-      generator.writeln("final ChromeStreamController _${event.name} =");
-      generator.writeln("    new ChromeStreamController.noArgs("
-          "${contextReference}, '${event.name}');");
-    }
+       String argCallArity = ['noArgs', 'oneArg', 'twoArgs', 'threeArgs'][type.arity];
+       generator.writeln("    new ChromeStreamController<${typeName}>.${argCallArity}("
+           "getApi, '${event.name}', ${converter});");
+     } else {
+       generator.writeln("_${event.name} =");
+       generator.writeln("    new ChromeStreamController.noArgs("
+           "getApi, '${event.name}');");
+     }
   }
 
   void _printEventType(ChromeType type) {

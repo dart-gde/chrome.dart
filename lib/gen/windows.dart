@@ -15,9 +15,38 @@ import '../src/common.dart';
 final ChromeWindows windows = new ChromeWindows._();
 
 class ChromeWindows extends ChromeApi {
-  static final JsObject _windows = chrome['windows'];
+  JsObject get _windows => chrome['windows'];
 
-  ChromeWindows._();
+  /**
+   * Fired when a window is created.
+   */
+  Stream<Window> get onCreated => _onCreated.stream;
+  ChromeStreamController<Window> _onCreated;
+
+  /**
+   * Fired when a window is removed (closed).
+   */
+  Stream<int> get onRemoved => _onRemoved.stream;
+  ChromeStreamController<int> _onRemoved;
+
+  /**
+   * Fired when the currently focused window changes. Will be
+   * chrome.windows.WINDOW_ID_NONE if all chrome windows have lost focus. Note:
+   * On some Linux window managers, WINDOW_ID_NONE will always be sent
+   * immediately preceding a switch from one chrome window to another.
+   */
+  Stream<int> get onFocusChanged => _onFocusChanged.stream;
+  ChromeStreamController<int> _onFocusChanged;
+
+  ChromeWindows._() {
+    var getApi = () => _windows;
+    _onCreated =
+        new ChromeStreamController<Window>.oneArg(getApi, 'onCreated', _createWindow);
+    _onRemoved =
+        new ChromeStreamController<int>.oneArg(getApi, 'onRemoved', selfConverter);
+    _onFocusChanged =
+        new ChromeStreamController<int>.oneArg(getApi, 'onFocusChanged', selfConverter);
+  }
 
   bool get available => _windows != null;
 
@@ -122,33 +151,6 @@ class ChromeWindows extends ChromeApi {
     _windows.callMethod('remove', [windowId, completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a window is created.
-   */
-  Stream<Window> get onCreated => _onCreated.stream;
-
-  final ChromeStreamController<Window> _onCreated =
-      new ChromeStreamController<Window>.oneArg(_windows, 'onCreated', _createWindow);
-
-  /**
-   * Fired when a window is removed (closed).
-   */
-  Stream<int> get onRemoved => _onRemoved.stream;
-
-  final ChromeStreamController<int> _onRemoved =
-      new ChromeStreamController<int>.oneArg(_windows, 'onRemoved', selfConverter);
-
-  /**
-   * Fired when the currently focused window changes. Will be
-   * chrome.windows.WINDOW_ID_NONE if all chrome windows have lost focus. Note:
-   * On some Linux window managers, WINDOW_ID_NONE will always be sent
-   * immediately preceding a switch from one chrome window to another.
-   */
-  Stream<int> get onFocusChanged => _onFocusChanged.stream;
-
-  final ChromeStreamController<int> _onFocusChanged =
-      new ChromeStreamController<int>.oneArg(_windows, 'onFocusChanged', selfConverter);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.windows' is not available");

@@ -16,7 +16,7 @@ import '../src/common.dart';
 final ChromeSessions sessions = new ChromeSessions._();
 
 class ChromeSessions extends ChromeApi {
-  static final JsObject _sessions = chrome['sessions'];
+  JsObject get _sessions => chrome['sessions'];
 
   ChromeSessions._();
 

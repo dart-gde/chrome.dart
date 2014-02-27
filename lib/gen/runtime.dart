@@ -20,9 +20,118 @@ import '../src/common.dart';
 final ChromeRuntime runtime = new ChromeRuntime._();
 
 class ChromeRuntime extends ChromeApi {
-  static final JsObject _runtime = chrome['runtime'];
+  JsObject get _runtime => chrome['runtime'];
 
-  ChromeRuntime._();
+  /**
+   * Fired when a profile that has this extension installed first starts up.
+   * This event is not fired when an incognito profile is started, even if this
+   * extension is operating in 'split' incognito mode.
+   */
+  Stream get onStartup => _onStartup.stream;
+  ChromeStreamController _onStartup;
+
+  /**
+   * Fired when the extension is first installed, when the extension is updated
+   * to a new version, and when Chrome is updated to a new version.
+   */
+  Stream<Map> get onInstalled => _onInstalled.stream;
+  ChromeStreamController<Map> _onInstalled;
+
+  /**
+   * Sent to the event page just before it is unloaded. This gives the extension
+   * opportunity to do some clean up. Note that since the page is unloading, any
+   * asynchronous operations started while handling this event are not
+   * guaranteed to complete. If more activity for the event page occurs before
+   * it gets unloaded the onSuspendCanceled event will be sent and the page
+   * won't be unloaded.
+   */
+  Stream get onSuspend => _onSuspend.stream;
+  ChromeStreamController _onSuspend;
+
+  /**
+   * Sent after onSuspend to indicate that the app won't be unloaded after all.
+   */
+  Stream get onSuspendCanceled => _onSuspendCanceled.stream;
+  ChromeStreamController _onSuspendCanceled;
+
+  /**
+   * Fired when an update is available, but isn't installed immediately because
+   * the app is currently running. If you do nothing, the update will be
+   * installed the next time the background page gets unloaded, if you want it
+   * to be installed sooner you can explicitly call chrome.runtime.reload().
+   */
+  Stream<Map<String, dynamic>> get onUpdateAvailable => _onUpdateAvailable.stream;
+  ChromeStreamController<Map<String, dynamic>> _onUpdateAvailable;
+
+  /**
+   * Fired when a Chrome update is available, but isn't installed immediately
+   * because a browser restart is required.
+   */
+  Stream get onBrowserUpdateAvailable => _onBrowserUpdateAvailable.stream;
+  ChromeStreamController _onBrowserUpdateAvailable;
+
+  /**
+   * Fired when a connection is made from either an extension process or a
+   * content script.
+   */
+  Stream<Port> get onConnect => _onConnect.stream;
+  ChromeStreamController<Port> _onConnect;
+
+  /**
+   * Fired when a connection is made from another extension.
+   */
+  Stream<Port> get onConnectExternal => _onConnectExternal.stream;
+  ChromeStreamController<Port> _onConnectExternal;
+
+  /**
+   * Fired when a message is sent from either an extension process or a content
+   * script.
+   */
+  Stream<OnMessageEvent> get onMessage => _onMessage.stream;
+  ChromeStreamController<OnMessageEvent> _onMessage;
+
+  /**
+   * Fired when a message is sent from another extension/app. Cannot be used in
+   * a content script.
+   */
+  Stream<OnMessageExternalEvent> get onMessageExternal => _onMessageExternal.stream;
+  ChromeStreamController<OnMessageExternalEvent> _onMessageExternal;
+
+  /**
+   * Fired when an app or the device that it runs on needs to be restarted. The
+   * app should close all its windows at its earliest convenient time to let the
+   * restart to happen. If the app does nothing, a restart will be enforced
+   * after a 24-hour grace period has passed. Currently, this event is only
+   * fired for Chrome OS kiosk apps.
+   */
+  Stream<String> get onRestartRequired => _onRestartRequired.stream;
+  ChromeStreamController<String> _onRestartRequired;
+
+  ChromeRuntime._() {
+    var getApi = () => _runtime;
+    _onStartup =
+        new ChromeStreamController.noArgs(getApi, 'onStartup');
+    _onInstalled =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onInstalled', mapify);
+    _onSuspend =
+        new ChromeStreamController.noArgs(getApi, 'onSuspend');
+    _onSuspendCanceled =
+        new ChromeStreamController.noArgs(getApi, 'onSuspendCanceled');
+    _onUpdateAvailable =
+        new ChromeStreamController<Map<String, dynamic>>.oneArg(getApi, 'onUpdateAvailable', mapify);
+    _onBrowserUpdateAvailable =
+        new ChromeStreamController.noArgs(getApi, 'onBrowserUpdateAvailable');
+    _onConnect =
+        new ChromeStreamController<Port>.oneArg(getApi, 'onConnect', _createPort);
+    _onConnectExternal =
+        new ChromeStreamController<Port>.oneArg(getApi, 'onConnectExternal', _createPort);
+    _onMessage =
+        new ChromeStreamController<OnMessageEvent>.threeArgs(getApi, 'onMessage', _createOnMessageEvent);
+    _onMessageExternal =
+        new ChromeStreamController<OnMessageExternalEvent>.threeArgs(getApi, 'onMessageExternal', _createOnMessageExternalEvent);
+    _onRestartRequired =
+        new ChromeStreamController<String>.oneArg(getApi, 'onRestartRequired', selfConverter);
+  }
 
   bool get available => _runtime != null;
 
@@ -230,113 +339,6 @@ class ChromeRuntime extends ChromeApi {
     return completer.future;
   }
 
-  /**
-   * Fired when a profile that has this extension installed first starts up.
-   * This event is not fired when an incognito profile is started, even if this
-   * extension is operating in 'split' incognito mode.
-   */
-  Stream get onStartup => _onStartup.stream;
-
-  final ChromeStreamController _onStartup =
-      new ChromeStreamController.noArgs(_runtime, 'onStartup');
-
-  /**
-   * Fired when the extension is first installed, when the extension is updated
-   * to a new version, and when Chrome is updated to a new version.
-   */
-  Stream<Map> get onInstalled => _onInstalled.stream;
-
-  final ChromeStreamController<Map> _onInstalled =
-      new ChromeStreamController<Map>.oneArg(_runtime, 'onInstalled', mapify);
-
-  /**
-   * Sent to the event page just before it is unloaded. This gives the extension
-   * opportunity to do some clean up. Note that since the page is unloading, any
-   * asynchronous operations started while handling this event are not
-   * guaranteed to complete. If more activity for the event page occurs before
-   * it gets unloaded the onSuspendCanceled event will be sent and the page
-   * won't be unloaded.
-   */
-  Stream get onSuspend => _onSuspend.stream;
-
-  final ChromeStreamController _onSuspend =
-      new ChromeStreamController.noArgs(_runtime, 'onSuspend');
-
-  /**
-   * Sent after onSuspend to indicate that the app won't be unloaded after all.
-   */
-  Stream get onSuspendCanceled => _onSuspendCanceled.stream;
-
-  final ChromeStreamController _onSuspendCanceled =
-      new ChromeStreamController.noArgs(_runtime, 'onSuspendCanceled');
-
-  /**
-   * Fired when an update is available, but isn't installed immediately because
-   * the app is currently running. If you do nothing, the update will be
-   * installed the next time the background page gets unloaded, if you want it
-   * to be installed sooner you can explicitly call chrome.runtime.reload().
-   */
-  Stream<Map<String, dynamic>> get onUpdateAvailable => _onUpdateAvailable.stream;
-
-  final ChromeStreamController<Map<String, dynamic>> _onUpdateAvailable =
-      new ChromeStreamController<Map<String, dynamic>>.oneArg(_runtime, 'onUpdateAvailable', mapify);
-
-  /**
-   * Fired when a Chrome update is available, but isn't installed immediately
-   * because a browser restart is required.
-   */
-  Stream get onBrowserUpdateAvailable => _onBrowserUpdateAvailable.stream;
-
-  final ChromeStreamController _onBrowserUpdateAvailable =
-      new ChromeStreamController.noArgs(_runtime, 'onBrowserUpdateAvailable');
-
-  /**
-   * Fired when a connection is made from either an extension process or a
-   * content script.
-   */
-  Stream<Port> get onConnect => _onConnect.stream;
-
-  final ChromeStreamController<Port> _onConnect =
-      new ChromeStreamController<Port>.oneArg(_runtime, 'onConnect', _createPort);
-
-  /**
-   * Fired when a connection is made from another extension.
-   */
-  Stream<Port> get onConnectExternal => _onConnectExternal.stream;
-
-  final ChromeStreamController<Port> _onConnectExternal =
-      new ChromeStreamController<Port>.oneArg(_runtime, 'onConnectExternal', _createPort);
-
-  /**
-   * Fired when a message is sent from either an extension process or a content
-   * script.
-   */
-  Stream<OnMessageEvent> get onMessage => _onMessage.stream;
-
-  final ChromeStreamController<OnMessageEvent> _onMessage =
-      new ChromeStreamController<OnMessageEvent>.threeArgs(_runtime, 'onMessage', _createOnMessageEvent);
-
-  /**
-   * Fired when a message is sent from another extension/app. Cannot be used in
-   * a content script.
-   */
-  Stream<OnMessageExternalEvent> get onMessageExternal => _onMessageExternal.stream;
-
-  final ChromeStreamController<OnMessageExternalEvent> _onMessageExternal =
-      new ChromeStreamController<OnMessageExternalEvent>.threeArgs(_runtime, 'onMessageExternal', _createOnMessageExternalEvent);
-
-  /**
-   * Fired when an app or the device that it runs on needs to be restarted. The
-   * app should close all its windows at its earliest convenient time to let the
-   * restart to happen. If the app does nothing, a restart will be enforced
-   * after a 24-hour grace period has passed. Currently, this event is only
-   * fired for Chrome OS kiosk apps.
-   */
-  Stream<String> get onRestartRequired => _onRestartRequired.stream;
-
-  final ChromeStreamController<String> _onRestartRequired =
-      new ChromeStreamController<String>.oneArg(_runtime, 'onRestartRequired', selfConverter);
-
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.runtime' is not available");
   }
@@ -540,14 +542,14 @@ class RequestUpdateCheckResult {
   RequestUpdateCheckResult._(this.status, this.details);
 }
 
-LastErrorRuntime _createLastErrorRuntime(JsObject jsProxy) => jsProxy == null ? null : new LastErrorRuntime.fromProxy(jsProxy);
-Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
 Port _createPort(JsObject jsProxy) => jsProxy == null ? null : new Port.fromProxy(jsProxy);
-DirectoryEntry _createDirectoryEntry(JsObject jsProxy) => jsProxy == null ? null : new CrDirectoryEntry.fromProxy(jsProxy);
 OnMessageEvent _createOnMessageEvent(JsObject message, JsObject sender, JsObject sendResponse) =>
     new OnMessageEvent(message, _createMessageSender(sender), sendResponse);
 OnMessageExternalEvent _createOnMessageExternalEvent(JsObject message, JsObject sender, JsObject sendResponse) =>
     new OnMessageExternalEvent(message, _createMessageSender(sender), sendResponse);
+LastErrorRuntime _createLastErrorRuntime(JsObject jsProxy) => jsProxy == null ? null : new LastErrorRuntime.fromProxy(jsProxy);
+Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
+DirectoryEntry _createDirectoryEntry(JsObject jsProxy) => jsProxy == null ? null : new CrDirectoryEntry.fromProxy(jsProxy);
 ChromeEvent _createEvent(JsObject jsProxy) => jsProxy == null ? null : new ChromeEvent.fromProxy(jsProxy);
 MessageSender _createMessageSender(JsObject jsProxy) => jsProxy == null ? null : new MessageSender.fromProxy(jsProxy);
 Tab _createTab(JsObject jsProxy) => jsProxy == null ? null : new Tab.fromProxy(jsProxy);

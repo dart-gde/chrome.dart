@@ -15,9 +15,20 @@ import '../src/common.dart';
 final ChromeScriptBadge scriptBadge = new ChromeScriptBadge._();
 
 class ChromeScriptBadge extends ChromeApi {
-  static final JsObject _scriptBadge = chrome['scriptBadge'];
+  JsObject get _scriptBadge => chrome['scriptBadge'];
 
-  ChromeScriptBadge._();
+  /**
+   * Fired when a script badge icon is clicked.  This event will not fire if the
+   * script badge has a popup.
+   */
+  Stream<Tab> get onClicked => _onClicked.stream;
+  ChromeStreamController<Tab> _onClicked;
+
+  ChromeScriptBadge._() {
+    var getApi = () => _scriptBadge;
+    _onClicked =
+        new ChromeStreamController<Tab>.oneArg(getApi, 'onClicked', _createTab);
+  }
 
   bool get available => _scriptBadge != null;
 
@@ -54,15 +65,6 @@ class ChromeScriptBadge extends ChromeApi {
 
     _scriptBadge.callMethod('getAttention', [jsify(details)]);
   }
-
-  /**
-   * Fired when a script badge icon is clicked.  This event will not fire if the
-   * script badge has a popup.
-   */
-  Stream<Tab> get onClicked => _onClicked.stream;
-
-  final ChromeStreamController<Tab> _onClicked =
-      new ChromeStreamController<Tab>.oneArg(_scriptBadge, 'onClicked', _createTab);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.scriptBadge' is not available");

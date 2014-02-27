@@ -16,9 +16,29 @@ import '../src/common.dart';
 final ChromeHistory history = new ChromeHistory._();
 
 class ChromeHistory extends ChromeApi {
-  static final JsObject _history = chrome['history'];
+  JsObject get _history => chrome['history'];
 
-  ChromeHistory._();
+  /**
+   * Fired when a URL is visited, providing the HistoryItem data for that URL.
+   * This event fires before the page has loaded.
+   */
+  Stream<HistoryItem> get onVisited => _onVisited.stream;
+  ChromeStreamController<HistoryItem> _onVisited;
+
+  /**
+   * Fired when one or more URLs are removed from the history service.  When all
+   * visits have been removed the URL is purged from history.
+   */
+  Stream<Map> get onVisitRemoved => _onVisitRemoved.stream;
+  ChromeStreamController<Map> _onVisitRemoved;
+
+  ChromeHistory._() {
+    var getApi = () => _history;
+    _onVisited =
+        new ChromeStreamController<HistoryItem>.oneArg(getApi, 'onVisited', _createHistoryItem);
+    _onVisitRemoved =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onVisitRemoved', mapify);
+  }
 
   bool get available => _history != null;
 
@@ -91,24 +111,6 @@ class ChromeHistory extends ChromeApi {
     _history.callMethod('deleteAll', [completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a URL is visited, providing the HistoryItem data for that URL.
-   * This event fires before the page has loaded.
-   */
-  Stream<HistoryItem> get onVisited => _onVisited.stream;
-
-  final ChromeStreamController<HistoryItem> _onVisited =
-      new ChromeStreamController<HistoryItem>.oneArg(_history, 'onVisited', _createHistoryItem);
-
-  /**
-   * Fired when one or more URLs are removed from the history service.  When all
-   * visits have been removed the URL is purged from history.
-   */
-  Stream<Map> get onVisitRemoved => _onVisitRemoved.stream;
-
-  final ChromeStreamController<Map> _onVisitRemoved =
-      new ChromeStreamController<Map>.oneArg(_history, 'onVisitRemoved', mapify);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.history' is not available");

@@ -14,9 +14,31 @@ import '../src/common.dart';
 final ChromeDownloads downloads = new ChromeDownloads._();
 
 class ChromeDownloads extends ChromeApi {
-  static final JsObject _downloads = chrome['downloads'];
+  JsObject get _downloads => chrome['downloads'];
 
-  ChromeDownloads._();
+  Stream<DownloadItem> get onCreated => _onCreated.stream;
+  ChromeStreamController<DownloadItem> _onCreated;
+
+  Stream<int> get onErased => _onErased.stream;
+  ChromeStreamController<int> _onErased;
+
+  Stream<DownloadDelta> get onChanged => _onChanged.stream;
+  ChromeStreamController<DownloadDelta> _onChanged;
+
+  Stream<OnDeterminingFilenameEvent> get onDeterminingFilename => _onDeterminingFilename.stream;
+  ChromeStreamController<OnDeterminingFilenameEvent> _onDeterminingFilename;
+
+  ChromeDownloads._() {
+    var getApi = () => _downloads;
+    _onCreated =
+        new ChromeStreamController<DownloadItem>.oneArg(getApi, 'onCreated', _createDownloadItem);
+    _onErased =
+        new ChromeStreamController<int>.oneArg(getApi, 'onErased', selfConverter);
+    _onChanged =
+        new ChromeStreamController<DownloadDelta>.oneArg(getApi, 'onChanged', _createDownloadDelta);
+    _onDeterminingFilename =
+        new ChromeStreamController<OnDeterminingFilenameEvent>.twoArgs(getApi, 'onDeterminingFilename', _createOnDeterminingFilenameEvent);
+  }
 
   bool get available => _downloads != null;
 
@@ -220,26 +242,6 @@ class ChromeDownloads extends ChromeApi {
 
     _downloads.callMethod('setShelfEnabled', [enabled]);
   }
-
-  Stream<DownloadItem> get onCreated => _onCreated.stream;
-
-  final ChromeStreamController<DownloadItem> _onCreated =
-      new ChromeStreamController<DownloadItem>.oneArg(_downloads, 'onCreated', _createDownloadItem);
-
-  Stream<int> get onErased => _onErased.stream;
-
-  final ChromeStreamController<int> _onErased =
-      new ChromeStreamController<int>.oneArg(_downloads, 'onErased', selfConverter);
-
-  Stream<DownloadDelta> get onChanged => _onChanged.stream;
-
-  final ChromeStreamController<DownloadDelta> _onChanged =
-      new ChromeStreamController<DownloadDelta>.oneArg(_downloads, 'onChanged', _createDownloadDelta);
-
-  Stream<OnDeterminingFilenameEvent> get onDeterminingFilename => _onDeterminingFilename.stream;
-
-  final ChromeStreamController<OnDeterminingFilenameEvent> _onDeterminingFilename =
-      new ChromeStreamController<OnDeterminingFilenameEvent>.twoArgs(_downloads, 'onDeterminingFilename', _createOnDeterminingFilenameEvent);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.downloads' is not available");

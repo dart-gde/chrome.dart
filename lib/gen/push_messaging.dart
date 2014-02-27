@@ -14,9 +14,16 @@ import '../src/common.dart';
 final ChromePushMessaging pushMessaging = new ChromePushMessaging._();
 
 class ChromePushMessaging extends ChromeApi {
-  static final JsObject _pushMessaging = chrome['pushMessaging'];
+  JsObject get _pushMessaging => chrome['pushMessaging'];
 
-  ChromePushMessaging._();
+  Stream<Message> get onMessage => _onMessage.stream;
+  ChromeStreamController<Message> _onMessage;
+
+  ChromePushMessaging._() {
+    var getApi = () => _pushMessaging;
+    _onMessage =
+        new ChromeStreamController<Message>.oneArg(getApi, 'onMessage', _createMessage);
+  }
 
   bool get available => _pushMessaging != null;
 
@@ -34,11 +41,6 @@ class ChromePushMessaging extends ChromeApi {
     _pushMessaging.callMethod('getChannelId', [interactive, completer.callback]);
     return completer.future;
   }
-
-  Stream<Message> get onMessage => _onMessage.stream;
-
-  final ChromeStreamController<Message> _onMessage =
-      new ChromeStreamController<Message>.oneArg(_pushMessaging, 'onMessage', _createMessage);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.pushMessaging' is not available");
@@ -69,5 +71,5 @@ class ChannelIdResult extends ChromeObject {
   set channelId(String value) => jsProxy['channelId'] = value;
 }
 
-ChannelIdResult _createChannelIdResult(JsObject jsProxy) => jsProxy == null ? null : new ChannelIdResult.fromProxy(jsProxy);
 Message _createMessage(JsObject jsProxy) => jsProxy == null ? null : new Message.fromProxy(jsProxy);
+ChannelIdResult _createChannelIdResult(JsObject jsProxy) => jsProxy == null ? null : new ChannelIdResult.fromProxy(jsProxy);

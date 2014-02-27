@@ -13,7 +13,7 @@ import '../src/common.dart';
 final ChromeTypes types = new ChromeTypes._();
 
 class ChromeTypes extends ChromeApi {
-  static final JsObject _types = chrome['types'];
+  JsObject get _types => chrome['types'];
 
   ChromeTypes._();
 

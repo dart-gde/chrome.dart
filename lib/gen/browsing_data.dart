@@ -14,7 +14,7 @@ import '../src/common.dart';
 final ChromeBrowsingData browsingData = new ChromeBrowsingData._();
 
 class ChromeBrowsingData extends ChromeApi {
-  static final JsObject _browsingData = chrome['browsingData'];
+  JsObject get _browsingData => chrome['browsingData'];
 
   ChromeBrowsingData._();
 

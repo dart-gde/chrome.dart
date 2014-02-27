@@ -13,9 +13,23 @@ import '../src/common.dart';
 final ChromeIdle idle = new ChromeIdle._();
 
 class ChromeIdle extends ChromeApi {
-  static final JsObject _idle = chrome['idle'];
+  JsObject get _idle => chrome['idle'];
 
-  ChromeIdle._();
+  /**
+   * Fired when the system changes to an active, idle or locked state. The event
+   * fires with "locked" if the screen is locked or the screensaver activates,
+   * "idle" if the system is unlocked and the user has not generated any input
+   * for a specified number of seconds, and "active" when the user generates
+   * input on an idle system.
+   */
+  Stream<String> get onStateChanged => _onStateChanged.stream;
+  ChromeStreamController<String> _onStateChanged;
+
+  ChromeIdle._() {
+    var getApi = () => _idle;
+    _onStateChanged =
+        new ChromeStreamController<String>.oneArg(getApi, 'onStateChanged', selfConverter);
+  }
 
   bool get available => _idle != null;
 
@@ -51,18 +65,6 @@ class ChromeIdle extends ChromeApi {
 
     _idle.callMethod('setDetectionInterval', [intervalInSeconds]);
   }
-
-  /**
-   * Fired when the system changes to an active, idle or locked state. The event
-   * fires with "locked" if the screen is locked or the screensaver activates,
-   * "idle" if the system is unlocked and the user has not generated any input
-   * for a specified number of seconds, and "active" when the user generates
-   * input on an idle system.
-   */
-  Stream<String> get onStateChanged => _onStateChanged.stream;
-
-  final ChromeStreamController<String> _onStateChanged =
-      new ChromeStreamController<String>.oneArg(_idle, 'onStateChanged', selfConverter);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.idle' is not available");

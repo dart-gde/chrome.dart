@@ -13,9 +13,58 @@ import '../src/common.dart';
 final ChromeProcesses processes = new ChromeProcesses._();
 
 class ChromeProcesses extends ChromeApi {
-  static final JsObject _processes = chrome['processes'];
+  JsObject get _processes => chrome['processes'];
 
-  ChromeProcesses._();
+  /**
+   * Fired each time the Task Manager updates its process statistics, providing
+   * the dictionary of updated Process objects, indexed by process ID.
+   */
+  Stream<Map> get onUpdated => _onUpdated.stream;
+  ChromeStreamController<Map> _onUpdated;
+
+  /**
+   * Fired each time the Task Manager updates its process statistics, providing
+   * the dictionary of updated Process objects, indexed by process ID. Identical
+   * to onUpdate, with the addition of memory usage details included in each
+   * Process object. Note, collecting memory usage information incurs extra CPU
+   * usage and should only be listened for when needed.
+   */
+  Stream<Map> get onUpdatedWithMemory => _onUpdatedWithMemory.stream;
+  ChromeStreamController<Map> _onUpdatedWithMemory;
+
+  /**
+   * Fired each time a process is created, providing the corrseponding Process
+   * object.
+   */
+  Stream<Process> get onCreated => _onCreated.stream;
+  ChromeStreamController<Process> _onCreated;
+
+  /**
+   * Fired each time a process becomes unresponsive, providing the corrseponding
+   * Process object.
+   */
+  Stream<Process> get onUnresponsive => _onUnresponsive.stream;
+  ChromeStreamController<Process> _onUnresponsive;
+
+  /**
+   * Fired each time a process is terminated, providing the type of exit.
+   */
+  Stream<OnExitedEvent> get onExited => _onExited.stream;
+  ChromeStreamController<OnExitedEvent> _onExited;
+
+  ChromeProcesses._() {
+    var getApi = () => _processes;
+    _onUpdated =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onUpdated', mapify);
+    _onUpdatedWithMemory =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onUpdatedWithMemory', mapify);
+    _onCreated =
+        new ChromeStreamController<Process>.oneArg(getApi, 'onCreated', _createProcess);
+    _onUnresponsive =
+        new ChromeStreamController<Process>.oneArg(getApi, 'onUnresponsive', _createProcess);
+    _onExited =
+        new ChromeStreamController<OnExitedEvent>.threeArgs(getApi, 'onExited', _createOnExitedEvent);
+  }
 
   bool get available => _processes != null;
 
@@ -77,53 +126,6 @@ class ChromeProcesses extends ChromeApi {
     _processes.callMethod('getProcessInfo', [jsify(processIds), includeMemory, completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired each time the Task Manager updates its process statistics, providing
-   * the dictionary of updated Process objects, indexed by process ID.
-   */
-  Stream<Map> get onUpdated => _onUpdated.stream;
-
-  final ChromeStreamController<Map> _onUpdated =
-      new ChromeStreamController<Map>.oneArg(_processes, 'onUpdated', mapify);
-
-  /**
-   * Fired each time the Task Manager updates its process statistics, providing
-   * the dictionary of updated Process objects, indexed by process ID. Identical
-   * to onUpdate, with the addition of memory usage details included in each
-   * Process object. Note, collecting memory usage information incurs extra CPU
-   * usage and should only be listened for when needed.
-   */
-  Stream<Map> get onUpdatedWithMemory => _onUpdatedWithMemory.stream;
-
-  final ChromeStreamController<Map> _onUpdatedWithMemory =
-      new ChromeStreamController<Map>.oneArg(_processes, 'onUpdatedWithMemory', mapify);
-
-  /**
-   * Fired each time a process is created, providing the corrseponding Process
-   * object.
-   */
-  Stream<Process> get onCreated => _onCreated.stream;
-
-  final ChromeStreamController<Process> _onCreated =
-      new ChromeStreamController<Process>.oneArg(_processes, 'onCreated', _createProcess);
-
-  /**
-   * Fired each time a process becomes unresponsive, providing the corrseponding
-   * Process object.
-   */
-  Stream<Process> get onUnresponsive => _onUnresponsive.stream;
-
-  final ChromeStreamController<Process> _onUnresponsive =
-      new ChromeStreamController<Process>.oneArg(_processes, 'onUnresponsive', _createProcess);
-
-  /**
-   * Fired each time a process is terminated, providing the type of exit.
-   */
-  Stream<OnExitedEvent> get onExited => _onExited.stream;
-
-  final ChromeStreamController<OnExitedEvent> _onExited =
-      new ChromeStreamController<OnExitedEvent>.threeArgs(_processes, 'onExited', _createOnExitedEvent);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.processes' is not available");

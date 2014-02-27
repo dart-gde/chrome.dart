@@ -13,9 +13,16 @@ import '../src/common.dart';
 final ChromeIdentity identity = new ChromeIdentity._();
 
 class ChromeIdentity extends ChromeApi {
-  static final JsObject _identity = chrome['identity'];
+  JsObject get _identity => chrome['identity'];
 
-  ChromeIdentity._();
+  Stream<OnSignInChangedEvent> get onSignInChanged => _onSignInChanged.stream;
+  ChromeStreamController<OnSignInChangedEvent> _onSignInChanged;
+
+  ChromeIdentity._() {
+    var getApi = () => _identity;
+    _onSignInChanged =
+        new ChromeStreamController<OnSignInChangedEvent>.twoArgs(getApi, 'onSignInChanged', _createOnSignInChangedEvent);
+  }
 
   bool get available => _identity != null;
 
@@ -77,11 +84,6 @@ class ChromeIdentity extends ChromeApi {
     _identity.callMethod('launchWebAuthFlow', [jsify(details), completer.callback]);
     return completer.future;
   }
-
-  Stream<OnSignInChangedEvent> get onSignInChanged => _onSignInChanged.stream;
-
-  final ChromeStreamController<OnSignInChangedEvent> _onSignInChanged =
-      new ChromeStreamController<OnSignInChangedEvent>.twoArgs(_identity, 'onSignInChanged', _createOnSignInChangedEvent);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.identity' is not available");

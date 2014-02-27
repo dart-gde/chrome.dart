@@ -13,7 +13,7 @@ import '../src/common.dart';
 final ChromePageCapture pageCapture = new ChromePageCapture._();
 
 class ChromePageCapture extends ChromeApi {
-  static final JsObject _pageCapture = chrome['pageCapture'];
+  JsObject get _pageCapture => chrome['pageCapture'];
 
   ChromePageCapture._();
 

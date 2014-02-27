@@ -17,9 +17,20 @@ import '../src/common.dart';
 final ChromeBrowserAction browserAction = new ChromeBrowserAction._();
 
 class ChromeBrowserAction extends ChromeApi {
-  static final JsObject _browserAction = chrome['browserAction'];
+  JsObject get _browserAction => chrome['browserAction'];
 
-  ChromeBrowserAction._();
+  /**
+   * Fired when a browser action icon is clicked.  This event will not fire if
+   * the browser action has a popup.
+   */
+  Stream<Tab> get onClicked => _onClicked.stream;
+  ChromeStreamController<Tab> _onClicked;
+
+  ChromeBrowserAction._() {
+    var getApi = () => _browserAction;
+    _onClicked =
+        new ChromeStreamController<Tab>.oneArg(getApi, 'onClicked', _createTab);
+  }
 
   bool get available => _browserAction != null;
 
@@ -158,15 +169,6 @@ class ChromeBrowserAction extends ChromeApi {
     _browserAction.callMethod('openPopup', [completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a browser action icon is clicked.  This event will not fire if
-   * the browser action has a popup.
-   */
-  Stream<Tab> get onClicked => _onClicked.stream;
-
-  final ChromeStreamController<Tab> _onClicked =
-      new ChromeStreamController<Tab>.oneArg(_browserAction, 'onClicked', _createTab);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.browserAction' is not available");
@@ -373,5 +375,5 @@ class BrowserActionGetBadgeBackgroundColorParams extends ChromeObject {
   set tabId(int value) => jsProxy['tabId'] = value;
 }
 
-ColorArray _createColorArray(JsObject jsProxy) => jsProxy == null ? null : new ColorArray.fromProxy(jsProxy);
 Tab _createTab(JsObject jsProxy) => jsProxy == null ? null : new Tab.fromProxy(jsProxy);
+ColorArray _createColorArray(JsObject jsProxy) => jsProxy == null ? null : new ColorArray.fromProxy(jsProxy);

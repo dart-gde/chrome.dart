@@ -18,16 +18,10 @@ import '../src/common.dart';
 final ChromeDeclarativeWebRequest declarativeWebRequest = new ChromeDeclarativeWebRequest._();
 
 class ChromeDeclarativeWebRequest extends ChromeApi {
-  static final JsObject _declarativeWebRequest = chrome['declarativeWebRequest'];
-
-  ChromeDeclarativeWebRequest._();
-
-  bool get available => _declarativeWebRequest != null;
+  JsObject get _declarativeWebRequest => chrome['declarativeWebRequest'];
 
   Stream get onRequest => _onRequest.stream;
-
-  final ChromeStreamController _onRequest =
-      new ChromeStreamController.noArgs(_declarativeWebRequest, 'onRequest');
+  ChromeStreamController _onRequest;
 
   /**
    * Fired when a message is sent via
@@ -35,9 +29,17 @@ class ChromeDeclarativeWebRequest extends ChromeApi {
    * declarative web request API.
    */
   Stream<Map> get onMessage => _onMessage.stream;
+  ChromeStreamController<Map> _onMessage;
 
-  final ChromeStreamController<Map> _onMessage =
-      new ChromeStreamController<Map>.oneArg(_declarativeWebRequest, 'onMessage', mapify);
+  ChromeDeclarativeWebRequest._() {
+    var getApi = () => _declarativeWebRequest;
+    _onRequest =
+        new ChromeStreamController.noArgs(getApi, 'onRequest');
+    _onMessage =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onMessage', mapify);
+  }
+
+  bool get available => _declarativeWebRequest != null;
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.declarativeWebRequest' is not available");

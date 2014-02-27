@@ -18,9 +18,27 @@ import '../src/common.dart';
 final ChromeExtension extension = new ChromeExtension._();
 
 class ChromeExtension extends ChromeApi {
-  static final JsObject _extension = chrome['extension'];
+  JsObject get _extension => chrome['extension'];
 
-  ChromeExtension._();
+  /**
+   * Deprecated: please use onMessage.
+   */
+  Stream<OnRequestEvent> get onRequest => _onRequest.stream;
+  ChromeStreamController<OnRequestEvent> _onRequest;
+
+  /**
+   * Deprecated: please use onMessageExternal.
+   */
+  Stream<OnRequestExternalEvent> get onRequestExternal => _onRequestExternal.stream;
+  ChromeStreamController<OnRequestExternalEvent> _onRequestExternal;
+
+  ChromeExtension._() {
+    var getApi = () => _extension;
+    _onRequest =
+        new ChromeStreamController<OnRequestEvent>.threeArgs(getApi, 'onRequest', _createOnRequestEvent);
+    _onRequestExternal =
+        new ChromeStreamController<OnRequestExternalEvent>.threeArgs(getApi, 'onRequestExternal', _createOnRequestExternalEvent);
+  }
 
   bool get available => _extension != null;
 
@@ -155,22 +173,6 @@ class ChromeExtension extends ChromeApi {
     _extension.callMethod('setUpdateUrlData', [data]);
   }
 
-  /**
-   * Deprecated: please use onMessage.
-   */
-  Stream<OnRequestEvent> get onRequest => _onRequest.stream;
-
-  final ChromeStreamController<OnRequestEvent> _onRequest =
-      new ChromeStreamController<OnRequestEvent>.threeArgs(_extension, 'onRequest', _createOnRequestEvent);
-
-  /**
-   * Deprecated: please use onMessageExternal.
-   */
-  Stream<OnRequestExternalEvent> get onRequestExternal => _onRequestExternal.stream;
-
-  final ChromeStreamController<OnRequestExternalEvent> _onRequestExternal =
-      new ChromeStreamController<OnRequestExternalEvent>.threeArgs(_extension, 'onRequestExternal', _createOnRequestExternalEvent);
-
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.extension' is not available");
   }
@@ -257,10 +259,10 @@ class ExtensionGetViewsParams extends ChromeObject {
   set windowId(int value) => jsProxy['windowId'] = value;
 }
 
-LastErrorExtension _createLastErrorExtension(JsObject jsProxy) => jsProxy == null ? null : new LastErrorExtension.fromProxy(jsProxy);
-Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
 OnRequestEvent _createOnRequestEvent(JsObject request, JsObject sender, JsObject sendResponse) =>
     new OnRequestEvent(request, _createMessageSender(sender), sendResponse);
 OnRequestExternalEvent _createOnRequestExternalEvent(JsObject request, JsObject sender, JsObject sendResponse) =>
     new OnRequestExternalEvent(request, _createMessageSender(sender), sendResponse);
+LastErrorExtension _createLastErrorExtension(JsObject jsProxy) => jsProxy == null ? null : new LastErrorExtension.fromProxy(jsProxy);
+Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
 MessageSender _createMessageSender(JsObject jsProxy) => jsProxy == null ? null : new MessageSender.fromProxy(jsProxy);

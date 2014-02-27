@@ -15,7 +15,7 @@ import '../src/common.dart';
 final ChromeUsb usb = new ChromeUsb._();
 
 class ChromeUsb extends ChromeApi {
-  static final JsObject _usb = chrome['usb'];
+  JsObject get _usb => chrome['usb'];
 
   ChromeUsb._();
 

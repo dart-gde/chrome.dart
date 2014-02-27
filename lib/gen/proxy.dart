@@ -16,9 +16,19 @@ import '../src/common.dart';
 final ChromeProxy proxy = new ChromeProxy._();
 
 class ChromeProxy extends ChromeApi {
-  static final JsObject _proxy = chrome['proxy'];
+  JsObject get _proxy => chrome['proxy'];
 
-  ChromeProxy._();
+  /**
+   * Notifies about proxy errors.
+   */
+  Stream<Map> get onProxyError => _onProxyError.stream;
+  ChromeStreamController<Map> _onProxyError;
+
+  ChromeProxy._() {
+    var getApi = () => _proxy;
+    _onProxyError =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onProxyError', mapify);
+  }
 
   bool get available => _proxy != null;
 
@@ -27,14 +37,6 @@ class ChromeProxy extends ChromeApi {
    * object.
    */
   ChromeSetting get settings => _createChromeSetting(_proxy['settings']);
-
-  /**
-   * Notifies about proxy errors.
-   */
-  Stream<Map> get onProxyError => _onProxyError.stream;
-
-  final ChromeStreamController<Map> _onProxyError =
-      new ChromeStreamController<Map>.oneArg(_proxy, 'onProxyError', mapify);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.proxy' is not available");

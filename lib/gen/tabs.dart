@@ -16,9 +16,117 @@ import '../src/common.dart';
 final ChromeTabs tabs = new ChromeTabs._();
 
 class ChromeTabs extends ChromeApi {
-  static final JsObject _tabs = chrome['tabs'];
+  JsObject get _tabs => chrome['tabs'];
 
-  ChromeTabs._();
+  /**
+   * Fired when a tab is created. Note that the tab's URL may not be set at the
+   * time this event fired, but you can listen to onUpdated events to be
+   * notified when a URL is set.
+   */
+  Stream<Tab> get onCreated => _onCreated.stream;
+  ChromeStreamController<Tab> _onCreated;
+
+  /**
+   * Fired when a tab is updated.
+   */
+  Stream<OnUpdatedEvent> get onUpdated => _onUpdated.stream;
+  ChromeStreamController<OnUpdatedEvent> _onUpdated;
+
+  /**
+   * Fired when a tab is moved within a window. Only one move event is fired,
+   * representing the tab the user directly moved. Move events are not fired for
+   * the other tabs that must move in response. This event is not fired when a
+   * tab is moved between windows. For that, see [onDetached.]
+   */
+  Stream<TabsOnMovedEvent> get onMoved => _onMoved.stream;
+  ChromeStreamController<TabsOnMovedEvent> _onMoved;
+
+  /**
+   * Deprecated. Please use onActivated.
+   */
+  Stream<OnSelectionChangedEvent> get onSelectionChanged => _onSelectionChanged.stream;
+  ChromeStreamController<OnSelectionChangedEvent> _onSelectionChanged;
+
+  /**
+   * Deprecated. Please use onActivated.
+   */
+  Stream<OnActiveChangedEvent> get onActiveChanged => _onActiveChanged.stream;
+  ChromeStreamController<OnActiveChangedEvent> _onActiveChanged;
+
+  /**
+   * Fires when the active tab in a window changes. Note that the tab's URL may
+   * not be set at the time this event fired, but you can listen to onUpdated
+   * events to be notified when a URL is set.
+   */
+  Stream<Map> get onActivated => _onActivated.stream;
+  ChromeStreamController<Map> _onActivated;
+
+  /**
+   * Deprecated. Please use onHighlighted.
+   */
+  Stream<Map> get onHighlightChanged => _onHighlightChanged.stream;
+  ChromeStreamController<Map> _onHighlightChanged;
+
+  /**
+   * Fired when the highlighted or selected tabs in a window changes.
+   */
+  Stream<Map> get onHighlighted => _onHighlighted.stream;
+  ChromeStreamController<Map> _onHighlighted;
+
+  /**
+   * Fired when a tab is detached from a window, for example because it is being
+   * moved between windows.
+   */
+  Stream<OnDetachedEvent> get onDetached => _onDetached.stream;
+  ChromeStreamController<OnDetachedEvent> _onDetached;
+
+  /**
+   * Fired when a tab is attached to a window, for example because it was moved
+   * between windows.
+   */
+  Stream<OnAttachedEvent> get onAttached => _onAttached.stream;
+  ChromeStreamController<OnAttachedEvent> _onAttached;
+
+  /**
+   * Fired when a tab is closed.
+   */
+  Stream<TabsOnRemovedEvent> get onRemoved => _onRemoved.stream;
+  ChromeStreamController<TabsOnRemovedEvent> _onRemoved;
+
+  /**
+   * Fired when a tab is replaced with another tab due to prerendering or
+   * instant.
+   */
+  Stream<OnReplacedEvent> get onReplaced => _onReplaced.stream;
+  ChromeStreamController<OnReplacedEvent> _onReplaced;
+
+  ChromeTabs._() {
+    var getApi = () => _tabs;
+    _onCreated =
+        new ChromeStreamController<Tab>.oneArg(getApi, 'onCreated', _createTab);
+    _onUpdated =
+        new ChromeStreamController<OnUpdatedEvent>.threeArgs(getApi, 'onUpdated', _createOnUpdatedEvent);
+    _onMoved =
+        new ChromeStreamController<TabsOnMovedEvent>.twoArgs(getApi, 'onMoved', _createOnMovedEvent);
+    _onSelectionChanged =
+        new ChromeStreamController<OnSelectionChangedEvent>.twoArgs(getApi, 'onSelectionChanged', _createOnSelectionChangedEvent);
+    _onActiveChanged =
+        new ChromeStreamController<OnActiveChangedEvent>.twoArgs(getApi, 'onActiveChanged', _createOnActiveChangedEvent);
+    _onActivated =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onActivated', mapify);
+    _onHighlightChanged =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onHighlightChanged', mapify);
+    _onHighlighted =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onHighlighted', mapify);
+    _onDetached =
+        new ChromeStreamController<OnDetachedEvent>.twoArgs(getApi, 'onDetached', _createOnDetachedEvent);
+    _onAttached =
+        new ChromeStreamController<OnAttachedEvent>.twoArgs(getApi, 'onAttached', _createOnAttachedEvent);
+    _onRemoved =
+        new ChromeStreamController<TabsOnRemovedEvent>.twoArgs(getApi, 'onRemoved', _createOnRemovedEvent);
+    _onReplaced =
+        new ChromeStreamController<OnReplacedEvent>.twoArgs(getApi, 'onReplaced', _createOnReplacedEvent);
+  }
 
   bool get available => _tabs != null;
 
@@ -329,112 +437,6 @@ class ChromeTabs extends ChromeApi {
     _tabs.callMethod('insertCSS', [tabId, jsify(details), completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a tab is created. Note that the tab's URL may not be set at the
-   * time this event fired, but you can listen to onUpdated events to be
-   * notified when a URL is set.
-   */
-  Stream<Tab> get onCreated => _onCreated.stream;
-
-  final ChromeStreamController<Tab> _onCreated =
-      new ChromeStreamController<Tab>.oneArg(_tabs, 'onCreated', _createTab);
-
-  /**
-   * Fired when a tab is updated.
-   */
-  Stream<OnUpdatedEvent> get onUpdated => _onUpdated.stream;
-
-  final ChromeStreamController<OnUpdatedEvent> _onUpdated =
-      new ChromeStreamController<OnUpdatedEvent>.threeArgs(_tabs, 'onUpdated', _createOnUpdatedEvent);
-
-  /**
-   * Fired when a tab is moved within a window. Only one move event is fired,
-   * representing the tab the user directly moved. Move events are not fired for
-   * the other tabs that must move in response. This event is not fired when a
-   * tab is moved between windows. For that, see [onDetached.]
-   */
-  Stream<TabsOnMovedEvent> get onMoved => _onMoved.stream;
-
-  final ChromeStreamController<TabsOnMovedEvent> _onMoved =
-      new ChromeStreamController<TabsOnMovedEvent>.twoArgs(_tabs, 'onMoved', _createOnMovedEvent);
-
-  /**
-   * Deprecated. Please use onActivated.
-   */
-  Stream<OnSelectionChangedEvent> get onSelectionChanged => _onSelectionChanged.stream;
-
-  final ChromeStreamController<OnSelectionChangedEvent> _onSelectionChanged =
-      new ChromeStreamController<OnSelectionChangedEvent>.twoArgs(_tabs, 'onSelectionChanged', _createOnSelectionChangedEvent);
-
-  /**
-   * Deprecated. Please use onActivated.
-   */
-  Stream<OnActiveChangedEvent> get onActiveChanged => _onActiveChanged.stream;
-
-  final ChromeStreamController<OnActiveChangedEvent> _onActiveChanged =
-      new ChromeStreamController<OnActiveChangedEvent>.twoArgs(_tabs, 'onActiveChanged', _createOnActiveChangedEvent);
-
-  /**
-   * Fires when the active tab in a window changes. Note that the tab's URL may
-   * not be set at the time this event fired, but you can listen to onUpdated
-   * events to be notified when a URL is set.
-   */
-  Stream<Map> get onActivated => _onActivated.stream;
-
-  final ChromeStreamController<Map> _onActivated =
-      new ChromeStreamController<Map>.oneArg(_tabs, 'onActivated', mapify);
-
-  /**
-   * Deprecated. Please use onHighlighted.
-   */
-  Stream<Map> get onHighlightChanged => _onHighlightChanged.stream;
-
-  final ChromeStreamController<Map> _onHighlightChanged =
-      new ChromeStreamController<Map>.oneArg(_tabs, 'onHighlightChanged', mapify);
-
-  /**
-   * Fired when the highlighted or selected tabs in a window changes.
-   */
-  Stream<Map> get onHighlighted => _onHighlighted.stream;
-
-  final ChromeStreamController<Map> _onHighlighted =
-      new ChromeStreamController<Map>.oneArg(_tabs, 'onHighlighted', mapify);
-
-  /**
-   * Fired when a tab is detached from a window, for example because it is being
-   * moved between windows.
-   */
-  Stream<OnDetachedEvent> get onDetached => _onDetached.stream;
-
-  final ChromeStreamController<OnDetachedEvent> _onDetached =
-      new ChromeStreamController<OnDetachedEvent>.twoArgs(_tabs, 'onDetached', _createOnDetachedEvent);
-
-  /**
-   * Fired when a tab is attached to a window, for example because it was moved
-   * between windows.
-   */
-  Stream<OnAttachedEvent> get onAttached => _onAttached.stream;
-
-  final ChromeStreamController<OnAttachedEvent> _onAttached =
-      new ChromeStreamController<OnAttachedEvent>.twoArgs(_tabs, 'onAttached', _createOnAttachedEvent);
-
-  /**
-   * Fired when a tab is closed.
-   */
-  Stream<TabsOnRemovedEvent> get onRemoved => _onRemoved.stream;
-
-  final ChromeStreamController<TabsOnRemovedEvent> _onRemoved =
-      new ChromeStreamController<TabsOnRemovedEvent>.twoArgs(_tabs, 'onRemoved', _createOnRemovedEvent);
-
-  /**
-   * Fired when a tab is replaced with another tab due to prerendering or
-   * instant.
-   */
-  Stream<OnReplacedEvent> get onReplaced => _onReplaced.stream;
-
-  final ChromeStreamController<OnReplacedEvent> _onReplaced =
-      new ChromeStreamController<OnReplacedEvent>.twoArgs(_tabs, 'onReplaced', _createOnReplacedEvent);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.tabs' is not available");
@@ -989,8 +991,6 @@ class TabsCaptureVisibleTabParams extends ChromeObject {
 }
 
 Tab _createTab(JsObject jsProxy) => jsProxy == null ? null : new Tab.fromProxy(jsProxy);
-Port _createPort(JsObject jsProxy) => jsProxy == null ? null : new Port.fromProxy(jsProxy);
-Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
 OnUpdatedEvent _createOnUpdatedEvent(int tabId, JsObject changeInfo, JsObject tab) =>
     new OnUpdatedEvent(tabId, mapify(changeInfo), _createTab(tab));
 TabsOnMovedEvent _createOnMovedEvent(int tabId, JsObject moveInfo) =>
@@ -1007,3 +1007,5 @@ TabsOnRemovedEvent _createOnRemovedEvent(int tabId, JsObject removeInfo) =>
     new TabsOnRemovedEvent(tabId, mapify(removeInfo));
 OnReplacedEvent _createOnReplacedEvent(int addedTabId, int removedTabId) =>
     new OnReplacedEvent(addedTabId, removedTabId);
+Port _createPort(JsObject jsProxy) => jsProxy == null ? null : new Port.fromProxy(jsProxy);
+Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);

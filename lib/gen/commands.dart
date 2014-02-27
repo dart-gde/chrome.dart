@@ -15,9 +15,19 @@ import '../src/common.dart';
 final ChromeCommands commands = new ChromeCommands._();
 
 class ChromeCommands extends ChromeApi {
-  static final JsObject _commands = chrome['commands'];
+  JsObject get _commands => chrome['commands'];
 
-  ChromeCommands._();
+  /**
+   * Fired when a registered command is activated using a keyboard shortcut.
+   */
+  Stream<String> get onCommand => _onCommand.stream;
+  ChromeStreamController<String> _onCommand;
+
+  ChromeCommands._() {
+    var getApi = () => _commands;
+    _onCommand =
+        new ChromeStreamController<String>.oneArg(getApi, 'onCommand', selfConverter);
+  }
 
   bool get available => _commands != null;
 
@@ -32,14 +42,6 @@ class ChromeCommands extends ChromeApi {
     _commands.callMethod('getAll', [completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a registered command is activated using a keyboard shortcut.
-   */
-  Stream<String> get onCommand => _onCommand.stream;
-
-  final ChromeStreamController<String> _onCommand =
-      new ChromeStreamController<String>.oneArg(_commands, 'onCommand', selfConverter);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.commands' is not available");

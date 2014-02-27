@@ -32,9 +32,21 @@ class ChromeSockets {
  * namespace are not compatible with ids created in other namespaces.
  */
 class ChromeSocketsTcp extends ChromeApi {
-  static final JsObject _sockets_tcp = chrome['sockets']['tcp'];
+  JsObject get _sockets_tcp => chrome['sockets']['tcp'];
 
-  ChromeSocketsTcp._();
+  Stream<ReceiveInfo> get onReceive => _onReceive.stream;
+  ChromeStreamController<ReceiveInfo> _onReceive;
+
+  Stream<ReceiveErrorInfo> get onReceiveError => _onReceiveError.stream;
+  ChromeStreamController<ReceiveErrorInfo> _onReceiveError;
+
+  ChromeSocketsTcp._() {
+    var getApi = () => _sockets_tcp;
+    _onReceive =
+        new ChromeStreamController<ReceiveInfo>.oneArg(getApi, 'onReceive', _createReceiveInfo);
+    _onReceiveError =
+        new ChromeStreamController<ReceiveErrorInfo>.oneArg(getApi, 'onReceiveError', _createReceiveErrorInfo);
+  }
 
   bool get available => _sockets_tcp != null;
 
@@ -231,16 +243,6 @@ class ChromeSocketsTcp extends ChromeApi {
     return completer.future;
   }
 
-  Stream<ReceiveInfo> get onReceive => _onReceive.stream;
-
-  final ChromeStreamController<ReceiveInfo> _onReceive =
-      new ChromeStreamController<ReceiveInfo>.oneArg(_sockets_tcp, 'onReceive', _createReceiveInfo);
-
-  Stream<ReceiveErrorInfo> get onReceiveError => _onReceiveError.stream;
-
-  final ChromeStreamController<ReceiveErrorInfo> _onReceiveError =
-      new ChromeStreamController<ReceiveErrorInfo>.oneArg(_sockets_tcp, 'onReceiveError', _createReceiveErrorInfo);
-
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.sockets.tcp' is not available");
   }
@@ -383,11 +385,11 @@ class ReceiveErrorInfo extends ChromeObject {
   set resultCode(int value) => jsProxy['resultCode'] = value;
 }
 
+ReceiveInfo _createReceiveInfo(JsObject jsProxy) => jsProxy == null ? null : new ReceiveInfo.fromProxy(jsProxy);
+ReceiveErrorInfo _createReceiveErrorInfo(JsObject jsProxy) => jsProxy == null ? null : new ReceiveErrorInfo.fromProxy(jsProxy);
 CreateInfo _createCreateInfo(JsObject jsProxy) => jsProxy == null ? null : new CreateInfo.fromProxy(jsProxy);
 SendInfo _createSendInfo(JsObject jsProxy) => jsProxy == null ? null : new SendInfo.fromProxy(jsProxy);
 SocketInfo _createSocketInfo(JsObject jsProxy) => jsProxy == null ? null : new SocketInfo.fromProxy(jsProxy);
-ReceiveInfo _createReceiveInfo(JsObject jsProxy) => jsProxy == null ? null : new ReceiveInfo.fromProxy(jsProxy);
-ReceiveErrorInfo _createReceiveErrorInfo(JsObject jsProxy) => jsProxy == null ? null : new ReceiveErrorInfo.fromProxy(jsProxy);
 ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
 
 /**
@@ -397,9 +399,21 @@ ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null :
  * namespace are not compatible with ids created in other namespaces.
  */
 class ChromeSocketsTcpServer extends ChromeApi {
-  static final JsObject _sockets_tcpServer = chrome['sockets']['tcpServer'];
+  JsObject get _sockets_tcpServer => chrome['sockets']['tcpServer'];
 
-  ChromeSocketsTcpServer._();
+  Stream<AcceptInfo> get onAccept => _onAccept.stream;
+  ChromeStreamController<AcceptInfo> _onAccept;
+
+  Stream<AcceptErrorInfo> get onAcceptError => _onAcceptError.stream;
+  ChromeStreamController<AcceptErrorInfo> _onAcceptError;
+
+  ChromeSocketsTcpServer._() {
+    var getApi = () => _sockets_tcpServer;
+    _onAccept =
+        new ChromeStreamController<AcceptInfo>.oneArg(getApi, 'onAccept', _createAcceptInfo);
+    _onAcceptError =
+        new ChromeStreamController<AcceptErrorInfo>.oneArg(getApi, 'onAcceptError', _createAcceptErrorInfo);
+  }
 
   bool get available => _sockets_tcpServer != null;
 
@@ -537,16 +551,6 @@ class ChromeSocketsTcpServer extends ChromeApi {
     return completer.future;
   }
 
-  Stream<AcceptInfo> get onAccept => _onAccept.stream;
-
-  final ChromeStreamController<AcceptInfo> _onAccept =
-      new ChromeStreamController<AcceptInfo>.oneArg(_sockets_tcpServer, 'onAccept', _createAcceptInfo);
-
-  Stream<AcceptErrorInfo> get onAcceptError => _onAcceptError.stream;
-
-  final ChromeStreamController<AcceptErrorInfo> _onAcceptError =
-      new ChromeStreamController<AcceptErrorInfo>.oneArg(_sockets_tcpServer, 'onAcceptError', _createAcceptErrorInfo);
-
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.sockets.tcpServer' is not available");
   }
@@ -596,9 +600,21 @@ AcceptErrorInfo _createAcceptErrorInfo(JsObject jsProxy) => jsProxy == null ? nu
  * namespace are not compatible with ids created in other namespaces.
  */
 class ChromeSocketsUdp extends ChromeApi {
-  static final JsObject _sockets_udp = chrome['sockets']['udp'];
+  JsObject get _sockets_udp => chrome['sockets']['udp'];
 
-  ChromeSocketsUdp._();
+  Stream<ReceiveInfo> get onReceive => _onReceive.stream;
+  ChromeStreamController<ReceiveInfo> _onReceive;
+
+  Stream<ReceiveErrorInfo> get onReceiveError => _onReceiveError.stream;
+  ChromeStreamController<ReceiveErrorInfo> _onReceiveError;
+
+  ChromeSocketsUdp._() {
+    var getApi = () => _sockets_udp;
+    _onReceive =
+        new ChromeStreamController<ReceiveInfo>.oneArg(getApi, 'onReceive', _createReceiveInfo);
+    _onReceiveError =
+        new ChromeStreamController<ReceiveErrorInfo>.oneArg(getApi, 'onReceiveError', _createReceiveErrorInfo);
+  }
 
   bool get available => _sockets_udp != null;
 
@@ -844,16 +860,6 @@ class ChromeSocketsUdp extends ChromeApi {
     _sockets_udp.callMethod('getJoinedGroups', [socketId, completer.callback]);
     return completer.future;
   }
-
-  Stream<ReceiveInfo> get onReceive => _onReceive.stream;
-
-  final ChromeStreamController<ReceiveInfo> _onReceive =
-      new ChromeStreamController<ReceiveInfo>.oneArg(_sockets_udp, 'onReceive', _createReceiveInfo);
-
-  Stream<ReceiveErrorInfo> get onReceiveError => _onReceiveError.stream;
-
-  final ChromeStreamController<ReceiveErrorInfo> _onReceiveError =
-      new ChromeStreamController<ReceiveErrorInfo>.oneArg(_sockets_udp, 'onReceiveError', _createReceiveErrorInfo);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.sockets.udp' is not available");

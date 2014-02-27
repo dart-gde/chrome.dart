@@ -17,7 +17,7 @@ import '../src/common.dart';
 final ChromePrivacy privacy = new ChromePrivacy._();
 
 class ChromePrivacy extends ChromeApi {
-  static final JsObject _privacy = chrome['privacy'];
+  JsObject get _privacy => chrome['privacy'];
 
   ChromePrivacy._();
 

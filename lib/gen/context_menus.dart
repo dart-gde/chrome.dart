@@ -16,9 +16,19 @@ import '../src/common.dart';
 final ChromeContextMenus contextMenus = new ChromeContextMenus._();
 
 class ChromeContextMenus extends ChromeApi {
-  static final JsObject _contextMenus = chrome['contextMenus'];
+  JsObject get _contextMenus => chrome['contextMenus'];
 
-  ChromeContextMenus._();
+  /**
+   * Fired when a context menu item is clicked.
+   */
+  Stream<OnClickedEvent> get onClicked => _onClicked.stream;
+  ChromeStreamController<OnClickedEvent> _onClicked;
+
+  ChromeContextMenus._() {
+    var getApi = () => _contextMenus;
+    _onClicked =
+        new ChromeStreamController<OnClickedEvent>.twoArgs(getApi, 'onClicked', _createOnClickedEvent);
+  }
 
   bool get available => _contextMenus != null;
 
@@ -79,14 +89,6 @@ class ChromeContextMenus extends ChromeApi {
     _contextMenus.callMethod('removeAll', [completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a context menu item is clicked.
-   */
-  Stream<OnClickedEvent> get onClicked => _onClicked.stream;
-
-  final ChromeStreamController<OnClickedEvent> _onClicked =
-      new ChromeStreamController<OnClickedEvent>.twoArgs(_contextMenus, 'onClicked', _createOnClickedEvent);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.contextMenus' is not available");

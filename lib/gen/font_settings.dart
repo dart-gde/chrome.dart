@@ -13,9 +13,43 @@ import '../src/common.dart';
 final ChromeFontSettings fontSettings = new ChromeFontSettings._();
 
 class ChromeFontSettings extends ChromeApi {
-  static final JsObject _fontSettings = chrome['fontSettings'];
+  JsObject get _fontSettings => chrome['fontSettings'];
 
-  ChromeFontSettings._();
+  /**
+   * Fired when a font setting changes.
+   */
+  Stream<Map> get onFontChanged => _onFontChanged.stream;
+  ChromeStreamController<Map> _onFontChanged;
+
+  /**
+   * Fired when the default font size setting changes.
+   */
+  Stream<Map> get onDefaultFontSizeChanged => _onDefaultFontSizeChanged.stream;
+  ChromeStreamController<Map> _onDefaultFontSizeChanged;
+
+  /**
+   * Fired when the default fixed font size setting changes.
+   */
+  Stream<Map> get onDefaultFixedFontSizeChanged => _onDefaultFixedFontSizeChanged.stream;
+  ChromeStreamController<Map> _onDefaultFixedFontSizeChanged;
+
+  /**
+   * Fired when the minimum font size setting changes.
+   */
+  Stream<Map> get onMinimumFontSizeChanged => _onMinimumFontSizeChanged.stream;
+  ChromeStreamController<Map> _onMinimumFontSizeChanged;
+
+  ChromeFontSettings._() {
+    var getApi = () => _fontSettings;
+    _onFontChanged =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onFontChanged', mapify);
+    _onDefaultFontSizeChanged =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onDefaultFontSizeChanged', mapify);
+    _onDefaultFixedFontSizeChanged =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onDefaultFixedFontSizeChanged', mapify);
+    _onMinimumFontSizeChanged =
+        new ChromeStreamController<Map>.oneArg(getApi, 'onMinimumFontSizeChanged', mapify);
+  }
 
   bool get available => _fontSettings != null;
 
@@ -173,38 +207,6 @@ class ChromeFontSettings extends ChromeApi {
     _fontSettings.callMethod('setMinimumFontSize', [jsify(details), completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a font setting changes.
-   */
-  Stream<Map> get onFontChanged => _onFontChanged.stream;
-
-  final ChromeStreamController<Map> _onFontChanged =
-      new ChromeStreamController<Map>.oneArg(_fontSettings, 'onFontChanged', mapify);
-
-  /**
-   * Fired when the default font size setting changes.
-   */
-  Stream<Map> get onDefaultFontSizeChanged => _onDefaultFontSizeChanged.stream;
-
-  final ChromeStreamController<Map> _onDefaultFontSizeChanged =
-      new ChromeStreamController<Map>.oneArg(_fontSettings, 'onDefaultFontSizeChanged', mapify);
-
-  /**
-   * Fired when the default fixed font size setting changes.
-   */
-  Stream<Map> get onDefaultFixedFontSizeChanged => _onDefaultFixedFontSizeChanged.stream;
-
-  final ChromeStreamController<Map> _onDefaultFixedFontSizeChanged =
-      new ChromeStreamController<Map>.oneArg(_fontSettings, 'onDefaultFixedFontSizeChanged', mapify);
-
-  /**
-   * Fired when the minimum font size setting changes.
-   */
-  Stream<Map> get onMinimumFontSizeChanged => _onMinimumFontSizeChanged.stream;
-
-  final ChromeStreamController<Map> _onMinimumFontSizeChanged =
-      new ChromeStreamController<Map>.oneArg(_fontSettings, 'onMinimumFontSizeChanged', mapify);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.fontSettings' is not available");

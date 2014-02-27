@@ -16,9 +16,19 @@ import '../src/common.dart';
 final ChromeTts tts = new ChromeTts._();
 
 class ChromeTts extends ChromeApi {
-  static final JsObject _tts = chrome['tts'];
+  JsObject get _tts => chrome['tts'];
 
-  ChromeTts._();
+  /**
+   * Used to pass events back to the function calling speak().
+   */
+  Stream<TtsEvent> get onEvent => _onEvent.stream;
+  ChromeStreamController<TtsEvent> _onEvent;
+
+  ChromeTts._() {
+    var getApi = () => _tts;
+    _onEvent =
+        new ChromeStreamController<TtsEvent>.oneArg(getApi, 'onEvent', _createTtsEvent);
+  }
 
   bool get available => _tts != null;
 
@@ -100,14 +110,6 @@ class ChromeTts extends ChromeApi {
     _tts.callMethod('getVoices', [completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Used to pass events back to the function calling speak().
-   */
-  Stream<TtsEvent> get onEvent => _onEvent.stream;
-
-  final ChromeStreamController<TtsEvent> _onEvent =
-      new ChromeStreamController<TtsEvent>.oneArg(_tts, 'onEvent', _createTtsEvent);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.tts' is not available");
@@ -298,5 +300,5 @@ class TtsSpeakParams extends ChromeObject {
   set onEvent(var value) => jsProxy['onEvent'] = jsify(value);
 }
 
-TtsVoice _createTtsVoice(JsObject jsProxy) => jsProxy == null ? null : new TtsVoice.fromProxy(jsProxy);
 TtsEvent _createTtsEvent(JsObject jsProxy) => jsProxy == null ? null : new TtsEvent.fromProxy(jsProxy);
+TtsVoice _createTtsVoice(JsObject jsProxy) => jsProxy == null ? null : new TtsVoice.fromProxy(jsProxy);

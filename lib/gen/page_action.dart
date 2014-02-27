@@ -16,9 +16,20 @@ import '../src/common.dart';
 final ChromePageAction pageAction = new ChromePageAction._();
 
 class ChromePageAction extends ChromeApi {
-  static final JsObject _pageAction = chrome['pageAction'];
+  JsObject get _pageAction => chrome['pageAction'];
 
-  ChromePageAction._();
+  /**
+   * Fired when a page action icon is clicked.  This event will not fire if the
+   * page action has a popup.
+   */
+  Stream<Tab> get onClicked => _onClicked.stream;
+  ChromeStreamController<Tab> _onClicked;
+
+  ChromePageAction._() {
+    var getApi = () => _pageAction;
+    _onClicked =
+        new ChromeStreamController<Tab>.oneArg(getApi, 'onClicked', _createTab);
+  }
 
   bool get available => _pageAction != null;
 
@@ -100,15 +111,6 @@ class ChromePageAction extends ChromeApi {
     _pageAction.callMethod('getPopup', [jsify(details), completer.callback]);
     return completer.future;
   }
-
-  /**
-   * Fired when a page action icon is clicked.  This event will not fire if the
-   * page action has a popup.
-   */
-  Stream<Tab> get onClicked => _onClicked.stream;
-
-  final ChromeStreamController<Tab> _onClicked =
-      new ChromeStreamController<Tab>.oneArg(_pageAction, 'onClicked', _createTab);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.pageAction' is not available");

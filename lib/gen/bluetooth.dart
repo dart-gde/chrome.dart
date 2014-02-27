@@ -13,9 +13,21 @@ import '../src/common.dart';
 final ChromeBluetooth bluetooth = new ChromeBluetooth._();
 
 class ChromeBluetooth extends ChromeApi {
-  static final JsObject _bluetooth = chrome['bluetooth'];
+  JsObject get _bluetooth => chrome['bluetooth'];
 
-  ChromeBluetooth._();
+  Stream<AdapterState> get onAdapterStateChanged => _onAdapterStateChanged.stream;
+  ChromeStreamController<AdapterState> _onAdapterStateChanged;
+
+  Stream<Socket> get onConnection => _onConnection.stream;
+  ChromeStreamController<Socket> _onConnection;
+
+  ChromeBluetooth._() {
+    var getApi = () => _bluetooth;
+    _onAdapterStateChanged =
+        new ChromeStreamController<AdapterState>.oneArg(getApi, 'onAdapterStateChanged', _createAdapterState);
+    _onConnection =
+        new ChromeStreamController<Socket>.oneArg(getApi, 'onConnection', _createSocket);
+  }
 
   bool get available => _bluetooth != null;
 
@@ -201,16 +213,6 @@ class ChromeBluetooth extends ChromeApi {
     _bluetooth.callMethod('stopDiscovery', [completer.callback]);
     return completer.future;
   }
-
-  Stream<AdapterState> get onAdapterStateChanged => _onAdapterStateChanged.stream;
-
-  final ChromeStreamController<AdapterState> _onAdapterStateChanged =
-      new ChromeStreamController<AdapterState>.oneArg(_bluetooth, 'onAdapterStateChanged', _createAdapterState);
-
-  Stream<Socket> get onConnection => _onConnection.stream;
-
-  final ChromeStreamController<Socket> _onConnection =
-      new ChromeStreamController<Socket>.oneArg(_bluetooth, 'onConnection', _createSocket);
 
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.bluetooth' is not available");
@@ -488,10 +490,10 @@ class StartDiscoveryOptions extends ChromeObject {
 }
 
 AdapterState _createAdapterState(JsObject jsProxy) => jsProxy == null ? null : new AdapterState.fromProxy(jsProxy);
+Socket _createSocket(JsObject jsProxy) => jsProxy == null ? null : new Socket.fromProxy(jsProxy);
 Profile _createProfile(JsObject jsProxy) => jsProxy == null ? null : new Profile.fromProxy(jsProxy);
 ServiceRecord _createServiceRecord(JsObject jsProxy) => jsProxy == null ? null : new ServiceRecord.fromProxy(jsProxy);
 ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
 OutOfBandPairingData _createOutOfBandPairingData(JsObject jsProxy) => jsProxy == null ? null : new OutOfBandPairingData.fromProxy(jsProxy);
-Socket _createSocket(JsObject jsProxy) => jsProxy == null ? null : new Socket.fromProxy(jsProxy);
 BluetoothDevice _createDevice(JsObject jsProxy) => jsProxy == null ? null : new BluetoothDevice.fromProxy(jsProxy);
 DeviceCallback _createDeviceCallback(JsObject jsProxy) => jsProxy == null ? null : new DeviceCallback.fromProxy(jsProxy);

@@ -18,7 +18,7 @@ import '../src/common.dart';
 final ChromeFileSystem fileSystem = new ChromeFileSystem._();
 
 class ChromeFileSystem extends ChromeApi {
-  static final JsObject _fileSystem = chrome['fileSystem'];
+  JsObject get _fileSystem => chrome['fileSystem'];
 
   ChromeFileSystem._();
 
