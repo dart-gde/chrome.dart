@@ -24,8 +24,7 @@ class ChromeStorage extends ChromeApi {
 
   ChromeStorage._() {
     var getApi = () => _storage;
-    _onChanged =
-        new ChromeStreamController<StorageOnChangedEvent>.twoArgs(getApi, 'onChanged', _createOnChangedEvent);
+    _onChanged = new ChromeStreamController<StorageOnChangedEvent>.twoArgs(getApi, 'onChanged', _createOnChangedEvent);
   }
 
   bool get available => _storage != null;

@@ -49,10 +49,8 @@ class ChromeDevtoolsInspectedWindow extends ChromeApi {
 
   ChromeDevtoolsInspectedWindow._() {
     var getApi = () => _devtools_inspectedWindow;
-    _onResourceAdded =
-        new ChromeStreamController<Resource>.oneArg(getApi, 'onResourceAdded', _createResource);
-    _onResourceContentCommitted =
-        new ChromeStreamController<OnResourceContentCommittedEvent>.twoArgs(getApi, 'onResourceContentCommitted', _createOnResourceContentCommittedEvent);
+    _onResourceAdded = new ChromeStreamController<Resource>.oneArg(getApi, 'onResourceAdded', _createResource);
+    _onResourceContentCommitted = new ChromeStreamController<OnResourceContentCommittedEvent>.twoArgs(getApi, 'onResourceContentCommitted', _createOnResourceContentCommittedEvent);
   }
 
   bool get available => _devtools_inspectedWindow != null;
@@ -267,10 +265,8 @@ class ChromeDevtoolsNetwork extends ChromeApi {
 
   ChromeDevtoolsNetwork._() {
     var getApi = () => _devtools_network;
-    _onRequestFinished =
-        new ChromeStreamController<Request>.oneArg(getApi, 'onRequestFinished', _createRequest);
-    _onNavigated =
-        new ChromeStreamController<String>.oneArg(getApi, 'onNavigated', selfConverter);
+    _onRequestFinished = new ChromeStreamController<Request>.oneArg(getApi, 'onRequestFinished', _createRequest);
+    _onNavigated = new ChromeStreamController<String>.oneArg(getApi, 'onNavigated', selfConverter);
   }
 
   bool get available => _devtools_network != null;

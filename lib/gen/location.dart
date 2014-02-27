@@ -27,10 +27,8 @@ class ChromeLocation extends ChromeApi {
 
   ChromeLocation._() {
     var getApi = () => _location;
-    _onLocationUpdate =
-        new ChromeStreamController<Location>.oneArg(getApi, 'onLocationUpdate', _createLocation);
-    _onLocationError =
-        new ChromeStreamController<String>.oneArg(getApi, 'onLocationError', selfConverter);
+    _onLocationUpdate = new ChromeStreamController<Location>.oneArg(getApi, 'onLocationUpdate', _createLocation);
+    _onLocationError = new ChromeStreamController<String>.oneArg(getApi, 'onLocationError', selfConverter);
   }
 
   bool get available => _location != null;

@@ -30,14 +30,10 @@ class ChromeNotifications extends ChromeApi {
 
   ChromeNotifications._() {
     var getApi = () => _notifications;
-    _onClosed =
-        new ChromeStreamController<OnClosedEvent>.twoArgs(getApi, 'onClosed', _createOnClosedEvent);
-    _onClicked =
-        new ChromeStreamController<String>.oneArg(getApi, 'onClicked', selfConverter);
-    _onButtonClicked =
-        new ChromeStreamController<OnButtonClickedEvent>.twoArgs(getApi, 'onButtonClicked', _createOnButtonClickedEvent);
-    _onPermissionLevelChanged =
-        new ChromeStreamController<PermissionLevel>.oneArg(getApi, 'onPermissionLevelChanged', _createPermissionLevel);
+    _onClosed = new ChromeStreamController<OnClosedEvent>.twoArgs(getApi, 'onClosed', _createOnClosedEvent);
+    _onClicked = new ChromeStreamController<String>.oneArg(getApi, 'onClicked', selfConverter);
+    _onButtonClicked = new ChromeStreamController<OnButtonClickedEvent>.twoArgs(getApi, 'onButtonClicked', _createOnButtonClickedEvent);
+    _onPermissionLevelChanged = new ChromeStreamController<PermissionLevel>.oneArg(getApi, 'onPermissionLevelChanged', _createPermissionLevel);
   }
 
   bool get available => _notifications != null;

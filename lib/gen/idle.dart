@@ -27,8 +27,7 @@ class ChromeIdle extends ChromeApi {
 
   ChromeIdle._() {
     var getApi = () => _idle;
-    _onStateChanged =
-        new ChromeStreamController<String>.oneArg(getApi, 'onStateChanged', selfConverter);
+    _onStateChanged = new ChromeStreamController<String>.oneArg(getApi, 'onStateChanged', selfConverter);
   }
 
   bool get available => _idle != null;

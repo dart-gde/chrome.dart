@@ -39,12 +39,9 @@ class ChromeGcm extends ChromeApi {
 
   ChromeGcm._() {
     var getApi = () => _gcm;
-    _onMessage =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onMessage', mapify);
-    _onMessagesDeleted =
-        new ChromeStreamController.noArgs(getApi, 'onMessagesDeleted');
-    _onSendError =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onSendError', mapify);
+    _onMessage = new ChromeStreamController<Map>.oneArg(getApi, 'onMessage', mapify);
+    _onMessagesDeleted = new ChromeStreamController.noArgs(getApi, 'onMessagesDeleted');
+    _onSendError = new ChromeStreamController<Map>.oneArg(getApi, 'onSendError', mapify);
   }
 
   bool get available => _gcm != null;

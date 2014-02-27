@@ -42,10 +42,8 @@ class ChromeSocketsTcp extends ChromeApi {
 
   ChromeSocketsTcp._() {
     var getApi = () => _sockets_tcp;
-    _onReceive =
-        new ChromeStreamController<ReceiveInfo>.oneArg(getApi, 'onReceive', _createReceiveInfo);
-    _onReceiveError =
-        new ChromeStreamController<ReceiveErrorInfo>.oneArg(getApi, 'onReceiveError', _createReceiveErrorInfo);
+    _onReceive = new ChromeStreamController<ReceiveInfo>.oneArg(getApi, 'onReceive', _createReceiveInfo);
+    _onReceiveError = new ChromeStreamController<ReceiveErrorInfo>.oneArg(getApi, 'onReceiveError', _createReceiveErrorInfo);
   }
 
   bool get available => _sockets_tcp != null;
@@ -409,10 +407,8 @@ class ChromeSocketsTcpServer extends ChromeApi {
 
   ChromeSocketsTcpServer._() {
     var getApi = () => _sockets_tcpServer;
-    _onAccept =
-        new ChromeStreamController<AcceptInfo>.oneArg(getApi, 'onAccept', _createAcceptInfo);
-    _onAcceptError =
-        new ChromeStreamController<AcceptErrorInfo>.oneArg(getApi, 'onAcceptError', _createAcceptErrorInfo);
+    _onAccept = new ChromeStreamController<AcceptInfo>.oneArg(getApi, 'onAccept', _createAcceptInfo);
+    _onAcceptError = new ChromeStreamController<AcceptErrorInfo>.oneArg(getApi, 'onAcceptError', _createAcceptErrorInfo);
   }
 
   bool get available => _sockets_tcpServer != null;
@@ -610,10 +606,8 @@ class ChromeSocketsUdp extends ChromeApi {
 
   ChromeSocketsUdp._() {
     var getApi = () => _sockets_udp;
-    _onReceive =
-        new ChromeStreamController<ReceiveInfo>.oneArg(getApi, 'onReceive', _createReceiveInfo);
-    _onReceiveError =
-        new ChromeStreamController<ReceiveErrorInfo>.oneArg(getApi, 'onReceiveError', _createReceiveErrorInfo);
+    _onReceive = new ChromeStreamController<ReceiveInfo>.oneArg(getApi, 'onReceive', _createReceiveInfo);
+    _onReceiveError = new ChromeStreamController<ReceiveErrorInfo>.oneArg(getApi, 'onReceiveError', _createReceiveErrorInfo);
   }
 
   bool get available => _sockets_udp != null;

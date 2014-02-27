@@ -67,20 +67,13 @@ class ChromeBookmarks extends ChromeApi {
 
   ChromeBookmarks._() {
     var getApi = () => _bookmarks;
-    _onCreated =
-        new ChromeStreamController<OnCreatedEvent>.twoArgs(getApi, 'onCreated', _createOnCreatedEvent);
-    _onRemoved =
-        new ChromeStreamController<BookmarksOnRemovedEvent>.twoArgs(getApi, 'onRemoved', _createOnRemovedEvent);
-    _onChanged =
-        new ChromeStreamController<BookmarksOnChangedEvent>.twoArgs(getApi, 'onChanged', _createOnChangedEvent);
-    _onMoved =
-        new ChromeStreamController<BookmarksOnMovedEvent>.twoArgs(getApi, 'onMoved', _createOnMovedEvent);
-    _onChildrenReordered =
-        new ChromeStreamController<OnChildrenReorderedEvent>.twoArgs(getApi, 'onChildrenReordered', _createOnChildrenReorderedEvent);
-    _onImportBegan =
-        new ChromeStreamController.noArgs(getApi, 'onImportBegan');
-    _onImportEnded =
-        new ChromeStreamController.noArgs(getApi, 'onImportEnded');
+    _onCreated = new ChromeStreamController<OnCreatedEvent>.twoArgs(getApi, 'onCreated', _createOnCreatedEvent);
+    _onRemoved = new ChromeStreamController<BookmarksOnRemovedEvent>.twoArgs(getApi, 'onRemoved', _createOnRemovedEvent);
+    _onChanged = new ChromeStreamController<BookmarksOnChangedEvent>.twoArgs(getApi, 'onChanged', _createOnChangedEvent);
+    _onMoved = new ChromeStreamController<BookmarksOnMovedEvent>.twoArgs(getApi, 'onMoved', _createOnMovedEvent);
+    _onChildrenReordered = new ChromeStreamController<OnChildrenReorderedEvent>.twoArgs(getApi, 'onChildrenReordered', _createOnChildrenReorderedEvent);
+    _onImportBegan = new ChromeStreamController.noArgs(getApi, 'onImportBegan');
+    _onImportEnded = new ChromeStreamController.noArgs(getApi, 'onImportEnded');
   }
 
   bool get available => _bookmarks != null;

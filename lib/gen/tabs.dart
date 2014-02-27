@@ -102,30 +102,18 @@ class ChromeTabs extends ChromeApi {
 
   ChromeTabs._() {
     var getApi = () => _tabs;
-    _onCreated =
-        new ChromeStreamController<Tab>.oneArg(getApi, 'onCreated', _createTab);
-    _onUpdated =
-        new ChromeStreamController<OnUpdatedEvent>.threeArgs(getApi, 'onUpdated', _createOnUpdatedEvent);
-    _onMoved =
-        new ChromeStreamController<TabsOnMovedEvent>.twoArgs(getApi, 'onMoved', _createOnMovedEvent);
-    _onSelectionChanged =
-        new ChromeStreamController<OnSelectionChangedEvent>.twoArgs(getApi, 'onSelectionChanged', _createOnSelectionChangedEvent);
-    _onActiveChanged =
-        new ChromeStreamController<OnActiveChangedEvent>.twoArgs(getApi, 'onActiveChanged', _createOnActiveChangedEvent);
-    _onActivated =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onActivated', mapify);
-    _onHighlightChanged =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onHighlightChanged', mapify);
-    _onHighlighted =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onHighlighted', mapify);
-    _onDetached =
-        new ChromeStreamController<OnDetachedEvent>.twoArgs(getApi, 'onDetached', _createOnDetachedEvent);
-    _onAttached =
-        new ChromeStreamController<OnAttachedEvent>.twoArgs(getApi, 'onAttached', _createOnAttachedEvent);
-    _onRemoved =
-        new ChromeStreamController<TabsOnRemovedEvent>.twoArgs(getApi, 'onRemoved', _createOnRemovedEvent);
-    _onReplaced =
-        new ChromeStreamController<OnReplacedEvent>.twoArgs(getApi, 'onReplaced', _createOnReplacedEvent);
+    _onCreated = new ChromeStreamController<Tab>.oneArg(getApi, 'onCreated', _createTab);
+    _onUpdated = new ChromeStreamController<OnUpdatedEvent>.threeArgs(getApi, 'onUpdated', _createOnUpdatedEvent);
+    _onMoved = new ChromeStreamController<TabsOnMovedEvent>.twoArgs(getApi, 'onMoved', _createOnMovedEvent);
+    _onSelectionChanged = new ChromeStreamController<OnSelectionChangedEvent>.twoArgs(getApi, 'onSelectionChanged', _createOnSelectionChangedEvent);
+    _onActiveChanged = new ChromeStreamController<OnActiveChangedEvent>.twoArgs(getApi, 'onActiveChanged', _createOnActiveChangedEvent);
+    _onActivated = new ChromeStreamController<Map>.oneArg(getApi, 'onActivated', mapify);
+    _onHighlightChanged = new ChromeStreamController<Map>.oneArg(getApi, 'onHighlightChanged', mapify);
+    _onHighlighted = new ChromeStreamController<Map>.oneArg(getApi, 'onHighlighted', mapify);
+    _onDetached = new ChromeStreamController<OnDetachedEvent>.twoArgs(getApi, 'onDetached', _createOnDetachedEvent);
+    _onAttached = new ChromeStreamController<OnAttachedEvent>.twoArgs(getApi, 'onAttached', _createOnAttachedEvent);
+    _onRemoved = new ChromeStreamController<TabsOnRemovedEvent>.twoArgs(getApi, 'onRemoved', _createOnRemovedEvent);
+    _onReplaced = new ChromeStreamController<OnReplacedEvent>.twoArgs(getApi, 'onReplaced', _createOnReplacedEvent);
   }
 
   bool get available => _tabs != null;

@@ -21,8 +21,7 @@ class ChromeSignedInDevices extends ChromeApi {
 
   ChromeSignedInDevices._() {
     var getApi = () => _signedInDevices;
-    _onDeviceInfoChange =
-        new ChromeStreamController<List<DeviceInfo>>.oneArg(getApi, 'onDeviceInfoChange', (e) => listify(e, _createDeviceInfo));
+    _onDeviceInfoChange = new ChromeStreamController<List<DeviceInfo>>.oneArg(getApi, 'onDeviceInfoChange', (e) => listify(e, _createDeviceInfo));
   }
 
   bool get available => _signedInDevices != null;

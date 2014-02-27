@@ -301,18 +301,15 @@ class DefaultBackend extends Backend {
      String typeName = type == null ? null : type.toReturnString();
 
      if (type != null) {
-       generator.writeln("_${event.name} =");
+       generator.write("_${event.name} = ");
        String converter = getCallbackConverter(type);
-       if (converter == null) {
-         converter = 'selfConverter';
-       }
+       if (converter == null) converter = 'selfConverter';
 
        String argCallArity = ['noArgs', 'oneArg', 'twoArgs', 'threeArgs'][type.arity];
-       generator.writeln("    new ChromeStreamController<${typeName}>.${argCallArity}("
+       generator.writeln("new ChromeStreamController<${typeName}>.${argCallArity}("
            "getApi, '${event.name}', ${converter});");
      } else {
-       generator.writeln("_${event.name} =");
-       generator.writeln("    new ChromeStreamController.noArgs("
+       generator.writeln("_${event.name} = new ChromeStreamController.noArgs("
            "getApi, '${event.name}');");
      }
   }

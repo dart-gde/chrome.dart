@@ -21,8 +21,7 @@ class ChromeAlarms extends ChromeApi {
 
   ChromeAlarms._() {
     var getApi = () => _alarms;
-    _onAlarm =
-        new ChromeStreamController<Alarm>.oneArg(getApi, 'onAlarm', _createAlarm);
+    _onAlarm = new ChromeStreamController<Alarm>.oneArg(getApi, 'onAlarm', _createAlarm);
   }
 
   bool get available => _alarms != null;

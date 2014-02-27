@@ -37,10 +37,8 @@ class ChromeDebugger extends ChromeApi {
 
   ChromeDebugger._() {
     var getApi = () => _debugger;
-    _onEvent =
-        new ChromeStreamController<OnEventEvent>.threeArgs(getApi, 'onEvent', _createOnEventEvent);
-    _onDetach =
-        new ChromeStreamController<OnDetachEvent>.twoArgs(getApi, 'onDetach', _createOnDetachEvent);
+    _onEvent = new ChromeStreamController<OnEventEvent>.threeArgs(getApi, 'onEvent', _createOnEventEvent);
+    _onDetach = new ChromeStreamController<OnDetachEvent>.twoArgs(getApi, 'onDetach', _createOnDetachEvent);
   }
 
   bool get available => _debugger != null;

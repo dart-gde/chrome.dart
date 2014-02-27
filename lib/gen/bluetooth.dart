@@ -23,10 +23,8 @@ class ChromeBluetooth extends ChromeApi {
 
   ChromeBluetooth._() {
     var getApi = () => _bluetooth;
-    _onAdapterStateChanged =
-        new ChromeStreamController<AdapterState>.oneArg(getApi, 'onAdapterStateChanged', _createAdapterState);
-    _onConnection =
-        new ChromeStreamController<Socket>.oneArg(getApi, 'onConnection', _createSocket);
+    _onAdapterStateChanged = new ChromeStreamController<AdapterState>.oneArg(getApi, 'onAdapterStateChanged', _createAdapterState);
+    _onConnection = new ChromeStreamController<Socket>.oneArg(getApi, 'onConnection', _createSocket);
   }
 
   bool get available => _bluetooth != null;

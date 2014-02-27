@@ -22,8 +22,7 @@ class ChromeDeclarativeContent extends ChromeApi {
 
   ChromeDeclarativeContent._() {
     var getApi = () => _declarativeContent;
-    _onPageChanged =
-        new ChromeStreamController.noArgs(getApi, 'onPageChanged');
+    _onPageChanged = new ChromeStreamController.noArgs(getApi, 'onPageChanged');
   }
 
   bool get available => _declarativeContent != null;

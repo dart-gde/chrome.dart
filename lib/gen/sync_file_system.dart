@@ -28,10 +28,8 @@ class ChromeSyncFileSystem extends ChromeApi {
 
   ChromeSyncFileSystem._() {
     var getApi = () => _syncFileSystem;
-    _onServiceStatusChanged =
-        new ChromeStreamController<ServiceInfo>.oneArg(getApi, 'onServiceStatusChanged', _createServiceInfo);
-    _onFileStatusChanged =
-        new ChromeStreamController<FileInfo>.oneArg(getApi, 'onFileStatusChanged', _createFileInfo);
+    _onServiceStatusChanged = new ChromeStreamController<ServiceInfo>.oneArg(getApi, 'onServiceStatusChanged', _createServiceInfo);
+    _onFileStatusChanged = new ChromeStreamController<FileInfo>.oneArg(getApi, 'onFileStatusChanged', _createFileInfo);
   }
 
   bool get available => _syncFileSystem != null;

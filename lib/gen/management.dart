@@ -43,14 +43,10 @@ class ChromeManagement extends ChromeApi {
 
   ChromeManagement._() {
     var getApi = () => _management;
-    _onInstalled =
-        new ChromeStreamController<ExtensionInfo>.oneArg(getApi, 'onInstalled', _createExtensionInfo);
-    _onUninstalled =
-        new ChromeStreamController<String>.oneArg(getApi, 'onUninstalled', selfConverter);
-    _onEnabled =
-        new ChromeStreamController<ExtensionInfo>.oneArg(getApi, 'onEnabled', _createExtensionInfo);
-    _onDisabled =
-        new ChromeStreamController<ExtensionInfo>.oneArg(getApi, 'onDisabled', _createExtensionInfo);
+    _onInstalled = new ChromeStreamController<ExtensionInfo>.oneArg(getApi, 'onInstalled', _createExtensionInfo);
+    _onUninstalled = new ChromeStreamController<String>.oneArg(getApi, 'onUninstalled', selfConverter);
+    _onEnabled = new ChromeStreamController<ExtensionInfo>.oneArg(getApi, 'onEnabled', _createExtensionInfo);
+    _onDisabled = new ChromeStreamController<ExtensionInfo>.oneArg(getApi, 'onDisabled', _createExtensionInfo);
   }
 
   bool get available => _management != null;

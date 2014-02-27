@@ -34,10 +34,8 @@ class ChromeHistory extends ChromeApi {
 
   ChromeHistory._() {
     var getApi = () => _history;
-    _onVisited =
-        new ChromeStreamController<HistoryItem>.oneArg(getApi, 'onVisited', _createHistoryItem);
-    _onVisitRemoved =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onVisitRemoved', mapify);
+    _onVisited = new ChromeStreamController<HistoryItem>.oneArg(getApi, 'onVisited', _createHistoryItem);
+    _onVisitRemoved = new ChromeStreamController<Map>.oneArg(getApi, 'onVisitRemoved', mapify);
   }
 
   bool get available => _history != null;

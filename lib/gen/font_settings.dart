@@ -41,14 +41,10 @@ class ChromeFontSettings extends ChromeApi {
 
   ChromeFontSettings._() {
     var getApi = () => _fontSettings;
-    _onFontChanged =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onFontChanged', mapify);
-    _onDefaultFontSizeChanged =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onDefaultFontSizeChanged', mapify);
-    _onDefaultFixedFontSizeChanged =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onDefaultFixedFontSizeChanged', mapify);
-    _onMinimumFontSizeChanged =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onMinimumFontSizeChanged', mapify);
+    _onFontChanged = new ChromeStreamController<Map>.oneArg(getApi, 'onFontChanged', mapify);
+    _onDefaultFontSizeChanged = new ChromeStreamController<Map>.oneArg(getApi, 'onDefaultFontSizeChanged', mapify);
+    _onDefaultFixedFontSizeChanged = new ChromeStreamController<Map>.oneArg(getApi, 'onDefaultFixedFontSizeChanged', mapify);
+    _onMinimumFontSizeChanged = new ChromeStreamController<Map>.oneArg(getApi, 'onMinimumFontSizeChanged', mapify);
   }
 
   bool get available => _fontSettings != null;

@@ -93,26 +93,16 @@ class ChromeInputIme extends ChromeApi {
 
   ChromeInputIme._() {
     var getApi = () => _input_ime;
-    _onActivate =
-        new ChromeStreamController<String>.oneArg(getApi, 'onActivate', selfConverter);
-    _onDeactivated =
-        new ChromeStreamController<String>.oneArg(getApi, 'onDeactivated', selfConverter);
-    _onFocus =
-        new ChromeStreamController<InputContext>.oneArg(getApi, 'onFocus', _createInputContext);
-    _onBlur =
-        new ChromeStreamController<int>.oneArg(getApi, 'onBlur', selfConverter);
-    _onInputContextUpdate =
-        new ChromeStreamController<InputContext>.oneArg(getApi, 'onInputContextUpdate', _createInputContext);
-    _onKeyEvent =
-        new ChromeStreamController<OnKeyEventEvent>.twoArgs(getApi, 'onKeyEvent', _createOnKeyEventEvent);
-    _onCandidateClicked =
-        new ChromeStreamController<OnCandidateClickedEvent>.threeArgs(getApi, 'onCandidateClicked', _createOnCandidateClickedEvent);
-    _onMenuItemActivated =
-        new ChromeStreamController<OnMenuItemActivatedEvent>.twoArgs(getApi, 'onMenuItemActivated', _createOnMenuItemActivatedEvent);
-    _onSurroundingTextChanged =
-        new ChromeStreamController<OnSurroundingTextChangedEvent>.twoArgs(getApi, 'onSurroundingTextChanged', _createOnSurroundingTextChangedEvent);
-    _onReset =
-        new ChromeStreamController<String>.oneArg(getApi, 'onReset', selfConverter);
+    _onActivate = new ChromeStreamController<String>.oneArg(getApi, 'onActivate', selfConverter);
+    _onDeactivated = new ChromeStreamController<String>.oneArg(getApi, 'onDeactivated', selfConverter);
+    _onFocus = new ChromeStreamController<InputContext>.oneArg(getApi, 'onFocus', _createInputContext);
+    _onBlur = new ChromeStreamController<int>.oneArg(getApi, 'onBlur', selfConverter);
+    _onInputContextUpdate = new ChromeStreamController<InputContext>.oneArg(getApi, 'onInputContextUpdate', _createInputContext);
+    _onKeyEvent = new ChromeStreamController<OnKeyEventEvent>.twoArgs(getApi, 'onKeyEvent', _createOnKeyEventEvent);
+    _onCandidateClicked = new ChromeStreamController<OnCandidateClickedEvent>.threeArgs(getApi, 'onCandidateClicked', _createOnCandidateClickedEvent);
+    _onMenuItemActivated = new ChromeStreamController<OnMenuItemActivatedEvent>.twoArgs(getApi, 'onMenuItemActivated', _createOnMenuItemActivatedEvent);
+    _onSurroundingTextChanged = new ChromeStreamController<OnSurroundingTextChangedEvent>.twoArgs(getApi, 'onSurroundingTextChanged', _createOnSurroundingTextChangedEvent);
+    _onReset = new ChromeStreamController<String>.oneArg(getApi, 'onReset', selfConverter);
   }
 
   bool get available => _input_ime != null;

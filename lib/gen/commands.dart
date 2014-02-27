@@ -25,8 +25,7 @@ class ChromeCommands extends ChromeApi {
 
   ChromeCommands._() {
     var getApi = () => _commands;
-    _onCommand =
-        new ChromeStreamController<String>.oneArg(getApi, 'onCommand', selfConverter);
+    _onCommand = new ChromeStreamController<String>.oneArg(getApi, 'onCommand', selfConverter);
   }
 
   bool get available => _commands != null;

@@ -44,14 +44,10 @@ class ChromeOmnibox extends ChromeApi {
 
   ChromeOmnibox._() {
     var getApi = () => _omnibox;
-    _onInputStarted =
-        new ChromeStreamController.noArgs(getApi, 'onInputStarted');
-    _onInputChanged =
-        new ChromeStreamController<OnInputChangedEvent>.twoArgs(getApi, 'onInputChanged', _createOnInputChangedEvent);
-    _onInputEntered =
-        new ChromeStreamController<OnInputEnteredEvent>.twoArgs(getApi, 'onInputEntered', _createOnInputEnteredEvent);
-    _onInputCancelled =
-        new ChromeStreamController.noArgs(getApi, 'onInputCancelled');
+    _onInputStarted = new ChromeStreamController.noArgs(getApi, 'onInputStarted');
+    _onInputChanged = new ChromeStreamController<OnInputChangedEvent>.twoArgs(getApi, 'onInputChanged', _createOnInputChangedEvent);
+    _onInputEntered = new ChromeStreamController<OnInputEnteredEvent>.twoArgs(getApi, 'onInputEntered', _createOnInputEnteredEvent);
+    _onInputCancelled = new ChromeStreamController.noArgs(getApi, 'onInputCancelled');
   }
 
   bool get available => _omnibox != null;
