@@ -28,8 +28,7 @@ class ChromeBrowserAction extends ChromeApi {
 
   ChromeBrowserAction._() {
     var getApi = () => _browserAction;
-    _onClicked =
-        new ChromeStreamController<Tab>.oneArg(getApi, 'onClicked', _createTab);
+    _onClicked = new ChromeStreamController<Tab>.oneArg(getApi, 'onClicked', _createTab);
   }
 
   bool get available => _browserAction != null;

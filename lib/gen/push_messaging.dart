@@ -21,8 +21,7 @@ class ChromePushMessaging extends ChromeApi {
 
   ChromePushMessaging._() {
     var getApi = () => _pushMessaging;
-    _onMessage =
-        new ChromeStreamController<Message>.oneArg(getApi, 'onMessage', _createMessage);
+    _onMessage = new ChromeStreamController<Message>.oneArg(getApi, 'onMessage', _createMessage);
   }
 
   bool get available => _pushMessaging != null;

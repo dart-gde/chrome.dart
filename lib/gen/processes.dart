@@ -54,16 +54,11 @@ class ChromeProcesses extends ChromeApi {
 
   ChromeProcesses._() {
     var getApi = () => _processes;
-    _onUpdated =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onUpdated', mapify);
-    _onUpdatedWithMemory =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onUpdatedWithMemory', mapify);
-    _onCreated =
-        new ChromeStreamController<Process>.oneArg(getApi, 'onCreated', _createProcess);
-    _onUnresponsive =
-        new ChromeStreamController<Process>.oneArg(getApi, 'onUnresponsive', _createProcess);
-    _onExited =
-        new ChromeStreamController<OnExitedEvent>.threeArgs(getApi, 'onExited', _createOnExitedEvent);
+    _onUpdated = new ChromeStreamController<Map>.oneArg(getApi, 'onUpdated', mapify);
+    _onUpdatedWithMemory = new ChromeStreamController<Map>.oneArg(getApi, 'onUpdatedWithMemory', mapify);
+    _onCreated = new ChromeStreamController<Process>.oneArg(getApi, 'onCreated', _createProcess);
+    _onUnresponsive = new ChromeStreamController<Process>.oneArg(getApi, 'onUnresponsive', _createProcess);
+    _onExited = new ChromeStreamController<OnExitedEvent>.threeArgs(getApi, 'onExited', _createOnExitedEvent);
   }
 
   bool get available => _processes != null;

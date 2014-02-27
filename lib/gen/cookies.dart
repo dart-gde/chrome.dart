@@ -28,8 +28,7 @@ class ChromeCookies extends ChromeApi {
 
   ChromeCookies._() {
     var getApi = () => _cookies;
-    _onChanged =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onChanged', mapify);
+    _onChanged = new ChromeStreamController<Map>.oneArg(getApi, 'onChanged', mapify);
   }
 
   bool get available => _cookies != null;

@@ -20,8 +20,7 @@ class ChromeTabCapture extends ChromeApi {
 
   ChromeTabCapture._() {
     var getApi = () => _tabCapture;
-    _onStatusChanged =
-        new ChromeStreamController<CaptureInfo>.oneArg(getApi, 'onStatusChanged', _createCaptureInfo);
+    _onStatusChanged = new ChromeStreamController<CaptureInfo>.oneArg(getApi, 'onStatusChanged', _createCaptureInfo);
   }
 
   bool get available => _tabCapture != null;

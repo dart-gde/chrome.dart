@@ -26,8 +26,7 @@ class ChromeContextMenus extends ChromeApi {
 
   ChromeContextMenus._() {
     var getApi = () => _contextMenus;
-    _onClicked =
-        new ChromeStreamController<OnClickedEvent>.twoArgs(getApi, 'onClicked', _createOnClickedEvent);
+    _onClicked = new ChromeStreamController<OnClickedEvent>.twoArgs(getApi, 'onClicked', _createOnClickedEvent);
   }
 
   bool get available => _contextMenus != null;

@@ -32,10 +32,8 @@ class ChromePermissions extends ChromeApi {
 
   ChromePermissions._() {
     var getApi = () => _permissions;
-    _onAdded =
-        new ChromeStreamController<Permissions>.oneArg(getApi, 'onAdded', _createPermissions);
-    _onRemoved =
-        new ChromeStreamController<Permissions>.oneArg(getApi, 'onRemoved', _createPermissions);
+    _onAdded = new ChromeStreamController<Permissions>.oneArg(getApi, 'onAdded', _createPermissions);
+    _onRemoved = new ChromeStreamController<Permissions>.oneArg(getApi, 'onRemoved', _createPermissions);
   }
 
   bool get available => _permissions != null;

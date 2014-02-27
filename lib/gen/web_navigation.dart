@@ -82,24 +82,15 @@ class ChromeWebNavigation extends ChromeApi {
 
   ChromeWebNavigation._() {
     var getApi = () => _webNavigation;
-    _onBeforeNavigate =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onBeforeNavigate', mapify);
-    _onCommitted =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onCommitted', mapify);
-    _onDOMContentLoaded =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onDOMContentLoaded', mapify);
-    _onCompleted =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onCompleted', mapify);
-    _onErrorOccurred =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onErrorOccurred', mapify);
-    _onCreatedNavigationTarget =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onCreatedNavigationTarget', mapify);
-    _onReferenceFragmentUpdated =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onReferenceFragmentUpdated', mapify);
-    _onTabReplaced =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onTabReplaced', mapify);
-    _onHistoryStateUpdated =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onHistoryStateUpdated', mapify);
+    _onBeforeNavigate = new ChromeStreamController<Map>.oneArg(getApi, 'onBeforeNavigate', mapify);
+    _onCommitted = new ChromeStreamController<Map>.oneArg(getApi, 'onCommitted', mapify);
+    _onDOMContentLoaded = new ChromeStreamController<Map>.oneArg(getApi, 'onDOMContentLoaded', mapify);
+    _onCompleted = new ChromeStreamController<Map>.oneArg(getApi, 'onCompleted', mapify);
+    _onErrorOccurred = new ChromeStreamController<Map>.oneArg(getApi, 'onErrorOccurred', mapify);
+    _onCreatedNavigationTarget = new ChromeStreamController<Map>.oneArg(getApi, 'onCreatedNavigationTarget', mapify);
+    _onReferenceFragmentUpdated = new ChromeStreamController<Map>.oneArg(getApi, 'onReferenceFragmentUpdated', mapify);
+    _onTabReplaced = new ChromeStreamController<Map>.oneArg(getApi, 'onTabReplaced', mapify);
+    _onHistoryStateUpdated = new ChromeStreamController<Map>.oneArg(getApi, 'onHistoryStateUpdated', mapify);
   }
 
   bool get available => _webNavigation != null;

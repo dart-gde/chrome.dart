@@ -26,8 +26,7 @@ class ChromeScriptBadge extends ChromeApi {
 
   ChromeScriptBadge._() {
     var getApi = () => _scriptBadge;
-    _onClicked =
-        new ChromeStreamController<Tab>.oneArg(getApi, 'onClicked', _createTab);
+    _onClicked = new ChromeStreamController<Tab>.oneArg(getApi, 'onClicked', _createTab);
   }
 
   bool get available => _scriptBadge != null;

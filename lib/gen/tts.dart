@@ -26,8 +26,7 @@ class ChromeTts extends ChromeApi {
 
   ChromeTts._() {
     var getApi = () => _tts;
-    _onEvent =
-        new ChromeStreamController<TtsEvent>.oneArg(getApi, 'onEvent', _createTtsEvent);
+    _onEvent = new ChromeStreamController<TtsEvent>.oneArg(getApi, 'onEvent', _createTtsEvent);
   }
 
   bool get available => _tts != null;

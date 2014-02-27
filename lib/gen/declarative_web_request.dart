@@ -33,10 +33,8 @@ class ChromeDeclarativeWebRequest extends ChromeApi {
 
   ChromeDeclarativeWebRequest._() {
     var getApi = () => _declarativeWebRequest;
-    _onRequest =
-        new ChromeStreamController.noArgs(getApi, 'onRequest');
-    _onMessage =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onMessage', mapify);
+    _onRequest = new ChromeStreamController.noArgs(getApi, 'onRequest');
+    _onMessage = new ChromeStreamController<Map>.oneArg(getApi, 'onMessage', mapify);
   }
 
   bool get available => _declarativeWebRequest != null;

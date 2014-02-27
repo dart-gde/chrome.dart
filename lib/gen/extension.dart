@@ -34,10 +34,8 @@ class ChromeExtension extends ChromeApi {
 
   ChromeExtension._() {
     var getApi = () => _extension;
-    _onRequest =
-        new ChromeStreamController<OnRequestEvent>.threeArgs(getApi, 'onRequest', _createOnRequestEvent);
-    _onRequestExternal =
-        new ChromeStreamController<OnRequestExternalEvent>.threeArgs(getApi, 'onRequestExternal', _createOnRequestExternalEvent);
+    _onRequest = new ChromeStreamController<OnRequestEvent>.threeArgs(getApi, 'onRequest', _createOnRequestEvent);
+    _onRequestExternal = new ChromeStreamController<OnRequestExternalEvent>.threeArgs(getApi, 'onRequestExternal', _createOnRequestExternalEvent);
   }
 
   bool get available => _extension != null;

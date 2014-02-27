@@ -22,8 +22,7 @@ class ChromeAudio extends ChromeApi {
 
   ChromeAudio._() {
     var getApi = () => _audio;
-    _onDeviceChanged =
-        new ChromeStreamController.noArgs(getApi, 'onDeviceChanged');
+    _onDeviceChanged = new ChromeStreamController.noArgs(getApi, 'onDeviceChanged');
   }
 
   bool get available => _audio != null;

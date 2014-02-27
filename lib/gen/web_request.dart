@@ -82,24 +82,15 @@ class ChromeWebRequest extends ChromeApi {
 
   ChromeWebRequest._() {
     var getApi = () => _webRequest;
-    _onBeforeRequest =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onBeforeRequest', mapify);
-    _onBeforeSendHeaders =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onBeforeSendHeaders', mapify);
-    _onSendHeaders =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onSendHeaders', mapify);
-    _onHeadersReceived =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onHeadersReceived', mapify);
-    _onAuthRequired =
-        new ChromeStreamController<OnAuthRequiredEvent>.twoArgs(getApi, 'onAuthRequired', _createOnAuthRequiredEvent);
-    _onResponseStarted =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onResponseStarted', mapify);
-    _onBeforeRedirect =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onBeforeRedirect', mapify);
-    _onCompleted =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onCompleted', mapify);
-    _onErrorOccurred =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onErrorOccurred', mapify);
+    _onBeforeRequest = new ChromeStreamController<Map>.oneArg(getApi, 'onBeforeRequest', mapify);
+    _onBeforeSendHeaders = new ChromeStreamController<Map>.oneArg(getApi, 'onBeforeSendHeaders', mapify);
+    _onSendHeaders = new ChromeStreamController<Map>.oneArg(getApi, 'onSendHeaders', mapify);
+    _onHeadersReceived = new ChromeStreamController<Map>.oneArg(getApi, 'onHeadersReceived', mapify);
+    _onAuthRequired = new ChromeStreamController<OnAuthRequiredEvent>.twoArgs(getApi, 'onAuthRequired', _createOnAuthRequiredEvent);
+    _onResponseStarted = new ChromeStreamController<Map>.oneArg(getApi, 'onResponseStarted', mapify);
+    _onBeforeRedirect = new ChromeStreamController<Map>.oneArg(getApi, 'onBeforeRedirect', mapify);
+    _onCompleted = new ChromeStreamController<Map>.oneArg(getApi, 'onCompleted', mapify);
+    _onErrorOccurred = new ChromeStreamController<Map>.oneArg(getApi, 'onErrorOccurred', mapify);
   }
 
   bool get available => _webRequest != null;

@@ -30,14 +30,10 @@ class ChromeDownloads extends ChromeApi {
 
   ChromeDownloads._() {
     var getApi = () => _downloads;
-    _onCreated =
-        new ChromeStreamController<DownloadItem>.oneArg(getApi, 'onCreated', _createDownloadItem);
-    _onErased =
-        new ChromeStreamController<int>.oneArg(getApi, 'onErased', selfConverter);
-    _onChanged =
-        new ChromeStreamController<DownloadDelta>.oneArg(getApi, 'onChanged', _createDownloadDelta);
-    _onDeterminingFilename =
-        new ChromeStreamController<OnDeterminingFilenameEvent>.twoArgs(getApi, 'onDeterminingFilename', _createOnDeterminingFilenameEvent);
+    _onCreated = new ChromeStreamController<DownloadItem>.oneArg(getApi, 'onCreated', _createDownloadItem);
+    _onErased = new ChromeStreamController<int>.oneArg(getApi, 'onErased', selfConverter);
+    _onChanged = new ChromeStreamController<DownloadDelta>.oneArg(getApi, 'onChanged', _createDownloadDelta);
+    _onDeterminingFilename = new ChromeStreamController<OnDeterminingFilenameEvent>.twoArgs(getApi, 'onDeterminingFilename', _createOnDeterminingFilenameEvent);
   }
 
   bool get available => _downloads != null;

@@ -109,28 +109,17 @@ class ChromeRuntime extends ChromeApi {
 
   ChromeRuntime._() {
     var getApi = () => _runtime;
-    _onStartup =
-        new ChromeStreamController.noArgs(getApi, 'onStartup');
-    _onInstalled =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onInstalled', mapify);
-    _onSuspend =
-        new ChromeStreamController.noArgs(getApi, 'onSuspend');
-    _onSuspendCanceled =
-        new ChromeStreamController.noArgs(getApi, 'onSuspendCanceled');
-    _onUpdateAvailable =
-        new ChromeStreamController<Map<String, dynamic>>.oneArg(getApi, 'onUpdateAvailable', mapify);
-    _onBrowserUpdateAvailable =
-        new ChromeStreamController.noArgs(getApi, 'onBrowserUpdateAvailable');
-    _onConnect =
-        new ChromeStreamController<Port>.oneArg(getApi, 'onConnect', _createPort);
-    _onConnectExternal =
-        new ChromeStreamController<Port>.oneArg(getApi, 'onConnectExternal', _createPort);
-    _onMessage =
-        new ChromeStreamController<OnMessageEvent>.threeArgs(getApi, 'onMessage', _createOnMessageEvent);
-    _onMessageExternal =
-        new ChromeStreamController<OnMessageExternalEvent>.threeArgs(getApi, 'onMessageExternal', _createOnMessageExternalEvent);
-    _onRestartRequired =
-        new ChromeStreamController<String>.oneArg(getApi, 'onRestartRequired', selfConverter);
+    _onStartup = new ChromeStreamController.noArgs(getApi, 'onStartup');
+    _onInstalled = new ChromeStreamController<Map>.oneArg(getApi, 'onInstalled', mapify);
+    _onSuspend = new ChromeStreamController.noArgs(getApi, 'onSuspend');
+    _onSuspendCanceled = new ChromeStreamController.noArgs(getApi, 'onSuspendCanceled');
+    _onUpdateAvailable = new ChromeStreamController<Map<String, dynamic>>.oneArg(getApi, 'onUpdateAvailable', mapify);
+    _onBrowserUpdateAvailable = new ChromeStreamController.noArgs(getApi, 'onBrowserUpdateAvailable');
+    _onConnect = new ChromeStreamController<Port>.oneArg(getApi, 'onConnect', _createPort);
+    _onConnectExternal = new ChromeStreamController<Port>.oneArg(getApi, 'onConnectExternal', _createPort);
+    _onMessage = new ChromeStreamController<OnMessageEvent>.threeArgs(getApi, 'onMessage', _createOnMessageEvent);
+    _onMessageExternal = new ChromeStreamController<OnMessageExternalEvent>.threeArgs(getApi, 'onMessageExternal', _createOnMessageExternalEvent);
+    _onRestartRequired = new ChromeStreamController<String>.oneArg(getApi, 'onRestartRequired', selfConverter);
   }
 
   bool get available => _runtime != null;

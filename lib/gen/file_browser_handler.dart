@@ -25,8 +25,7 @@ class ChromeFileBrowserHandler extends ChromeApi {
 
   ChromeFileBrowserHandler._() {
     var getApi = () => _fileBrowserHandler;
-    _onExecute =
-        new ChromeStreamController<OnExecuteEvent>.twoArgs(getApi, 'onExecute', _createOnExecuteEvent);
+    _onExecute = new ChromeStreamController<OnExecuteEvent>.twoArgs(getApi, 'onExecute', _createOnExecuteEvent);
   }
 
   bool get available => _fileBrowserHandler != null;

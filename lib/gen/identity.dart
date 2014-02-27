@@ -20,8 +20,7 @@ class ChromeIdentity extends ChromeApi {
 
   ChromeIdentity._() {
     var getApi = () => _identity;
-    _onSignInChanged =
-        new ChromeStreamController<OnSignInChangedEvent>.twoArgs(getApi, 'onSignInChanged', _createOnSignInChangedEvent);
+    _onSignInChanged = new ChromeStreamController<OnSignInChangedEvent>.twoArgs(getApi, 'onSignInChanged', _createOnSignInChangedEvent);
   }
 
   bool get available => _identity != null;

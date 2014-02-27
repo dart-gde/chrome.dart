@@ -92,8 +92,7 @@ class ChromeSystemDisplay extends ChromeApi {
 
   ChromeSystemDisplay._() {
     var getApi = () => _system_display;
-    _onDisplayChanged =
-        new ChromeStreamController.noArgs(getApi, 'onDisplayChanged');
+    _onDisplayChanged = new ChromeStreamController.noArgs(getApi, 'onDisplayChanged');
   }
 
   bool get available => _system_display != null;
@@ -351,10 +350,8 @@ class ChromeSystemStorage extends ChromeApi {
 
   ChromeSystemStorage._() {
     var getApi = () => _system_storage;
-    _onAttached =
-        new ChromeStreamController<StorageUnitInfo>.oneArg(getApi, 'onAttached', _createStorageUnitInfo);
-    _onDetached =
-        new ChromeStreamController<String>.oneArg(getApi, 'onDetached', selfConverter);
+    _onAttached = new ChromeStreamController<StorageUnitInfo>.oneArg(getApi, 'onAttached', _createStorageUnitInfo);
+    _onDetached = new ChromeStreamController<String>.oneArg(getApi, 'onDetached', selfConverter);
   }
 
   bool get available => _system_storage != null;

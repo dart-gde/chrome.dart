@@ -40,12 +40,9 @@ class ChromeWindows extends ChromeApi {
 
   ChromeWindows._() {
     var getApi = () => _windows;
-    _onCreated =
-        new ChromeStreamController<Window>.oneArg(getApi, 'onCreated', _createWindow);
-    _onRemoved =
-        new ChromeStreamController<int>.oneArg(getApi, 'onRemoved', selfConverter);
-    _onFocusChanged =
-        new ChromeStreamController<int>.oneArg(getApi, 'onFocusChanged', selfConverter);
+    _onCreated = new ChromeStreamController<Window>.oneArg(getApi, 'onCreated', _createWindow);
+    _onRemoved = new ChromeStreamController<int>.oneArg(getApi, 'onRemoved', selfConverter);
+    _onFocusChanged = new ChromeStreamController<int>.oneArg(getApi, 'onFocusChanged', selfConverter);
   }
 
   bool get available => _windows != null;

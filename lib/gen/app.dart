@@ -40,10 +40,8 @@ class ChromeAppRuntime extends ChromeApi {
 
   ChromeAppRuntime._() {
     var getApi = () => _app_runtime;
-    _onLaunched =
-        new ChromeStreamController<LaunchData>.oneArg(getApi, 'onLaunched', _createLaunchData);
-    _onRestarted =
-        new ChromeStreamController.noArgs(getApi, 'onRestarted');
+    _onLaunched = new ChromeStreamController<LaunchData>.oneArg(getApi, 'onLaunched', _createLaunchData);
+    _onRestarted = new ChromeStreamController.noArgs(getApi, 'onRestarted');
   }
 
   bool get available => _app_runtime != null;
@@ -129,18 +127,12 @@ class _ChromeAppWindow extends ChromeApi {
 
   _ChromeAppWindow._() {
     var getApi = () => _app_window;
-    _onBoundsChanged =
-        new ChromeStreamController.noArgs(getApi, 'onBoundsChanged');
-    _onClosed =
-        new ChromeStreamController.noArgs(getApi, 'onClosed');
-    _onFullscreened =
-        new ChromeStreamController.noArgs(getApi, 'onFullscreened');
-    _onMaximized =
-        new ChromeStreamController.noArgs(getApi, 'onMaximized');
-    _onMinimized =
-        new ChromeStreamController.noArgs(getApi, 'onMinimized');
-    _onRestored =
-        new ChromeStreamController.noArgs(getApi, 'onRestored');
+    _onBoundsChanged = new ChromeStreamController.noArgs(getApi, 'onBoundsChanged');
+    _onClosed = new ChromeStreamController.noArgs(getApi, 'onClosed');
+    _onFullscreened = new ChromeStreamController.noArgs(getApi, 'onFullscreened');
+    _onMaximized = new ChromeStreamController.noArgs(getApi, 'onMaximized');
+    _onMinimized = new ChromeStreamController.noArgs(getApi, 'onMinimized');
+    _onRestored = new ChromeStreamController.noArgs(getApi, 'onRestored');
   }
 
   bool get available => _app_window != null;

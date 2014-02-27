@@ -26,8 +26,7 @@ class ChromeProxy extends ChromeApi {
 
   ChromeProxy._() {
     var getApi = () => _proxy;
-    _onProxyError =
-        new ChromeStreamController<Map>.oneArg(getApi, 'onProxyError', mapify);
+    _onProxyError = new ChromeStreamController<Map>.oneArg(getApi, 'onProxyError', mapify);
   }
 
   bool get available => _proxy != null;
