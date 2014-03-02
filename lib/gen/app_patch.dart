@@ -38,7 +38,7 @@ class AppWindow extends _AppWindow {
 
   Stream _streamFor(String event) {
     if (_streamMap[event] == null) {
-      _streamMap[event] = new ChromeStreamController.noArgs(jsProxy, event).stream;
+      _streamMap[event] = new ChromeStreamController.noArgs(() => jsProxy, event).stream;
     }
 
     return _streamMap[event];
