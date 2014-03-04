@@ -23,6 +23,17 @@ Add this to your package's pubspec.yaml file:
 
 Also, see the [FAQ](https://github.com/dart-gde/chrome.dart/wiki/FAQ).
 
+## In your pubspec.yaml
+
+In order to build your app with `pub build`, you'll need to tell it to select
+the CSP compliant output of dart2js. To do that, add these lines:
+
+    transformers:
+    - chrome
+        entry_points: web/foo_bar.html
+
+to your `pubspec.yaml` file.
+
 ## Documentation
 Documentation is available at:
 
