@@ -12,7 +12,6 @@ import 'package:barback/barback.dart';
  *
  *     transformers:
  *     - chrome
- *         entry_points: web/foo_bar.html
  *
  * to your `pubspec.yaml` file.
  */

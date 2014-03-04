@@ -9,9 +9,10 @@ authors:
 description: >
   An library for accessing the Chrome APIs in a packaged app or extension.
 homepage: https://github.com/dart-gde/chrome.dart
+dependencies:
+  barback: any
 dev_dependencies:
   args: any
-  barback: any
   browser: any
   logging: any
   parsers: ">=0.13.7"

@@ -30,7 +30,6 @@ the CSP compliant output of dart2js. To do that, add these lines:
 
     transformers:
     - chrome
-        entry_points: web/foo_bar.html
 
 to your `pubspec.yaml` file.
 
