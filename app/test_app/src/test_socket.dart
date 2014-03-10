@@ -10,7 +10,7 @@ void main() {
   group('chrome.socket', () {
     test('create', () {
       socket.create(SocketType.TCP)
-        .then(expectAsync1((CreateInfo createInfo) {
+        .then(expectAsync((CreateInfo createInfo) {
           expect(createInfo.socketId, greaterThan(0));
           expect(() => socket.destroy(createInfo.socketId), returnsNormally);
         }));
@@ -18,10 +18,10 @@ void main() {
 
     test('connect', () {
       socket.create(SocketType.TCP)
-      .then(expectAsync1((CreateInfo createInfo) {
+      .then(expectAsync((CreateInfo createInfo) {
         expect(createInfo.socketId, greaterThan(0));
         socket.connect(createInfo.socketId, "google.com", 80)
-          .then(expectAsync1((int connected) {
+          .then(expectAsync((int connected) {
             socket.destroy(createInfo.socketId);
             expect(connected, isZero);
         }));
@@ -32,10 +32,10 @@ void main() {
 
     test('disconnect', () {
       socket.create(SocketType.TCP)
-      .then(expectAsync1((CreateInfo createInfo) {
+      .then(expectAsync((CreateInfo createInfo) {
         expect(createInfo.socketId, greaterThan(0));
         socket.connect(createInfo.socketId, "google.com", 80)
-          .then(expectAsync1((int connected) {
+          .then(expectAsync((int connected) {
             socket.disconnect(createInfo.socketId);
             socket.destroy(createInfo.socketId);
             expect(connected, isZero);
@@ -45,13 +45,13 @@ void main() {
 
     test('read', () {
       socket.create(SocketType.TCP)
-        .then(expectAsync1((CreateInfo createInfo) {
+        .then(expectAsync((CreateInfo createInfo) {
         expect(createInfo.socketId, greaterThan(0));
         socket.connect(createInfo.socketId, "128.138.140.44", 13)
-          .then(expectAsync1((int connected) {
+          .then(expectAsync((int connected) {
           expect(connected, isZero);
           socket.read(createInfo.socketId)
-            .then(expectAsync1((SocketReadInfo readInfo) {
+            .then(expectAsync((SocketReadInfo readInfo) {
               socket.disconnect(createInfo.socketId);
               socket.destroy(createInfo.socketId);
               expect(readInfo.resultCode, greaterThan(0));
@@ -65,15 +65,15 @@ void main() {
 
     test('write', () {
       socket.create(SocketType.TCP)
-        .then(expectAsync1((CreateInfo createInfo) {
+        .then(expectAsync((CreateInfo createInfo) {
         expect(createInfo.socketId, greaterThan(0));
         socket.connect(createInfo.socketId, "google.com", 80)
-          .then(expectAsync1((int connected) {
+          .then(expectAsync((int connected) {
           expect(connected, isZero);
           var writeBuffer = new typed_data.Uint8List.fromList("GET /\n".codeUnits);
           socket.write(createInfo.socketId,
               new chrome.ArrayBuffer.fromBytes(writeBuffer))
-            .then(expectAsync1((SocketWriteInfo writeInfo) {
+            .then(expectAsync((SocketWriteInfo writeInfo) {
               socket.disconnect(createInfo.socketId);
               socket.destroy(createInfo.socketId);
               logMessage("writeInfo.bytesWritten = ${writeInfo.bytesWritten}");
@@ -92,13 +92,13 @@ void main() {
 
     test('getInfo', () {
       socket.create(SocketType.TCP)
-        .then(expectAsync1((CreateInfo createInfo) {
+        .then(expectAsync((CreateInfo createInfo) {
         expect(createInfo.socketId, greaterThan(0));
         socket.connect(createInfo.socketId, "google.com", 80)
-          .then(expectAsync1((int connected) {
+          .then(expectAsync((int connected) {
           expect(connected, isZero);
           socket.getInfo(createInfo.socketId)
-            .then(expectAsync1((SocketInfo socketInfo) {
+            .then(expectAsync((SocketInfo socketInfo) {
             expect(socketInfo.socketType, equals(SocketType.TCP));
             expect(socketInfo.localPort, greaterThan(0));
             expect(socketInfo.peerAddress.isEmpty, isFalse);
