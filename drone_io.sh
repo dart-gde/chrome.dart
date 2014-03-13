@@ -49,8 +49,16 @@ mv dartdoc-viewer/client/out/web ./.docs_staging
 # make sure we don't have changes in lib/gen
 git checkout lib/gen
 
+# fetch origin
+git fetch origin
+
+# get branches 
+git branch -v -a
+
 # copy docs up to github gh-pages branch
-git checkout gh-pages
+#git checkout gh-pages
+git checkout -b gh-pages origin/gh-pages
+
 # delete any files that might still be around.
 rm -rf *
 date > date.txt
@@ -60,4 +68,4 @@ cd ../
 git add -A
 git commit -m"auto commit from drone"
 git remote set-url origin git@github.com:dart-gde/chrome.dart.git
-git push origin HEAD:gh-pages
+git push origin gh-pages
