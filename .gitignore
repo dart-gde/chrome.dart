@@ -1,8 +1,9 @@
 .buildlog
 .project
+*.dart.js
 *.dart.js.deps
 *.dart.js.map
-*.dart.js
+*.dart.precompiled.js
 .DS_Store
 out
 packages
@@ -11,5 +12,3 @@ docs/
 dart.js
 dart_interop.js
 interop.js
-app/test_app/harness.dart.precompiled.js
-app/test_ext/harness.dart.precompiled.js
