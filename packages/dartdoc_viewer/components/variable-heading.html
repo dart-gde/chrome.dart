@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<link rel="import" href="annotations.html">
+<link rel="import" href="parameters.html">
+<link rel="import" href="type.html">
+
+<polymer-element name="variable-heading" attributes="item">
+  <template>
+    <template if="{{item.isFinal}}">final</template>
+    <template if="{{item.isStatic}}">static</template>
+    <template if="{{item.isConstant}}">const</template>
+    <template if="{{item.isSetter}}">
+      set
+      <b><a id="{{idName}}" href="{{item.prefixedAnchorHref}}"
+          >{{name}}</a></b><dartdoc-parameter 
+          parameters="{{item.parameters}}"></dartdoc-parameter>
+    </template>
+    <template if="{{isNotSetter}}">
+      <dartdoc-type type="{{item.type}}"></dartdoc-type>
+      {{getter}}
+      <b><a id="{{idName}}" href="{{item.prefixedAnchorHref}}">{{name}}</a></b>
+    </template>
+  </template>
+  <script type="application/dart" src="variable-heading.dart"></script>
+</polymer-element>

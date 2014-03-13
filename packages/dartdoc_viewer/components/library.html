@@ -1,0 +1,34 @@
+<link rel="import" href="category.html">
+<link rel="import" href="class.html">
+<link rel="import" href="comment.html">
+<link rel="import" href="item.html">
+
+<polymer-element name="dartdoc-library" attributes="item">
+  <template>
+    <div class="page-header"><h1>{{item.decoratedName}} library</h1></div>
+
+    <!-- Comment -->
+    <!--  TODO(alanknight): The div with itemList and panel are here to
+    convince it to use the right paragraph spacing. Seems pretty awful. -->
+    <div id="itemList">
+      <div is="dartdoc-comment" class="panel" item="{{item}}"></div>
+    </div>
+    <div class="accordion" id="accordion-grouping">
+      <!-- Note: the implementation knows about the order of these items. -->
+      <dartdoc-category category="{{item.operators}}"
+          methods="{{lazyOperators}}"></dartdoc-category>
+      <dartdoc-category category="{{item.variables}}"
+          variables="{{lazyVariables}}"></dartdoc-category>
+      <dartdoc-category category="{{item.functions}}"
+          methods="{{lazyFunctions}}"></dartdoc-category>
+      <dartdoc-category category="{{item.classes}}"
+          items="{{lazyClasses}}"></dartdoc-category>
+      <dartdoc-category category="{{item.typedefs}}"
+          items="{{lazyTypedefs}}"></dartdoc-category>
+      <dartdoc-category category="{{item.errors}}"
+          items="{{lazyErrors}}"></dartdoc-category>
+    </div>
+  </template>
+
+  <script type="application/dart" src="library.dart"></script>
+</polymer-element>
