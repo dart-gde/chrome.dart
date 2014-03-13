@@ -57,7 +57,7 @@ git branch -v -a
 
 # copy docs up to github gh-pages branch
 #git checkout gh-pages
-git checkout -b gh-pages origin/gh-pages
+git checkout --track -b gh-pages origin/gh-pages
 
 # delete any files that might still be around.
 rm -rf *
