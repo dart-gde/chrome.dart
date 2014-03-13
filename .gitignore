@@ -11,5 +11,6 @@ docs/
 dart.js
 dart_interop.js
 interop.js
+app/demo/demo.dart.precompiled.js
 app/test_app/harness.dart.precompiled.js
 app/test_ext/harness.dart.precompiled.js

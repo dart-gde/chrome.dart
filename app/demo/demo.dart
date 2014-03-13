@@ -233,12 +233,17 @@ void handleAudioGetInfo() {
 }
 
 void handleAppWindowCreate() {
-  chrome.app.window.create('demo.html');
+  chrome.app.window.create('demo.html').then((chrome.AppWindow window) {
+    window.onBoundsChanged.listen((_) => print('window boundsChanged'));
+    window.onClosed.listen((_) => print('window closed'));
+  });
 }
 
 void handleAppWindowCreateOptions() {
   chrome.app.window.create('demo.html',
-      new chrome.CreateWindowOptions(width: 1200, height: 200));
+      new chrome.CreateWindowOptions(width: 1200, height: 200)).then((chrome.AppWindow window) {
+    window.onClosed.listen((_) => print('window closed'));
+  });
 }
 
 void handleSystemCpu() {
