@@ -55,6 +55,9 @@ git fetch origin
 # get branches 
 git branch -v -a
 
+# delete any files that might still be around.
+rm -rf *
+
 # copy docs up to github gh-pages branch
 #git checkout gh-pages
 git checkout --track -b gh-pages origin/gh-pages
