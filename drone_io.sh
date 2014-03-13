@@ -44,17 +44,17 @@ rm dartdoc-viewer/client/out/web/static/js/packages
 rm dartdoc-viewer/client/out/web/static/css/packages
 
 mv dartdoc-viewer/client/out/packages dartdoc-viewer/client/out/web/packages
-mv dartdoc-viewer/client/out/web ./docs_staging
+mv dartdoc-viewer/client/out/web ./.docs_staging
 
 # make sure we don't have changes in lib/gen
 git checkout lib/gen
 
 # copy docs up to github gh-pages branch
 git checkout gh-pages
-git rm .gitignore
+# delete any files that might still be around.
+rm -rf *
 date > date.txt
-cd docs_staging
-rm -rf ../packages
+cd .docs_staging
 cp -r . ..
 cd ../
 git add -A
