@@ -34,7 +34,15 @@ dartanalyzer app/test_ext/harness.dart
 #dartdoc --omit-generation-time --package-root packages/ --exclude-lib=logging,chrome.src.common --out docs/app lib/chrome_app.dart
 #dartdoc --omit-generation-time --package-root packages/ --exclude-lib=chrome.src.common --out docs/ext lib/chrome_ext.dart
 docgen --compile --package-root=./packages --no-include-sdk --include-private lib/chrome_*
+
 rm dartdoc-viewer/client/out/web/packages
+rm dartdoc-viewer/client/out/web/docs/packages
+rm dartdoc-viewer/client/out/web/docs/chrome/packages
+
+rm dartdoc-viewer/client/out/web/static/packages
+rm dartdoc-viewer/client/out/web/static/js/packages
+rm dartdoc-viewer/client/out/web/static/css/packages
+
 mv dartdoc-viewer/client/out/packages dartdoc-viewer/client/out/web/packages
 mv dartdoc-viewer/client/out/web ./docs
 
@@ -43,6 +51,7 @@ git checkout lib/gen
 
 # copy docs up to github gh-pages branch
 git checkout gh-pages
+git rm .gitignore
 date > date.txt
 cd docs/
 rm -rf ../packages
