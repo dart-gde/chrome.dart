@@ -1,0 +1,87 @@
+<link rel="import" href="breadcrumbs.html">
+<link rel="import" href="category.html">
+<link rel="import" href="item.html">
+<link rel="import" href="library-panel.html">
+<link rel="import" href="minimap-class.html">
+<link rel="import" href="minimap-library.html">
+<link rel="import" href="page.html">
+<link rel="import" href="search.html">
+
+<polymer-element name="dartdoc-main">
+  <template>
+    <div class="navbar navbar-fixed-top">
+      <img src="loading.gif" id="loading-indicator"
+          style="display:none" />
+      <div class="navbar-inner">
+        <button type="button" class="navbar-toggle" id="nav-collapse-button"
+          on-click="{{navHideShow}}">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a href="http://api.dartlang.org/" class="navbar-brand header-logo"></a>
+        <a href="#home"
+          class="navbar-brand btn-link">
+          Dart API Reference
+        </a>
+        <div class="collapse in" id="nav-collapse-content">
+          <dartdoc-breadcrumbs id="navbar"
+              on-update="{{collapseSearchAndOptionsIfNeeded}}">
+          </dartdoc-breadcrumbs>
+          <ul class="nav navbar-nav pull-right" id="searchAndOptions">
+            <li class="dropdown">
+              <a class="dropdown-toggle" on-click="{{toggleOptionsMenu}}">
+                Options <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li class="visible-lg"><a on-click="{{togglePanel}}">
+                  {{showOrHideLibraries}} Libraries
+                </a></li>
+                <li class="visible-lg"><a on-click="{{toggleMinimap}}">
+                  {{showOrHideMinimap}} Minimap
+                </a></li>
+                <li><a on-click="{{toggleInherited}}">
+                  {{showOrHideInherited}} Inherited
+                </a></li>
+                <li><a on-click="{{toggleObjectMembers}}">
+                  {{showOrHideObjectMembers}} Object Members
+                </a></li>
+                <li><a on-click="{{togglePkg}}">
+                  {{showOrHidePackages}} Packages
+                </a></li>
+              </ul>
+            </li>
+
+            <li><search-box></search-box></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-body">
+      <template if="{{shouldShowLibraryPanel}}">
+        <dartdoc-library-panel></dartdoc-library-panel>
+      </template>
+
+      <main id="page-content" class="{{pageContentClass}}">
+        <dartdoc-page id="dartdoc-page" item="{{viewer.currentPage}}">
+        </dartdoc-page>
+      </main>
+
+      <template if="{{shouldShowLibraryMinimap}}">
+        <dartdoc-minimap-library item="{{viewer.currentPage}}">
+        </dartdoc-minimap-library>
+      </template>
+
+      <template if="{{shouldShowClassMinimap}}">
+        <dartdoc-minimap-class item="{{viewer.currentPage}}">
+        </dartdoc-minimap-class>
+      </template>
+      <template if="{{showVersion}}">
+        <div>Version {{version}}</div>
+      </template>
+    </div>
+  </template>
+</polymer-element>
+<script type="application/dart" src="main.dart"></script>

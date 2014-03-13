@@ -1,0 +1,26 @@
+<link rel="import" href="annotations.html">
+<link rel="import" href="comment.html">
+<link rel="import" href="parameters.html">
+
+<polymer-element name="dartdoc-typedef" attributes="item">
+  <template>
+    <div class="page-header"><h1>{{item.name}} typedef</h1></div>
+
+    <!-- Signature -->
+    <div class="panel-heading">
+      <dartdoc-annotation annotations="{{item.annotations}}">
+      </dartdoc-annotation>
+
+      <p class="panel-title">typedef
+        <a href="{{prefixedLocation}}">{{item.type.simpleType}}</a>
+        {{item.name}}
+        <dartdoc-parameter parameters="{{item.parameters}}"></dartdoc-parameter>
+      </p>
+    </div>
+
+    <!-- Comment -->
+    <div is="dartdoc-comment" item="{{item}}"></div>
+  </template>
+
+  <script type="application/dart" src="typedef.dart"></script>
+</polymer-element>

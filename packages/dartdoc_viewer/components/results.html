@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<polymer-element name="search-result" extends="a" lightdom>
+  <template>
+    <ul class="list-unstyled small">
+      <li id="result-name"><strong>{{descriptiveName}}</strong></li>
+      <li class="text-right text-muted small">{{descriptiveType}}</li>
+      <li class="text-right text-muted small">{{outerLibrary}}</li>
+    </ul>
+  </template>
+  <script type="application/dart" src="results.dart"></script>
+</polymer-element>

@@ -1,0 +1,537 @@
+<!DOCTYPE html><html><head><script src="packages/shadow_dom/shadow_dom.debug.js"></script>
+<script src="packages/custom_element/custom-elements.debug.js"></script>
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="static/css/bootstrap.css">
+  <link rel="stylesheet" href="static/css/dart-style.css">
+  <link rel="stylesheet" href="static/css/pics.css">
+  <link rel="stylesheet" href="static/css/prettify.css">
+  <link rel="stylesheet" href="static/css/print.css">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <script src="packages/browser/interop.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dart API Reference</title>
+</head>
+<body><polymer-element name="dartdoc-comment" extends="div">
+  
+</polymer-element>
+<polymer-element name="dartdoc-parameter" attributes="parameters">
+  
+</polymer-element>
+<polymer-element name="dartdoc-item">
+  <template>
+    <ul class="nav nav-pills nav-stacked">
+      <li id="nameGoesHere">
+        <a href="{{item.prefixedLinkHref}}" id="{{idName}}">
+            {{item.decoratedName}}</a>
+        <template if="{{item.previewComment}}">
+          <hr><div is="dartdoc-comment" preview="" item="{{item}}"></div>
+        </template>
+      </li>
+    </ul>
+  </template>
+  
+</polymer-element>
+<polymer-element name="dartdoc-annotation">
+  
+</polymer-element>
+<polymer-element name="dartdoc-link">
+  
+</polymer-element>
+<polymer-element name="dartdoc-type">
+  
+</polymer-element>
+<polymer-element name="variable-heading" attributes="item">
+  <template>
+    <template if="{{item.isFinal}}">final</template>
+    <template if="{{item.isStatic}}">static</template>
+    <template if="{{item.isConstant}}">const</template>
+    <template if="{{item.isSetter}}">
+      set
+      <b><a id="{{idName}}" href="{{item.prefixedAnchorHref}}">{{name}}</a></b><dartdoc-parameter parameters="{{item.parameters}}"></dartdoc-parameter>
+    </template>
+    <template if="{{isNotSetter}}">
+      <dartdoc-type type="{{item.type}}"></dartdoc-type>
+      {{getter}}
+      <b><a id="{{idName}}" href="{{item.prefixedAnchorHref}}">{{name}}</a></b>
+    </template>
+  </template>
+  
+</polymer-element>
+<polymer-element name="dartdoc-variable">
+  <template>
+    <div class="panel-heading">
+      <dartdoc-annotation annotations="{{item.annotations}}">
+      </dartdoc-annotation>
+      <p><variable-heading item="{{item}}"></variable-heading></p>
+    </div>
+
+    <p class="text-right"><dfn>
+      <template if="{{isInherited}}">
+        Inherited from
+        <dartdoc-link type="{{inheritedFrom}}"></dartdoc-link>
+      </template>
+    </dfn></p>
+
+
+    <!-- Comment -->
+    <template if="{{shouldShowComment}}">
+      <div is="dartdoc-comment" item="{{item}}"></div>
+    </template>
+
+    <p class="text-right"><dfn>
+      <template if="{{shouldShowCommentFrom}}">
+        Comment inherited from
+        <dartdoc-link type="{{commentFrom}}"></dartdoc-link>
+      </template>
+    </dfn></p>
+
+  </template>
+  
+</polymer-element>
+<polymer-element name="dartdoc-method">
+  <template>
+    <dartdoc-annotation annotations="{{item.annotations}}"></dartdoc-annotation>
+
+    <!-- Return Type -->
+    <div class="page-header">
+      <h1>
+        {{modifiers}}
+        <template if="{{isNotConstructor}}">
+          <dartdoc-type type="{{item.type}}"></dartdoc-type>
+        </template>
+        <template if="{{item.isOperator}}">operator</template>
+        {{item.decoratedName}}
+         <!-- Parameters -->
+        <dartdoc-parameter parameters="{{item.parameters}}"></dartdoc-parameter>
+      </h1>
+    </div>
+
+    <p class="text-right"><dfn>
+      <template if="{{isInherited}}">
+        Inherited from
+        <dartdoc-link type="{{inheritedFrom}}"></dartdoc-link>
+      </template>
+    </dfn></p>
+
+    <!-- Comment -->
+    <template if="{{shouldShowComment}}">
+      <div is="dartdoc-comment" item="{{item}}"></div>
+    </template>
+
+    <p class="text-right"><dfn>
+      <template if="{{shouldShowCommentFrom}}">
+        Comment inherited from
+        <dartdoc-link type="{{commentFrom}}"></dartdoc-link>
+      </template>
+    </dfn></p>
+
+  </template>
+</polymer-element>
+
+<!-- TODO(tmandel): Reduce redundancy with dartdoc-method -->
+<polymer-element name="method-panel">
+  <template>
+    <div class="panel-heading">
+      <dartdoc-annotation annotations="{{item.annotations}}">
+      </dartdoc-annotation>
+      <!-- Return Type -->
+      <p>
+        <span>
+          {{modifiers}}
+          <template if="{{isNotConstructor}}">
+            <dartdoc-type type="{{item.type}}"></dartdoc-type>
+          </template>
+          <b><a id="{{idName}}" href="{{item.prefixedAnchorHref}}">
+          {{item.decoratedName}}</a></b><dartdoc-parameter parameters="{{item.parameters}}">
+          </dartdoc-parameter>
+        </span>
+      </p>
+    </div>
+
+    <p class="text-right"><dfn>
+      <template if="{{isInherited}}">
+        Inherited from
+        <dartdoc-link type="{{inheritedFrom}}"></dartdoc-link>
+      </template>
+    </dfn></p>
+
+    <!-- Comment -->
+    <template if="{{shouldShowComment}}">
+      <div is="dartdoc-comment" item="{{item}}"></div>
+    </template>
+
+    <p class="text-right"><dfn>
+      <template if="{{shouldShowCommentFrom}}">
+        Comment inherited from
+        <dartdoc-link type="{{commentFrom}}"></dartdoc-link>
+      </template>
+    </dfn></p>
+  </template>
+</polymer-element>
+
+
+<polymer-element name="dartdoc-typedef" attributes="item">
+  <template>
+    <div class="page-header"><h1>{{item.name}} typedef</h1></div>
+
+    <!-- Signature -->
+    <div class="panel-heading">
+      <dartdoc-annotation annotations="{{item.annotations}}">
+      </dartdoc-annotation>
+
+      <p class="panel-title">typedef
+        <a href="{{prefixedLocation}}">{{item.type.simpleType}}</a>
+        {{item.name}}
+        <dartdoc-parameter parameters="{{item.parameters}}"></dartdoc-parameter>
+      </p>
+    </div>
+
+    <!-- Comment -->
+    <div is="dartdoc-comment" item="{{item}}"></div>
+  </template>
+
+  
+</polymer-element>
+<polymer-element name="dartdoc-category" class="accordion-group">
+<template>
+  <template if="{{hasItems}}">
+    <div class="accordion-heading">
+      <a id="{{stylizedName}}" class="accordion-toggle {{accordionStyle}}" on-click="{{hideShow}}" data-toggle="collapse" data-target="#accordion-{{stylizedName}}">
+        {{title}}<b id="caret" class="{{caretStyle}}"></b>
+      </a>
+    </div>
+
+    <div id="accordion-{{stylizedName}}" class="accordion-body {{divClass}}" style="height:{{lineHeight}}">
+      <div class="accordion-inner">
+        <ul id="itemList" class="nav nav-pills nav-stacked">
+          <template repeat="{{variables}}">
+            <dartdoc-variable class="panel" item="{{}}"></dartdoc-variable>
+          </template>
+          <template repeat="{{items}}">
+            <dartdoc-item class="panel" item="{{}}"></dartdoc-item>
+          </template>
+          <template repeat="{{methods}}">
+            <method-panel class="panel" item="{{}}"></method-panel>
+          </template>
+        </ul>
+      </div>
+    </div>
+  </template>
+</template>
+
+</polymer-element>
+<polymer-element name="dartdoc-minimap">
+  <template>
+    <template if="{{itemsToShow.isNotEmpty}}">
+      <li>
+        <a id="{{camelCaseName}}" href="{{categoryLink}}">{{category.name}}</a>
+      </li>
+      <ul class="minimap-sublist collapse in">
+        <template repeat="{{itemsToShow}}">
+          <li><a href="{{prefixedAnchorHref}}">{{decoratedName}}</a></li>
+        </template>
+      </ul>
+    </template>
+  </template>
+  
+</polymer-element>
+<polymer-element name="dartdoc-homepage">
+  <template>
+    <!-- TODO(alanknight): The div with itemList and panel are here to
+         convince it to use the right paragraph spacing. Seems pretty awful. -->
+    <div id="itemList">
+      <div is="dartdoc-comment" class="panel" item="{{item}}"></div>
+    </div>
+    <div class="page-header"><h1>Libraries</h1></div>
+    <template repeat="{{viewer.libraries}}">
+      <dartdoc-item class="panel" item="{{}}"></dartdoc-item>
+    </template>
+  </template>
+
+  
+</polymer-element>
+<polymer-element name="dartdoc-class" attributes="item">
+  <template>
+    <dartdoc-annotation annotations="{{item.annotations}}"></dartdoc-annotation>
+
+    <div class="page-header"><h1>
+      {{item.nameWithGeneric}}
+      <template if="{{item.isAbstract}}">abstract</template>
+      class
+    </h1></div>
+
+    <p id="interfaces"></p>
+    <p id="subclasses"></p>
+
+    <!-- Comment -->
+    <!--  TODO(alanknight): The div with itemList and panel are here to
+    convince it to use the right paragraph spacing. Seems pretty awful. -->
+    <div id="itemList">
+      <div is="dartdoc-comment" class="panel" item="{{item}}"></div>
+    </div>
+
+    <div class="accordion" id="accordion-grouping">
+      <dartdoc-category category="{{item.constructors}}" methods="{{lazyConstructors}}"></dartdoc-category>
+      <dartdoc-category category="{{item.instanceFunctions}}" methods="{{lazyInstanceFunctions}}"></dartdoc-category>
+      <dartdoc-category category="{{item.operators}}" methods="{{lazyOperators}}"></dartdoc-category>
+      <dartdoc-category category="{{item.staticFunctions}}" methods="{{lazyStaticFunctions}}"></dartdoc-category>
+      <dartdoc-category category="{{item.instanceVariables}}" variables="{{lazyInstanceVariables}}"></dartdoc-category>
+      <dartdoc-category category="{{item.staticVariables}}" variables="{{lazyStaticVariables}}"></dartdoc-category>
+    </div>
+  </template>
+
+  
+</polymer-element>
+<polymer-element name="dartdoc-library" attributes="item">
+  <template>
+    <div class="page-header"><h1>{{item.decoratedName}} library</h1></div>
+
+    <!-- Comment -->
+    <!--  TODO(alanknight): The div with itemList and panel are here to
+    convince it to use the right paragraph spacing. Seems pretty awful. -->
+    <div id="itemList">
+      <div is="dartdoc-comment" class="panel" item="{{item}}"></div>
+    </div>
+    <div class="accordion" id="accordion-grouping">
+      <!-- Note: the implementation knows about the order of these items. -->
+      <dartdoc-category category="{{item.operators}}" methods="{{lazyOperators}}"></dartdoc-category>
+      <dartdoc-category category="{{item.variables}}" variables="{{lazyVariables}}"></dartdoc-category>
+      <dartdoc-category category="{{item.functions}}" methods="{{lazyFunctions}}"></dartdoc-category>
+      <dartdoc-category category="{{item.classes}}" items="{{lazyClasses}}"></dartdoc-category>
+      <dartdoc-category category="{{item.typedefs}}" items="{{lazyTypedefs}}"></dartdoc-category>
+      <dartdoc-category category="{{item.errors}}" items="{{lazyErrors}}"></dartdoc-category>
+    </div>
+  </template>
+
+  
+</polymer-element>
+<polymer-element name="dartdoc-page">
+  <template>
+    <!-- Home -->
+    <template if="{{isHome}}">
+      <dartdoc-homepage item="{{item}}"></dartdoc-homepage>
+    </template>
+
+    <template if="{{viewer.homePage}}">
+
+      <!-- Library -->
+      <template if="{{isLibrary}}">
+        <dartdoc-library item="{{item}}"></dartdoc-library>
+      </template>
+
+      <!-- Class -->
+      <template if="{{isClass}}">
+        <dartdoc-class item="{{item}}"></dartdoc-class>
+      </template>
+
+      <!-- Method -->
+      <template if="{{isMethod}}">
+        <dartdoc-method item="{{item}}"></dartdoc-method>
+      </template>
+
+      <!-- Typedef -->
+      <template if="{{isTypedef}}">
+        <dartdoc-typedef item="{{item}}"></dartdoc-typedef>
+      </template>
+
+    </template>
+  </template>
+
+  
+</polymer-element>
+<polymer-element name="search-result" extends="a" lightdom="">
+  <template>
+    <ul class="list-unstyled small">
+      <li id="result-name"><strong>{{descriptiveName}}</strong></li>
+      <li class="text-right text-muted small">{{descriptiveType}}</li>
+      <li class="text-right text-muted small">{{outerLibrary}}</li>
+    </ul>
+  </template>
+  
+</polymer-element>
+<polymer-element name="search-box">
+  <template>
+    <div class="navbar-form pull-right dropdown {{dropdownOpen}}" id="search">
+      <input type="search" name="q" id="q" autocomplete="off" class="form-control dropdown-toggle" placeholder="Search API" value="{{searchQuery}}" data-toggle="dropdown">
+
+        <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu" on-click="{{onSubmitCallback}}">
+          <template if="{{results.isEmpty}}">
+            <li class="search-result disabled">
+              <a tabindex="-1" href="#">No Results.</a>
+            </li>
+          </template>
+          <template repeat="{{results}}">
+            <!-- A tabIndex of 0 allows for tab navigation through results -->
+            <li tabindex="0" class="search-result">
+              <a is="search-result" item="{{}}" id="search{{position}}" data-ref-id="{{url}}">
+              </a>
+            </li>
+          </template>
+          <!-- TODO(janicejl): Add "...add More" link to show more results.-->
+        </ul>
+      </div>
+
+  </template>
+</polymer-element>
+
+<polymer-element name="dartdoc-minimap-library">
+  <template>
+    <div class="well well-sm nav affix-right" id="minimap">
+      <a href="{{item.prefixedLinkHref}}">{{item.decoratedName}}</a>
+      <ul>
+        <dartdoc-minimap category="{{item.operators}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.variables}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.functions}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.classes}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.typedefs}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.errors}}" item="{{item}}">
+        </dartdoc-minimap>
+      </ul>
+    </div>
+  </template>
+  
+</polymer-element>
+<polymer-element name="dartdoc-library-panel">
+<template>
+  <div class="list-group affix-left" id="library-panel">
+    <template repeat="{{viewer.libraries}}">
+      <a href="{{prefixedLinkHref}}" class="list-group-item">
+          {{decoratedName}}</a>
+    </template>
+  </div>
+</template>
+
+</polymer-element>
+<polymer-element name="dartdoc-minimap-class">
+  <template>
+    <div class="well well-sm nav affix-right" id="minimap">
+      <a href="{{item.anchorLinkHref}}">{{item.decoratedName}}</a>
+      <ul>
+        <dartdoc-minimap category="{{item.constructors}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.instanceFunctions}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.operators}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.staticFunctions}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.instanceVariables}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.staticVariables}}" item="{{item}}">
+        </dartdoc-minimap>
+      </ul>
+    </div>
+    </template>
+  
+</polymer-element>
+<polymer-element name="dartdoc-breadcrumbs">
+  <template>
+    <ul class="nav navbar-nav">
+      <template repeat="{{breadcrumbs}}">
+        <li><a class="btn-link" href="{{prefixedLinkHref}}">
+          {{decoratedName}}</a></li>
+      </template>
+      <template if="{{lastCrumb}}">
+        <li class="active">
+          <a class="btn-link">{{lastCrumb.decoratedName}}</a>
+        </li>
+      </template>
+    </ul>
+  </template>
+  
+</polymer-element>
+<polymer-element name="dartdoc-main">
+  <template>
+    <div class="navbar navbar-fixed-top">
+      <img src="packages/dartdoc_viewer/components/loading.gif" id="loading-indicator" style="display:none">
+      <div class="navbar-inner">
+        <button type="button" class="navbar-toggle" id="nav-collapse-button" on-click="{{navHideShow}}">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a href="http://api.dartlang.org/" class="navbar-brand header-logo"></a>
+        <a href="#home" class="navbar-brand btn-link">
+          Dart API Reference
+        </a>
+        <div class="collapse in" id="nav-collapse-content">
+          <dartdoc-breadcrumbs id="navbar" on-update="{{collapseSearchAndOptionsIfNeeded}}">
+          </dartdoc-breadcrumbs>
+          <ul class="nav navbar-nav pull-right" id="searchAndOptions">
+            <li class="dropdown">
+              <a class="dropdown-toggle" on-click="{{toggleOptionsMenu}}">
+                Options <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li class="visible-lg"><a on-click="{{togglePanel}}">
+                  {{showOrHideLibraries}} Libraries
+                </a></li>
+                <li class="visible-lg"><a on-click="{{toggleMinimap}}">
+                  {{showOrHideMinimap}} Minimap
+                </a></li>
+                <li><a on-click="{{toggleInherited}}">
+                  {{showOrHideInherited}} Inherited
+                </a></li>
+                <li><a on-click="{{toggleObjectMembers}}">
+                  {{showOrHideObjectMembers}} Object Members
+                </a></li>
+                <li><a on-click="{{togglePkg}}">
+                  {{showOrHidePackages}} Packages
+                </a></li>
+              </ul>
+            </li>
+
+            <li><search-box></search-box></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-body">
+      <template if="{{shouldShowLibraryPanel}}">
+        <dartdoc-library-panel></dartdoc-library-panel>
+      </template>
+
+      <main id="page-content" class="{{pageContentClass}}">
+        <dartdoc-page id="dartdoc-page" item="{{viewer.currentPage}}">
+        </dartdoc-page>
+      </main>
+
+      <template if="{{shouldShowLibraryMinimap}}">
+        <dartdoc-minimap-library item="{{viewer.currentPage}}">
+        </dartdoc-minimap-library>
+      </template>
+
+      <template if="{{shouldShowClassMinimap}}">
+        <dartdoc-minimap-class item="{{viewer.currentPage}}">
+        </dartdoc-minimap-class>
+      </template>
+      <template if="{{showVersion}}">
+        <div>Version {{version}}</div>
+      </template>
+    </div>
+  </template>
+</polymer-element>
+
+
+  <dartdoc-main id="dartdoc-main"></dartdoc-main>
+  <script src="static/js/prettify.js"></script>
+  <script src="index.html_bootstrap.dart.js"></script>
+  <!-- Google Analytics -->
+
+</body></html>

@@ -1,0 +1,38 @@
+<!--
+Copyright (c) 2013, the Dart project authors.  Please see the AUTHORS file
+for details. All rights reserved. Use of this source code is governed by a
+BSD-style license that can be found in the LICENSE file.
+-->
+<link rel="import" href="results.html">
+
+<polymer-element name="search-box">
+  <template>
+    <div class="navbar-form pull-right dropdown {{dropdownOpen}}" id="search">
+      <input type="search" name="q" id="q" autocomplete="off"
+          class="form-control dropdown-toggle" placeholder="Search API"
+          value="{{searchQuery}}"
+          data-toggle="dropdown">
+
+        <ul class="dropdown-menu pull-right" role="menu"
+            aria-labelledby="dropdownMenu" on-click="{{onSubmitCallback}}">
+          <template if="{{results.isEmpty}}">
+            <li class="search-result disabled">
+              <a tabindex="-1" href="#">No Results.</a>
+            </li>
+          </template>
+          <template repeat="{{results}}">
+            <!-- A tabIndex of 0 allows for tab navigation through results -->
+            <li tabindex="0" class="search-result">
+              <a is="search-result" item="{{}}" id="search{{position}}"
+                  data-ref-id="{{url}}" >
+              </a>
+            </li>
+          </template>
+          <!-- TODO(janicejl): Add "...add More" link to show more results.-->
+        </ul>
+      </div>
+
+  </template>
+</polymer-element>
+<script type="application/dart" src="search.dart">
+</script>
