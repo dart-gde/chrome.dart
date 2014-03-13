@@ -65,6 +65,7 @@ date > date.txt
 cd .docs_staging
 cp -r . ..
 cd ../
+rm -rf .docs_staging
 git add -A
 git commit -m"auto commit from drone"
 git remote set-url origin git@github.com:dart-gde/chrome.dart.git
