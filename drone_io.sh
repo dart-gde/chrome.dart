@@ -33,7 +33,7 @@ dartanalyzer app/test_ext/harness.dart
 #mkdir docs/ext
 #dartdoc --omit-generation-time --package-root packages/ --exclude-lib=logging,chrome.src.common --out docs/app lib/chrome_app.dart
 #dartdoc --omit-generation-time --package-root packages/ --exclude-lib=chrome.src.common --out docs/ext lib/chrome_ext.dart
-docgen --compile --package-root=./packages --sdk=/Applications/dart/dart-sdk --no-include-sdk --include-private lib/chrome_*
+docgen --compile --package-root=./packages --no-include-sdk --include-private lib/chrome_*
 rm dartdoc-viewer/client/out/web/packages
 mv dartdoc-viewer/client/out/packages dartdoc-viewer/client/out/web/packages
 mv dartdoc-viewer/client/out/web ./docs
