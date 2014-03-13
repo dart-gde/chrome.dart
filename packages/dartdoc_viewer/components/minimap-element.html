@@ -1,0 +1,15 @@
+<polymer-element name="dartdoc-minimap">
+  <template>
+    <template if="{{itemsToShow.isNotEmpty}}">
+      <li>
+        <a id="{{camelCaseName}}" href="{{categoryLink}}">{{category.name}}</a>
+      </li>
+      <ul class="minimap-sublist collapse in">
+        <template repeat="{{itemsToShow}}">
+          <li><a href="{{prefixedAnchorHref}}">{{decoratedName}}</a></li>
+        </template>
+      </ul>
+    </template>
+  </template>
+  <script type="application/dart" src="minimap-element.dart"></script>
+</polymer-element>

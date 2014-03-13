@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<link rel="import" href="item.html">
+<link rel="import" href="variable.html">
+<link rel="import" href="method.html">
+<link rel="import" href="typedef.html">
+
+<!-- TODO(jmesserly): try lightdom here -->
+<polymer-element name="dartdoc-category" class="accordion-group">
+<template>
+  <template if="{{hasItems}}">
+    <div class="accordion-heading">
+      <a id="{{stylizedName}}" class="accordion-toggle {{accordionStyle}}"
+        on-click="{{hideShow}}"
+        data-toggle="collapse"
+        data-target="#accordion-{{stylizedName}}">
+        {{title}}<b id="caret" class="{{caretStyle}}"></b>
+      </a>
+    </div>
+
+    <div id="accordion-{{stylizedName}}"
+        class="accordion-body {{divClass}}"
+        style="height:{{lineHeight}}">
+      <div class="accordion-inner">
+        <ul id="itemList" class="nav nav-pills nav-stacked">
+          <template repeat="{{variables}}">
+            <dartdoc-variable class="panel" item="{{}}"></dartdoc-variable>
+          </template>
+          <template repeat="{{items}}">
+            <dartdoc-item class="panel" item="{{}}"></dartdoc-item>
+          </template>
+          <template repeat="{{methods}}">
+            <method-panel class="panel" item="{{}}"></method-panel>
+          </template>
+        </ul>
+      </div>
+    </div>
+  </template>
+</template>
+<script type="application/dart" src="category.dart"></script>
+</polymer-element>
