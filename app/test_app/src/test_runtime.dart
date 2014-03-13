@@ -1,6 +1,5 @@
 library test_runtime;
 
-import 'dart:async';
 import 'dart:html' as html;
 
 import 'package:unittest/unittest.dart';
@@ -26,7 +25,7 @@ void main() {
 
     test('getBackgroundPage()', () {
       chrome.runtime.getBackgroundPage()
-        .then(expectAsync1((w.Window backgroundPage) {
+        .then(expectAsync((w.Window backgroundPage) {
           logMessage("backgroundPage = ${backgroundPage.id}");
           logMessage("backgroundPage = ${backgroundPage.type}");
           logMessage("backgroundPage = ${backgroundPage.state}");
@@ -65,7 +64,7 @@ void main() {
 
     test('requestUpdateCheck()', () {
       chrome.runtime.requestUpdateCheck()
-        .then(expectAsync1((chrome.RequestUpdateCheckResult update) {
+        .then(expectAsync((chrome.RequestUpdateCheckResult update) {
         logMessage("update = ${update}");
 
         expect(update, new isInstanceOf<chrome.RequestUpdateCheckResult>());
@@ -76,7 +75,7 @@ void main() {
 
     test('getPackageDirectoryEntry()', () {
       chrome.runtime.getPackageDirectoryEntry()
-        .then(expectAsync1((chrome.DirectoryEntry dir) {
+        .then(expectAsync((chrome.DirectoryEntry dir) {
         expect(dir, isNotNull);
         expect(dir.name.length, greaterThanOrEqualTo(1));
         logMessage("packages dir = ${dir}");
@@ -115,7 +114,7 @@ void main() {
 
     test('Test that a call to getPlatformInfo succeeds', () {
       chrome.runtime.getPlatformInfo()
-        .then(expectAsync1((Map<dynamic, dynamic> info) {
+        .then(expectAsync((Map<dynamic, dynamic> info) {
           logMessage("info = ${info}");
         String htmlPlatformInfo =
             html.window.navigator.platform.toLowerCase();

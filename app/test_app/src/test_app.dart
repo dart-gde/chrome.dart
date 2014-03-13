@@ -16,7 +16,7 @@ void main() {
     Completer completer = new Completer();
     Duration duration = new Duration(seconds: 3);
     Timer timer = new Timer(duration, () {
-      function().then(expectAsync1((v) => completer.complete(v)));
+      function().then(expectAsync((v) => completer.complete(v)));
     });
     return completer.future;
   };
@@ -49,7 +49,7 @@ void main() {
             expect(win.isFullscreen(), isFalse);
             return true;
           });
-      }).then(expectAsync1((v) => expect(v, isTrue)));
+      }).then(expectAsync((v) => expect(v, isTrue)));
     });
 
     test('Test a call to create() with options: { bounds }', () {
@@ -77,7 +77,7 @@ void main() {
             expect(win.getBounds().height, equals(40));
             return true;
           });
-      }).then(expectAsync1((v) => expect(v, isTrue)));
+      }).then(expectAsync((v) => expect(v, isTrue)));
     });
 
     test('Test a call to create() with options: { state : minimized }', () {
@@ -94,7 +94,7 @@ void main() {
           expect(win.isMaximized(), isFalse);
           return true;
         });
-      }).then(expectAsync1((v) => expect(v, isTrue)));
+      }).then(expectAsync((v) => expect(v, isTrue)));
     });
 
     test('Test a call to create() with options: { state : maximized }', () {
@@ -111,7 +111,7 @@ void main() {
           expect(win.isFullscreen(), isFalse);
           return true;
         });
-      }).then(expectAsync1((v) => expect(v, isTrue)));
+      }).then(expectAsync((v) => expect(v, isTrue)));
     });
 
 // BUG: This unit test crashes dartium on mac
@@ -129,7 +129,7 @@ void main() {
 //          expect(win.isMinimized, isFalse);
 //          return true;
 //        });
-//      }).then(expectAsync1((v)=> print(v)));
+//      }).then(expectAsync((v)=> print(v)));
 //    });
 
 // TODO: Finish unit test. Current cannot not listen on the
@@ -148,7 +148,7 @@ void main() {
 //          win.minimize();
 //          return true;
 //        });
-//      }).then(expectAsync1((v) => expect(v, isTrue)));
+//      }).then(expectAsync((v) => expect(v, isTrue)));
 //    });
 //
 //    test('Test a successful call to maximize()', () {
@@ -164,7 +164,7 @@ void main() {
 //          win.maximize();
 //          return true;
 //        });
-//      }).then(expectAsync1((v) => expect(v, isTrue)));
+//      }).then(expectAsync((v) => expect(v, isTrue)));
 //    });
 //
 ////    test('Test a successful call to fullscreen()', () {
@@ -180,7 +180,7 @@ void main() {
 ////          win.fullscreen();
 ////          return true;
 ////        });
-////      }).then(expectAsync1((v)=> print(v)));
+////      }).then(expectAsync((v)=> print(v)));
 ////    });
 //
 //    test('Test a successful call to restore() from isMaximized', () {
@@ -200,7 +200,7 @@ void main() {
 //            return true;
 //          });
 //        });
-//      }).then(expectAsync1((v) => expect(v, isTrue)));
+//      }).then(expectAsync((v) => expect(v, isTrue)));
 //    });
 //
 //    test('Test getting the contentWindow of an AppWindow', () {
@@ -214,7 +214,7 @@ void main() {
 //          contentWindow.onContentLoaded.listen(verify);
 //          return true;
 //        });
-//      }).then(expectAsync1((v) => expect(v, isTrue)));
+//      }).then(expectAsync((v) => expect(v, isTrue)));
 //    });
 //
 //    test('Test postMessage to the contentWindow of an AppWindow', () {
@@ -233,7 +233,7 @@ void main() {
 //            return true;
 //          });
 //        });
-//      }).then(expectAsync1((v) => expect(v, isTrue)));
+//      }).then(expectAsync((v) => expect(v, isTrue)));
 //    });
   });
 }

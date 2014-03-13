@@ -1,7 +1,5 @@
 library test_file_system;
 
-import 'dart:async';
-
 import 'package:unittest/unittest.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
 
@@ -13,12 +11,12 @@ void main() {
 
     test('directory.getFile', () {
       return chrome.runtime.getPackageDirectoryEntry()
-          .then(expectAsync1((chrome.DirectoryEntry dir) {
+          .then(expectAsync((chrome.DirectoryEntry dir) {
         logMessage("dir = ${dir}");
         expect(dir, isNotNull);
         expect(dir.toUrl(), isNotNull);
         return dir.getFile("manifest.json");
-      })).then(expectAsync1((chrome.Entry entry) {
+      })).then(expectAsync((chrome.Entry entry) {
         logMessage("entry = ${entry}");
         expect(entry, isNotNull);
         expect(entry.isFile, true);

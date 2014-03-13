@@ -44,7 +44,7 @@ void main() {
           new chrome.WindowsGetParams(populate: true);
 
       chrome.windows.get(window.id, getInfo)
-        .then(expectAsync1((chrome.Window newWindow) {
+        .then(expectAsync((chrome.Window newWindow) {
           expect(newWindow.id, window.id);
           expect(newWindow.tabs, hasLength(1));
           expect(newWindow.tabs.first.id, window.tabs.first.id);
@@ -56,7 +56,7 @@ void main() {
           new chrome.WindowsGetParams(populate: false);
 
       chrome.windows.get(window.id, getInfo)
-        .then(expectAsync1((chrome.Window newWindow) {
+        .then(expectAsync((chrome.Window newWindow) {
           expect(newWindow.id, window.id);
           expect(newWindow.tabs, isNull);
         }));
@@ -67,7 +67,7 @@ void main() {
           new chrome.WindowsGetCurrentParams(populate: true);
 
       chrome.windows.getCurrent(getInfo)
-        .then(expectAsync1((chrome.Window newWindow) {
+        .then(expectAsync((chrome.Window newWindow) {
           expect(newWindow.tabs, hasLength(isPositive));
         }));
     });
@@ -77,7 +77,7 @@ void main() {
           new chrome.WindowsGetCurrentParams(populate: false);
 
       chrome.windows.getCurrent(getInfo)
-        .then(expectAsync1((chrome.Window newWindow) {
+        .then(expectAsync((chrome.Window newWindow) {
           expect(newWindow.tabs, isNull);
         }));
     });
@@ -87,7 +87,7 @@ void main() {
           new chrome.WindowsGetLastFocusedParams(populate: true);
 
       chrome.windows.getLastFocused(getInfo)
-        .then(expectAsync1((chrome.Window newWindow) {
+        .then(expectAsync((chrome.Window newWindow) {
           // TODO(DrMarcII): figure out why the last focused window
           //                 is non-deterministic
           expect(newWindow.tabs, hasLength(isPositive));
@@ -99,7 +99,7 @@ void main() {
           new chrome.WindowsGetLastFocusedParams(populate: false);
 
       chrome.windows.getLastFocused(getInfo)
-        .then(expectAsync1((chrome.Window newWindow) {
+        .then(expectAsync((chrome.Window newWindow) {
           // TODO(DrMarcII): figure out why the last focused window
           //                 is non-deterministic
           expect(newWindow.tabs, isNull);
@@ -111,7 +111,7 @@ void main() {
           new chrome.WindowsGetAllParams(populate: true);
 
       chrome.windows.getAll(getInfo)
-        .then(expectAsync1((List<chrome.Window> allWindows) {
+        .then(expectAsync((List<chrome.Window> allWindows) {
           expect(allWindows.map((w) => w.id), contains(window.id));
           expect(allWindows.map((w) => w.tabs),
               everyElement(hasLength(isPositive)));
@@ -123,7 +123,7 @@ void main() {
           new chrome.WindowsGetAllParams(populate: false);
 
       chrome.windows.getAll(getInfo)
-        .then(expectAsync1((List<chrome.Window> allWindows) {
+        .then(expectAsync((List<chrome.Window> allWindows) {
           expect(allWindows.map((w) => w.id), contains(window.id));
           expect(allWindows.map((w) => w.tabs), everyElement(isNull));
         }));
@@ -138,7 +138,7 @@ void main() {
           expect(window.type, "normal");
           return chrome.windows.remove(window.id);
         })
-          .then(expectAsync1((_) { }));
+          .then(expectAsync((_) { }));
     });
 
     // Requires extension access to incognito windows.
@@ -168,7 +168,7 @@ void main() {
               expect(window.type, "normal");
               expect(window.state, "normal");
               return chrome.windows.remove(window.id);
-            }).then(expectAsync1((_) { }));
+            }).then(expectAsync((_) { }));
       });
 
       // Requires enable panels flag to be set.
@@ -182,7 +182,7 @@ void main() {
               expect(window.type, "panel");
               expect(window.state, "normal");
               return chrome.windows.remove(window.id);
-            }).then(expectAsync1((_) { }));
+            }).then(expectAsync((_) { }));
       });
 
       test('update maximized', () {
@@ -191,7 +191,7 @@ void main() {
 
         // TODO(DrMarcII): Figure out better mechanism to validate this
         chrome.windows.update(window.id, updateInfo)
-            .then(expectAsync1((_) { }));
+            .then(expectAsync((_) { }));
       });
 
       test('update set size', () {
@@ -204,7 +204,7 @@ void main() {
                 focused: false);
 
         // TODO(DrMarcII): Figure out better mechanism to validate this
-        chrome.windows.update(window.id, updateInfo).then(expectAsync1((_) { }));
+        chrome.windows.update(window.id, updateInfo).then(expectAsync((_) { }));
       });
 
       test('remove', () {
@@ -213,34 +213,34 @@ void main() {
             .then((window) => id = window.id)
             .then((_) => chrome.windows.remove(id))
             .then((_) => chrome.windows.get(id))
-            .catchError(expectAsync1((_) { }));
+            .catchError(expectAsync((_) { }));
       });
 
       test('onCreated', () {
         var subscription;
-        subscription = chrome.windows.onCreated.listen(expectAsync1((window) {
+        subscription = chrome.windows.onCreated.listen(expectAsync((window) {
           expect(window, new isInstanceOf<chrome.Window>());
           subscription.cancel();
         }));
         chrome.windows.create()
             .then((window) => chrome.windows.remove(window.id))
-            .then(expectAsync1((_) { }));
+            .then(expectAsync((_) { }));
       });
 
       test('onRemoved', () {
         var subscription;
-        subscription = chrome.windows.onRemoved.listen(expectAsync1((windowId) {
+        subscription = chrome.windows.onRemoved.listen(expectAsync((windowId) {
           expect(windowId, isPositive);
           subscription.cancel();
         }));
         chrome.windows.create()
             .then((window) => chrome.windows.remove(window.id))
-            .then(expectAsync1((_) { }));
+            .then(expectAsync((_) { }));
       });
 
       test('onFocusChanged', () {
         var subscription;
-        subscription = chrome.windows.onFocusChanged.listen(expectAsync1((windowId) {
+        subscription = chrome.windows.onFocusChanged.listen(expectAsync((windowId) {
           expect(windowId, new isInstanceOf<int>());
           subscription.cancel();
         }));
@@ -249,7 +249,7 @@ void main() {
             new chrome.WindowsCreateParams(focused: true);
         chrome.windows.create(updateInfo)
             .then((window) => chrome.windows.remove(window.id))
-            .then(expectAsync1((_) { }));
+            .then(expectAsync((_) { }));
       });
   });
 }
