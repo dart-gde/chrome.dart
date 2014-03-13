@@ -60,5 +60,4 @@ cd ../
 git add -A
 git commit -m"auto commit from drone"
 git remote set-url origin git@github.com:dart-gde/chrome.dart.git
-git push origin gh-pages
-
+git push origin HEAD:gh-pages
