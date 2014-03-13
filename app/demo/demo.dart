@@ -316,6 +316,11 @@ void handleChooseEntry() {
   chrome.ChooseEntryOptions options = new chrome.ChooseEntryOptions(type: chrome.ChooseEntryType.OPEN_WRITABLE_FILE);
   chrome.fileSystem.chooseEntry(options).then((chrome.ChooseEntryResult result) {
     summary("result: ${result}, ${result.entry}, name=${result.entry.name}, fullPath=${result.entry.fullPath}");
+
+    result.entry.getMetadata().then((chrome.Metadata meta) {
+      print("file mod: ${meta.modificationTime}, file size: ${meta.size}"
+          ",timezone=${meta.modificationTime.timeZoneName}");
+    });
   });
 }
 

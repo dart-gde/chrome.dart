@@ -1,7 +1,5 @@
 library test_browser_action;
 
-import 'dart:async';
-
 import 'package:unittest/unittest.dart';
 import 'package:chrome/chrome_ext.dart' as chrome;
 
@@ -13,7 +11,7 @@ void main() {
           new chrome.BrowserActionSetTitleParams(title: title);
       chrome.browserAction.setTitle(details);
       chrome.browserAction.getTitle(new chrome.BrowserActionGetTitleParams())
-        .then(expectAsync1((String actual) {
+        .then(expectAsync((String actual) {
         expect(actual, equals(title));
       }));
 
@@ -22,21 +20,21 @@ void main() {
           new chrome.BrowserActionSetTitleParams(title: originalTitle);
       chrome.browserAction.setTitle(originalTitleDetails);
       chrome.browserAction.getTitle(new chrome.BrowserActionGetTitleParams())
-        .then(expectAsync1((String actual) {
+        .then(expectAsync((String actual) {
         expect(actual, equals(originalTitle));
       }));
     });
 
     test('title -- tab', () {
       String title = 'test title';
-      chrome.tabs.getCurrent().then(expectAsync1((chrome.Tab tab) {
+      chrome.tabs.getCurrent().then(expectAsync((chrome.Tab tab) {
         chrome.BrowserActionSetTitleParams details =
             new chrome.BrowserActionSetTitleParams(title: title, tabId: tab.id);
 
         chrome.browserAction.setTitle(details);
         chrome.BrowserActionGetTitleParams getTitleDetails =
             new chrome.BrowserActionGetTitleParams(tabId: tab.id);
-        chrome.browserAction.getTitle(getTitleDetails).then(expectAsync1((actual) {
+        chrome.browserAction.getTitle(getTitleDetails).then(expectAsync((actual) {
           expect(actual, equals(title));
         }));
         String originalTitle = "chrome_ext.dart - test";
@@ -47,7 +45,7 @@ void main() {
         chrome.BrowserActionGetTitleParams getOriginalTitleDetails =
             new chrome.BrowserActionGetTitleParams(tabId: tab.id);
         chrome.browserAction.getTitle(getOriginalTitleDetails)
-          .then(expectAsync1((String actual) {
+          .then(expectAsync((String actual) {
           expect(actual, equals(originalTitle));
         }));
       }));
@@ -62,7 +60,7 @@ void main() {
       chrome.BrowserActionGetBadgeTextParams getBadgedetails =
           new chrome.BrowserActionGetBadgeTextParams();
       chrome.browserAction.getBadgeText(getBadgedetails)
-        .then(expectAsync1((String actual) {
+        .then(expectAsync((String actual) {
         expect(actual, equals(badgeText));
       }));
 
@@ -70,14 +68,14 @@ void main() {
           new chrome.BrowserActionSetBadgeTextParams(text: '');
       chrome.browserAction.setBadgeText(clearBadgedetails);
       chrome.browserAction.getBadgeText(getBadgedetails)
-        .then(expectAsync1((String actual) {
+        .then(expectAsync((String actual) {
         expect(actual, equals(''));
       }));
     });
 
     test('badge text -- tab', () {
       String badgeText = '9999';
-      chrome.tabs.getCurrent().then(expectAsync1((chrome.Tab tab) {
+      chrome.tabs.getCurrent().then(expectAsync((chrome.Tab tab) {
         chrome.BrowserActionSetBadgeTextParams details =
             new chrome.BrowserActionSetBadgeTextParams(text: badgeText, tabId: tab.id);
         chrome.browserAction.setBadgeText(details);
@@ -85,7 +83,7 @@ void main() {
         chrome.BrowserActionGetBadgeTextParams getBadgeDetails =
             new chrome.BrowserActionGetBadgeTextParams(tabId: tab.id);
         chrome.browserAction.getBadgeText(getBadgeDetails)
-          .then(expectAsync1((String actual) {
+          .then(expectAsync((String actual) {
           expect(actual, equals(badgeText));
         }));
 
@@ -93,7 +91,7 @@ void main() {
             new chrome.BrowserActionSetBadgeTextParams(text: '', tabId: tab.id);
         chrome.browserAction.setBadgeText(clearBadgedetails);
         chrome.browserAction.getBadgeText(getBadgeDetails)
-          .then(expectAsync1((String actual) {
+          .then(expectAsync((String actual) {
           expect(actual, equals(''));
         }));
       }));
@@ -107,7 +105,7 @@ void main() {
 
       chrome.browserAction.setBadgeBackgroundColor(badgeColor);
       chrome.browserAction.getBadgeBackgroundColor(new chrome.BrowserActionGetBadgeBackgroundColorParams())
-        .then(expectAsync1((chrome.ColorArray actual) {
+        .then(expectAsync((chrome.ColorArray actual) {
           expect(actual.toJs()[0], equals(badgeColor.color[0]));
           expect(actual.toJs()[1], equals(badgeColor.color[1]));
           expect(actual.toJs()[2], equals(badgeColor.color[2]));
@@ -116,7 +114,7 @@ void main() {
 
       chrome.browserAction.setBadgeBackgroundColor(originalColor);
       chrome.browserAction.getBadgeBackgroundColor(new chrome.BrowserActionGetBadgeBackgroundColorParams())
-        .then(expectAsync1((chrome.ColorArray actual) {
+        .then(expectAsync((chrome.ColorArray actual) {
           expect(actual.toJs()[0], equals(originalColor.color[0]));
           expect(actual.toJs()[1], equals(originalColor.color[1]));
           expect(actual.toJs()[2], equals(originalColor.color[2]));
@@ -125,7 +123,7 @@ void main() {
     });
 
     test('badge background color -- tab', () {
-      chrome.tabs.getCurrent().then(expectAsync1((chrome.Tab tab) {
+      chrome.tabs.getCurrent().then(expectAsync((chrome.Tab tab) {
         chrome.BrowserActionSetBadgeBackgroundColorParams badgeColor =
             new chrome.BrowserActionSetBadgeBackgroundColorParams(color: [192, 134, 76, 255],  tabId: tab.id);
         chrome.BrowserActionSetBadgeBackgroundColorParams originalColor =
@@ -133,7 +131,7 @@ void main() {
 
         chrome.browserAction.setBadgeBackgroundColor(badgeColor);
         chrome.browserAction.getBadgeBackgroundColor(new chrome.BrowserActionGetBadgeBackgroundColorParams(tabId: tab.id))
-          .then(expectAsync1((chrome.ColorArray actual) {
+          .then(expectAsync((chrome.ColorArray actual) {
             expect(actual.toJs()[0], equals(badgeColor.color[0]));
             expect(actual.toJs()[1], equals(badgeColor.color[1]));
             expect(actual.toJs()[2], equals(badgeColor.color[2]));
@@ -141,7 +139,7 @@ void main() {
           }));
         chrome.browserAction.setBadgeBackgroundColor(originalColor);
         chrome.browserAction.getBadgeBackgroundColor(new chrome.BrowserActionGetBadgeBackgroundColorParams(tabId: tab.id))
-          .then(expectAsync1((chrome.ColorArray actual) {
+          .then(expectAsync((chrome.ColorArray actual) {
             expect(actual.toJs()[0], equals(originalColor.color[0]));
             expect(actual.toJs()[1], equals(originalColor.color[1]));
             expect(actual.toJs()[2], equals(originalColor.color[2]));
@@ -158,7 +156,7 @@ void main() {
       chrome.BrowserActionGetPopupParams getPopupParams =
           new chrome.BrowserActionGetPopupParams();
       chrome.browserAction.getPopup(getPopupParams)
-        .then(expectAsync1((String actual) {
+        .then(expectAsync((String actual) {
         expect(actual, endsWith(popupFile)); // adds extension prefix
       }));
 
@@ -166,14 +164,14 @@ void main() {
           new chrome.BrowserActionSetPopupParams(popup: "");
       chrome.browserAction.setPopup(clearPopupParams);
       chrome.browserAction.getPopup(getPopupParams)
-        .then(expectAsync1((String actual) {
+        .then(expectAsync((String actual) {
         expect(actual, equals(""));
       }));
     });
 
     test('popup -- tab', () {
       String popupFile = "sample.html";
-      chrome.tabs.getCurrent().then(expectAsync1((chrome.Tab tab) {
+      chrome.tabs.getCurrent().then(expectAsync((chrome.Tab tab) {
         chrome.BrowserActionSetPopupParams popupParams =
             new chrome.BrowserActionSetPopupParams(popup: popupFile, tabId: tab.id);
 
@@ -185,11 +183,11 @@ void main() {
 
         chrome.browserAction.setPopup(popupParams);
         chrome.browserAction.getPopup(getPopupParams)
-          .then(expectAsync1((String actual) {
+          .then(expectAsync((String actual) {
           expect(actual, endsWith(popupFile)); // adds extension prefix
         }));
         chrome.browserAction.setPopup(clearPopupParams);
-        chrome.browserAction.getPopup(getPopupParams).then(expectAsync1((actual) {
+        chrome.browserAction.getPopup(getPopupParams).then(expectAsync((actual) {
           expect(actual, equals(""));
         }));
       }));
@@ -202,7 +200,7 @@ void main() {
     });
 
     test('disable/enable -- tab', () {
-      chrome.tabs.getCurrent().then(expectAsync1((chrome.Tab tab) {
+      chrome.tabs.getCurrent().then(expectAsync((chrome.Tab tab) {
         chrome.browserAction.disable(tab.id);
         chrome.browserAction.enable(tab.id);
       }));

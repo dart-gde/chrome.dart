@@ -1,7 +1,5 @@
 library test_sync_file_system;
 
-import 'dart:async';
-
 import 'package:unittest/unittest.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
 
@@ -13,7 +11,7 @@ void main() {
 
     test('requestFileSystem', () {
       //Completer c = new Completer();
-      Function f = expectAsync1((_) {
+      Function f = expectAsync((_) {
 
       });
       chrome.syncFileSystem.requestFileSystem().then((chrome.FileSystem fs) {

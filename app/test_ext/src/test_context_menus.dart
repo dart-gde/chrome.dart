@@ -1,7 +1,5 @@
 library test_context_menus;
 
-import 'dart:async';
-
 import 'package:unittest/unittest.dart';
 import 'package:chrome/chrome_ext.dart' as chrome;
 
@@ -63,7 +61,7 @@ void main() {
           new chrome.ContextMenusUpdateParams(title: 'update -- title');
 
       chrome.contextMenus.update(id, updateProperties)
-        .then(expectAsync1((value) {
+        .then(expectAsync((value) {
           expect(value, isNull);
         }));
     });
@@ -74,7 +72,7 @@ void main() {
 
       // TODO(DrMarcII): figure out a mechanism for selecting menu
       chrome.contextMenus.update(id, updateProperties)
-        .then(expectAsync1((_) {
+        .then(expectAsync((_) {
           expect(_, isNull);
         }));
     });
@@ -96,7 +94,7 @@ void main() {
       var newId = chrome.contextMenus.create(createProperties);
       expect(newId, equals("testId"));
 
-      chrome.contextMenus.update(newId, updateProperties).then(expectAsync1((value) {
+      chrome.contextMenus.update(newId, updateProperties).then(expectAsync((value) {
         expect(value, isNull);
       }));
     });
@@ -106,15 +104,15 @@ void main() {
           new chrome.ContextMenusUpdateParams();
 
       chrome.contextMenus.update('not a real id', updateProperties)
-        .catchError(expectAsync1((_) { }));
+        .catchError(expectAsync((_) { }));
     });
 
     test('remove -- successful', () {
-      chrome.contextMenus.remove(id).then(expectAsync1((_) { }));
+      chrome.contextMenus.remove(id).then(expectAsync((_) { }));
     });
 
     test('remove -- failure', () {
-      chrome.contextMenus.remove('not a real id').catchError(expectAsync1((_) { }));
+      chrome.contextMenus.remove('not a real id').catchError(expectAsync((_) { }));
     });
 
     test('onClicked', () {

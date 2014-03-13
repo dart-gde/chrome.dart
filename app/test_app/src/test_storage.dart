@@ -1,7 +1,5 @@
 library test_storage;
 
-import 'dart:async';
-
 import 'package:unittest/unittest.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
 
@@ -24,10 +22,10 @@ void main() {
     // get, set
     test('local.set_get', () {
       return chrome.storage.local.set({"foo": "bar"})
-          .then(expectAsync1((_) {
+          .then(expectAsync((_) {
             return chrome.storage.local.get(["foo"]);
           }))
-          .then(expectAsync1((Map<String, dynamic> result) {
+          .then(expectAsync((Map<String, dynamic> result) {
             expect(result, isNotNull);
             expect(result["foo"], equals("bar"));
           }));
@@ -35,9 +33,9 @@ void main() {
 
     test('local.get_all', () {
       return chrome.storage.local.set({"baz": "123"})
-          .then(expectAsync1((_) {
+          .then(expectAsync((_) {
             return chrome.storage.local.get(null);
-          })).then(expectAsync1((Map<String, dynamic> result) {
+          })).then(expectAsync((Map<String, dynamic> result) {
             expect(result, isNotNull);
             logMessage('local.get contains ${result.length} items');
             expect(result.length, greaterThanOrEqualTo(1));
