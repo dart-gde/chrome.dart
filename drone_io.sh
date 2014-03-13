@@ -28,11 +28,15 @@ dart bin/setup_app.dart app/test_ext harness.dart
 dartanalyzer app/test_ext/harness.dart
 
 # gen docs
-mkdir docs
-mkdir docs/app
-mkdir docs/ext
-dartdoc --omit-generation-time --package-root packages/ --exclude-lib=logging,chrome.src.common --out docs/app lib/chrome_app.dart
-dartdoc --omit-generation-time --package-root packages/ --exclude-lib=chrome.src.common --out docs/ext lib/chrome_ext.dart
+#mkdir docs
+#mkdir docs/app
+#mkdir docs/ext
+#dartdoc --omit-generation-time --package-root packages/ --exclude-lib=logging,chrome.src.common --out docs/app lib/chrome_app.dart
+#dartdoc --omit-generation-time --package-root packages/ --exclude-lib=chrome.src.common --out docs/ext lib/chrome_ext.dart
+docgen --compile --package-root=./packages --sdk=/Applications/dart/dart-sdk --no-include-sdk --include-private lib/chrome_*
+rm dartdoc-viewer/client/out/web/packages
+mv dartdoc-viewer/client/out/packages dartdoc-viewer/client/out/web/packages
+mv dartdoc-viewer/client/out/web ./docs
 
 # make sure we don't have changes in lib/gen
 git checkout lib/gen
@@ -47,3 +51,4 @@ git add -A
 git commit -m"auto commit from drone"
 git remote set-url origin git@github.com:dart-gde/chrome.dart.git
 git push origin gh-pages
+
