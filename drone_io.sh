@@ -45,6 +45,7 @@ git checkout lib/gen
 git checkout gh-pages
 date > date.txt
 cd docs/
+rm -rf ../packages
 cp -r . ..
 cd ../
 git add -A
