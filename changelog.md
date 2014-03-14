@@ -1,22 +1,32 @@
 # Changelog - chrome.dart
 
+## 0.5.2 2014-02-14 (SDK 1.3.0-dev.3.2 r33495)
+
+- Updated to use docgen for api documentation 
+- Make the window close event sync instead of async
+- Clean up warnings in unit tests
+- Add app/ to drone_io.sh script
+- Add a chrome pub transformer  
+- Fix an issue w/ the hand-overridden API
+- Use a getter to fetch the JsObject for an API each time it is needed
+
 ## 0.5.1 2014-02-24 (SDK 1.2.0-dev.5.15 r32954)
 
-- added a `toString()` to the `FileError` implementation
-- added ability to override generated code with hand-written methods
-- implemented window events override for `ChromeAppWindow` class
+- Added a `toString()` to the `FileError` implementation
+- Added ability to override generated code with hand-written methods
+- Implemented window events override for `ChromeAppWindow` class
 
 ## 0.5.0 2014-02-20 (SDK 1.2.0-dev.5.12 r32844)
 
-- added the new `chrome.sockets` API
-- the existing `chrome.socket` API has been removed from the chrome_app.dart
+- Added the new `chrome.sockets` API
+- The existing `chrome.socket` API has been removed from the chrome_app.dart
   library. In order to continue using it, you can reference it directly
   (`import 'package:chrome/gen/socket.dart';`)
-- added `chrome.gcm`; exposes Google Cloud Messaging
-- added `chrome.signedInDevices`
-- added `chrome.wallpaper`
-- added `chrome.system.display`
-- added `chrome.system.network`
+- Added `chrome.gcm`; exposes Google Cloud Messaging
+- Added `chrome.signedInDevices`
+- Added `chrome.wallpaper`
+- Added `chrome.system.display`
+- Added `chrome.system.network`
 
 ## 0.4.3 2014-01-21 (SDK 1.2.0-dev.1.0 r31918)
 
