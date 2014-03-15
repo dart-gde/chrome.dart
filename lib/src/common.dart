@@ -169,14 +169,22 @@ class ChromeStreamController<T> {
 
   void _ensureHandlerAdded() {
     if (!_handlerAdded) {
-      _api[_eventName].callMethod('addListener', [_listener]);
+      // TODO: Workaround an issue where the event objects are not properly
+      // proxied in M35 and after.
+      var jsEvent = _api[_eventName];
+      JsObject event = (jsEvent is JsObject ? jsEvent : new JsObject.fromBrowserObject(jsEvent));
+      event.callMethod('addListener', [_listener]);
       _handlerAdded = true;
     }
   }
 
   void _removeHandler() {
     if (_handlerAdded) {
-      _api[_eventName].callMethod('removeListener', [_listener]);
+      // TODO: Workaround an issue where the event objects are not properly
+      // proxied in M35 and after.
+      var jsEvent = _api[_eventName];
+      JsObject event = (jsEvent is JsObject ? jsEvent : new JsObject.fromBrowserObject(jsEvent));
+      event.callMethod('removeListener', [_listener]);
       _handlerAdded = false;
     }
   }
