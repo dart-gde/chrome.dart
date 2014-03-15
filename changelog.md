@@ -1,5 +1,9 @@
 # Changelog - chrome.dart
 
+## 0.5.3 2014-02-15 (SDK 1.3.0-dev.3.2 r33495)
+
+- Fixed an issue with event listeners and Chrome M35+
+
 ## 0.5.2 2014-02-14 (SDK 1.3.0-dev.3.2 r33495)
 
 - Updated to use docgen for api documentation 
