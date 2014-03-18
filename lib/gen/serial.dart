@@ -16,91 +16,147 @@ final ChromeSerial serial = new ChromeSerial._();
 class ChromeSerial extends ChromeApi {
   JsObject get _serial => chrome['serial'];
 
-  ChromeSerial._();
+  Stream<ReceiveInfo> get onReceive => _onReceive.stream;
+  ChromeStreamController<ReceiveInfo> _onReceive;
+
+  Stream<ReceiveErrorInfo> get onReceiveError => _onReceiveError.stream;
+  ChromeStreamController<ReceiveErrorInfo> _onReceiveError;
+
+  ChromeSerial._() {
+    var getApi = () => _serial;
+    _onReceive = new ChromeStreamController<ReceiveInfo>.oneArg(getApi, 'onReceive', _createReceiveInfo);
+    _onReceiveError = new ChromeStreamController<ReceiveErrorInfo>.oneArg(getApi, 'onReceiveError', _createReceiveErrorInfo);
+  }
 
   bool get available => _serial != null;
 
   /**
-   * Returns names of valid ports on this machine, each of which is likely to be
-   * valid to pass as the port argument to open(). The list is regenerated each
-   * time this method is called, as port validity is dynamic.
-   * 
-   * [callback]: Called with the list of ports.
+   * Returns information about available serial devices on the system. The list
+   * is regenerated each time this method is called.
+   * [callback]: Called with the list of `DeviceInfo` objects.
    */
-  Future<List<String>> getPorts() {
+  Future<List<DeviceInfo>> getDevices() {
     if (_serial == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<List<String>>.oneArg(listify);
-    _serial.callMethod('getPorts', [completer.callback]);
+    var completer = new ChromeCompleter<List<DeviceInfo>>.oneArg((e) => listify(e, _createDeviceInfo));
+    _serial.callMethod('getDevices', [completer.callback]);
     return completer.future;
   }
 
   /**
-   * Opens a connection to the given serial port.
-   * [port]: The name of the serial port to open.
-   * [options]: Connection options.
+   * Connects to a given serial port.
+   * [path]: The system path of the serial port to open.
+   * [options]: Port configuration options.
    * [callback]: Called when the connection has been opened.
+   * 
+   * Returns:
+   * Callback from the `connect` method;
    */
-  Future<OpenInfo> open(String port, [OpenOptions options]) {
+  Future<ConnectionInfo> connect(String path, [ConnectionOptions options]) {
     if (_serial == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<OpenInfo>.oneArg(_createOpenInfo);
-    _serial.callMethod('open', [port, jsify(options), completer.callback]);
+    var completer = new ChromeCompleter<ConnectionInfo>.oneArg(_createConnectionInfo);
+    _serial.callMethod('connect', [path, jsify(options), completer.callback]);
     return completer.future;
   }
 
   /**
-   * Closes an open connection.
+   * Update the option settings on an open serial port connection.
+   * [connectionId]: The id of the opened connection.
+   * [options]: Port configuration options.
+   * [callback]: Called when the configuation has completed.
+   * 
+   * Returns:
+   * Callback from the `update` method.
+   */
+  Future<bool> update(int connectionId, ConnectionOptions options) {
+    if (_serial == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<bool>.oneArg();
+    _serial.callMethod('update', [connectionId, jsify(options), completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Disconnects from a serial port.
    * [connectionId]: The id of the opened connection.
    * [callback]: Called when the connection has been closed.
    * 
    * Returns:
-   * Returns true if operation was successful.
+   * Callback from the `disconnect` method. Returns true if the operation was
+   * successful.
    */
-  Future<bool> close(int connectionId) {
+  Future<bool> disconnect(int connectionId) {
     if (_serial == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<bool>.oneArg();
-    _serial.callMethod('close', [connectionId, completer.callback]);
+    _serial.callMethod('disconnect', [connectionId, completer.callback]);
     return completer.future;
   }
 
   /**
-   * Reads a byte from the given connection.
-   * [connectionId]: The id of the connection.
-   * [bytesToRead]: The number of bytes to read.
-   * [callback]: Called when all the requested bytes have been read or when the
-   * read blocks.
+   * Pauses or unpauses an open connection.
+   * [connectionId]: The id of the opened connection.
+   * [paused]: Flag to indicate whether to pause or unpause.
+   * [callback]: Called when the connection has been successfully paused or
+   * unpaused.
    */
-  Future<SerialReadInfo> read(int connectionId, int bytesToRead) {
+  Future setPaused(int connectionId, bool paused) {
     if (_serial == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<SerialReadInfo>.oneArg(_createReadInfo);
-    _serial.callMethod('read', [connectionId, bytesToRead, completer.callback]);
+    var completer = new ChromeCompleter.noArgs();
+    _serial.callMethod('setPaused', [connectionId, paused, completer.callback]);
     return completer.future;
   }
 
   /**
-   * Writes a string to the given connection.
-   * [connectionId]: The id of the connection.
-   * [data]: The string to write.
-   * [callback]: Called when the string has been written.
+   * Retrieves the state of a given connection.
+   * [connectionId]: The id of the opened connection.
+   * [callback]: Called with connection state information when available.
+   * 
+   * Returns:
+   * Callback from the `getInfo` method.
    */
-  Future<SerialWriteInfo> write(int connectionId, ArrayBuffer data) {
+  Future<ConnectionInfo> getInfo(int connectionId) {
     if (_serial == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<SerialWriteInfo>.oneArg(_createWriteInfo);
-    _serial.callMethod('write', [connectionId, jsify(data), completer.callback]);
+    var completer = new ChromeCompleter<ConnectionInfo>.oneArg(_createConnectionInfo);
+    _serial.callMethod('getInfo', [connectionId, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Retrieves the list of currently opened serial port connections owned by the
+   * application.
+   * [callback]: Called with the list of connections when available.
+   * 
+   * Returns:
+   * Callback from the `getConnections` method.
+   */
+  Future<List<ConnectionInfo>> getConnections() {
+    if (_serial == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<List<ConnectionInfo>>.oneArg((e) => listify(e, _createConnectionInfo));
+    _serial.callMethod('getConnections', [completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Writes data to the given connection.
+   * [connectionId]: The id of the connection.
+   * [data]: The data to send.
+   * [callback]: Called when the operation has completed.
+   */
+  Future<SendInfo> send(int connectionId, ArrayBuffer data) {
+    if (_serial == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<SendInfo>.oneArg(_createSendInfo);
+    _serial.callMethod('send', [connectionId, jsify(data), completer.callback]);
     return completer.future;
   }
 
   /**
    * Flushes all bytes in the given connection's input and output buffers.
-   * [connectionId]: The id of the connection.
-   * [callback]: Called when the flush is complete.
-   * 
-   * Returns:
-   * Returns true if operation was successful.
    */
   Future<bool> flush(int connectionId) {
     if (_serial == null) _throwNotAvailable();
@@ -110,19 +166,36 @@ class ChromeSerial extends ChromeApi {
     return completer.future;
   }
 
-  Future<ControlSignalOptions> getControlSignals(int connectionId) {
+  /**
+   * Retrieves the state of control signals on a given connection.
+   * [connectionId]: The id of the connection.
+   * [callback]: Called when the control signals are available.
+   * 
+   * Returns:
+   * Returns a snapshot of current control signals.
+   */
+  Future<DeviceControlSignals> getControlSignals(int connectionId) {
     if (_serial == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<ControlSignalOptions>.oneArg(_createControlSignalOptions);
+    var completer = new ChromeCompleter<DeviceControlSignals>.oneArg(_createDeviceControlSignals);
     _serial.callMethod('getControlSignals', [connectionId, completer.callback]);
     return completer.future;
   }
 
-  Future<bool> setControlSignals(int connectionId, ControlSignalOptions options) {
+  /**
+   * Sets the state of control signals on a given connection.
+   * [connectionId]: The id of the connection.
+   * [signals]: The set of signal changes to send to the device.
+   * [callback]: Called once the control signals have been set.
+   * 
+   * Returns:
+   * Returns true if operation was successful.
+   */
+  Future<bool> setControlSignals(int connectionId, HostControlSignals signals) {
     if (_serial == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<bool>.oneArg();
-    _serial.callMethod('setControlSignals', [connectionId, jsify(options), completer.callback]);
+    _serial.callMethod('setControlSignals', [connectionId, jsify(signals), completer.callback]);
     return completer.future;
   }
 
@@ -131,126 +204,272 @@ class ChromeSerial extends ChromeApi {
   }
 }
 
-class DataBit extends ChromeEnum {
-  static const DataBit SEVENBIT = const DataBit._('sevenbit');
-  static const DataBit EIGHTBIT = const DataBit._('eightbit');
+class DataBits extends ChromeEnum {
+  static const DataBits SEVEN = const DataBits._('seven');
+  static const DataBits EIGHT = const DataBits._('eight');
 
-  static const List<DataBit> VALUES = const[SEVENBIT, EIGHTBIT];
+  static const List<DataBits> VALUES = const[SEVEN, EIGHT];
 
-  const DataBit._(String str): super(str);
+  const DataBits._(String str): super(str);
 }
 
 class ParityBit extends ChromeEnum {
-  static const ParityBit NOPARITY = const ParityBit._('noparity');
-  static const ParityBit ODDPARITY = const ParityBit._('oddparity');
-  static const ParityBit EVENPARITY = const ParityBit._('evenparity');
+  static const ParityBit NO = const ParityBit._('no');
+  static const ParityBit ODD = const ParityBit._('odd');
+  static const ParityBit EVEN = const ParityBit._('even');
 
-  static const List<ParityBit> VALUES = const[NOPARITY, ODDPARITY, EVENPARITY];
+  static const List<ParityBit> VALUES = const[NO, ODD, EVEN];
 
   const ParityBit._(String str): super(str);
 }
 
-class StopBit extends ChromeEnum {
-  static const StopBit ONESTOPBIT = const StopBit._('onestopbit');
-  static const StopBit TWOSTOPBIT = const StopBit._('twostopbit');
+class StopBits extends ChromeEnum {
+  static const StopBits ONE = const StopBits._('one');
+  static const StopBits TWO = const StopBits._('two');
 
-  static const List<StopBit> VALUES = const[ONESTOPBIT, TWOSTOPBIT];
+  static const List<StopBits> VALUES = const[ONE, TWO];
 
-  const StopBit._(String str): super(str);
+  const StopBits._(String str): super(str);
 }
 
-class OpenOptions extends ChromeObject {
-  OpenOptions({int bitrate, DataBit dataBit, ParityBit parityBit, StopBit stopBit}) {
-    if (bitrate != null) this.bitrate = bitrate;
-    if (dataBit != null) this.dataBit = dataBit;
-    if (parityBit != null) this.parityBit = parityBit;
-    if (stopBit != null) this.stopBit = stopBit;
+class SendError extends ChromeEnum {
+  static const SendError DISCONNECTED = const SendError._('disconnected');
+  static const SendError PENDING = const SendError._('pending');
+  static const SendError TIMEOUT = const SendError._('timeout');
+  static const SendError SYSTEM_ERROR = const SendError._('system_error');
+
+  static const List<SendError> VALUES = const[DISCONNECTED, PENDING, TIMEOUT, SYSTEM_ERROR];
+
+  const SendError._(String str): super(str);
+}
+
+class ReceiveError extends ChromeEnum {
+  static const ReceiveError DISCONNECTED = const ReceiveError._('disconnected');
+  static const ReceiveError TIMEOUT = const ReceiveError._('timeout');
+  static const ReceiveError DEVICE_LOST = const ReceiveError._('device_lost');
+  static const ReceiveError SYSTEM_ERROR = const ReceiveError._('system_error');
+
+  static const List<ReceiveError> VALUES = const[DISCONNECTED, TIMEOUT, DEVICE_LOST, SYSTEM_ERROR];
+
+  const ReceiveError._(String str): super(str);
+}
+
+class DeviceInfo extends ChromeObject {
+  DeviceInfo({String path}) {
+    if (path != null) this.path = path;
   }
-  OpenOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  DeviceInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get path => jsProxy['path'];
+  set path(String value) => jsProxy['path'] = value;
+}
+
+class ConnectionOptions extends ChromeObject {
+  ConnectionOptions({bool persistent, String name, int bufferSize, int bitrate, DataBits dataBits, ParityBit parityBit, StopBits stopBits, bool ctsFlowControl, int receiveTimeout, int sendTimeout}) {
+    if (persistent != null) this.persistent = persistent;
+    if (name != null) this.name = name;
+    if (bufferSize != null) this.bufferSize = bufferSize;
+    if (bitrate != null) this.bitrate = bitrate;
+    if (dataBits != null) this.dataBits = dataBits;
+    if (parityBit != null) this.parityBit = parityBit;
+    if (stopBits != null) this.stopBits = stopBits;
+    if (ctsFlowControl != null) this.ctsFlowControl = ctsFlowControl;
+    if (receiveTimeout != null) this.receiveTimeout = receiveTimeout;
+    if (sendTimeout != null) this.sendTimeout = sendTimeout;
+  }
+  ConnectionOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  bool get persistent => jsProxy['persistent'];
+  set persistent(bool value) => jsProxy['persistent'] = value;
+
+  String get name => jsProxy['name'];
+  set name(String value) => jsProxy['name'] = value;
+
+  int get bufferSize => jsProxy['bufferSize'];
+  set bufferSize(int value) => jsProxy['bufferSize'] = value;
 
   int get bitrate => jsProxy['bitrate'];
   set bitrate(int value) => jsProxy['bitrate'] = value;
 
-  DataBit get dataBit => _createDataBit(jsProxy['dataBit']);
-  set dataBit(DataBit value) => jsProxy['dataBit'] = jsify(value);
+  DataBits get dataBits => _createDataBits(jsProxy['dataBits']);
+  set dataBits(DataBits value) => jsProxy['dataBits'] = jsify(value);
 
   ParityBit get parityBit => _createParityBit(jsProxy['parityBit']);
   set parityBit(ParityBit value) => jsProxy['parityBit'] = jsify(value);
 
-  StopBit get stopBit => _createStopBit(jsProxy['stopBit']);
-  set stopBit(StopBit value) => jsProxy['stopBit'] = jsify(value);
-}
+  StopBits get stopBits => _createStopBits(jsProxy['stopBits']);
+  set stopBits(StopBits value) => jsProxy['stopBits'] = jsify(value);
 
-class OpenInfo extends ChromeObject {
-  OpenInfo({int connectionId}) {
-    if (connectionId != null) this.connectionId = connectionId;
-  }
-  OpenInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  bool get ctsFlowControl => jsProxy['ctsFlowControl'];
+  set ctsFlowControl(bool value) => jsProxy['ctsFlowControl'] = value;
 
-  int get connectionId => jsProxy['connectionId'];
-  set connectionId(int value) => jsProxy['connectionId'] = value;
-}
+  int get receiveTimeout => jsProxy['receiveTimeout'];
+  set receiveTimeout(int value) => jsProxy['receiveTimeout'] = value;
 
-class SerialReadInfo extends ChromeObject {
-  SerialReadInfo({int bytesRead, ArrayBuffer data}) {
-    if (bytesRead != null) this.bytesRead = bytesRead;
-    if (data != null) this.data = data;
-  }
-  SerialReadInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-
-  int get bytesRead => jsProxy['bytesRead'];
-  set bytesRead(int value) => jsProxy['bytesRead'] = value;
-
-  ArrayBuffer get data => _createArrayBuffer(jsProxy['data']);
-  set data(ArrayBuffer value) => jsProxy['data'] = jsify(value);
-}
-
-class SerialWriteInfo extends ChromeObject {
-  SerialWriteInfo({int bytesWritten}) {
-    if (bytesWritten != null) this.bytesWritten = bytesWritten;
-  }
-  SerialWriteInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-
-  int get bytesWritten => jsProxy['bytesWritten'];
-  set bytesWritten(int value) => jsProxy['bytesWritten'] = value;
+  int get sendTimeout => jsProxy['sendTimeout'];
+  set sendTimeout(int value) => jsProxy['sendTimeout'] = value;
 }
 
 /**
- * Boolean true = mark signal (negative serial voltage). Boolean false = space
- * signal (positive serial voltage).
- * 
- * For SetControlSignals, include the sendable signals that you wish to change.
- * Signals not included in the dictionary will be left unchanged.
- * 
- * GetControlSignals includes all receivable signals.
+ * Result of the `getInfo` method.
  */
-class ControlSignalOptions extends ChromeObject {
-  ControlSignalOptions({bool dtr, bool rts, bool dcd, bool cts}) {
+class ConnectionInfo extends ChromeObject {
+  ConnectionInfo({int connectionId, bool paused, bool persistent, String name, int bufferSize, int receiveTimeout, int sendTimeout, int bitrate, DataBits dataBits, ParityBit parityBit, StopBits stopBits, bool ctsFlowControl}) {
+    if (connectionId != null) this.connectionId = connectionId;
+    if (paused != null) this.paused = paused;
+    if (persistent != null) this.persistent = persistent;
+    if (name != null) this.name = name;
+    if (bufferSize != null) this.bufferSize = bufferSize;
+    if (receiveTimeout != null) this.receiveTimeout = receiveTimeout;
+    if (sendTimeout != null) this.sendTimeout = sendTimeout;
+    if (bitrate != null) this.bitrate = bitrate;
+    if (dataBits != null) this.dataBits = dataBits;
+    if (parityBit != null) this.parityBit = parityBit;
+    if (stopBits != null) this.stopBits = stopBits;
+    if (ctsFlowControl != null) this.ctsFlowControl = ctsFlowControl;
+  }
+  ConnectionInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get connectionId => jsProxy['connectionId'];
+  set connectionId(int value) => jsProxy['connectionId'] = value;
+
+  bool get paused => jsProxy['paused'];
+  set paused(bool value) => jsProxy['paused'] = value;
+
+  bool get persistent => jsProxy['persistent'];
+  set persistent(bool value) => jsProxy['persistent'] = value;
+
+  String get name => jsProxy['name'];
+  set name(String value) => jsProxy['name'] = value;
+
+  int get bufferSize => jsProxy['bufferSize'];
+  set bufferSize(int value) => jsProxy['bufferSize'] = value;
+
+  int get receiveTimeout => jsProxy['receiveTimeout'];
+  set receiveTimeout(int value) => jsProxy['receiveTimeout'] = value;
+
+  int get sendTimeout => jsProxy['sendTimeout'];
+  set sendTimeout(int value) => jsProxy['sendTimeout'] = value;
+
+  int get bitrate => jsProxy['bitrate'];
+  set bitrate(int value) => jsProxy['bitrate'] = value;
+
+  DataBits get dataBits => _createDataBits(jsProxy['dataBits']);
+  set dataBits(DataBits value) => jsProxy['dataBits'] = jsify(value);
+
+  ParityBit get parityBit => _createParityBit(jsProxy['parityBit']);
+  set parityBit(ParityBit value) => jsProxy['parityBit'] = jsify(value);
+
+  StopBits get stopBits => _createStopBits(jsProxy['stopBits']);
+  set stopBits(StopBits value) => jsProxy['stopBits'] = jsify(value);
+
+  bool get ctsFlowControl => jsProxy['ctsFlowControl'];
+  set ctsFlowControl(bool value) => jsProxy['ctsFlowControl'] = value;
+}
+
+class SendInfo extends ChromeObject {
+  SendInfo({int bytesSent, SendError error}) {
+    if (bytesSent != null) this.bytesSent = bytesSent;
+    if (error != null) this.error = error;
+  }
+  SendInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get bytesSent => jsProxy['bytesSent'];
+  set bytesSent(int value) => jsProxy['bytesSent'] = value;
+
+  SendError get error => _createSendError(jsProxy['error']);
+  set error(SendError value) => jsProxy['error'] = jsify(value);
+}
+
+/**
+ * The set of control signals which may be sent to a connected serial device
+ * using `setControlSignals`. Note that support for these signals is
+ * device-dependent.
+ */
+class HostControlSignals extends ChromeObject {
+  HostControlSignals({bool dtr, bool rts}) {
     if (dtr != null) this.dtr = dtr;
     if (rts != null) this.rts = rts;
-    if (dcd != null) this.dcd = dcd;
-    if (cts != null) this.cts = cts;
   }
-  ControlSignalOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  HostControlSignals.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   bool get dtr => jsProxy['dtr'];
   set dtr(bool value) => jsProxy['dtr'] = value;
 
   bool get rts => jsProxy['rts'];
   set rts(bool value) => jsProxy['rts'] = value;
+}
+
+/**
+ * The set of control signals which may be set by a connected serial device.
+ * These can be queried using `getControlSignals`. Note that support for these
+ * signals is device-dependent.
+ */
+class DeviceControlSignals extends ChromeObject {
+  DeviceControlSignals({bool dcd, bool cts, bool ri, bool dsr}) {
+    if (dcd != null) this.dcd = dcd;
+    if (cts != null) this.cts = cts;
+    if (ri != null) this.ri = ri;
+    if (dsr != null) this.dsr = dsr;
+  }
+  DeviceControlSignals.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   bool get dcd => jsProxy['dcd'];
   set dcd(bool value) => jsProxy['dcd'] = value;
 
   bool get cts => jsProxy['cts'];
   set cts(bool value) => jsProxy['cts'] = value;
+
+  bool get ri => jsProxy['ri'];
+  set ri(bool value) => jsProxy['ri'] = value;
+
+  bool get dsr => jsProxy['dsr'];
+  set dsr(bool value) => jsProxy['dsr'] = value;
 }
 
-OpenInfo _createOpenInfo(JsObject jsProxy) => jsProxy == null ? null : new OpenInfo.fromProxy(jsProxy);
-SerialReadInfo _createReadInfo(JsObject jsProxy) => jsProxy == null ? null : new SerialReadInfo.fromProxy(jsProxy);
-SerialWriteInfo _createWriteInfo(JsObject jsProxy) => jsProxy == null ? null : new SerialWriteInfo.fromProxy(jsProxy);
-ControlSignalOptions _createControlSignalOptions(JsObject jsProxy) => jsProxy == null ? null : new ControlSignalOptions.fromProxy(jsProxy);
-DataBit _createDataBit(String value) => DataBit.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+/**
+ * Data from an `onReceive` event.
+ */
+class ReceiveInfo extends ChromeObject {
+  ReceiveInfo({int connectionId, ArrayBuffer data}) {
+    if (connectionId != null) this.connectionId = connectionId;
+    if (data != null) this.data = data;
+  }
+  ReceiveInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get connectionId => jsProxy['connectionId'];
+  set connectionId(int value) => jsProxy['connectionId'] = value;
+
+  ArrayBuffer get data => _createArrayBuffer(jsProxy['data']);
+  set data(ArrayBuffer value) => jsProxy['data'] = jsify(value);
+}
+
+/**
+ * Data from an `onReceiveError` event.
+ */
+class ReceiveErrorInfo extends ChromeObject {
+  ReceiveErrorInfo({int connectionId, ReceiveError error}) {
+    if (connectionId != null) this.connectionId = connectionId;
+    if (error != null) this.error = error;
+  }
+  ReceiveErrorInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get connectionId => jsProxy['connectionId'];
+  set connectionId(int value) => jsProxy['connectionId'] = value;
+
+  ReceiveError get error => _createReceiveError(jsProxy['error']);
+  set error(ReceiveError value) => jsProxy['error'] = jsify(value);
+}
+
+ReceiveInfo _createReceiveInfo(JsObject jsProxy) => jsProxy == null ? null : new ReceiveInfo.fromProxy(jsProxy);
+ReceiveErrorInfo _createReceiveErrorInfo(JsObject jsProxy) => jsProxy == null ? null : new ReceiveErrorInfo.fromProxy(jsProxy);
+DeviceInfo _createDeviceInfo(JsObject jsProxy) => jsProxy == null ? null : new DeviceInfo.fromProxy(jsProxy);
+ConnectionInfo _createConnectionInfo(JsObject jsProxy) => jsProxy == null ? null : new ConnectionInfo.fromProxy(jsProxy);
+SendInfo _createSendInfo(JsObject jsProxy) => jsProxy == null ? null : new SendInfo.fromProxy(jsProxy);
+DeviceControlSignals _createDeviceControlSignals(JsObject jsProxy) => jsProxy == null ? null : new DeviceControlSignals.fromProxy(jsProxy);
+DataBits _createDataBits(String value) => DataBits.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ParityBit _createParityBit(String value) => ParityBit.VALUES.singleWhere((ChromeEnum e) => e.value == value);
-StopBit _createStopBit(String value) => StopBit.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+StopBits _createStopBits(String value) => StopBits.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+SendError _createSendError(String value) => SendError.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
+ReceiveError _createReceiveError(String value) => ReceiveError.VALUES.singleWhere((ChromeEnum e) => e.value == value);
