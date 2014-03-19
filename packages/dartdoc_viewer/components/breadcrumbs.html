@@ -1,0 +1,16 @@
+<polymer-element name="dartdoc-breadcrumbs">
+  <template>
+    <ul class="nav navbar-nav">
+      <template repeat="{{breadcrumbs}}">
+        <li><a class="btn-link" href="{{prefixedLinkHref}}">
+          {{decoratedName}}</a></li>
+      </template>
+      <template if="{{lastCrumb}}">
+        <li class="active">
+          <a class="btn-link">{{lastCrumb.decoratedName}}</a>
+        </li>
+      </template>
+    </ul>
+  </template>
+  <script type="application/dart" src="breadcrumbs.dart"></script>
+</polymer-element>

@@ -1,0 +1,36 @@
+<link rel="import" href="annotations.html">
+<link rel="import" href="comment.html">
+<link rel="import" href="link.html">
+<link rel="import" href="variable-heading.html">
+
+<polymer-element name="dartdoc-variable">
+  <template>
+    <div class="panel-heading">
+      <dartdoc-annotation annotations="{{item.annotations}}">
+      </dartdoc-annotation>
+      <p><variable-heading item="{{item}}"></variable-heading></p>
+    </div>
+
+    <p class="text-right"><dfn>
+      <template if="{{isInherited}}">
+        Inherited from
+        <dartdoc-link type="{{inheritedFrom}}"></dartdoc-link>
+      </template>
+    </dfn></p>
+
+
+    <!-- Comment -->
+    <template if="{{shouldShowComment}}">
+      <div is="dartdoc-comment" item="{{item}}"></div>
+    </template>
+
+    <p class="text-right"><dfn>
+      <template if="{{shouldShowCommentFrom}}">
+        Comment inherited from
+        <dartdoc-link type="{{commentFrom}}"></dartdoc-link>
+      </template>
+    </dfn></p>
+
+  </template>
+  <script type="application/dart" src="variable.dart"></script>
+</polymer-element>

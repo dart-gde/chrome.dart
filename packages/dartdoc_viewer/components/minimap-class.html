@@ -1,0 +1,24 @@
+<link rel="import" href="minimap-element.html">
+
+<polymer-element name="dartdoc-minimap-class">
+  <template>
+    <div class="well well-sm nav affix-right" id="minimap">
+      <a href="{{item.anchorLinkHref}}">{{item.decoratedName}}</a>
+      <ul>
+        <dartdoc-minimap category="{{item.constructors}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.instanceFunctions}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.operators}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.staticFunctions}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.instanceVariables}}" item="{{item}}">
+        </dartdoc-minimap>
+        <dartdoc-minimap category="{{item.staticVariables}}" item="{{item}}">
+        </dartdoc-minimap>
+      </ul>
+    </div>
+    </template>
+  <script type="application/dart" src="minimap-class.dart"></script>
+</polymer-element>

@@ -1,0 +1,18 @@
+<link rel="import" href="comment.html">
+<link rel="import" href="item.html">
+
+<polymer-element name="dartdoc-homepage">
+  <template>
+    <!-- TODO(alanknight): The div with itemList and panel are here to
+         convince it to use the right paragraph spacing. Seems pretty awful. -->
+    <div id="itemList">
+      <div is="dartdoc-comment" class="panel" item="{{item}}"></div>
+    </div>
+    <div class="page-header"><h1>Libraries</h1></div>
+    <template repeat="{{viewer.libraries}}">
+      <dartdoc-item class="panel" item="{{}}"></dartdoc-item>
+    </template>
+  </template>
+
+  <script type="application/dart" src="homepage.dart"></script>
+</polymer-element>
