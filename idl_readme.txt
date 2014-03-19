@@ -13,6 +13,8 @@ svn co https://src.chromium.org/chrome/trunk/src/chrome/common/extensions/api id
 svn co https://src.chromium.org/chrome/trunk/src/chrome/common/extensions/api idl -r <rev_number>
 update the svn revision above
 dart tool/gen_apis.dart
-ensure that the generated code looks good!
+Ensure that the generated code looks good!
+You can override class name from ./meta/overrides.json
+
 
 Please see the corresponding LICENSE file at: http://src.chromium.org/svn/trunk/src/LICENSE

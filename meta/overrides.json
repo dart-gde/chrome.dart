@@ -16,12 +16,16 @@
 
   "renameClass": {
     "bluetooth.Device": "BluetoothDevice",
+
     "serial.Device": "SerialDevice",
+    "serial.ReadInfo": "SerialReadInfo",
+    "serial.ReceiveErrorInfo": "SerialReceiveErrorInfo",
+    "serial.ReceiveInfo": "SerialReceiveInfo",
+    "serial.SendInfo": "SerialSendInfo",
+    "serial.WriteInfo": "SerialWriteInfo",
 
     "socket.ReadInfo": "SocketReadInfo",
     "socket.WriteInfo": "SocketWriteInfo",
-    "serial.ReadInfo": "SerialReadInfo",
-    "serial.WriteInfo": "SerialWriteInfo",
 
     "bookmarks.OnChangedEvent": "BookmarksOnChangedEvent",
     "storage.OnChangedEvent": "StorageOnChangedEvent",
