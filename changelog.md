@@ -1,5 +1,11 @@
 # Changelog - chrome.dart
 
+## 0.5.4 2014-03-19 (SDK 1.3.0-dev.4.1 r33731)
+
+- Update to latest serial.idl
+- Included overrides for new serial namespace
+- Updated serial unit tests
+
 ## 0.5.3 2014-02-15 (SDK 1.3.0-dev.3.2 r33495)
 
 - Fixed an issue with event listeners and Chrome M35+
