@@ -16,16 +16,16 @@ final ChromeSerial serial = new ChromeSerial._();
 class ChromeSerial extends ChromeApi {
   JsObject get _serial => chrome['serial'];
 
-  Stream<ReceiveInfo> get onReceive => _onReceive.stream;
-  ChromeStreamController<ReceiveInfo> _onReceive;
+  Stream<SerialReceiveInfo> get onReceive => _onReceive.stream;
+  ChromeStreamController<SerialReceiveInfo> _onReceive;
 
-  Stream<ReceiveErrorInfo> get onReceiveError => _onReceiveError.stream;
-  ChromeStreamController<ReceiveErrorInfo> _onReceiveError;
+  Stream<SerialReceiveErrorInfo> get onReceiveError => _onReceiveError.stream;
+  ChromeStreamController<SerialReceiveErrorInfo> _onReceiveError;
 
   ChromeSerial._() {
     var getApi = () => _serial;
-    _onReceive = new ChromeStreamController<ReceiveInfo>.oneArg(getApi, 'onReceive', _createReceiveInfo);
-    _onReceiveError = new ChromeStreamController<ReceiveErrorInfo>.oneArg(getApi, 'onReceiveError', _createReceiveErrorInfo);
+    _onReceive = new ChromeStreamController<SerialReceiveInfo>.oneArg(getApi, 'onReceive', _createReceiveInfo);
+    _onReceiveError = new ChromeStreamController<SerialReceiveErrorInfo>.oneArg(getApi, 'onReceiveError', _createReceiveErrorInfo);
   }
 
   bool get available => _serial != null;
@@ -147,10 +147,10 @@ class ChromeSerial extends ChromeApi {
    * [data]: The data to send.
    * [callback]: Called when the operation has completed.
    */
-  Future<SendInfo> send(int connectionId, ArrayBuffer data) {
+  Future<SerialSendInfo> send(int connectionId, ArrayBuffer data) {
     if (_serial == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<SendInfo>.oneArg(_createSendInfo);
+    var completer = new ChromeCompleter<SerialSendInfo>.oneArg(_createSendInfo);
     _serial.callMethod('send', [connectionId, jsify(data), completer.callback]);
     return completer.future;
   }
@@ -367,12 +367,12 @@ class ConnectionInfo extends ChromeObject {
   set ctsFlowControl(bool value) => jsProxy['ctsFlowControl'] = value;
 }
 
-class SendInfo extends ChromeObject {
-  SendInfo({int bytesSent, SendError error}) {
+class SerialSendInfo extends ChromeObject {
+  SerialSendInfo({int bytesSent, SendError error}) {
     if (bytesSent != null) this.bytesSent = bytesSent;
     if (error != null) this.error = error;
   }
-  SendInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  SerialSendInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   int get bytesSent => jsProxy['bytesSent'];
   set bytesSent(int value) => jsProxy['bytesSent'] = value;
@@ -430,12 +430,12 @@ class DeviceControlSignals extends ChromeObject {
 /**
  * Data from an `onReceive` event.
  */
-class ReceiveInfo extends ChromeObject {
-  ReceiveInfo({int connectionId, ArrayBuffer data}) {
+class SerialReceiveInfo extends ChromeObject {
+  SerialReceiveInfo({int connectionId, ArrayBuffer data}) {
     if (connectionId != null) this.connectionId = connectionId;
     if (data != null) this.data = data;
   }
-  ReceiveInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  SerialReceiveInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   int get connectionId => jsProxy['connectionId'];
   set connectionId(int value) => jsProxy['connectionId'] = value;
@@ -447,12 +447,12 @@ class ReceiveInfo extends ChromeObject {
 /**
  * Data from an `onReceiveError` event.
  */
-class ReceiveErrorInfo extends ChromeObject {
-  ReceiveErrorInfo({int connectionId, ReceiveError error}) {
+class SerialReceiveErrorInfo extends ChromeObject {
+  SerialReceiveErrorInfo({int connectionId, ReceiveError error}) {
     if (connectionId != null) this.connectionId = connectionId;
     if (error != null) this.error = error;
   }
-  ReceiveErrorInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  SerialReceiveErrorInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   int get connectionId => jsProxy['connectionId'];
   set connectionId(int value) => jsProxy['connectionId'] = value;
@@ -461,11 +461,11 @@ class ReceiveErrorInfo extends ChromeObject {
   set error(ReceiveError value) => jsProxy['error'] = jsify(value);
 }
 
-ReceiveInfo _createReceiveInfo(JsObject jsProxy) => jsProxy == null ? null : new ReceiveInfo.fromProxy(jsProxy);
-ReceiveErrorInfo _createReceiveErrorInfo(JsObject jsProxy) => jsProxy == null ? null : new ReceiveErrorInfo.fromProxy(jsProxy);
+SerialReceiveInfo _createReceiveInfo(JsObject jsProxy) => jsProxy == null ? null : new SerialReceiveInfo.fromProxy(jsProxy);
+SerialReceiveErrorInfo _createReceiveErrorInfo(JsObject jsProxy) => jsProxy == null ? null : new SerialReceiveErrorInfo.fromProxy(jsProxy);
 DeviceInfo _createDeviceInfo(JsObject jsProxy) => jsProxy == null ? null : new DeviceInfo.fromProxy(jsProxy);
 ConnectionInfo _createConnectionInfo(JsObject jsProxy) => jsProxy == null ? null : new ConnectionInfo.fromProxy(jsProxy);
-SendInfo _createSendInfo(JsObject jsProxy) => jsProxy == null ? null : new SendInfo.fromProxy(jsProxy);
+SerialSendInfo _createSendInfo(JsObject jsProxy) => jsProxy == null ? null : new SerialSendInfo.fromProxy(jsProxy);
 DeviceControlSignals _createDeviceControlSignals(JsObject jsProxy) => jsProxy == null ? null : new DeviceControlSignals.fromProxy(jsProxy);
 DataBits _createDataBits(String value) => DataBits.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ParityBit _createParityBit(String value) => ParityBit.VALUES.singleWhere((ChromeEnum e) => e.value == value);
