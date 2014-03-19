@@ -2,7 +2,7 @@
 set -o xtrace
 
 # run pub; ensure that the code is warning free
-pub install
+pub get 
 dartanalyzer tool/gen_apis.dart
 dartanalyzer test/all.dart
 dartanalyzer bin/setup_app.dart
