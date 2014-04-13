@@ -23,8 +23,10 @@ class ChromeTransformer extends Transformer {
 
   ChromeTransformer.asPlugin();
 
-  Future<bool> isPrimary(Asset input) {
-    return new Future.value(input.id.extension == '.html');
+  // TODO: Remove the [assetOrId] hack.
+  Future<bool> isPrimary(assetOrId) {
+    AssetId id = assetOrId is Asset ? assetOrId.id : assetOrId;
+    return new Future.value(id.extension == '.html');
   }
 
   Future apply(Transform transform) {
