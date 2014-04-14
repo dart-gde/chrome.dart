@@ -14,36 +14,46 @@ abstract class Visitor {
   visitIndex(Index i);
   visitInvoke(Invoke i);
   visitLiteral(Literal l);
+  visitListLiteral(ListLiteral l);
   visitMapLiteral(MapLiteral l);
   visitMapLiteralEntry(MapLiteralEntry l);
   visitIdentifier(Identifier i);
   visitBinaryOperator(BinaryOperator o);
   visitUnaryOperator(UnaryOperator o);
+  visitTernaryOperator(TernaryOperator o);
   visitInExpression(InExpression c);
 }
 
-abstract class RecursiveVisitor extends Visitor {
-  visitExpression(Expression e);
+class RecursiveVisitor extends Visitor {
+  preVisitExpression(Expression e) {}
+  visitExpression(Expression e) {}
 
-  visitEmptyExpression(EmptyExpression e) => visitExpression(e);
+  visitEmptyExpression(EmptyExpression e) {
+    preVisitExpression(e);
+    visitExpression(e);
+  }
 
   visitParenthesizedExpression(ParenthesizedExpression e) {
+    preVisitExpression(e);
     visit(e.child);
     visitExpression(e);
   }
 
   visitGetter(Getter i) {
+    preVisitExpression(i);
     visit(i.receiver);
     visitExpression(i);
   }
 
   visitIndex(Index i) {
+    preVisitExpression(i);
     visit(i.receiver);
     visit(i.argument);
     visitExpression(i);
   }
 
   visitInvoke(Invoke i) {
+    preVisitExpression(i);
     visit(i.receiver);
     if (i.arguments != null) {
       for (var a in i.arguments) {
@@ -53,9 +63,21 @@ abstract class RecursiveVisitor extends Visitor {
     visitExpression(i);
   }
 
-  visitLiteral(Literal l) => visitExpression(l);
+  visitLiteral(Literal l) {
+    preVisitExpression(l);
+    visitExpression(l);
+  }
+
+  visitListLiteral(ListLiteral l) {
+    preVisitExpression(l);
+    for (var i in l.items) {
+      visit(i);
+    }
+    visitExpression(l);
+  }
 
   visitMapLiteral(MapLiteral l) {
+    preVisitExpression(l);
     for (var e in l.entries) {
       visit(e);
     }
@@ -63,25 +85,40 @@ abstract class RecursiveVisitor extends Visitor {
   }
 
   visitMapLiteralEntry(MapLiteralEntry e) {
+    preVisitExpression(e);
     visit(e.key);
     visit(e.entryValue);
     visitExpression(e);
   }
 
-  visitIdentifier(Identifier i) => visitExpression(i);
+  visitIdentifier(Identifier i) {
+    preVisitExpression(i);
+    visitExpression(i);
+  }
 
   visitBinaryOperator(BinaryOperator o) {
+    preVisitExpression(o);
     visit(o.left);
     visit(o.right);
     visitExpression(o);
   }
 
   visitUnaryOperator(UnaryOperator o) {
+    preVisitExpression(o);
     visit(o.child);
     visitExpression(o);
   }
 
+  visitTernaryOperator(TernaryOperator o) {
+    preVisitExpression(o);
+    visit(o.condition);
+    visit(o.trueExpr);
+    visit(o.falseExpr);
+    visitExpression(o);
+  }
+
   visitInExpression(InExpression c) {
+    preVisitExpression(c);
     visit(c.left);
     visit(c.right);
     visitExpression(c);

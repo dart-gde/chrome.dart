@@ -66,7 +66,8 @@ void navigate(event) {
 }
 
 /// Handles browser navigation.
-void _initApp() {
+@initMethod
+void initApp() {
   window.onResize.listen((event) {
     viewer.isDesktop = window.innerWidth > DESKTOP_SIZE_BOUNDARY;
     dartdocMain.collapseSearchAndOptionsIfNeeded();
@@ -88,5 +89,3 @@ void _initApp() {
     }
   });
 }
-
-void main() => initPolymer().run(_initApp);

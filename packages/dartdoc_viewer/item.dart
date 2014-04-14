@@ -16,14 +16,14 @@ import 'package:dartdoc_viewer/search.dart' show searchIndex;
 import 'package:collection/equality.dart';
 
 // TODO(tmandel): Don't hardcode in a path if it can be avoided.
-@reflectable const docsPath = 'docs/';
+const docsPath = 'docs/';
 
 _returnNull() => null;
 
 /**
  * Abstract class for anything that holds values and can be displayed.
  */
-@reflectable class Container extends ChangeNotifier {
+class Container extends ChangeNotifier {
   final String name;
   @reflectable @observable String get comment => __$comment; String __$comment = '<span></span>'; @reflectable set comment(String value) { __$comment = notifyPropertyChange(#comment, __$comment, value); }
   bool get hasComment => !hasNoComment;
@@ -42,7 +42,7 @@ String _wrapComment(String comment) =>
 /**
  * A [Container] that contains other [Container]s to be displayed.
  */
-@reflectable class Category extends Container {
+class Category extends Container {
   List<Container> content = [];
   Set<String> memberNames = new Set<String>();
   int inheritedCounter = 0;
@@ -177,7 +177,7 @@ class Filter {
 /**
  * A [Container] synonymous with a page.
  */
-@reflectable class Item extends Container {
+class Item extends Container {
   /// A list of [Item]s representing the path to this [Item].
   List<Item> path = [];
   @observable final String qualifiedName;
@@ -260,7 +260,7 @@ class Filter {
 }
 
 /// Sorts each inner [List] by qualified names.
-@reflectable void _sort(List<List<Item>> items) {
+void _sort(List<List<Item>> items) {
   items.forEach((item) {
     item.sort((Item a, Item b) =>
       _compareLibraryNames(a.decoratedName, b.decoratedName));
@@ -278,7 +278,7 @@ int _compareLibraryNames(String a, String b) {
 /**
  * An [Item] containing all of the [Library] and [Placeholder] objects.
  */
-@reflectable class Home extends Item {
+class Home extends Item {
   Item get home => this;
   Home owner;
 
@@ -362,7 +362,7 @@ int _compareLibraryNames(String a, String b) {
 }
 
 /// Runs through the member structure and creates path information.
-@reflectable void buildHierarchy(Item page, Item previous) {
+void buildHierarchy(Item page, Item previous) {
   if (page.path.isEmpty) {
     page.path
         ..addAll(previous.path)
@@ -374,7 +374,7 @@ int _compareLibraryNames(String a, String b) {
 /**
  * An [Item] that is lazily loaded.
  */
-@reflectable abstract class LazyItem extends Item {
+abstract class LazyItem extends Item {
   bool isLoaded = false;
   final String previewComment;
 
@@ -402,7 +402,7 @@ int _compareLibraryNames(String a, String b) {
 /**
  * An [Item] that describes a single Dart library.
  */
-@reflectable class Library extends LazyItem {
+class Library extends LazyItem {
   Category classes;
   Category errors;
   Category typedefs;
@@ -482,7 +482,7 @@ int _compareLibraryNames(String a, String b) {
 /**
  * An [Item] that describes a single Dart class.
  */
-@reflectable class Class extends LazyItem {
+class Class extends LazyItem {
   Category functions;
   Category variables;
   Category constructs;
@@ -654,27 +654,22 @@ int _compareLibraryNames(String a, String b) {
 
   Item memberNamed(String name, {Function orElse : _returnNull}) {
     if (name == null) return orElse();
-    for (var category in
-        [annotations, constructs, functions, operators, variables]) {
-      var member =  category == null ? null :
+    for (var category in [constructs, functions, operators, variables]) {
+      var member = category == null ? null :
           category.memberNamed(name, orElse: _returnNull);
       if (member != null) return member;
     }
     return orElse();
   }
-
 }
 
 /**
  * A collection of [Annotation]s.
  */
-@reflectable class AnnotationGroup {
+class AnnotationGroup {
   List<String> supportedBrowsers = [];
   List<Annotation> annotations = [];
   String domName;
-
-  Item memberNamed(String name, {Function orElse : _returnNull}) =>
-    annotations.firstWhere((a) => a.qualifiedName == name, orElse: orElse);
 
   AnnotationGroup(List annotes) {
     var set = new Set();
@@ -697,25 +692,25 @@ int _compareLibraryNames(String a, String b) {
 /**
  * A single annotation to an [Item].
  */
-@reflectable class Annotation {
-  String qualifiedName;
-  LinkableType link;
-  List<String> parameters;
+class Annotation {
+  final String qualifiedName;
+  final LinkableType link;
+  final List<String> parameters;
 
-  Annotation(Map yaml) {
-    qualifiedName = yaml['name'];
-    link = new LinkableType(qualifiedName);
-    parameters = yaml['parameters'] == null ? [] : yaml['parameters'];
-  }
+  Annotation(Map yaml)
+      : this.qualifiedName = yaml['name'],
+        this.link = new LinkableType(yaml['name']),
+        this.parameters = yaml['parameters'] == null ? [] : yaml['parameters'];
 
   /// Hash by XORing together our name and parameters.
-  get hashCode => parameters.fold(
+  int get hashCode => parameters.fold(
       qualifiedName.hashCode, (a, param) => a ^ param.hashCode);
 
-  operator ==(other) => qualifiedName == other.qualifiedName &&
+  bool operator ==(Object other) => other is Annotation &&
+      qualifiedName == other.qualifiedName &&
       const ListEquality().equals(parameters, other.parameters);
 
-  get shortName => new DocsLocation(qualifiedName).lastName;
+  String get shortName => new DocsLocation(qualifiedName).lastName;
 
   toString() => 'Annotation($shortName)';
 }
@@ -723,7 +718,7 @@ int _compareLibraryNames(String a, String b) {
 /**
  * An [Item] that describes a Dart member with parameters.
  */
-@reflectable class Parameterized extends Item {
+class Parameterized extends Item {
   List<Parameter> parameters;
 
   Parameterized(String name, String qualifiedName, [String comment])
@@ -752,7 +747,7 @@ int _compareLibraryNames(String a, String b) {
 /**
  * An [Item] that describes a single Dart typedef.
  */
-@reflectable class Typedef extends Parameterized {
+class Typedef extends Parameterized {
   final LinkableType type;
   final AnnotationGroup annotations;
   final String previewComment;
@@ -770,30 +765,30 @@ int _compareLibraryNames(String a, String b) {
 /**
  * An [Item] that describes a single Dart method.
  */
-@reflectable class Method extends Parameterized {
-  bool isStatic;
-  bool isAbstract;
-  bool isConstant;
-  bool isConstructor;
-  String inheritedFrom;
+class Method extends Parameterized {
+  final bool isStatic;
+  final bool isAbstract;
+  final bool isConstant;
+  final bool isConstructor;
+  final String inheritedFrom;
+  final String className;
+  final bool isOperator;
+  final AnnotationGroup annotations;
+  final NestedType type;
   String commentFrom;
-  String className;
-  bool isOperator;
-  AnnotationGroup annotations;
-  NestedType type;
 
   Method(Map yaml, {this.isConstructor: false, this.className: '',
       this.isOperator: false, this.inheritedFrom: '',
       String commentFrom: '', owner: null})
-        : super(yaml['name'], yaml['qualifiedName'],
+      : this.isStatic = _boolFor('static', yaml),
+        this.isAbstract = _boolFor('abstract', yaml),
+        this.isConstant = _boolFor('constant', yaml),
+        this.type = new NestedType(yaml['return'].first),
+        this.annotations = new AnnotationGroup(yaml['annotations']),
+        super(yaml['name'], yaml['qualifiedName'],
             _wrapComment(yaml['comment'])) {
-    isStatic = _boolFor('static', yaml);
-    isAbstract = _boolFor('abstract', yaml);
-    isConstant = _boolFor('constant', yaml);
     commentFrom = commentFrom == '' ? yaml['commentFrom'] : commentFrom;
-    type = new NestedType(yaml['return'].first);
     parameters = getParameters(yaml['parameters']);
-    annotations = new AnnotationGroup(yaml['annotations']);
     _owner = owner;
   }
 
@@ -835,7 +830,7 @@ int _compareLibraryNames(String a, String b) {
 /**
  * A single parameter to a [Method].
  */
-@reflectable class Parameter extends Item {
+class Parameter extends Item {
 
   final bool isOptional;
   final bool isNamed;
@@ -898,7 +893,7 @@ int _compareLibraryNames(String a, String b) {
 /**
  * A [Container] that describes a single Dart variable.
  */
-@reflectable class Variable extends Parameterized {
+class Variable extends Parameterized {
 
   final bool isFinal;
   final bool isStatic;
@@ -968,7 +963,7 @@ int _compareLibraryNames(String a, String b) {
 /**
  * A Dart type that potentially contains generic parameters.
  */
-@reflectable class NestedType {
+class NestedType {
   final LinkableType outer;
   final List<NestedType> inner;
 
@@ -996,7 +991,7 @@ int _compareLibraryNames(String a, String b) {
 /**
  * A Dart type that should link to other [Item]s.
  */
-@reflectable class LinkableType {
+class LinkableType {
   /// The resolved qualified name of the type this [LinkableType] represents.
   final DocsLocation loc;
 

@@ -46,7 +46,7 @@ class NullTreeSanitizer implements NodeTreeSanitizer {
 }
 
 //// An abstract class for all Dartdoc elements.
-@reflectable abstract class DartdocElement extends PolymerElement {
+abstract class DartdocElement extends PolymerElement {
 
   DartdocElement.created() : super.created();
 
@@ -79,7 +79,7 @@ class NullTreeSanitizer implements NodeTreeSanitizer {
 //// This is a web component to be extended by all Dart members with comments.
 //// Each member has an [Item] associated with it as well as a comment to
 //// display, so this class handles those two aspects shared by all members.
-@reflectable abstract class MemberElement extends DartdocElement with ChangeNotifier  {
+abstract class MemberElement extends DartdocElement with ChangeNotifier  {
   MemberElement.created() : super.created() {
     _item = defaultItem;
   }
@@ -108,7 +108,7 @@ class NullTreeSanitizer implements NodeTreeSanitizer {
 }
 
 //// A [MemberElement] that could be inherited from another [MemberElement].
-@reflectable abstract class InheritedElement extends MemberElement with ChangeNotifier  {
+abstract class InheritedElement extends MemberElement with ChangeNotifier  {
   @reflectable @observable LinkableType get inheritedFrom => __$inheritedFrom; LinkableType __$inheritedFrom; @reflectable set inheritedFrom(LinkableType value) { __$inheritedFrom = notifyPropertyChange(#inheritedFrom, __$inheritedFrom, value); }
   @reflectable @observable LinkableType get commentFrom => __$commentFrom; LinkableType __$commentFrom; @reflectable set commentFrom(LinkableType value) { __$commentFrom = notifyPropertyChange(#commentFrom, __$commentFrom, value); }
   @reflectable @observable bool get isInherited => __$isInherited; bool __$isInherited; @reflectable set isInherited(bool value) { __$isInherited = notifyPropertyChange(#isInherited, __$isInherited, value); }

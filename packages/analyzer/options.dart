@@ -4,11 +4,9 @@
 
 library options;
 
-import 'package:args/args.dart';
-import 'package:path/path.dart';
-
 import 'dart:io';
 
+import 'package:args/args.dart';
 
 const _BINARY_NAME = 'dartanalyzer';
 
@@ -41,6 +39,9 @@ class CommandLineOptions {
   /** Whether to show SDK warnings */
   final bool showSdkWarnings;
 
+  /** Whether to show both cold and hot performance statistics */
+  final bool warmPerf;
+
   /** Whether to treat warnings as fatal */
   final bool warningsAreFatal;
 
@@ -52,6 +53,9 @@ class CommandLineOptions {
 
   /** The source files to analyze */
   final List<String> sourceFiles;
+
+  /** Whether to log additional analysis messages and exceptions */
+  final bool log;
 
   /**
    * Initialize options from the given parsed [args].
@@ -65,9 +69,11 @@ class CommandLineOptions {
       perf = args['perf'],
       showPackageWarnings = args['show-package-warnings'] || args['package-warnings'],
       showSdkWarnings = args['show-sdk-warnings'] || args['warnings'],
+      warmPerf = args['warm-perf'],
       warningsAreFatal = args['fatal-warnings'],
       dartSdkPath = args['dart-sdk'],
       packageRootPath = args['package-root'],
+      log = args['log'],
       sourceFiles = args.rest;
 
   /**
@@ -125,12 +131,17 @@ class CommandLineOptions {
       ..addFlag('perf',
           help: 'Show performance statistics',
           defaultsTo: false, negatable: false)
+      ..addFlag('warm-perf',
+          help: 'Show both cold and warm performance statistics',
+          defaultsTo: false, negatable: false, hide: true)
       ..addFlag('warnings', help: 'Show warnings from SDK imports',
           defaultsTo: false, negatable: false)
       ..addFlag('show-sdk-warnings', help: 'Show warnings from SDK imports (deprecated)',
           defaultsTo: false, negatable: false)
       ..addFlag('help', abbr: 'h', help: 'Display this help message',
-          defaultsTo: false, negatable: false);
+          defaultsTo: false, negatable: false)
+      ..addFlag('log', help: 'Log additional messages and exceptions',
+        defaultsTo: false, negatable: false, hide: true);
 
     try {
       // TODO(scheglov) https://code.google.com/p/dart/issues/detail?id=11061
@@ -208,10 +219,10 @@ class _CommandLineParser {
    * See [ArgParser.addFlag()].
    */
   void addFlag(String name, {String abbr, String help, bool defaultsTo: false,
-      bool negatable: true, void callback(bool value)}) {
+      bool negatable: true, void callback(bool value), bool hide: false}) {
     _knownFlags.add(name);
     _parser.addFlag(name, abbr: abbr, help: help, defaultsTo: defaultsTo,
-        negatable: negatable, callback: callback);
+        negatable: negatable, callback: callback, hide: hide);
   }
 
   /**

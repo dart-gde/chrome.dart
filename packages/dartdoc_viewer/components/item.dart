@@ -21,5 +21,5 @@ class ItemElement extends MemberElement {
 
   get defaultItem => _defaultItem;
   static final _defaultItem = new Class.forPlaceholder("loading.loading",
-      "loading");
+      "<span>loading</span>");
 }

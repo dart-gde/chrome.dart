@@ -5,10 +5,12 @@
 library web.parameters;
 
 import 'dart:html';
-import 'package:dartdoc_viewer/item.dart';
-import 'package:dartdoc_viewer/location.dart';
+
 import 'package:polymer/polymer.dart';
+
+import 'package:dartdoc_viewer/item.dart';
 import 'package:dartdoc_viewer/member.dart';
+
 import 'type.dart';
 
 @CustomTag("dartdoc-parameter")
@@ -43,15 +45,7 @@ class ParameterElement extends DartdocElement with ChangeNotifier  {
       outerSpan.appendText(optionalOpeningDelimiter);
     }
     for (var element in elements) {
-      // Since a dartdoc-annotation cannot be instantiated from Dart code,
-      // the annotations must be built manually.
-      element.annotations.annotations.forEach((annotation) {
-        var anchor = new AnchorElement()
-          ..text = '@${annotation.simpleType}'
-          ..href = '${locationPrefixed(annotation.location)}';
-        outerSpan.append(anchor);
-        outerSpan.appendText(' ');
-      });
+      // TODO(kevmoo): Fix annotation rendering for paramaters - Issue 18133
       // Skip dynamic as an outer parameter type (but not as generic)
       var space = '';
       if (!element.type.isDynamic) {

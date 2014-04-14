@@ -240,7 +240,7 @@
  * To display the help, use the ArgParser getUsage() method:
  *
  *     print(parser.getUsage());
- * 
+ *
  * The resulting string looks something like this:
  *
  *     --mode            The compiler configuration
@@ -261,7 +261,7 @@
  */
 library args;
 
-import 'package:unmodifiable_collection/unmodifiable_collection.dart';
+import 'package:collection/wrappers.dart';
 
 import 'src/parser.dart';
 import 'src/usage.dart';
@@ -321,9 +321,9 @@ class ArgParser {
    * * There is already an option using abbreviation [abbr].
    */
   void addFlag(String name, {String abbr, String help, bool defaultsTo: false,
-      bool negatable: true, void callback(bool value)}) {
+      bool negatable: true, void callback(bool value), bool hide: false}) {
     _addOption(name, abbr, help, null, null, defaultsTo, callback,
-        isFlag: true, negatable: negatable);
+        isFlag: true, negatable: negatable, hide: hide);
   }
 
   /**

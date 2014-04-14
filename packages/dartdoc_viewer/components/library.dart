@@ -32,7 +32,8 @@ class LibraryElement extends MemberElement {
 
   get defaultItem => _defaultItem;
   static final _defaultItem =
-      new Library.forPlaceholder({ 'name': 'loading', 'preview': 'loading' });
+      new Library.forPlaceholder({ 'name': 'loading',
+        'preview': '<span>loading</span>' });
 
   leftView() {
     super.leftView();

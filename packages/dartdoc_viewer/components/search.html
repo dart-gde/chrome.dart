@@ -14,7 +14,7 @@ BSD-style license that can be found in the LICENSE file.
           data-toggle="dropdown">
 
         <ul class="dropdown-menu pull-right" role="menu"
-            aria-labelledby="dropdownMenu" on-click="{{onSubmitCallback}}">
+            aria-labelledby="dropdownMenu" on-click="{{selectDropDownItem}}">
           <template if="{{results.isEmpty}}">
             <li class="search-result disabled">
               <a tabindex="-1" href="#">No Results.</a>
@@ -34,5 +34,5 @@ BSD-style license that can be found in the LICENSE file.
 
   </template>
 </polymer-element>
-<script type="application/dart" src="search.dart">
+<script type="application/dart;component=1" src="search.dart">
 </script>

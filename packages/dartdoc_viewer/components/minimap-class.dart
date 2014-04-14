@@ -17,5 +17,5 @@ class MinimapElementClass extends MemberElement {
 
   Class get defaultItem => _defaultItem;
   static final _defaultItem =
-      new Class.forPlaceholder('loading.loading', 'loading');
+      new Class.forPlaceholder('loading.loading', '<span>loading</span>');
 }

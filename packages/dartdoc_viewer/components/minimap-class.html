@@ -3,7 +3,7 @@
 <polymer-element name="dartdoc-minimap-class">
   <template>
     <div class="well well-sm nav affix-right" id="minimap">
-      <a href="{{item.anchorLinkHref}}">{{item.decoratedName}}</a>
+      <a href="{{item.anchorHref}}">{{item.decoratedName}}</a>
       <ul>
         <dartdoc-minimap category="{{item.constructors}}" item="{{item}}">
         </dartdoc-minimap>
@@ -20,5 +20,5 @@
       </ul>
     </div>
     </template>
-  <script type="application/dart" src="minimap-class.dart"></script>
+  <script type="application/dart;component=1" src="minimap-class.dart"></script>
 </polymer-element>

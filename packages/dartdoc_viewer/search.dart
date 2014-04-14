@@ -14,13 +14,12 @@
  */
 library search;
 
-import 'package:polymer/polymer.dart';
 import 'package:dartdoc_viewer/location.dart';
 
 /** Search Index. */
 final SearchIndex searchIndex = new SearchIndex();
 
-@reflectable class SearchResult implements Comparable {
+class SearchResult implements Comparable {
   /** Qualified name of this search result references. */
   final String element;
 

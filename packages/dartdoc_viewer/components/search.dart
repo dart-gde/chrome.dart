@@ -72,18 +72,28 @@ class Search extends PolymerElement with ChangeNotifier  {
     isFocused = true;
   }
 
-  void onSubmitCallback(event, detail, target) {
-    if (results.isEmpty) return;
-
-    String refId;
-    var actualTarget = event.path.firstWhere(
-        (x) => x is Element && x.dataset['ref-id'] != null,
-        orElse: () => target);
-    refId = actualTarget == null ? null : actualTarget.dataset['ref-id'];
-    if (refId == null || refId.isEmpty) {
-      // If nothing is focused, use the first search result.
-      refId = results.first.element;
+  /// Find the first ref-id data attribute on a parent of [element].
+  String _searchRefId(element) {
+    if (element == null) return null;
+    if (element is Element && element.dataset['ref-id'] != null) {
+      return element.dataset['ref-id'];
     }
+    if (element is ShadowRoot) return _searchRefId(element.host);
+    return _searchRefId(element.parentNode);
+  }
+
+  void selectDropDownItem(event, detail, target) {
+    if (results.isEmpty) return;
+    // event.target is within [results.html] template. As we walk up, we find
+    // the <a is='search-result'> element which contains the dataset
+    // information.
+    var refId = _searchRefId(event.target);
+    if (refId != null) _navigateTo(refId);
+  }
+
+  void _navigateTo(String refId) {
+    // Technically this shouldn't happen, but just in case.
+    if (refId == null || refId.isEmpty) return;
     var newLocation = new DocsLocation(refId).withAnchor;
     var encoded = Uri.encodeFull(newLocation);
     viewer.handleLink(encoded);
@@ -122,8 +132,8 @@ class Search extends PolymerElement with ChangeNotifier  {
       }
       e.preventDefault();
     } else if (e.keyCode == KeyCode.ENTER) {
-      onSubmitCallback(e, null,
-          shadowRoot.querySelector('#search$currentIndex'));
+      // If nothing is focused, use the first search result.
+      _navigateTo(results[currentIndex == -1 ? 0 : currentIndex].url);
       e.preventDefault();
     }
   }

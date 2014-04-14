@@ -2,9 +2,18 @@ library java.core;
 
 import "dart:math" as math;
 
+final Stopwatch nanoTimeStopwatch = new Stopwatch();
+
 class JavaSystem {
   static int currentTimeMillis() {
     return (new DateTime.now()).millisecondsSinceEpoch;
+  }
+
+  static int nanoTime() {
+    if (!nanoTimeStopwatch.isRunning) {
+      nanoTimeStopwatch.start();
+    }
+    return nanoTimeStopwatch.elapsedMicroseconds * 1000;
   }
 
   static void arraycopy(List src, int srcPos, List dest, int destPos, int length) {
@@ -12,72 +21,6 @@ class JavaSystem {
       dest[destPos + i] = src[srcPos + i];
     }
   }
-}
-
-/**
- * Limited implementation of "o is instanceOfType", see
- * http://code.google.com/p/dart/issues/detail?id=8184
- */
-bool isInstanceOf(o, Type t) {
-  if (o == null) {
-    return false;
-  }
-  if (o.runtimeType == t) {
-    return true;
-  }
-  String oTypeName = o.runtimeType.toString();
-  String tTypeName = t.toString();
-  if (oTypeName == tTypeName) {
-    return true;
-  }
-  if (oTypeName.startsWith("List") && tTypeName == "List") {
-    return true;
-  }
-  if (tTypeName == "Map" && o is Map) {
-    return true;
-  }
-  // Dart Analysis Engine specific
-  if (oTypeName == "${tTypeName}Impl") {
-    return true;
-  }
-  if (tTypeName == "FormalParameter") {
-    return
-        oTypeName == "DefaultFormalParameter" ||
-        oTypeName == "FieldNormalParameter" ||
-        oTypeName == "FunctionTypedFormalParameter" ||
-        oTypeName == "SimpleFormalParameter";
-  }
-  if (tTypeName == "MethodElement") {
-    if (oTypeName == "MethodMember") {
-      return true;
-    }
-  }
-  if (tTypeName == "ExecutableElement") {
-    if (oTypeName == "MethodElementImpl" ||
-        oTypeName == "FunctionElementImpl" ||
-        oTypeName == "PropertyAccessorElementImpl") {
-      return true;
-    }
-  }
-  if (tTypeName == "ParameterElement") {
-    if (oTypeName == "FieldFormalParameterElementImpl" ||
-        oTypeName == "DefaultFieldFormalParameterElementImpl" ||
-        oTypeName == "DefaultParameterElementImpl") {
-      return true;
-    }
-  }
-  if (tTypeName == "VariableElement") {
-    if (oTypeName == "LocalVariableElementImpl" ||
-        oTypeName == "ConstLocalVariableElementImpl" ||
-        oTypeName == "FieldElementImpl" ||
-        oTypeName == "ConstFieldElementImpl" ||
-        oTypeName == "TopLevelVariableElementImpl" ||
-        oTypeName == "ConstTopLevelVariableElementImpl") {
-      return true;
-    }
-  }
-  // no
-  return false;
 }
 
 class JavaArrays {
@@ -115,11 +58,14 @@ class Character {
   static const int MIN_SUPPLEMENTARY_CODE_POINT = 0x010000;
   static const int MIN_LOW_SURROGATE  = 0xDC00;
   static const int MIN_HIGH_SURROGATE = 0xD800;
+  static bool isDigit(int c) {
+    return c >= 0x30 && c <= 0x39;
+  }
   static bool isLetter(int c) {
     return c >= 0x41 && c <= 0x5A || c >= 0x61 && c <= 0x7A;
   }
   static bool isLetterOrDigit(int c) {
-    return isLetter(c) || c >= 0x30 && c <= 0x39;
+    return isLetter(c) || isDigit(c);
   }
   static bool isWhitespace(int c) {
     return c == 0x09 || c == 0x20 || c == 0x0A || c == 0x0D;
@@ -265,7 +211,7 @@ class PrintStringWriter extends PrintWriter {
 }
 
 class StringUtils {
-  static List<String> split(String s, String pattern) => s.split(pattern);
+  static List<String> split(String s, [String pattern = '']) => s.split(pattern);
   static String replace(String s, String from, String to) => s.replaceAll(from, to);
   static String repeat(String s, int n) {
     StringBuffer sb = new StringBuffer();
@@ -312,6 +258,10 @@ class IllegalStateException extends JavaException {
 
 class UnsupportedOperationException extends JavaException {
   String toString() => "UnsupportedOperationException";
+}
+
+class NoSuchElementException extends JavaException {
+  String toString() => "NoSuchElementException";
 }
 
 class NumberFormatException extends JavaException {
@@ -436,6 +386,10 @@ bool javaBooleanAnd(bool a, bool b) {
   return a && b;
 }
 
+int javaByte(Object o) {
+  return (o as int) & 0xFF;
+}
+
 class JavaStringBuilder {
   StringBuffer sb = new StringBuffer();
   String toString() => sb.toString();
@@ -471,7 +425,7 @@ abstract class Enum<E extends Enum> implements Comparable<E> {
   final String name;
   /// The position in the enum declaration.
   final int ordinal;
-  Enum(this.name, this.ordinal);
+  const Enum(this.name, this.ordinal);
   int get hashCode => ordinal;
   String toString() => name;
   int compareTo(E other) => ordinal - other.ordinal;

@@ -30,7 +30,6 @@ library polymer_expressions;
 import 'dart:async';
 import 'dart:html';
 
-import 'package:logging/logging.dart';
 import 'package:observe/observe.dart';
 import 'package:template_binding/template_binding.dart';
 
@@ -38,8 +37,6 @@ import 'eval.dart';
 import 'expression.dart';
 import 'parser.dart';
 import 'src/globals.dart';
-
-final Logger _logger = new Logger('polymer_expressions');
 
 // TODO(justin): Investigate XSS protection
 Object _classAttributeConverter(v) =>
@@ -64,7 +61,7 @@ class PolymerExpressions extends BindingDelegate {
    * [DEFAULT_GLOBALS] will be used.
    */
   PolymerExpressions({Map<String, Object> globals})
-      : globals = (globals == null) ?
+      : globals = globals == null ?
           new Map<String, Object>.from(DEFAULT_GLOBALS) : globals;
 
   prepareBinding(String path, name, node) {
@@ -81,17 +78,23 @@ class PolymerExpressions extends BindingDelegate {
       return null;
     }
 
-    return (model, node) {
+    return (model, node, oneTime) {
       if (model is! Scope) {
         model = new Scope(model: model, variables: globals);
       }
+      var converter = null;
       if (node is Element && name == "class") {
-        return new _Binding(expr, model, _classAttributeConverter);
+        converter = _classAttributeConverter;
       }
       if (node is Element && name == "style") {
-        return new _Binding(expr, model, _styleAttributeConverter);
+        converter = _styleAttributeConverter;
       }
-      return new _Binding(expr, model);
+
+      if (oneTime) {
+        return _Binding._oneTime(expr, model, converter);
+      }
+
+      return new _Binding(expr, model, converter);
     };
   }
 
@@ -99,50 +102,82 @@ class PolymerExpressions extends BindingDelegate {
       model is Scope ? model : new Scope(model: model, variables: globals);
 }
 
-class _Binding extends ChangeNotifier {
+class _Binding extends Bindable {
   final Scope _scope;
-  final ExpressionObserver _expr;
   final _converter;
+  Expression _expr;
+  Function _callback;
+  StreamSubscription _sub;
   var _value;
 
-  _Binding(Expression expr, Scope scope, [this._converter])
-      : _expr = observe(expr, scope),
-        _scope = scope {
-    _expr.onUpdate.listen(_setValue).onError((e) {
-      _logger.warning("Error evaluating expression '$_expr': ${e.message}");
-    });
+  _Binding(this._expr, this._scope, [this._converter]);
+
+  static _oneTime(Expression expr, Scope scope, [converter]) {
     try {
-      update(_expr, _scope);
-      _setValue(_expr.currentValue);
-    } on EvalException catch (e) {
-      _logger.warning("Error evaluating expression '$_expr': ${e.message}");
+      return _convertValue(eval(expr, scope), scope, converter);
+    } catch (e, s) {
+      new Completer().completeError(
+          "Error evaluating expression '$expr': $e", s);
     }
+    return null;
   }
 
   _setValue(v) {
-    var oldValue = _value;
+    _value = _convertValue(v, _scope, _converter);
+    if (_callback != null) _callback(_value);
+  }
+
+  static _convertValue(v, scope, converter) {
     if (v is Comprehension) {
       // convert the Comprehension into a list of scopes with the loop
       // variable added to the scope
-      _value = v.iterable.map((i) {
-        var vars = new Map();
-        vars[v.identifier] = i;
-        Scope childScope = new Scope(parent: _scope, variables: vars);
-        return childScope;
-      }).toList(growable: false);
+      return v.iterable.map((i) => scope.childScope(v.identifier, i))
+          .toList(growable: false);
     } else {
-      _value = (_converter == null) ? v : _converter(v);
+      return converter == null ? v : converter(v);
     }
-    notifyPropertyChange(#value, oldValue, _value);
   }
 
-  @reflectable get value => _value;
+  get value {
+    if (_callback != null) return _value;
+    return _oneTime(_expr, _scope, _converter);
+  }
 
-  @reflectable set value(v) {
+  set value(v) {
     try {
       assign(_expr, v, _scope);
-    } on EvalException catch (e) {
-      _logger.warning("Error evaluating expression '$_expr': ${e.message}");
+    } catch (e, s) {
+      new Completer().completeError(
+          "Error evaluating expression '$_expr': $e", s);
     }
+  }
+
+  open(callback(value)) {
+    if (_callback != null) throw new StateError('already open');
+
+    _callback = callback;
+    final expr = observe(_expr, _scope);
+    _expr = expr;
+    _sub = expr.onUpdate.listen(_setValue)..onError((e, s) {
+      new Completer().completeError(
+          "Error evaluating expression '$expr': $e", s);
+    });
+    try {
+      update(expr, _scope);
+      _value = _convertValue(expr.currentValue, _scope, _converter);
+    } catch (e, s) {
+      new Completer().completeError(
+          "Error evaluating expression '$expr': $e", s);
+    }
+    return _value;
+  }
+
+  void close() {
+    if (_callback == null) return;
+
+    _sub.cancel();
+    _sub = null;
+    _expr = (_expr as ExpressionObserver).expression;
+    _callback = null;
   }
 }

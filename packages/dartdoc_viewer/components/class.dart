@@ -37,7 +37,7 @@ class ClassElement extends MemberElement {
   Class get defaultItem => _defaultItem;
 
   static final _defaultItem = new Class.forPlaceholder('loading.loading',
-      'loading');
+      '<span>loading</span>');
 
   bool wrongClass(newItem) => newItem is! Class;
 

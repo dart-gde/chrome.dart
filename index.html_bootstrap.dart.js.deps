@@ -87,6 +87,7 @@ file:///home/ubuntu/dart/dart-sdk/lib/core/pattern.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/print.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/regexp.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/set.dart
+file:///home/ubuntu/dart/dart-sdk/lib/core/sink.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/stacktrace.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/stopwatch.dart
 file:///home/ubuntu/dart/dart-sdk/lib/core/string.dart
@@ -131,7 +132,6 @@ file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/ou
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/collection/equality.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/collection/src/unmodifiable_wrappers.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/collection/wrappers.dart
-file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/custom_element/polyfill.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/dartdoc_viewer/analytics.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/dartdoc_viewer/app.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/dartdoc_viewer/components/annotations.dart
@@ -170,9 +170,9 @@ file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/ou
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/html.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/observe.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/bind_property.dart
+file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/bindable.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/change_notifier.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/change_record.dart
-file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/compound_path_observer.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/dirty_check.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/list_diff.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/list_path_observer.dart
@@ -181,6 +181,7 @@ file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/ou
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/observable_box.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/observable_list.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/observable_map.dart
+file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/observer_transform.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/path_observer.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/observe/src/to_observable.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/path/path.dart
@@ -193,7 +194,6 @@ file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/ou
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/path/src/style/windows.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer/deserialize.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer/polymer.dart
-file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer/src/boot.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer/src/build/utils.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer/src/declaration.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer/src/instance.dart
@@ -206,16 +206,20 @@ file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/ou
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer_expressions/parser.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer_expressions/polymer_expressions.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer_expressions/src/globals.dart
-file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer_expressions/src/mirrors.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer_expressions/tokenizer.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/polymer_expressions/visitor.dart
+file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/smoke/mirrors.dart
+file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/smoke/smoke.dart
+file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/smoke/src/common.dart
+file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/smoke/src/implementation.dart
+file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/smoke/static.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/template_binding/src/binding_delegate.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/template_binding/src/element.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/template_binding/src/input_bindings.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/template_binding/src/input_element.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/template_binding/src/instance_binding_map.dart
+file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/template_binding/src/mustache_tokens.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/template_binding/src/node.dart
-file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/template_binding/src/node_binding.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/template_binding/src/select_element.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/template_binding/src/template.dart
 file:///home/ubuntu/src/github.com/dart-gde/chrome.dart/dartdoc-viewer/client/out/web/packages/template_binding/src/template_iterator.dart

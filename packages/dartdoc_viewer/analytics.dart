@@ -40,7 +40,7 @@ class Tracker {
   }
 
   void _track() {
-    var ga = new JsObject(context['ga']);
+    var ga = context['ga'];
     if (ga != null) {
       var data = new JsObject.jsify({ 'page': _lastLoc });
       context.callMethod('ga', ['send', 'pageview', data]);

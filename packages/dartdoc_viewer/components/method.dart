@@ -10,13 +10,12 @@ import 'package:dartdoc_viewer/member.dart';
 import 'package:dartdoc_viewer/item.dart';
 
 
-@initMethod _init() {
+@initMethod registerMethodElement() {
   Polymer.register('method-panel', MethodElement);
   Polymer.register('dartdoc-method', MethodElement);
 }
 
 /// Shared type for dartdoc-method and method-panel
-@reflectable
 class MethodElement extends InheritedElement with ChangeNotifier  {
   @reflectable @observable bool get isNotConstructor => __$isNotConstructor; bool __$isNotConstructor; @reflectable set isNotConstructor(bool value) { __$isNotConstructor = notifyPropertyChange(#isNotConstructor, __$isNotConstructor, value); }
   @reflectable @observable String get modifiers => __$modifiers; String __$modifiers; @reflectable set modifiers(String value) { __$modifiers = notifyPropertyChange(#modifiers, __$modifiers, value); }
@@ -25,9 +24,9 @@ class MethodElement extends InheritedElement with ChangeNotifier  {
 
   MethodElement.created() : super.created();
 
-  wrongClass(newItem) => newItem is! Method;
+  bool wrongClass(newItem) => newItem is! Method;
 
-  itemChanged() {
+  void itemChanged() {
     super.itemChanged();
     if (item == null) return;
 
@@ -37,7 +36,8 @@ class MethodElement extends InheritedElement with ChangeNotifier  {
     modifiers = constantModifier + staticModifier;
   }
 
-  get defaultItem => _defaultItem;
+  Method get defaultItem => _defaultItem;
+
   static final _defaultItem = new Method({
     "name" : "Loading",
     "qualifiedName" : "Loading",
