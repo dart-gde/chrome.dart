@@ -100,17 +100,21 @@ class ArrayBuffer extends ChromeObject {
   }
 
   List<int> getBytes() {
-    var int8View = new JsObject(context['Uint8Array'], [jsProxy]);
+    if (jsProxy is typed_data.Uint8List) {
+      return jsProxy as typed_data.Uint8List;
+    } else {
+      var int8View = new JsObject(context['Uint8Array'], [jsProxy]);
 
-    List<int> result = new List<int>(int8View['length']);
+      List<int> result = new List<int>(int8View['length']);
 
-    // TODO: this is _very_ slow
-    // can we instead do: jsArray = Array.apply([], int8View);
-    for (int i = 0; i < result.length; i++) {
-      result[i] = int8View[i];
+      // TODO: this is _very_ slow
+      // can we instead do: jsArray = Array.apply([], int8View);
+      for (int i = 0; i < result.length; i++) {
+        result[i] = int8View[i];
+      }
+
+      return result;
     }
-
-    return result;
   }
 }
 
@@ -133,16 +137,6 @@ class _Uint8ListArrayBuffer implements ArrayBuffer {
   }
 
   JsObject toJs() => jsProxy;
-}
-
-// TODO: this is a hack, to eliminate analysis warnings. remove as soon as possible
-class DeviceCallback {
-  DeviceCallback.fromProxy(JsObject jsProxy);
-}
-
-// TODO: this is a hack, to eliminate analysis warnings. remove as soon as possible
-class SuggestFilenameCallback {
-  SuggestFilenameCallback.fromProxy(JsObject jsProxy);
 }
 
 // TODO:
