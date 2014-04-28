@@ -139,6 +139,16 @@ class _Uint8ListArrayBuffer implements ArrayBuffer {
   JsObject toJs() => jsProxy;
 }
 
+// TODO: this is a hack, to eliminate analysis warnings. remove as soon as possible
+class DeviceCallback {
+  DeviceCallback.fromProxy(JsObject jsProxy);
+}
+
+// TODO: this is a hack, to eliminate analysis warnings. remove as soon as possible
+class SuggestFilenameCallback {
+  SuggestFilenameCallback.fromProxy(JsObject jsProxy);
+}
+
 // TODO:
 class LocalMediaStream extends ChromeObject {
   static LocalMediaStream create(JsObject jsProxy) => new LocalMediaStream.fromProxy(jsProxy);
