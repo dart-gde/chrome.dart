@@ -1,5 +1,13 @@
 # Changelog - chrome.dart
 
+## 0.5.6 2014-04-29 (SDK 1.4.0-dev.4.0 r35362)
+
+- Added speculative performance fix for array performance issue
+
+## 0.5.5 2014-04-14 (SDK 1.3.0-dev.4.1 r33731)
+
+- Fixed support change in transformers
+
 ## 0.5.4 2014-03-19 (SDK 1.3.0-dev.4.1 r33731)
 
 - Update to latest serial.idl
