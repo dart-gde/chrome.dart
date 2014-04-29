@@ -6,7 +6,7 @@
 
 ## 0.5.5 2014-04-14 (SDK 1.3.0-dev.4.1 r33731)
 
-- Fixed support change in transformers
+- Make the pub transformer work with the old and new version of barback
 
 ## 0.5.4 2014-03-19 (SDK 1.3.0-dev.4.1 r33731)
 
