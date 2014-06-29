@@ -5,6 +5,7 @@
     "app.window",
     "audio",
     "bluetooth",
+    "browser",
     "contextMenus",
     "events",
     "fileSystem",

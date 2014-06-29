@@ -9,6 +9,7 @@ export 'gen/alarms.dart';
 export 'gen/app.dart';
 export 'gen/audio.dart';
 export 'gen/bluetooth.dart';
+export 'gen/browser.dart';
 export 'gen/context_menus.dart';
 export 'gen/events.dart';
 export 'gen/file_system.dart';
