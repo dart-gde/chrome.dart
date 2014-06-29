@@ -126,6 +126,11 @@ class GenApis {
   }
 
   void _generateCombinedFile(Overrides overrides, String shortName, List<String> libNames) {
+    Directory genDir = new Directory(pathos.join(outDirPath, 'gen'));
+    if (!genDir.existsSync()) {
+      genDir.createSync();
+    }
+
     String fileName = _convertJSLibNameToFileName(shortName);
     File outFile = new File(pathos.join(outDirPath, 'gen', "${fileName}.dart"));
     File patchFile = new File(pathos.join(outDirPath, 'gen', "${fileName}_patch.dart"));
