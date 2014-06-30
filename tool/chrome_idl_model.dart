@@ -169,9 +169,16 @@ class IDLAttributeTypeEnum {
 
   const IDLAttributeTypeEnum._(this.type);
 
-  static const List<IDLAttributeTypeEnum> values = const [INSTANCE_OF,
-    SUPPORTS_FILTER, NOINLINE_DOC, INLINE_DOC, NODOC, NOCOMPILE, LEGAL_VALUES,
-    PERMISSIONS, MAX_LISTENERS];
+  static const List<IDLAttributeTypeEnum> values = const [DEPRECATED,
+    INSTANCE_OF, SUPPORTS_FILTER, NOINLINE_DOC, INLINE_DOC, NODOC, NOCOMPILE,
+    LEGAL_VALUES, PERMISSIONS, MAX_LISTENERS];
+
+  /**
+   * Example:
+   *
+   *     [deprecated="Use innerBounds or outerBounds."]
+   */
+  static const DEPRECATED = const IDLAttributeTypeEnum._("deprecated");
 
   /**
    * Example:
