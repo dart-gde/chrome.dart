@@ -23,7 +23,8 @@ class ChromeSessions extends ChromeApi {
   bool get available => _sessions != null;
 
   /**
-   * The maximum number of [Session] that will be included in a requested list.
+   * The maximum number of [sessions.Session] that will be included in a
+   * requested list.
    */
   int get MAX_SESSION_RESULTS => _sessions['MAX_SESSION_RESULTS'];
 
@@ -47,10 +48,10 @@ class ChromeSessions extends ChromeApi {
    * Retrieves all devices with synced sessions.
    * 
    * Returns:
-   * The list of [Device] objects for each synced session, sorted in order from
-   * device with most recently modified session to device with least recently
-   * modified session. [tabs.Tab] objects are sorted by recency in the
-   * [windows.Window] of the [Session] objects.
+   * The list of [sessions.Device] objects for each synced session, sorted in
+   * order from device with most recently modified session to device with least
+   * recently modified session. [tabs.Tab] objects are sorted by recency in the
+   * [windows.Window] of the [sessions.Session] objects.
    */
   Future<List<Device>> getDevices([Filter filter]) {
     if (_sessions == null) _throwNotAvailable();
@@ -68,7 +69,8 @@ class ChromeSessions extends ChromeApi {
    * restore.
    * 
    * Returns:
-   * A [Session] containing the restored [windows.Window] or [tabs.Tab] object.
+   * A [sessions.Session] containing the restored [windows.Window] or [tabs.Tab]
+   * object.
    */
   Future<Session> restore([String sessionId]) {
     if (_sessions == null) _throwNotAvailable();
@@ -92,7 +94,7 @@ class Filter extends ChromeObject {
   /**
    * The maximum number of entries to be fetched in the requested list. Omit
    * this parameter to fetch the maximum number of entries
-   * ([MAX_SESSION_RESULTS]).
+   * ([sessions.MAX_SESSION_RESULTS]).
    */
   int get maxResults => jsProxy['maxResults'];
   set maxResults(int value) => jsProxy['maxResults'] = value;
@@ -115,14 +117,14 @@ class Session extends ChromeObject {
 
   /**
    * The [tabs.Tab], if this entry describes a tab. Either this or
-   * [Session.window] will be set.
+   * [sessions.Session.window] will be set.
    */
   Tab get tab => _createTab(jsProxy['tab']);
   set tab(Tab value) => jsProxy['tab'] = jsify(value);
 
   /**
    * The [windows.Window], if this entry describes a window. Either this or
-   * [Session.tab] will be set.
+   * [sessions.Session.tab] will be set.
    */
   Window get window => _createWindow(jsProxy['window']);
   set window(Window value) => jsProxy['window'] = jsify(value);

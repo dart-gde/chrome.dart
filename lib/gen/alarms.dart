@@ -83,19 +83,23 @@ class ChromeAlarms extends ChromeApi {
    * Clears the alarm with the given name.
    * [name]: The name of the alarm to clear. Defaults to the empty string.
    */
-  void clear([String name]) {
+  Future<bool> clear([String name]) {
     if (_alarms == null) _throwNotAvailable();
 
-    _alarms.callMethod('clear', [name]);
+    var completer = new ChromeCompleter<bool>.oneArg();
+    _alarms.callMethod('clear', [name, completer.callback]);
+    return completer.future;
   }
 
   /**
    * Clears all alarms.
    */
-  void clearAll() {
+  Future<bool> clearAll() {
     if (_alarms == null) _throwNotAvailable();
 
-    _alarms.callMethod('clearAll');
+    var completer = new ChromeCompleter<bool>.oneArg();
+    _alarms.callMethod('clearAll', [completer.callback]);
+    return completer.future;
   }
 
   void _throwNotAvailable() {

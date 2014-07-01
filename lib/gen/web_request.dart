@@ -216,9 +216,13 @@ class BlockingResponse extends ChromeObject {
   set cancel(bool value) => jsProxy['cancel'] = value;
 
   /**
-   * Only used as a response to the onBeforeRequest event. If set, the original
-   * request is prevented from being sent and is instead redirected to the given
-   * URL.
+   * Only used as a response to the onBeforeRequest and onHeadersReceived
+   * events. If set, the original request is prevented from being sent/completed
+   * and is instead redirected to the given URL. Redirections to non-HTTP
+   * schemes such as data: are allowed. Redirects initiated by a redirect action
+   * use the original request method for the redirect, with one exception: If
+   * the redirect is initiated at the onHeadersReceived stage, then the redirect
+   * will be issued using the GET method.
    */
   String get redirectUrl => jsProxy['redirectUrl'];
   set redirectUrl(String value) => jsProxy['redirectUrl'] = value;

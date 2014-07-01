@@ -6,11 +6,108 @@
 // have an optional frame with title bar and size controls. They are not
 // associated with any Chrome browser windows.
 namespace app.window {
-  dictionary Bounds {
+
+  // Previously named Bounds.
+  dictionary ContentBounds {
     long? left;
     long? top;
     long? width;
     long? height;
+  };
+
+  dictionary BoundsSpecification {
+    // The X coordinate of the content or window.
+    long? left;
+
+    // The Y coordinate of the content or window.
+    long? top;
+
+    // The width of the content or window.
+    long? width;
+
+    // The height of the content or window.
+    long? height;
+
+    // The minimum width of the content or window.
+    long? minWidth;
+
+    // The minimum height of the content or window.
+    long? minHeight;
+
+    // The maximum width of the content or window.
+    long? maxWidth;
+
+    // The maximum height of the content or window.
+    long? maxHeight;
+  };
+
+  dictionary Bounds {
+    // This property can be used to read or write the current X coordinate of
+    // the content or window.
+    long left;
+
+    // This property can be used to read or write the current Y coordinate of
+    // the content or window.
+    long top;
+
+    // This property can be used to read or write the current width of the
+    // content or window.
+    long width;
+
+    // This property can be used to read or write the current height of the
+    // content or window.
+    long height;
+
+    // This property can be used to read or write the current minimum width of
+    // the content or window. A value of <code>null</code> indicates
+    // 'unspecified'.
+    long? minWidth;
+
+    // This property can be used to read or write the current minimum height of
+    // the content or window. A value of <code>null</code> indicates
+    // 'unspecified'.
+    long? minHeight;
+
+    // This property can be used to read or write the current maximum width of
+    // the content or window. A value of <code>null</code> indicates
+    // 'unspecified'.
+    long? maxWidth;
+
+    // This property can be used to read or write the current maximum height of
+    // the content or window. A value of <code>null</code> indicates
+    // 'unspecified'.
+    long? maxHeight;
+
+    // Set the left and top position of the content or window.
+    static void setPosition(long left, long top);
+
+    // Set the width and height of the content or window.
+    static void setSize(long width, long height);
+
+    // Set the minimum size constraints of the content or window. The minimum
+    // width or height can be set to <code>null</code> to remove the constraint.
+    // A value of <code>undefined</code> will leave a constraint unchanged.
+    static void setMinimumSize(long minWidth, long minHeight);
+
+    // Set the maximum size constraints of the content or window. The maximum
+    // width or height can be set to <code>null</code> to remove the constraint.
+    // A value of <code>undefined</code> will leave a constraint unchanged.
+    static void setMaximumSize(long maxWidth, long maxHeight);
+  };
+
+  dictionary FrameOptions {
+    // Frame type: <code>none</code> or <code>chrome</code> (defaults to
+    // <code>chrome</code>).<br>
+    // For <code>none</code>, the <code>-webkit-app-region</code> CSS property
+    // can be used to apply draggability to the app's window.
+    // <code>-webkit-app-region: drag</code> can be used to mark regions
+    // draggable. <code>no-drag</code> can be used to disable this style on
+    // nested elements.<br>
+    DOMString? type;
+    // Allows the frame color to be set. Frame coloring is only available if the
+    // frame type is <code>chrome</code>.
+    // Frame coloring is experimental and only available in dev channel.
+    DOMString? color;
   };
 
   // State of a window: normal, fullscreen, maximized, minimized.
@@ -24,46 +121,73 @@ namespace app.window {
     // Id to identify the window. This will be used to remember the size
     // and position of the window and restore that geometry when a window
     // with the same id is later opened.
+    // If a window with a given id is created while another window with the same
+    // id already exists, the currently opened window will be focused instead of
+    // creating a new window.
     DOMString? id;
 
-    // Default width of the window. (Deprecated; regular bounds act like this
-    // now.)
-    [nodoc] long? defaultWidth;
+    // Used to specify the initial position, initial size and constraints of the
+    // window's content (excluding window decorations).
+    // If an <code>id</code> is also specified and a window with a matching
+    // <code>id</code> has been shown before, the remembered bounds will be used
+    // instead.
+    //
+    // Note that the padding between the inner and outer bounds is determined by
+    // the OS. Therefore setting the same bounds property for both the
+    // <code>innerBounds</code> and <code>outerBounds</code> will result in an
+    // error.
+    //
+    // Currently only available on the Dev channel from Chrome 35.
+    BoundsSpecification? innerBounds;
 
-    // Default height of the window. (Deprecated; regular bounds act like this
-    // now.)
-    [nodoc] long? defaultHeight;
+    // Used to specify the initial position, initial size and constraints of the
+    // window (including window decorations such as the title bar and frame).
+    // If an <code>id</code> is also specified and a window with a matching
+    // <code>id</code> has been shown before, the remembered bounds will be used
+    // instead.
+    //
+    // Note that the padding between the inner and outer bounds is determined by
+    // the OS. Therefore setting the same bounds property for both the
+    // <code>innerBounds</code> and <code>outerBounds</code> will result in an
+    // error.
+    //
+    // Currently only available on the Dev channel from Chrome 35.
+    BoundsSpecification? outerBounds;
 
-    // Default X coordinate of the window. (Deprecated; regular bounds act like
-    // this now.)
-    [nodoc] long? defaultLeft;
+    // Default width of the window.
+    [nodoc, deprecated="Use $(ref:BoundsSpecification)."] long? defaultWidth;
 
-    // Default Y coordinate of the window. (Deprecated; regular bounds act like
-    // this now.)
-    [nodoc] long? defaultTop;
+    // Default height of the window.
+    [nodoc, deprecated="Use $(ref:BoundsSpecification)."] long? defaultHeight;
 
-    // Width of the window. (Deprecated; use 'bounds'.)
-    [nodoc] long? width;
+    // Default X coordinate of the window.
+    [nodoc, deprecated="Use $(ref:BoundsSpecification)."] long? defaultLeft;
 
-    // Height of the window. (Deprecated; use 'bounds'.)
-    [nodoc] long? height;
+    // Default Y coordinate of the window.
+    [nodoc, deprecated="Use $(ref:BoundsSpecification)."] long? defaultTop;
 
-    // X coordinate of the window. (Deprecated; use 'bounds'.)
-    [nodoc] long? left;
+    // Width of the window.
+    [nodoc, deprecated="Use $(ref:BoundsSpecification)."] long? width;
 
-    // Y coordinate of the window. (Deprecated; use 'bounds'.)
-    [nodoc] long? top;
+    // Height of the window.
+    [nodoc, deprecated="Use $(ref:BoundsSpecification)."] long? height;
 
-    // Minimum width for the lifetime of the window.
+    // X coordinate of the window.
+    [nodoc, deprecated="Use $(ref:BoundsSpecification)."] long? left;
+
+    // Y coordinate of the window.
+    [nodoc, deprecated="Use $(ref:BoundsSpecification)."] long? top;
+
+    // Minimum width of the window.
     long? minWidth;
 
-    // Minimum height for the lifetime of the window.
+    // Minimum height of the window.
     long? minHeight;
 
-    // Maximum width for the lifetime of the window.
+    // Maximum width of the window.
     long? maxWidth;
 
-    // Maximum height for the lifetime of the window.
+    // Maximum height of the window.
     long? maxHeight;
 
     // Type of window to create.
@@ -74,13 +198,14 @@ namespace app.window {
     // <code>-webkit-app-region</code> CSS property can be used to apply
     // draggability to the app's window. <code>-webkit-app-region: drag</code>
     // can be used to mark regions draggable. <code>no-drag</code> can be used
-    // to disable this style on nested elements.
+    // to disable this style on nested elements.<br>
+    // Use of <code>FrameOptions</code> is only supported in dev channel.
     DOMString? frame;
 
     // Size and position of the content in the window (excluding the titlebar).
     // If an id is also specified and a window with a matching id has been shown
     // before, the remembered bounds of the window will be used instead.
-    Bounds? bounds;
+    ContentBounds? bounds;
 
     // Enable window background transparency.
     // Only supported in ash. Requires experimental API permission.
@@ -102,31 +227,42 @@ namespace app.window {
     // window with the same id already exists that window is activated instead.
     // If you do want to create multiple windows with the same id, you can
     // set this property to false.
-    boolean? singleton;
+    [deprecated="Multiple windows with the same id is no longer supported."] boolean? singleton;
 
     // If true, the window will stay above most other windows. If there are
     // multiple windows of this kind, the currently focused window will be in
-    // the foreground. Defaults to false. Call <code>setAlwaysOnTop()</code> on
-    // the window to change this property after creation.
-    // Currently available in the Dev channel only.
+    // the foreground. Requires the <code>"app.window.alwaysOnTop"</code>
+    // permission. Defaults to false.<br>
+    // Call <code>setAlwaysOnTop()</code> on the window to change this property
+    // after creation.<br>
     boolean? alwaysOnTop;
+
+    // If true, the window will be focused when created. Defaults to true.
+    boolean? focused;
   };
 
   // Called in the creating window (parent) before the load event is called in
   // the created window (child). The parent can set fields or functions on the
   // child usable from onload. E.g. background.js:<br>
-  // <code>function(created_window) { created_window.contentWindow.foo =
+  // <code>function(createdWindow) { createdWindow.contentWindow.foo =
   // function () { }; };</code>
   // <br>window.js:<br>
   // <code>window.onload = function () { foo(); }</code>
   callback CreateWindowCallback =
-      void ([instanceOf=AppWindow] object created_window);
+      void ([instanceOf=AppWindow] object createdWindow);
 
   [noinline_doc] dictionary AppWindow {
     // Focus the window.
     static void focus();
 
-    // Fullscreens the window.
+    // Fullscreens the window.<br>
+    // The user will be able to restore the window by pressing ESC. An
+    // application can prevent the fullscreen state to be left when ESC is
+    // pressed by requesting the <b>app.window.fullscreen.overrideEsc</b>
+    // permission and canceling the event by calling .preventDefault(), like
+    // this:<br>
+    // <code>window.onKeyDown = function(e) { if (e.keyCode == 27 /* ESC */) {
+    // e.preventDefault(); } };</code>
     static void fullscreen();
 
     // Is the window fullscreen?
@@ -163,32 +299,57 @@ namespace app.window {
     static void close();
 
     // Show the window. Does nothing if the window is already visible.
-    static void show();
+    // Focus the window if |focused| is set to true or omitted.
+    static void show(optional boolean focused);
 
     // Hide the window. Does nothing if the window is already hidden.
     static void hide();
 
-    // Get the window's bounds as a $ref:Bounds object.
-    [nocompile] static Bounds getBounds();
+    // Get the window's inner bounds as a $(ref:ContentBounds) object.
+    [nocompile] static ContentBounds getBounds();
 
-    // Set the window's bounds.
-    static void setBounds(Bounds bounds);
+    // Set the window's inner bounds.
+    [nocompile] static void setBounds(ContentBounds bounds);
 
     // Set the app icon for the window (experimental).
     // Currently this is only being implemented on Ash.
     // TODO(stevenjb): Investigate implementing this on Windows and OSX.
-    [nodoc] static void setIcon(DOMString icon_url);
+    [nodoc] static void setIcon(DOMString iconUrl);
+
+    // Set a badge icon for the window.
+    // TODO(benwells): Document this properly before going to stable.
+    [nodoc] static void setBadgeIcon(DOMString iconUrl);
+
+    // Clear the current for the window.
+    // TODO(benwells): Document this properly before going to stable.
+    [nodoc] static void clearBadge();
 
     // Is the window always on top?
-    // Currently available in the Dev channel only.
     static boolean isAlwaysOnTop();
 
-    // Set whether the window should stay above most other windows.
-    // Currently available in the Dev channel only.
-    static void setAlwaysOnTop(boolean always_on_top);
+    // Accessors for testing.
+    [nodoc] boolean hasFrameColor;
+    [nodoc] long frameColor;
+
+    // Set whether the window should stay above most other windows. Requires the
+    // <code>"app.window.alwaysOnTop"</code> permission.
+    static void setAlwaysOnTop(boolean alwaysOnTop);
 
     // The JavaScript 'window' object for the created child.
     [instanceOf=Window] object contentWindow;
+
+    // The id the window was created with.
+    DOMString id;
+
+    // The position, size and constraints of the window's content, which does
+    // not include window decorations.
+    // Currently only available on the Dev channel from Chrome 35.
+    Bounds innerBounds;
+
+    // The position, size and constraints of the window, which includes window
+    // decorations, such as the title bar and frame.
+    // Currently only available on the Dev channel from Chrome 35.
+    Bounds outerBounds;
   };
 
   interface Functions {
@@ -197,11 +358,11 @@ namespace app.window {
     // all, in which case a default size and platform dependent position will
     // be used.
     //
-    // Another option is to use the bounds property, which will put the window
-    // at the specified coordinates with the specified size. If the window has
-    // a frame, it's total size will be the size given plus the size of the
-    // frame; that is, the size in bounds is the content size, not the window
-    // size.
+    // Another option is to use the <code>bounds</code> property, which will put
+    // the window at the specified coordinates with the specified size. If the
+    // window has a frame, it's total size will be the size given plus the size
+    // of the frame; that is, the size in bounds is the content size, not the
+    // window size.
     //
     // To automatically remember the positions of windows you can give them ids.
     // If a window has an id, This id is used to remember the size and position
@@ -214,12 +375,20 @@ namespace app.window {
                        optional CreateWindowOptions options,
                        optional CreateWindowCallback callback);
 
-    // Returns an $ref:AppWindow object for the
+    // Returns an $(ref:AppWindow) object for the
     // current script context (ie JavaScript 'window' object). This can also be
     // called on a handle to a script context for another page, for example:
     // otherWindow.chrome.app.window.current().
     [nocompile] static AppWindow current();
     [nocompile, nodoc] static void initializeAppWindow(object state);
+
+    // Gets an array of all currently created app windows. This method is new in
+    // Chrome 33.
+    [nocompile] static AppWindow[] getAll();
+
+    // Gets an $(ref:AppWindow) with the given id. If no window with the given id
+    // exists null is returned. This method is new in Chrome 33.
+    [nocompile] static AppWindow get(DOMString id);
   };
 
   interface Events {

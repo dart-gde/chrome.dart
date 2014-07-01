@@ -33,7 +33,7 @@
           {
             "name": "callback",
             "type": "function",
-            "optional": "false",
+            "optional": false,
             "parameters": [
               { "name": "is_enabled", "type": "boolean" }
             ]
@@ -49,7 +49,7 @@
           {
             "name": "callback",
             "type": "function",
-            "optional": "false",
+            "optional": false,
             "parameters": [
               { "name": "group", "type": "string" }
             ]
@@ -65,7 +65,7 @@
           {
             "name": "callback",
             "type": "function",
-            "optional": "false",
+            "optional": false,
             "parameters": [
               {
                 "name": "params",
@@ -142,6 +142,15 @@
         "name": "recordLongTime",
         "type": "function",
         "description": "Records an elapsed time of no more than 1 hour.  The sample value is specified in milliseconds.",
+        "parameters": [
+          {"name": "metricName", "type": "string"},
+          {"name": "value", "type": "integer"}
+        ]
+      },
+      {
+        "name": "recordSparseValue",
+        "type": "function",
+        "description": "Increments the count associated with |value| in the sparse histogram defined by the |metricName|.",
         "parameters": [
           {"name": "metricName", "type": "string"},
           {"name": "value", "type": "integer"}

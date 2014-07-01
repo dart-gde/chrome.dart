@@ -143,8 +143,31 @@ class ChromeInputIme extends ChromeApi {
   }
 
   /**
+   * Sends the key events.  This function is expected to be used by virtual
+   * keyboards.  When key(s) on a virtual keyboard is pressed by a user, this
+   * function is used to propagate that event to the system.
+   */
+  Future sendKeyEvents(InputImeSendKeyEventsParams parameters) {
+    if (_input_ime == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _input_ime.callMethod('sendKeyEvents', [jsify(parameters), completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Hides the input view window, which is popped up automatically by system. If
+   * the input view window is already hidden, this function will do nothing.
+   */
+  void hideInputView() {
+    if (_input_ime == null) _throwNotAvailable();
+
+    _input_ime.callMethod('hideInputView');
+  }
+
+  /**
    * Sets the properties of the candidate window. This fails if the extension
-   * doesn’t own the active IME
+   * doesn't own the active IME
    */
   Future<bool> setCandidateWindowProperties(InputImeSetCandidateWindowPropertiesParams parameters) {
     if (_input_ime == null) _throwNotAvailable();
@@ -155,7 +178,7 @@ class ChromeInputIme extends ChromeApi {
   }
 
   /**
-   * Sets the current candidate list. This fails if this extension doesn’t own
+   * Sets the current candidate list. This fails if this extension doesn't own
    * the active IME
    */
   Future<bool> setCandidates(InputImeSetCandidatesParams parameters) {
@@ -390,9 +413,10 @@ class UsageInputIme extends ChromeObject {
  * See http://www.w3.org/TR/DOM-Level-3-Events/#events-KeyboardEvent
  */
 class KeyboardEvent extends ChromeObject {
-  KeyboardEvent({String type, String requestId, String key, String code, bool altKey, bool ctrlKey, bool shiftKey, bool capsLock}) {
+  KeyboardEvent({String type, String requestId, String extensionId, String key, String code, bool altKey, bool ctrlKey, bool shiftKey, bool capsLock}) {
     if (type != null) this.type = type;
     if (requestId != null) this.requestId = requestId;
+    if (extensionId != null) this.extensionId = extensionId;
     if (key != null) this.key = key;
     if (code != null) this.code = code;
     if (altKey != null) this.altKey = altKey;
@@ -414,6 +438,12 @@ class KeyboardEvent extends ChromeObject {
    */
   String get requestId => jsProxy['requestId'];
   set requestId(String value) => jsProxy['requestId'] = value;
+
+  /**
+   * The extension ID of the sender of this keyevent.
+   */
+  String get extensionId => jsProxy['extensionId'];
+  set extensionId(String value) => jsProxy['extensionId'] = value;
 
   /**
    * Value of the key being pressed
@@ -471,8 +501,8 @@ class InputContext extends ChromeObject {
   set contextID(int value) => jsProxy['contextID'] = value;
 
   /**
-   * Type of value this text field edits, (Text, Number, Password, etc)
-   * enum of `text`, `number`, `password`
+   * Type of value this text field edits, (Text, Number, URL, etc)
+   * enum of `text`, `search`, `tel`, `url`, `email`, `number`
    */
   String get type => jsProxy['type'];
   set type(String value) => jsProxy['type'] = value;
@@ -611,6 +641,27 @@ class InputImeCommitTextParams extends ChromeObject {
    */
   String get text => jsProxy['text'];
   set text(String value) => jsProxy['text'] = value;
+}
+
+class InputImeSendKeyEventsParams extends ChromeObject {
+  InputImeSendKeyEventsParams({int contextID, List<KeyboardEvent> keyData}) {
+    if (contextID != null) this.contextID = contextID;
+    if (keyData != null) this.keyData = keyData;
+  }
+  InputImeSendKeyEventsParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  /**
+   * ID of the context where the key events will be sent, or zero to send key
+   * events to non-input field.
+   */
+  int get contextID => jsProxy['contextID'];
+  set contextID(int value) => jsProxy['contextID'] = value;
+
+  /**
+   * Data on the key event.
+   */
+  List<KeyboardEvent> get keyData => listify(jsProxy['keyData'], _createKeyboardEvent);
+  set keyData(List<KeyboardEvent> value) => jsProxy['keyData'] = jsify(value);
 }
 
 class InputImeSetCandidateWindowPropertiesParams extends ChromeObject {
@@ -754,6 +805,6 @@ OnMenuItemActivatedEvent _createOnMenuItemActivatedEvent(String engineID, String
     new OnMenuItemActivatedEvent(engineID, name);
 OnSurroundingTextChangedEvent _createOnSurroundingTextChangedEvent(String engineID, JsObject surroundingInfo) =>
     new OnSurroundingTextChangedEvent(engineID, mapify(surroundingInfo));
+KeyboardEvent _createKeyboardEvent(JsObject jsProxy) => jsProxy == null ? null : new KeyboardEvent.fromProxy(jsProxy);
 PropertiesInputIme _createPropertiesInputIme(JsObject jsProxy) => jsProxy == null ? null : new PropertiesInputIme.fromProxy(jsProxy);
 MenuItem _createMenuItem(JsObject jsProxy) => jsProxy == null ? null : new MenuItem.fromProxy(jsProxy);
-KeyboardEvent _createKeyboardEvent(JsObject jsProxy) => jsProxy == null ? null : new KeyboardEvent.fromProxy(jsProxy);

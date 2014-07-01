@@ -142,8 +142,8 @@ class _ChromeAppWindow extends ChromeApi {
    * ways. The most simple option is not specifying anything at all, in which
    * case a default size and platform dependent position will be used.
    * 
-   * Another option is to use the bounds property, which will put the window at
-   * the specified coordinates with the specified size. If the window has a
+   * Another option is to use the `bounds` property, which will put the window
+   * at the specified coordinates with the specified size. If the window has a
    * frame, it's total size will be the size given plus the size of the frame;
    * that is, the size in bounds is the content size, not the window size.
    * 
@@ -160,8 +160,8 @@ class _ChromeAppWindow extends ChromeApi {
    * the created window (child). The parent can set fields or functions on the
    * child usable from onload. E.g. background.js:
    * 
-   * `function(created_window) { created_window.contentWindow.foo = function ()
-   * { }; };`
+   * `function(createdWindow) { createdWindow.contentWindow.foo = function () {
+   * }; };`
    * 
    * window.js:
    * 
@@ -190,6 +190,27 @@ class _ChromeAppWindow extends ChromeApi {
     if (_app_window == null) _throwNotAvailable();
 
     _app_window.callMethod('initializeAppWindow', [jsify(state)]);
+  }
+
+  /**
+   * Gets an array of all currently created app windows. This method is new in
+   * Chrome 33.
+   */
+  List<AppWindow> getAll() {
+    if (_app_window == null) _throwNotAvailable();
+
+    var ret = _app_window.callMethod('getAll');
+    return ret;
+  }
+
+  /**
+   * Gets an [AppWindow] with the given id. If no window with the given id
+   * exists null is returned. This method is new in Chrome 33.
+   */
+  AppWindow get(String id) {
+    if (_app_window == null) _throwNotAvailable();
+
+    return _createAppWindow(_app_window.callMethod('get', [id]));
   }
 
   void _throwNotAvailable() {
@@ -224,9 +245,88 @@ class WindowType extends ChromeEnum {
   const WindowType._(String str): super(str);
 }
 
+/**
+ * Previously named Bounds.
+ */
+class ContentBounds extends ChromeObject {
+  ContentBounds({int left, int top, int width, int height}) {
+    if (left != null) this.left = left;
+    if (top != null) this.top = top;
+    if (width != null) this.width = width;
+    if (height != null) this.height = height;
+  }
+  ContentBounds.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get left => jsProxy['left'];
+  set left(int value) => jsProxy['left'] = value;
+
+  int get top => jsProxy['top'];
+  set top(int value) => jsProxy['top'] = value;
+
+  int get width => jsProxy['width'];
+  set width(int value) => jsProxy['width'] = value;
+
+  int get height => jsProxy['height'];
+  set height(int value) => jsProxy['height'] = value;
+}
+
+class BoundsSpecification extends ChromeObject {
+  BoundsSpecification({int left, int top, int width, int height, int minWidth, int minHeight, int maxWidth, int maxHeight}) {
+    if (left != null) this.left = left;
+    if (top != null) this.top = top;
+    if (width != null) this.width = width;
+    if (height != null) this.height = height;
+    if (minWidth != null) this.minWidth = minWidth;
+    if (minHeight != null) this.minHeight = minHeight;
+    if (maxWidth != null) this.maxWidth = maxWidth;
+    if (maxHeight != null) this.maxHeight = maxHeight;
+  }
+  BoundsSpecification.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get left => jsProxy['left'];
+  set left(int value) => jsProxy['left'] = value;
+
+  int get top => jsProxy['top'];
+  set top(int value) => jsProxy['top'] = value;
+
+  int get width => jsProxy['width'];
+  set width(int value) => jsProxy['width'] = value;
+
+  int get height => jsProxy['height'];
+  set height(int value) => jsProxy['height'] = value;
+
+  int get minWidth => jsProxy['minWidth'];
+  set minWidth(int value) => jsProxy['minWidth'] = value;
+
+  int get minHeight => jsProxy['minHeight'];
+  set minHeight(int value) => jsProxy['minHeight'] = value;
+
+  int get maxWidth => jsProxy['maxWidth'];
+  set maxWidth(int value) => jsProxy['maxWidth'] = value;
+
+  int get maxHeight => jsProxy['maxHeight'];
+  set maxHeight(int value) => jsProxy['maxHeight'] = value;
+}
+
+class FrameOptions extends ChromeObject {
+  FrameOptions({String type, String color}) {
+    if (type != null) this.type = type;
+    if (color != null) this.color = color;
+  }
+  FrameOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get type => jsProxy['type'];
+  set type(String value) => jsProxy['type'] = value;
+
+  String get color => jsProxy['color'];
+  set color(String value) => jsProxy['color'] = value;
+}
+
 class CreateWindowOptions extends ChromeObject {
-  CreateWindowOptions({String id, int defaultWidth, int defaultHeight, int defaultLeft, int defaultTop, int width, int height, int left, int top, int minWidth, int minHeight, int maxWidth, int maxHeight, WindowType type, String frame, Bounds bounds, bool transparentBackground, State state, bool hidden, bool resizable, bool singleton, bool alwaysOnTop}) {
+  CreateWindowOptions({String id, BoundsSpecification innerBounds, BoundsSpecification outerBounds, int defaultWidth, int defaultHeight, int defaultLeft, int defaultTop, int width, int height, int left, int top, int minWidth, int minHeight, int maxWidth, int maxHeight, WindowType type, String frame, ContentBounds bounds, bool transparentBackground, State state, bool hidden, bool resizable, bool singleton, bool alwaysOnTop, bool focused}) {
     if (id != null) this.id = id;
+    if (innerBounds != null) this.innerBounds = innerBounds;
+    if (outerBounds != null) this.outerBounds = outerBounds;
     if (defaultWidth != null) this.defaultWidth = defaultWidth;
     if (defaultHeight != null) this.defaultHeight = defaultHeight;
     if (defaultLeft != null) this.defaultLeft = defaultLeft;
@@ -248,11 +348,18 @@ class CreateWindowOptions extends ChromeObject {
     if (resizable != null) this.resizable = resizable;
     if (singleton != null) this.singleton = singleton;
     if (alwaysOnTop != null) this.alwaysOnTop = alwaysOnTop;
+    if (focused != null) this.focused = focused;
   }
   CreateWindowOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   String get id => jsProxy['id'];
   set id(String value) => jsProxy['id'] = value;
+
+  BoundsSpecification get innerBounds => _createBoundsSpecification(jsProxy['innerBounds']);
+  set innerBounds(BoundsSpecification value) => jsProxy['innerBounds'] = jsify(value);
+
+  BoundsSpecification get outerBounds => _createBoundsSpecification(jsProxy['outerBounds']);
+  set outerBounds(BoundsSpecification value) => jsProxy['outerBounds'] = jsify(value);
 
   int get defaultWidth => jsProxy['defaultWidth'];
   set defaultWidth(int value) => jsProxy['defaultWidth'] = value;
@@ -296,8 +403,8 @@ class CreateWindowOptions extends ChromeObject {
   String get frame => jsProxy['frame'];
   set frame(String value) => jsProxy['frame'] = value;
 
-  Bounds get bounds => _createBounds(jsProxy['bounds']);
-  set bounds(Bounds value) => jsProxy['bounds'] = jsify(value);
+  ContentBounds get bounds => _createContentBounds(jsProxy['bounds']);
+  set bounds(ContentBounds value) => jsProxy['bounds'] = jsify(value);
 
   bool get transparentBackground => jsProxy['transparentBackground'];
   set transparentBackground(bool value) => jsProxy['transparentBackground'] = value;
@@ -316,16 +423,39 @@ class CreateWindowOptions extends ChromeObject {
 
   bool get alwaysOnTop => jsProxy['alwaysOnTop'];
   set alwaysOnTop(bool value) => jsProxy['alwaysOnTop'] = value;
+
+  bool get focused => jsProxy['focused'];
+  set focused(bool value) => jsProxy['focused'] = value;
 }
 
 class _AppWindow extends ChromeObject {
-  _AppWindow({Window contentWindow}) {
+  _AppWindow({bool hasFrameColor, int frameColor, Window contentWindow, String id, Bounds innerBounds, Bounds outerBounds}) {
+    if (hasFrameColor != null) this.hasFrameColor = hasFrameColor;
+    if (frameColor != null) this.frameColor = frameColor;
     if (contentWindow != null) this.contentWindow = contentWindow;
+    if (id != null) this.id = id;
+    if (innerBounds != null) this.innerBounds = innerBounds;
+    if (outerBounds != null) this.outerBounds = outerBounds;
   }
   _AppWindow.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
+  bool get hasFrameColor => jsProxy['hasFrameColor'];
+  set hasFrameColor(bool value) => jsProxy['hasFrameColor'] = value;
+
+  int get frameColor => jsProxy['frameColor'];
+  set frameColor(int value) => jsProxy['frameColor'] = value;
+
   Window get contentWindow => _createWindow(jsProxy['contentWindow']);
   set contentWindow(Window value) => jsProxy['contentWindow'] = jsify(value);
+
+  String get id => jsProxy['id'];
+  set id(String value) => jsProxy['id'] = value;
+
+  Bounds get innerBounds => _createBounds(jsProxy['innerBounds']);
+  set innerBounds(Bounds value) => jsProxy['innerBounds'] = jsify(value);
+
+  Bounds get outerBounds => _createBounds(jsProxy['outerBounds']);
+  set outerBounds(Bounds value) => jsProxy['outerBounds'] = jsify(value);
 
   /**
    * Focus the window.
@@ -336,6 +466,14 @@ class _AppWindow extends ChromeObject {
 
   /**
    * Fullscreens the window.
+   * 
+   * The user will be able to restore the window by pressing ESC. An
+   * application can prevent the fullscreen state to be left when ESC is pressed
+   * by requesting the <b>app.window.fullscreen.overrideEsc</b> permission and
+   * canceling the event by calling .preventDefault(), like this:
+   * 
+   * `window.onKeyDown = function(e) { if (e.keyCode == 27 / ESC /) {
+   * e.preventDefault(); } };`
    */
   void fullscreen() {
     jsProxy.callMethod('fullscreen');
@@ -419,10 +557,11 @@ class _AppWindow extends ChromeObject {
   }
 
   /**
-   * Show the window. Does nothing if the window is already visible.
+   * Show the window. Does nothing if the window is already visible. Focus the
+   * window if [focused] is set to true or omitted.
    */
-  void show() {
-    jsProxy.callMethod('show');
+  void show([bool focused]) {
+    jsProxy.callMethod('show', [focused]);
   }
 
   /**
@@ -433,16 +572,16 @@ class _AppWindow extends ChromeObject {
   }
 
   /**
-   * Get the window's bounds as a [Bounds] object.
+   * Get the window's inner bounds as a [ContentBounds] object.
    */
-  Bounds getBounds() {
-    return _createBounds(jsProxy.callMethod('getBounds'));
+  ContentBounds getBounds() {
+    return _createContentBounds(jsProxy.callMethod('getBounds'));
   }
 
   /**
-   * Set the window's bounds.
+   * Set the window's inner bounds.
    */
-  void setBounds(Bounds bounds) {
+  void setBounds(ContentBounds bounds) {
     jsProxy.callMethod('setBounds', [jsify(bounds)]);
   }
 
@@ -451,28 +590,46 @@ class _AppWindow extends ChromeObject {
    * being implemented on Ash. todo(stevenjb): Investigate implementing this on
    * Windows and OSX.
    */
-  void setIcon(String icon_url) {
-    jsProxy.callMethod('setIcon', [icon_url]);
+  void setIcon(String iconUrl) {
+    jsProxy.callMethod('setIcon', [iconUrl]);
   }
 
   /**
-   * Is the window always on top? Currently available in the Dev channel only.
+   * Set a badge icon for the window. todo(benwells): Document this properly
+   * before going to stable.
+   */
+  void setBadgeIcon(String iconUrl) {
+    jsProxy.callMethod('setBadgeIcon', [iconUrl]);
+  }
+
+  /**
+   * Clear the current for the window. todo(benwells): Document this properly
+   * before going to stable.
+   */
+  void clearBadge() {
+    jsProxy.callMethod('clearBadge');
+  }
+
+  /**
+   * Is the window always on top?
    */
   bool isAlwaysOnTop() {
     return jsProxy.callMethod('isAlwaysOnTop');
   }
 
   /**
-   * Set whether the window should stay above most other windows. Currently
-   * available in the Dev channel only.
+   * Set whether the window should stay above most other windows. Requires the
+   * `"app.window.alwaysOnTop"` permission.
    */
-  void setAlwaysOnTop(bool always_on_top) {
-    jsProxy.callMethod('setAlwaysOnTop', [always_on_top]);
+  void setAlwaysOnTop(bool alwaysOnTop) {
+    jsProxy.callMethod('setAlwaysOnTop', [alwaysOnTop]);
   }
 }
 
 AppWindow _createAppWindow(JsObject jsProxy) => jsProxy == null ? null : new AppWindow.fromProxy(jsProxy);
+BoundsSpecification _createBoundsSpecification(JsObject jsProxy) => jsProxy == null ? null : new BoundsSpecification.fromProxy(jsProxy);
 WindowType _createWindowType(String value) => WindowType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
-Bounds _createBounds(JsObject jsProxy) => jsProxy == null ? null : new Bounds.fromProxy(jsProxy);
+ContentBounds _createContentBounds(JsObject jsProxy) => jsProxy == null ? null : new ContentBounds.fromProxy(jsProxy);
 State _createState(String value) => State.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
+Bounds _createBounds(JsObject jsProxy) => jsProxy == null ? null : new Bounds.fromProxy(jsProxy);

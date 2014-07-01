@@ -38,7 +38,13 @@ class ChromeSyncFileSystem extends ChromeApi {
    * Returns a syncable filesystem backed by Google Drive. The returned
    * `FileSystem` instance can be operated on in the same way as the
    * Temporary and Persistant file systems (see <a
-   * href="http://www.w3.org/TR/file-system-api/">http://www.w3.org/TR/file-system-api/</a>).
+   * href="http://www.w3.org/TR/file-system-api/">http://www.w3.org/TR/file-system-api/</a>),
+   * except that the filesystem object returned for Sync FileSystem does
+   * <b>NOT</b> support directory operations (yet). You can get a list of file
+   * entries by reading the root directory (by <a
+   * href="http://www.w3.org/TR/file-system-api/#widl-DirectoryEntry-createReader-DirectoryReader">creating
+   * a new DirectoryReader</a>), but cannot create a new directory in it.
+   * 
    * Calling this multiple times from the same app will return the same handle
    * to the same file system.
    * 

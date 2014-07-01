@@ -2,9 +2,9 @@
 
 /**
  * Use browser actions to put icons in the main Google Chrome toolbar, to the
- * right of the address bar. In addition to its [icon](#icon), a browser action
- * can also have a [tooltip](#tooltip), a [badge](#badge), and a <a href =
- * '#popups'>popup</a>.
+ * right of the address bar. In addition to its [icon](browserAction#icon), a
+ * browser action can also have a [tooltip](browserAction#tooltip), a
+ * [badge](browserAction#badge), and a [popup](browserAction#popups).
  */
 library chrome.browserAction;
 

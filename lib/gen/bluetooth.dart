@@ -1,7 +1,8 @@
 /* This file has been generated from bluetooth.idl - do not edit */
 
 /**
- * Use the `chrome.bluetooth` API to connect to a Bluetooth device.
+ * Use the `chrome.bluetooth` API to connect to a Bluetooth device. All
+ * functions report failures via chrome.runtime.lastError.
  */
 library chrome.bluetooth;
 
@@ -18,12 +19,24 @@ class ChromeBluetooth extends ChromeApi {
   Stream<AdapterState> get onAdapterStateChanged => _onAdapterStateChanged.stream;
   ChromeStreamController<AdapterState> _onAdapterStateChanged;
 
+  Stream<BluetoothDevice> get onDeviceAdded => _onDeviceAdded.stream;
+  ChromeStreamController<BluetoothDevice> _onDeviceAdded;
+
+  Stream<BluetoothDevice> get onDeviceChanged => _onDeviceChanged.stream;
+  ChromeStreamController<BluetoothDevice> _onDeviceChanged;
+
+  Stream<BluetoothDevice> get onDeviceRemoved => _onDeviceRemoved.stream;
+  ChromeStreamController<BluetoothDevice> _onDeviceRemoved;
+
   Stream<Socket> get onConnection => _onConnection.stream;
   ChromeStreamController<Socket> _onConnection;
 
   ChromeBluetooth._() {
     var getApi = () => _bluetooth;
     _onAdapterStateChanged = new ChromeStreamController<AdapterState>.oneArg(getApi, 'onAdapterStateChanged', _createAdapterState);
+    _onDeviceAdded = new ChromeStreamController<BluetoothDevice>.oneArg(getApi, 'onDeviceAdded', _createDevice);
+    _onDeviceChanged = new ChromeStreamController<BluetoothDevice>.oneArg(getApi, 'onDeviceChanged', _createDevice);
+    _onDeviceRemoved = new ChromeStreamController<BluetoothDevice>.oneArg(getApi, 'onDeviceRemoved', _createDevice);
     _onConnection = new ChromeStreamController<Socket>.oneArg(getApi, 'onConnection', _createSocket);
   }
 
@@ -68,41 +81,28 @@ class ChromeBluetooth extends ChromeApi {
   }
 
   /**
-   * Get a bluetooth devices known to the system. Known devices are either
-   * currently paired, or have been paired in the past.
-   * [options]: Controls which devices are returned and provides
-   * [deviceCallback], which is called for each matching device.
-   * [callback]: Called when the search is completed. |options.deviceCallback|
-   * will not be called after [callback] has been called.
+   * Get a list of Bluetooth devices known to the system, including paired and
+   * recently discovered devices.
+   * [callback]: Called when the search is completed.
    */
-  Future getDevices(GetDevicesOptions options) {
+  Future<List<BluetoothDevice>> getDevices() {
     if (_bluetooth == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter.noArgs();
-    _bluetooth.callMethod('getDevices', [jsify(options), completer.callback]);
+    var completer = new ChromeCompleter<List<BluetoothDevice>>.oneArg((e) => listify(e, _createDevice));
+    _bluetooth.callMethod('getDevices', [completer.callback]);
     return completer.future;
   }
 
   /**
-   * Returns the set of exported profiles for the device specified in options.
-   * This function will not initiate a connection to the remote device.
+   * Get information about a Bluetooth device known to the system.
+   * [deviceAddress]: Address of device to get.
+   * [callback]: Called with the BluetoothDevice object describing the device.
    */
-  Future<List<Profile>> getProfiles(GetProfilesOptions options) {
+  Future<BluetoothDevice> getDevice(String deviceAddress) {
     if (_bluetooth == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<List<Profile>>.oneArg((e) => listify(e, _createProfile));
-    _bluetooth.callMethod('getProfiles', [jsify(options), completer.callback]);
-    return completer.future;
-  }
-
-  /**
-   * Get a list of services provided by a device.
-   */
-  Future<List<ServiceRecord>> getServices(GetServicesOptions options) {
-    if (_bluetooth == null) _throwNotAvailable();
-
-    var completer = new ChromeCompleter<List<ServiceRecord>>.oneArg((e) => listify(e, _createServiceRecord));
-    _bluetooth.callMethod('getServices', [jsify(options), completer.callback]);
+    var completer = new ChromeCompleter<BluetoothDevice>.oneArg(_createDevice);
+    _bluetooth.callMethod('getDevice', [deviceAddress, completer.callback]);
     return completer.future;
   }
 
@@ -133,9 +133,11 @@ class ChromeBluetooth extends ChromeApi {
   }
 
   /**
-   * Read data from a Bluetooth connection.
+   * Read data from a Bluetooth connection. The [callback] will be called with
+   * the current data in the buffer even if it is empty. This function should be
+   * polled to read incoming data.
    * [options]: The options for this function.
-   * [callback]: Called with the data when it is available.
+   * [callback]: Called with the data read from the socket buffer.
    */
   Future<ArrayBuffer> read(ReadOptions options) {
     if (_bluetooth == null) _throwNotAvailable();
@@ -185,18 +187,21 @@ class ChromeBluetooth extends ChromeApi {
   }
 
   /**
-   * Start discovery. Discovered devices will be returned via the
-   * [onDeviceDiscovered] callback. Discovery will fail to start if it is
-   * already in progress. Discovery can be resource intensive: stopDiscovery
-   * should be called as soon as possible.
-   * [options]: The options for this function.
+   * Start discovery. Newly discovered devices will be returned via the
+   * onDeviceAdded event. Previously discovered devices already known to the
+   * adapter must be obtained using getDevices and will only be updated using
+   * the [onDeviceChanged] event if information about them changes.
+   * 
+   * Discovery will fail to start if this application has already called
+   * startDiscovery. Discovery can be resource intensive: stopDiscovery should
+   * be called as soon as possible.
    * [callback]: Called to indicate success or failure.
    */
-  Future startDiscovery(StartDiscoveryOptions options) {
+  Future startDiscovery() {
     if (_bluetooth == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter.noArgs();
-    _bluetooth.callMethod('startDiscovery', [jsify(options), completer.callback]);
+    _bluetooth.callMethod('startDiscovery', [completer.callback]);
     return completer.future;
   }
 
@@ -215,6 +220,41 @@ class ChromeBluetooth extends ChromeApi {
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.bluetooth' is not available");
   }
+}
+
+/**
+ * Allocation authorities for Vendor IDs.
+ */
+class VendorIdSource extends ChromeEnum {
+  static const VendorIdSource BLUETOOTH = const VendorIdSource._('bluetooth');
+  static const VendorIdSource USB = const VendorIdSource._('usb');
+
+  static const List<VendorIdSource> VALUES = const[BLUETOOTH, USB];
+
+  const VendorIdSource._(String str): super(str);
+}
+
+/**
+ * Common device types recognized by Chrome.
+ */
+class DeviceType extends ChromeEnum {
+  static const DeviceType COMPUTER = const DeviceType._('computer');
+  static const DeviceType PHONE = const DeviceType._('phone');
+  static const DeviceType MODEM = const DeviceType._('modem');
+  static const DeviceType AUDIO = const DeviceType._('audio');
+  static const DeviceType CAR_AUDIO = const DeviceType._('carAudio');
+  static const DeviceType VIDEO = const DeviceType._('video');
+  static const DeviceType PERIPHERAL = const DeviceType._('peripheral');
+  static const DeviceType JOYSTICK = const DeviceType._('joystick');
+  static const DeviceType GAMEPAD = const DeviceType._('gamepad');
+  static const DeviceType KEYBOARD = const DeviceType._('keyboard');
+  static const DeviceType MOUSE = const DeviceType._('mouse');
+  static const DeviceType TABLET = const DeviceType._('tablet');
+  static const DeviceType KEYBOARD_MOUSE_COMBO = const DeviceType._('keyboardMouseCombo');
+
+  static const List<DeviceType> VALUES = const[COMPUTER, PHONE, MODEM, AUDIO, CAR_AUDIO, VIDEO, PERIPHERAL, JOYSTICK, GAMEPAD, KEYBOARD, MOUSE, TABLET, KEYBOARD_MOUSE_COMBO];
+
+  const DeviceType._(String str): super(str);
 }
 
 class AdapterState extends ChromeObject {
@@ -244,11 +284,18 @@ class AdapterState extends ChromeObject {
 }
 
 class BluetoothDevice extends ChromeObject {
-  BluetoothDevice({String address, String name, bool paired, bool connected}) {
+  BluetoothDevice({String address, String name, int deviceClass, VendorIdSource vendorIdSource, int vendorId, int productId, int deviceId, DeviceType type, bool paired, bool connected, List<String> uuids}) {
     if (address != null) this.address = address;
     if (name != null) this.name = name;
+    if (deviceClass != null) this.deviceClass = deviceClass;
+    if (vendorIdSource != null) this.vendorIdSource = vendorIdSource;
+    if (vendorId != null) this.vendorId = vendorId;
+    if (productId != null) this.productId = productId;
+    if (deviceId != null) this.deviceId = deviceId;
+    if (type != null) this.type = type;
     if (paired != null) this.paired = paired;
     if (connected != null) this.connected = connected;
+    if (uuids != null) this.uuids = uuids;
   }
   BluetoothDevice.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -258,11 +305,32 @@ class BluetoothDevice extends ChromeObject {
   String get name => jsProxy['name'];
   set name(String value) => jsProxy['name'] = value;
 
+  int get deviceClass => jsProxy['deviceClass'];
+  set deviceClass(int value) => jsProxy['deviceClass'] = value;
+
+  VendorIdSource get vendorIdSource => _createVendorIdSource(jsProxy['vendorIdSource']);
+  set vendorIdSource(VendorIdSource value) => jsProxy['vendorIdSource'] = jsify(value);
+
+  int get vendorId => jsProxy['vendorId'];
+  set vendorId(int value) => jsProxy['vendorId'] = value;
+
+  int get productId => jsProxy['productId'];
+  set productId(int value) => jsProxy['productId'] = value;
+
+  int get deviceId => jsProxy['deviceId'];
+  set deviceId(int value) => jsProxy['deviceId'] = value;
+
+  DeviceType get type => _createDeviceType(jsProxy['type']);
+  set type(DeviceType value) => jsProxy['type'] = jsify(value);
+
   bool get paired => jsProxy['paired'];
   set paired(bool value) => jsProxy['paired'] = value;
 
   bool get connected => jsProxy['connected'];
   set connected(bool value) => jsProxy['connected'] = value;
+
+  List<String> get uuids => listify(jsProxy['uuids']);
+  set uuids(List<String> value) => jsProxy['uuids'] = jsify(value);
 }
 
 class Profile extends ChromeObject {
@@ -354,50 +422,6 @@ class OutOfBandPairingData extends ChromeObject {
 }
 
 /**
- * Options for the getDevices function. If [profile] is not provided, all
- * devices known to the system are returned.
- */
-class GetDevicesOptions extends ChromeObject {
-  GetDevicesOptions({Profile profile, DeviceCallback deviceCallback}) {
-    if (profile != null) this.profile = profile;
-    if (deviceCallback != null) this.deviceCallback = deviceCallback;
-  }
-  GetDevicesOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-
-  Profile get profile => _createProfile(jsProxy['profile']);
-  set profile(Profile value) => jsProxy['profile'] = jsify(value);
-
-  DeviceCallback get deviceCallback => _createDeviceCallback(jsProxy['deviceCallback']);
-  set deviceCallback(DeviceCallback value) => jsProxy['deviceCallback'] = jsify(value);
-}
-
-/**
- * Options for the getProfiles function.
- */
-class GetProfilesOptions extends ChromeObject {
-  GetProfilesOptions({BluetoothDevice device}) {
-    if (device != null) this.device = device;
-  }
-  GetProfilesOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-
-  BluetoothDevice get device => _createDevice(jsProxy['device']);
-  set device(BluetoothDevice value) => jsProxy['device'] = jsify(value);
-}
-
-/**
- * Options for the getServices function.
- */
-class GetServicesOptions extends ChromeObject {
-  GetServicesOptions({String deviceAddress}) {
-    if (deviceAddress != null) this.deviceAddress = deviceAddress;
-  }
-  GetServicesOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-
-  String get deviceAddress => jsProxy['deviceAddress'];
-  set deviceAddress(String value) => jsProxy['deviceAddress'] = value;
-}
-
-/**
  * Options for the connect function.
  */
 class ConnectOptions extends ChromeObject {
@@ -474,24 +498,11 @@ class SetOutOfBandPairingDataOptions extends ChromeObject {
   set data(OutOfBandPairingData value) => jsProxy['data'] = jsify(value);
 }
 
-/**
- * Options for the startDiscovery function.
- */
-class StartDiscoveryOptions extends ChromeObject {
-  StartDiscoveryOptions({DeviceCallback deviceCallback}) {
-    if (deviceCallback != null) this.deviceCallback = deviceCallback;
-  }
-  StartDiscoveryOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-
-  DeviceCallback get deviceCallback => _createDeviceCallback(jsProxy['deviceCallback']);
-  set deviceCallback(DeviceCallback value) => jsProxy['deviceCallback'] = jsify(value);
-}
-
 AdapterState _createAdapterState(JsObject jsProxy) => jsProxy == null ? null : new AdapterState.fromProxy(jsProxy);
+BluetoothDevice _createDevice(JsObject jsProxy) => jsProxy == null ? null : new BluetoothDevice.fromProxy(jsProxy);
 Socket _createSocket(JsObject jsProxy) => jsProxy == null ? null : new Socket.fromProxy(jsProxy);
-Profile _createProfile(JsObject jsProxy) => jsProxy == null ? null : new Profile.fromProxy(jsProxy);
-ServiceRecord _createServiceRecord(JsObject jsProxy) => jsProxy == null ? null : new ServiceRecord.fromProxy(jsProxy);
 ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
 OutOfBandPairingData _createOutOfBandPairingData(JsObject jsProxy) => jsProxy == null ? null : new OutOfBandPairingData.fromProxy(jsProxy);
-BluetoothDevice _createDevice(JsObject jsProxy) => jsProxy == null ? null : new BluetoothDevice.fromProxy(jsProxy);
-DeviceCallback _createDeviceCallback(JsObject jsProxy) => jsProxy == null ? null : new DeviceCallback.fromProxy(jsProxy);
+VendorIdSource _createVendorIdSource(String value) => VendorIdSource.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+DeviceType _createDeviceType(String value) => DeviceType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+Profile _createProfile(JsObject jsProxy) => jsProxy == null ? null : new Profile.fromProxy(jsProxy);

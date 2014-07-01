@@ -84,6 +84,20 @@ class ChromeIdentity extends ChromeApi {
     return completer.future;
   }
 
+  /**
+   * Generates a redirect URL to be used in [launchWebAuthFlow].
+   * 
+   * The generated URLs match the pattern
+   * `https://&lt;app-id&gt;.chromiumapp.org/`.
+   * 
+   * [path]: The path appended to the end of the generated URL.
+   */
+  String getRedirectURL([String path]) {
+    if (_identity == null) _throwNotAvailable();
+
+    return _identity.callMethod('getRedirectURL', [path]);
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.identity' is not available");
   }

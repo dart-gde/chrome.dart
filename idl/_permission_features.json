@@ -5,7 +5,24 @@
 // See c/c/e/features/* to understand this file, in particular feature.h,
 // simple_feature.h, and base_feature_provider.h.
 
+// To add a new whitelisted ID, SHA-1 it and force it to uppercase. In Bash:
+//
+// $ echo -n "aaaabbbbccccddddeeeeffffgggghhhh" | \
+// sha1sum | tr '[:lower:]' '[:upper:]'
+// 9A0417016F345C934A1A88F55CA17C05014EEEBA  -
+//
+// Google employees: please update http://go/chrome-api-whitelist to map
+// hashes back to ids.
+
 {
+  "accessibilityFeatures.modify": {
+    "channel": "dev",
+    "extension_types": ["extension", "platform_app"]
+  },
+  "accessibilityFeatures.read": {
+    "channel": "dev",
+    "extension_types": ["extension", "platform_app"]
+  },
   "activeTab": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"],
@@ -15,9 +32,11 @@
     "channel": "stable",
     "extension_types": ["extension", "platform_app"],
     "whitelist": [
-      "abjoigjokfeibfhiahiijggogladbmfm",  // Watchdog Release
-      "hhcnncjlpehbepkbgccanfpkneoejnpb",  // Watchdog Testing
-      "acldcpdepobcjbdanifkmfndkjoilgba"   // Obsolete key
+      "EE17C698905F7F2E6DDC87C9C30F11E164C829F4",  // Watchdog release
+      "90113DA9516526D24DAF156C629CC41C049E8882",  // Watchdog testing
+      "A9EFD71948A480C87D3B7C758FD938215F445F00",   // Obsolete
+      "AE27D69DBE571F4B1694F05C89B710C646792231", // Published ADT.
+      "5107DE9024C329EEA9C9A72D94C16723790C6422"  // Apps Developer Tool Dev.
     ]
   },
   "adview": {
@@ -29,6 +48,22 @@
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
     "min_manifest_version": 2
   },
+  "app.window.alwaysOnTop": {
+    "channel": "stable",
+    "extension_types": ["platform_app"]
+  },
+  "app.window.fullscreen": {
+    "channel": "stable",
+    "extension_types": ["platform_app"]
+  },
+  "app.window.fullscreen.overrideEsc": {
+    "channel": "stable",
+    "extension_types": ["platform_app"]
+  },
+  "app.window.shape": {
+    "channel": "dev",
+    "extension_types": ["platform_app"]
+  },
   "audio": [
     {
       "channel": "dev",
@@ -39,10 +74,17 @@
       "extension_types": ["platform_app"],
       "whitelist": [
         "8C3741E3AF0B93B6E8E0DDD499BB0B74839EA578",
-        "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB"
+        "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB",
+        "A3BC37E2148AC4E99BE4B16AF9D42DD1E592BBBE",  // http://crbug.com/335729
+        "1C93BD3CF875F4A73C0B2A163BB8FBDA8B8B3D80",  // http://crbug.com/335729
+        "307E96539209F95A1A8740C713E6998A73657D96"   // http://crbug.com/335729
       ]
     }
   ],
+  "automation": {
+    "channel": "trunk",
+    "extension_types": ["extension", "legacy_packaged_app", "platform_app"]
+  },
   "autotestPrivate": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"],
@@ -58,8 +100,10 @@
       "extension_types": ["extension"],
       "whitelist": [
         // http://crbug.com/292856
-        "mppnpdlheglhdfmldimlhpnegondlapf",
-        "bepbmhgboaologfdajaanbcjmnhjmhfn"
+        "3F50C3A83839D9C76334BCE81CDEC06174F266AF",
+        "09FDCB5851B8F3378DB630D06E316076E89C95A6",
+        "39BE69F11F68E4EED080DA3DC2394F7885B7AFF9",
+        "FF78670081967CE21DB86A04AD94A0498F01E20A"
       ]
     }
   ],
@@ -76,22 +120,21 @@
       "whitelist": [
         "5B5DA6D054D10DB917AF7D9EAE3C56044D1B0B03",  // http://crbug.com/286542
         "2843C1E82A9B6C6FB49308FDDF4E157B6B44BC2B",  // http://crbug.com/286542
-        "3F596D221126DCDFD115CFAA2E5A3141806358AD"   // http://crbug.com/286542
+        "3F596D221126DCDFD115CFAA2E5A3141806358AD",  // http://crbug.com/286542
+        "F7FA7ABC1ECB89BA8EE6656847EFABBF43BB9BCA",  // http://crbug.com/320952
+        "4B1D0E19C6C43C008C44A8278C8B5BFE15ABEB3C",  // http://crbug.com/320952
+        "4FE45FA56EF6A25FDE8C302C44045CA9CE8A605A"   // http://crbug.com/320952
       ]
     }
   ],
-  "bluetooth": {
-    "channel": "dev",
-    "extension_types": ["platform_app"]
-  },
-  "bluetoothDevices": {
-    "channel": "dev",
-    "extension_types": ["platform_app"]
-  },
   "bookmarkManagerPrivate": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"],
-    "location": "component"
+    "whitelist": [
+      "CB2E4E7174A398FCB3AFA6840500C2E1D22DA7B2", // Bookmark Manager
+      "D5736E4B5CF695CB93A2FB57E4FDC6E5AFAB6FE2", // http://crbug.com/312900
+      "D57DE394F36DC1C3220E7604C575D29C51A6C495"  // http://crbug.com/319444
+    ]
   },
   "bookmarks": {
     "channel": "stable",
@@ -110,21 +153,25 @@
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
     "whitelist": [
-      "enhhojjnijigcajfphajepfemndkmdlo",  // Dev
-      "pkedcjkdefgpdelpbcmbmeomcjbeemfm",  // Trusted Tester
-      "fmfcbgogabcbclcofgocippekhfcmgfj",  // Staging
-      "hfaagokkkhdbgiakmmlclaapfelnkoah",  // Canary
+      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // Dev
+      "226CF815E39A363090A1E547D53063472B8279FA",  // Trusted Tester
+      "FA01E0B81978950F2BC5A50512FD769725F57510",  // Staging
+      "B11A93E7E5B541F8010245EBDE2C74647D6C14B9",  // Canary
       "F155646B5D1CA545F7E1E4E20D573DFDD44C2540",  // Trusted Tester (public)
       "16CA7A47AAE4BE49B1E75A6B960C3875E945B264"   // Release
     ]
+  },
+  "cast.streaming": {
+    "channel": "dev",
+    "extension_types": ["extension"]
   },
   "chromePrivate": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"],
     "whitelist": [
-      "haiffjcadagjlijoggckpgfnoeiflnem",  // Citrix Receiver
-      "gnedhmakppccajfpfiihfcdlnpgomkcf",  // Citrix Receiver Beta
-      "fjcibdnjlbfnbfdjneajpipnlcppleek"   // Citrix Receiver Dev
+      "2462D64ACB971A7E708757159C2B17761D4FF54A",  // Citrix Receiver
+      "3010EF507AFEF487EEA9CDE2930EC94867C60936",  // Citrix Receiver Beta
+      "ABAABC5F49E022A76CBB12972A53B58354C04AC6"   // Citrix Receiver Dev
     ]
   },
   "chromeosInfoPrivate": {
@@ -134,7 +181,18 @@
       "1C93BD3CF875F4A73C0B2A163BB8FBDA8B8B3D80",  // http://crbug.com/293683
       "A3BC37E2148AC4E99BE4B16AF9D42DD1E592BBBE",  // http://crbug.com/293683
       "8C3741E3AF0B93B6E8E0DDD499BB0B74839EA578",  // http://crbug.com/234235
-      "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB"   // http://crbug.com/234235
+      "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB",  // http://crbug.com/234235
+      "307E96539209F95A1A8740C713E6998A73657D96",  // http://crbug.com/329690
+      "A291B26E088FA6BA53FFD72F0916F06EBA7C585A",  // http://crbug.com/341258
+      "D7986543275120831B39EF28D1327552FC343960",  // http://crbug.com/329088
+      // TODO(tbarzic): Remove the following six when http://crbug.com/346572
+      // gets fixed.
+      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // http://crbug.com/343701
+      "226CF815E39A363090A1E547D53063472B8279FA",  // http://crbug.com/343701
+      "FA01E0B81978950F2BC5A50512FD769725F57510",  // http://crbug.com/343701
+      "B11A93E7E5B541F8010245EBDE2C74647D6C14B9",  // http://crbug.com/343701
+      "F155646B5D1CA545F7E1E4E20D573DFDD44C2540",  // http://crbug.com/343701
+      "16CA7A47AAE4BE49B1E75A6B960C3875E945B264"   // http://crbug.com/343701
     ]
   },
   "clipboardRead": {
@@ -151,9 +209,9 @@
   },
   "cloudPrintPrivate": {
     "channel": "stable",
-    "extension_types": ["extension", "legacy_packaged_app"],
+    "extension_types": ["extension", "legacy_packaged_app", "hosted_app"],
     // CloudPrint
-    "whitelist": ["mfehgcgbbipciphmccgaenjidiccnmng"]
+    "whitelist": ["99060B01DE911EB85FD630C8BA6320C9186CA3AB"]
   },
   "commandLinePrivate": {
     "channel": "stable",
@@ -181,26 +239,39 @@
       "channel": "stable",
       "extension_types": ["platform_app"],
       "whitelist": [
-        "mlocfejafidcakdddnndjdngfmncfbeg",  // CCD Development
-        "ganomidahfnpdchomfgdoppjmmedlhia",  // CCD Testing
-        "eemlkeanncmjljgehlbplemhmdmalhdc"   // CCD Release
+        "7AE714FFD394E073F0294CFA134C9F91DB5FBAA4",  // CCD Development
+        "C7DA3A55C2355F994D3FDDAD120B426A0DF63843",  // CCD Testing
+        "75E3CFFFC530582C583E4690EF97C70B9C8423B7"   // CCD Release
       ]
     }
   ],
-  "debugger": {
-    "channel": "stable",
-    "extension_types": ["extension", "legacy_packaged_app"]
-  },
+  "debugger": [
+    {
+      "channel": "stable",
+      "extension_types": ["extension", "legacy_packaged_app"]
+    },
+    {
+      "channel": "stable",
+      "extension_types": ["platform_app"],
+      "whitelist": [
+        "AE27D69DBE571F4B1694F05C89B710C646792231", // Published ADT.
+        // TODO(grv): clean up once Apps developer tool is published.
+        "5107DE9024C329EEA9C9A72D94C16723790C6422"  // Apps Developer Tool.
+      ]
+    }
+  ],
   "developerPrivate": {
     "channel": "stable",
     "extension_types": ["platform_app"],
     "whitelist": [
-        "ohmmkhmmmpcnpikjeljgnaoabkaalbgc", // Published Apps developer tool.
+        "AE27D69DBE571F4B1694F05C89B710C646792231", // Published ADT.
         // TODO(grv): clean up once Apps developer tool is published.
-        "lphgohfeebnhcpiohjndkgbhhkoapkjc",  // Apps Developer tool.
-        "gonnpeheodhmhdjiimoiheniambmdcco",  // Apps Editor old.
+        "5107DE9024C329EEA9C9A72D94C16723790C6422",  // Apps Developer Tool.
+        "8C0B1873FFFB65E4D0F4D772879F7304CEF125C2",  // Apps Editor old.
         // TODO(grv) : clean up once after publish.
-        "cbelnpbjogfbjamhpbofhlnklecjpido"  // Apps Editor published.
+        "FA0501B579070BB9CBD4FCAEC8CB0EDF22BA2F04", // Apps Editor published.
+        "4A4EA121622FCA3D78ED2AB534197F43D7189EE0", // Spark nightly build
+        "9FDE6E7F06FCFA11D9A05041C7FF6D8AE662F5D1"  // Spark release
     ]
   },
   "devtools": {
@@ -208,36 +279,19 @@
     "extension_types": ["extension", "legacy_packaged_app"]
   },
   "declarativeContent": {
-    "channel": "trunk",
+    "channel": "stable",
     "extension_types": ["extension"]
   },
   "declarativeWebRequest": [
     {
       "channel": "beta",
       "extension_types": ["extension", "legacy_packaged_app"]
-    },
-    {
-      "channel": "stable",
-      "extension_types": ["extension", "legacy_packaged_app"],
-      // Legacy Browser Support (remove once this API hits stable).
-      "whitelist": ["heildphpnddilhkemkielfhnkaagiabh"]
     }
   ],
-  "desktopCapture": [
-    {
-      "channel": "dev",
-      "extension_types": ["extension", "platform_app"]
-    },
-    {
-      "channel": "stable",
-      "extension_types": ["extension", "platform_app"],
-      "whitelist": [
-        "80B9DC58E5210749F052F5B4DB239C50CF72AEB6",
-        // Hangout Services component extension.
-        "nkeimhogjdpnpccoofpliimaahmaaome"
-      ]
-    }
-  ],
+  "desktopCapture": {
+    "channel": "stable",
+    "extension_types": ["extension", "platform_app"]
+  },
   "dns": [
     {
       "channel": "dev",
@@ -247,12 +301,22 @@
       "channel": "stable",
       "extension_types": ["extension", "platform_app"],
       "whitelist": [
-        "mlocfejafidcakdddnndjdngfmncfbeg",  // CCD Development
-        "ganomidahfnpdchomfgdoppjmmedlhia",  // CCD Testing
-        "eemlkeanncmjljgehlbplemhmdmalhdc"   // CCD Release
+        "7AE714FFD394E073F0294CFA134C9F91DB5FBAA4",  // CCD Development
+        "C7DA3A55C2355F994D3FDDAD120B426A0DF63843",  // CCD Testing
+        "75E3CFFFC530582C583E4690EF97C70B9C8423B7"   // CCD Release
       ]
     }
   ],
+  "screenlockPrivate": {
+    "channel": "stable",
+    "extension_types":["platform_app"],
+    "whitelist": [
+      "lkegkdgachcnekllcdfkijonogckdnjo",  // API test
+      "190C131D270994E7330E9A3CD48224061CB10E2D",  // dogfood 1
+      "7FDDD1C0CB0052596657FDEC92841D509DC8D404",  // dogfood 2
+      "E13990DC5440B6E270503DA27A35762F423725C3"   // dogfood 3
+    ]
+  },
   "downloads": {
     "channel": "stable",
     "extension_types": ["extension"]
@@ -269,9 +333,9 @@
     "channel": "stable",
     "extension_types": ["extension"],
     "whitelist": [
-      "pkedcjkdefgpdelpbcmbmeomcjbeemfm",  // Trusted Tester
-      "fmfcbgogabcbclcofgocippekhfcmgfj",  // Staging
-      "hfaagokkkhdbgiakmmlclaapfelnkoah",  // Canary
+      "226CF815E39A363090A1E547D53063472B8279FA",  // Trusted Tester
+      "FA01E0B81978950F2BC5A50512FD769725F57510",  // Staging
+      "B11A93E7E5B541F8010245EBDE2C74647D6C14B9",  // Canary
       "F155646B5D1CA545F7E1E4E20D573DFDD44C2540",  // Trusted Tester (public)
       "16CA7A47AAE4BE49B1E75A6B960C3875E945B264"   // Release
     ]
@@ -280,8 +344,8 @@
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"],
     "whitelist": [
-      "inmdanhiiibfpdlljnjjbchhjgelojnn",  // Dogfood
-      "cbpmgnfekbgbgpkmokfppmldaccjcbnb"   // Test
+      "657FEC7E77355CA205B0E226586621F86B33F611",  // Dogfood
+      "5894126C625EF31852F215ED301A5FF1F9B7D026"   // Test
     ]
   },
   "experimental": {
@@ -298,7 +362,8 @@
       "1C93BD3CF875F4A73C0B2A163BB8FBDA8B8B3D80",  // http://crbug.com/293683
       "A3BC37E2148AC4E99BE4B16AF9D42DD1E592BBBE",  // http://crbug.com/293683
       "8C3741E3AF0B93B6E8E0DDD499BB0B74839EA578",  // http://crbug.com/234235
-      "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB"   // http://crbug.com/234235
+      "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB",  // http://crbug.com/234235
+      "307E96539209F95A1A8740C713E6998A73657D96"   // http://crbug.com/329690
     ]
   },
   "fileBrowserHandler": {
@@ -307,7 +372,7 @@
   },
   "fileBrowserPrivate": {
     "channel": "stable",
-    "extension_types": ["extension", "legacy_packaged_app"],
+    "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
     "location": "component"
   },
   "fileSystem": [{
@@ -316,7 +381,11 @@
   },{
     "channel": "stable",
     "extension_types": ["extension"],
-    "whitelist": [ "2FC374607C2DF285634B67C64A2E356C607091C3" ]
+    "whitelist": [
+      "2FC374607C2DF285634B67C64A2E356C607091C3",  // Quickoffice
+      "3727DD3E564B6055387425027AD74C58784ACC15",  // Quickoffice internal
+      "12E618C3C6E97495AAECF2AC12DEB082353241C6"   // QO component extension
+    ]
   }],
   "fileSystem.directory": [{
     "channel": "stable",
@@ -332,15 +401,28 @@
   },{
     "channel": "stable",
     "extension_types": ["extension"],
-    "whitelist": [ "2FC374607C2DF285634B67C64A2E356C607091C3" ]
+    "whitelist": [
+      "2FC374607C2DF285634B67C64A2E356C607091C3",  // Quickoffice
+      "3727DD3E564B6055387425027AD74C58784ACC15",  // Quickoffice internal
+      "12E618C3C6E97495AAECF2AC12DEB082353241C6"   // QO component extension
+    ]
   }],
+  "fileSystemProvider": {
+    "channel": "trunk",
+    "extension_types": ["platform_app"]
+  },
+  "firstRunPrivate": {
+    "channel": "stable",
+    "extension_types": ["platform_app"],
+    "location": "component"
+  },
   "fontSettings": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"]
   },
-  "fullscreen": {
-    "channel": "stable",
-    "extension_types": ["platform_app"]
+  "gcm": {
+    "channel": "dev",
+    "extension_types": ["extension", "platform_app"]
   },
   "geolocation": {
     "channel": "stable",
@@ -348,9 +430,21 @@
       "extension", "legacy_packaged_app", "hosted_app", "platform_app"
     ]
   },
+  "hid": {
+    "channel": "dev",
+    "extension_types": ["platform_app"]
+  },
   "history": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"]
+  },
+  "hotwordPrivate": {
+    "channel": "stable",
+    "extension_types": ["extension"],
+    "whitelist": [
+      "8CE39F175D076AD6BDF7CBF418F2409558B367E3",  // hotword_helper
+      "09FDCB5851B8F3378DB630D06E316076E89C95A6"   // hotword nacl
+    ]
   },
   "identity": {
     "channel": "stable",
@@ -359,7 +453,7 @@
   "identityPrivate": {
     "channel": "stable",
     "extension_types": [
-      "legacy_packaged_app"
+      "legacy_packaged_app", "platform_app"
     ],
     "location": "component"
   },
@@ -384,11 +478,11 @@
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
     "whitelist": [
-      "haiffjcadagjlijoggckpgfnoeiflnem",  // Citrix Receiver
-      "gnedhmakppccajfpfiihfcdlnpgomkcf",  // Citrix Receiver Beta
-      "fjcibdnjlbfnbfdjneajpipnlcppleek",  // Citrix Receiver Dev
-      "pnhechapfaindjhompbnflcldabbghjo",  // HTerm
-      "okddffdblfhhnmhodogpojmfkjmhinfp"  // HTerm dev
+      "2462D64ACB971A7E708757159C2B17761D4FF54A",  // Citrix Receiver
+      "3010EF507AFEF487EEA9CDE2930EC94867C60936",  // Citrix Receiver Beta
+      "ABAABC5F49E022A76CBB12972A53B58354C04AC6",  // Citrix Receiver Dev
+      "0EA6B717932AD64C469C1CCB6911457733295907",  // HTerm
+      "58B0C2968C335964D5433E89CA4D86628A0E3D4B"   // HTerm dev
     ]
   },{
     "channel": "stable",
@@ -424,13 +518,22 @@
       "channel": "stable",
       "extension_types": ["platform_app"],
       "whitelist": [
-          "ohmmkhmmmpcnpikjeljgnaoabkaalbgc", // Published Apps developer tool.
-          // TODO(grv): clean up once Apps developer tool is published.
-          "lphgohfeebnhcpiohjndkgbhhkoapkjc",  // Apps Developer tool.
-          "gonnpeheodhmhdjiimoiheniambmdcco",  // Apps Editor old.
-          "cbelnpbjogfbjamhpbofhlnklecjpido",  // Apps Editor published.
-          "abjoigjokfeibfhiahiijggogladbmfm",  // Watchdog (Activity Log)
-          "hhcnncjlpehbepkbgccanfpkneoejnpb"  // Watchdog Test Version
+        "AE27D69DBE571F4B1694F05C89B710C646792231", // Published ADT
+        // TODO(grv): clean up once Apps developer tool is published.
+        "5107DE9024C329EEA9C9A72D94C16723790C6422",  // Apps Developer Tool.
+        "8C0B1873FFFB65E4D0F4D772879F7304CEF125C2",  // Apps Editor old.
+        "FA0501B579070BB9CBD4FCAEC8CB0EDF22BA2F04",  // Apps Editor published.
+        "EE17C698905F7F2E6DDC87C9C30F11E164C829F4",  // Watchdog (Activity Log)
+        "90113DA9516526D24DAF156C629CC41C049E8882",   // Watchdog Test Version
+        "4A4EA121622FCA3D78ED2AB534197F43D7189EE0", // Spark nightly build
+        "9FDE6E7F06FCFA11D9A05041C7FF6D8AE662F5D1"  // Spark release
+      ]
+    },
+    {
+      "channel": "stable",
+      "extension_types": ["hosted_app"],
+      "whitelist": [
+        "B44D08FD98F1523ED5837D78D0A606EA9D6206E5"  // Web Store
       ]
     }
   ],
@@ -442,6 +545,10 @@
     "channel": "stable",
     "extension_types": [ "platform_app" ]
   },
+  "mediaGalleries.scan": {
+    "channel": "dev",
+    "extension_types": [ "platform_app" ]
+  },
   "mediaGalleries.read": {
     "channel": "stable",
     "extension_types": [ "platform_app" ]
@@ -450,22 +557,23 @@
     "channel": "stable",
     "extension_types": [ "platform_app" ]
   },
-  // TODO(thestig) Remove this as part of http://crbug.com/144496
+  "mediaGalleries.delete": {
+    "channel": "stable",
+    "extension_types": [ "platform_app" ]
+  },
+  // TODO(thestig) Remove this as part of http://crbug.com/166950
   "mediaGalleriesPrivate": {
     "channel": "stable",
     "extension_types": [ "platform_app" ],
     "whitelist": [
-      "dhgjflpimlbndbpamnkoepaacagejgda",
-      "5B5DA6D054D10DB917AF7D9EAE3C56044D1B0B03",  // http://crbug.com/286542
-      "2843C1E82A9B6C6FB49308FDDF4E157B6B44BC2B",  // http://crbug.com/286542
-      "3F596D221126DCDFD115CFAA2E5A3141806358AD",  // http://crbug.com/286542
+      "4B1D0E19C6C43C008C44A8278C8B5BFE15ABEB3C",
       "F7FA7ABC1ECB89BA8EE6656847EFABBF43BB9BCA",
       "4FE45FA56EF6A25FDE8C302C44045CA9CE8A605A"
     ]
   },
   "mediaPlayerPrivate": {
     "channel": "stable",
-    "extension_types": ["extension", "legacy_packaged_app"],
+    "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
     "location": "component"
   },
   "metricsPrivate": {
@@ -477,26 +585,28 @@
       // whitelist.
       // Adding it to this whitelist documents their dependency, however, and
       // also doesn't hurt anything.
-      "hhaomjibdihmijegdhdafkllkbggdgoj",  // File manager
-      "gbkeegbaiigmenfmjfclcdgdpimamgkj",  // Quickoffice
-      "ionpfmkccalenbmnddpbmocokhaknphg",  // Quickoffice dev
-      "bpmcpldpdmajfigpchkicefoigmkfalc",  // Quickoffice component extension
-      "ehibbfinohgbchlgdbfpikodjaojhccn",  // Editor
-      "pafkbggdmjlpgkdkcbjmhmfcdpncadgh",  // Google Now
-      "khopmbdjffemhegeeobelklnbglcdgfh",  // RU-NTP
-      "mlocfejafidcakdddnndjdngfmncfbeg",  // CCD Development
-      "ganomidahfnpdchomfgdoppjmmedlhia",  // CCD Testing
-      "eemlkeanncmjljgehlbplemhmdmalhdc"   // CCD Release
+      "A948368FC53BE437A55FEB414106E207925482F5",  // File manager
+      "2FC374607C2DF285634B67C64A2E356C607091C3",  // Quickoffice
+      "3727DD3E564B6055387425027AD74C58784ACC15",  // Quickoffice internal
+      "12E618C3C6E97495AAECF2AC12DEB082353241C6",  // QO component extension
+      "3727DD3E564B6055387425027AD74C58784ACC15",  // Editor
+      "C41AD9DCD670210295614257EF8C9945AD68D86E",  // Google Now
+      "6EEEA7775E79C735E4BA1F24DBB191BDACB1262C",  // RU-NTP
+      "7AE714FFD394E073F0294CFA134C9F91DB5FBAA4",  // CCD Development
+      "C7DA3A55C2355F994D3FDDAD120B426A0DF63843",  // CCD Testing
+      "75E3CFFFC530582C583E4690EF97C70B9C8423B7",  // CCD Release
+      "D5736E4B5CF695CB93A2FB57E4FDC6E5AFAB6FE2",  // http://crbug.com/312900.
+      "D57DE394F36DC1C3220E7604C575D29C51A6C495"   // http://crbug.com/319444.
     ]
   },
   "mdns": {
     "channel": "stable",
     "extension_types": ["extension"],
     "whitelist": [
-      "enhhojjnijigcajfphajepfemndkmdlo",  // Dev
-      "pkedcjkdefgpdelpbcmbmeomcjbeemfm",  // Trusted Tester
-      "fmfcbgogabcbclcofgocippekhfcmgfj",  // Staging
-      "hfaagokkkhdbgiakmmlclaapfelnkoah",  // Canary
+      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // Dev
+      "226CF815E39A363090A1E547D53063472B8279FA",  // Trusted Tester
+      "FA01E0B81978950F2BC5A50512FD769725F57510",  // Staging
+      "B11A93E7E5B541F8010245EBDE2C74647D6C14B9",  // Canary
       "F155646B5D1CA545F7E1E4E20D573DFDD44C2540",  // Trusted Tester (public)
       "16CA7A47AAE4BE49B1E75A6B960C3875E945B264"   // Release
     ]
@@ -525,14 +635,15 @@
       "A3BC37E2148AC4E99BE4B16AF9D42DD1E592BBBE",  // http://crbug.com/293683
       "8C3741E3AF0B93B6E8E0DDD499BB0B74839EA578",  // http://crbug.com/234235
       "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB",  // http://crbug.com/234235
-      "pkedcjkdefgpdelpbcmbmeomcjbeemfm",  // Trusted Tester
-      "fmfcbgogabcbclcofgocippekhfcmgfj",  // Staging
-      "hfaagokkkhdbgiakmmlclaapfelnkoah",  // Canary
+      "307E96539209F95A1A8740C713E6998A73657D96",  // http://crbug.com/329690
+      "226CF815E39A363090A1E547D53063472B8279FA",  // Trusted Tester
+      "FA01E0B81978950F2BC5A50512FD769725F57510",  // Staging
+      "B11A93E7E5B541F8010245EBDE2C74647D6C14B9",  // Canary
       "F155646B5D1CA545F7E1E4E20D573DFDD44C2540",  // Trusted Tester (public)
       "16CA7A47AAE4BE49B1E75A6B960C3875E945B264",  // Release
-      "mlocfejafidcakdddnndjdngfmncfbeg",  // CCD Development
-      "ganomidahfnpdchomfgdoppjmmedlhia",  // CCD Testing
-      "eemlkeanncmjljgehlbplemhmdmalhdc"   // CCD Release
+      "7AE714FFD394E073F0294CFA134C9F91DB5FBAA4",  // CCD Development
+      "C7DA3A55C2355F994D3FDDAD120B426A0DF63843",  // CCD Testing
+      "75E3CFFFC530582C583E4690EF97C70B9C8423B7"   // CCD Release
     ]
   },
   "notifications": {
@@ -549,7 +660,7 @@
   },
   "echoPrivate": {
     "channel": "stable",
-    "extension_types": ["extension", "legacy_packaged_app"],
+    "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
     "location": "component"
   },
   "pageCapture": {
@@ -575,13 +686,17 @@
     "extension_types": [
       "extension"
     ],
-    "location": "component"
+    "whitelist": [
+      "C41AD9DCD670210295614257EF8C9945AD68D86E",  // Google Now
+      "D5736E4B5CF695CB93A2FB57E4FDC6E5AFAB6FE2",  // http://crbug.com/312900
+      "D57DE394F36DC1C3220E7604C575D29C51A6C495"   // http://crbug.com/319444
+    ]
   },
   "principalsPrivate": {
     "channel": "stable",
     "extension_types": ["extension"],
     "whitelist": [
-      "dofmkfphhdaddeofjngcjphcegkbbooh"   // Chrome Login Proxy (prototype)
+      "2779FA8B45841D61A37207CCFAC9CB393964FE5B"  // Login Proxy (prototype)
     ]
   },
   "privacy": {
@@ -604,18 +719,26 @@
     "channel": "stable",
     "extension_types": ["platform_app"],
     "whitelist": [
-      "jobolcahaebjkjhdedcfcnfkgpjcmkcg", // Dev version
-      "D7986543275120831B39EF28D1327552FC343960"  // Release version
+      "A291B26E088FA6BA53FFD72F0916F06EBA7C585A", // http://crbug.com/329088
+      "D7986543275120831B39EF28D1327552FC343960"  // http://crbug.com/329088
+    ]
+  },
+  "readingListPrivate": {
+    "channel": "stable",
+    "extension_types": ["extension"],
+    "whitelist": [
+      "D5736E4B5CF695CB93A2FB57E4FDC6E5AFAB6FE2", // http://crbug.com/312900
+      "D57DE394F36DC1C3220E7604C575D29C51A6C495"  // http://crbug.com/319444
     ]
   },
   "rtcPrivate": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"],
     "whitelist": [
-      "nckgahadagoaajjgafhacjanaoiihapd",  // Google Talk prod
-      "eggnbpckecmjlblplehfpjjdhhidfdoj",  // Google Talk beta
-      "ppleadejekpmccmnpjdimmlfljlkdfej",  // Google Talk alpha
-      "ljclpkphhpbpinifbeabbhlfddcpfdde"   // Google Talk debug
+      "53041A2FA309EECED01FFC751E7399186E860B2C",  // Google Talk prod
+      "A74A4D44C7CFCD8844830E6140C8D763E12DD8F3",  // Google Talk beta
+      "E7E2461CE072DF036CF9592740196159E2D7C089",  // Google Talk alpha
+      "312745D9BF916161191143F6490085EEA0434997"   // Google Talk debug
     ]
   },
   // Note: runtime is not actually a permission, but some systems check these
@@ -644,11 +767,12 @@
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
     "whitelist": [
-      "oickdpebdnfbgkcaoklfcdhjniefkcji",  // browser_tests
-      "gbkeegbaiigmenfmjfclcdgdpimamgkj",  // QuickOffice
-      "ionpfmkccalenbmnddpbmocokhaknphg",  // QuickOffice Dev
-      "bpmcpldpdmajfigpchkicefoigmkfalc",  // Quickoffice component extension
-      "ehibbfinohgbchlgdbfpikodjaojhccn"   // Editor
+      "787000072C6FBB934AF5A42275CDE73FC977D995",  // browser_tests
+      "2FC374607C2DF285634B67C64A2E356C607091C3",  // QuickOffice
+      "5D3851BEFF680AB6D954B76678EFCCE834465C23",  // QuickOffice Dev
+      "12E618C3C6E97495AAECF2AC12DEB082353241C6",  // QO component extension
+      "3727DD3E564B6055387425027AD74C58784ACC15",  // Editor
+      "CBCC42ABED43A4B58FE3810E62AFFA010EB0349F"   // PDF
     ]
   },
   "socket": [{
@@ -661,13 +785,9 @@
       // The connectivity diagnostic utility is a component extension that is
       // used to try to provide suggestions on how to fix connection issues.  It
       // should be the only non-app allowed to use the socket API.
-      "kodldpbjkkmmnilagfdheibampofhaom"
+      "32A1BA997F8AB8DE29ED1BA94AAF00CF2A3FEFA7"
     ]
   }],
-  "sockets.udp": {
-    "channel": "dev",
-    "extension_types": ["platform_app"]
-  },
   "syncFileSystem": {
     "channel": "stable",
     "extension_types": ["platform_app"]
@@ -689,6 +809,10 @@
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"]
   },
+  "system.network": {
+    "channel": "stable",
+    "extension_types": ["platform_app"]
+  },
   "system.storage": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"]
@@ -702,10 +826,21 @@
     "extension_types": ["extension", "legacy_packaged_app"],
     "location": "component"
   },
-  "tabs": {
-    "channel": "stable",
-    "extension_types": ["extension", "legacy_packaged_app"]
-  },
+  "tabs": [
+    {
+      "channel": "stable",
+      "extension_types": ["extension", "legacy_packaged_app"]
+    },
+    {
+      "channel": "stable",
+      "extension_types": ["platform_app"],
+      "whitelist": [
+        "AE27D69DBE571F4B1694F05C89B710C646792231", // Published ADT.
+        // TODO(grv): clean up once Apps developer tool is published.
+        "5107DE9024C329EEA9C9A72D94C16723790C6422"  // Apps Developer Tool.
+      ]
+    }
+  ],
   "tabCapture": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"]
@@ -714,8 +849,8 @@
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
     "whitelist": [
-      "pnhechapfaindjhompbnflcldabbghjo",  // HTerm
-      "okddffdblfhhnmhodogpojmfkjmhinfp"   // HTerm dev
+      "0EA6B717932AD64C469C1CCB6911457733295907",  // HTerm
+      "58B0C2968C335964D5433E89CA4D86628A0E3D4B"   // HTerm dev
     ]
   },
   "topSites": {
@@ -754,15 +889,16 @@
       "extension_types": ["extension"],
       "whitelist": [
         // http://crbug.com/292856
-        "mppnpdlheglhdfmldimlhpnegondlapf",
-        "bepbmhgboaologfdajaanbcjmnhjmhfn"
+        "3F50C3A83839D9C76334BCE81CDEC06174F266AF",
+        "09FDCB5851B8F3378DB630D06E316076E89C95A6",
+        "A434B90223C3C52F2B69DB494736B63C612C774D"
       ]
     }
   ],
   "virtualKeyboardPrivate": {
     "channel": "stable",
     "whitelist": [
-      "mppnpdlheglhdfmldimlhpnegondlapf"  // System-level virtual keyboard.
+      "3F50C3A83839D9C76334BCE81CDEC06174F266AF"  // System-level virtual kbd
     ],
     "extension_types": ["extension"]
   },
@@ -779,19 +915,15 @@
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"]
   },
-  "webrtc": {
-    "channel": "dev",
-    "extension_types": ["extension"]
-  },
   "webrtcAudioPrivate": {
     "channel": "stable",
     "extension_types": ["extension"],
     "whitelist": [
       "80B9DC58E5210749F052F5B4DB239C50CF72AEB6",
       // Hangout Services component extension.
-      "nkeimhogjdpnpccoofpliimaahmaaome",
+      "DF84F03F9B960409CCDE0D895B9650EBE81C0A8E",
       // Extension used for API test.
-      "knldjmfmopnpolahpmmgbagdohdnhkik"
+      "ADFA45434ABA2F1A4647E673F53FF37F8F6047A3"
     ]
   },
   "webrtcLoggingPrivate": {
@@ -800,16 +932,16 @@
     "whitelist": [
       "80B9DC58E5210749F052F5B4DB239C50CF72AEB6",
       // Hangout Services component extension.
-      "nkeimhogjdpnpccoofpliimaahmaaome"
+      "DF84F03F9B960409CCDE0D895B9650EBE81C0A8E"
     ]
   },
   "webstorePrivate": {
     "channel": "stable",
-    "extension_types": ["extension", "legacy_packaged_app"],
+    "extension_types": ["extension", "legacy_packaged_app", "hosted_app"],
     "whitelist": [
-      "ahfgeienlihckogmohjhadlkjgocpleb",  // Web Store
-      "afchcafgojfnemjkcbhfekplkmjaldaa",  // Enterprise Web Store
-      "dofmkfphhdaddeofjngcjphcegkbbooh"   // Chrome Login Proxy (prototype)
+      "B44D08FD98F1523ED5837D78D0A606EA9D6206E5",  // Web Store
+      "2653F6F6C39BC6EEBD36A09AFB92A19782FF7EB4",  // Enterprise Web Store
+      "2779FA8B45841D61A37207CCFAC9CB393964FE5B"   // Login Proxy (prototype)
     ]
   },
   "webRequest": {
@@ -831,7 +963,7 @@
     "extension_types": ["extension"],
     "location": "component",
     "whitelist": [
-      "mfffpogegjflfpflabcdkioaeobkgjik"  // GAIA Component Extension
+      "D519188F86D9ACCEE0412007B227D9936EB9676B"  // GAIA Component Extension
     ]
   }]
 }

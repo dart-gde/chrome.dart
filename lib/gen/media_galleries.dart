@@ -1,8 +1,8 @@
 /* This file has been generated from media_galleries.idl - do not edit */
 
 /**
- * Use the `chrome.mediaGalleries` API to access media files (images, video,
- * audio) from the user's local disks (with the user's consent).
+ * Use the `chrome.mediaGalleries` API to access media files (audio, images,
+ * video) from the user's local disks (with the user's consent).
  */
 library chrome.mediaGalleries;
 
@@ -17,7 +17,13 @@ final ChromeMediaGalleries mediaGalleries = new ChromeMediaGalleries._();
 class ChromeMediaGalleries extends ChromeApi {
   JsObject get _mediaGalleries => chrome['mediaGalleries'];
 
-  ChromeMediaGalleries._();
+  Stream<ScanProgressDetails> get onScanProgress => _onScanProgress.stream;
+  ChromeStreamController<ScanProgressDetails> _onScanProgress;
+
+  ChromeMediaGalleries._() {
+    var getApi = () => _mediaGalleries;
+    _onScanProgress = new ChromeStreamController<ScanProgressDetails>.oneArg(getApi, 'onScanProgress', _createScanProgressDetails);
+  }
 
   bool get available => _mediaGalleries != null;
 
@@ -34,12 +40,89 @@ class ChromeMediaGalleries extends ChromeApi {
   }
 
   /**
+   * Present a directory picker to the user and add the selected directory as a
+   * gallery. If the user cancels the picker, selectedFileSystemName will be
+   * empty. A user gesture is required for the dialog to display. Without a user
+   * gesture, the callback will run as though the user canceled.
+   * 
+   * Returns:
+   * [mediaFileSystems] null
+   * [selectedFileSystemName] null
+   */
+  Future<AddUserSelectedFolderResult> addUserSelectedFolder() {
+    if (_mediaGalleries == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<AddUserSelectedFolderResult>.twoArgs(AddUserSelectedFolderResult._create);
+    _mediaGalleries.callMethod('addUserSelectedFolder', [completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Start a scan of the user's hard disks for directories containing media. The
+   * scan may take a long time so progress and completion is communicated by
+   * events. No permission is granted as a result of the scan, see
+   * addScanResults.
+   */
+  void startMediaScan() {
+    if (_mediaGalleries == null) _throwNotAvailable();
+
+    _mediaGalleries.callMethod('startMediaScan');
+  }
+
+  /**
+   * Cancel any pending media scan. Well behaved apps should provide a way for
+   * the user to cancel scans they start.
+   */
+  void cancelMediaScan() {
+    if (_mediaGalleries == null) _throwNotAvailable();
+
+    _mediaGalleries.callMethod('cancelMediaScan');
+  }
+
+  /**
+   * Show the user the scan results and let them add any or all of them as
+   * galleries. This should be used after the 'finish' onScanProgress() event
+   * has happened. All galleries the app has access to are returned, not just
+   * the newly added galleries.
+   */
+  Future<List<FileSystem>> addScanResults() {
+    if (_mediaGalleries == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<List<FileSystem>>.oneArg((e) => listify(e, _createDOMFileSystem));
+    _mediaGalleries.callMethod('addScanResults', [completer.callback]);
+    return completer.future;
+  }
+
+  /**
    * Get metadata about a specific media file system.
    */
   MediaFileSystemMetadata getMediaFileSystemMetadata(FileSystem mediaFileSystem) {
     if (_mediaGalleries == null) _throwNotAvailable();
 
     return _createMediaFileSystemMetadata(_mediaGalleries.callMethod('getMediaFileSystemMetadata', [jsify(mediaFileSystem)]));
+  }
+
+  /**
+   * Get metadata for all available media galleries.
+   */
+  Future<List<MediaFileSystemMetadata>> getAllMediaFileSystemMetadata() {
+    if (_mediaGalleries == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<List<MediaFileSystemMetadata>>.oneArg((e) => listify(e, _createMediaFileSystemMetadata));
+    _mediaGalleries.callMethod('getAllMediaFileSystemMetadata', [completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Gets the media-specific metadata for a media file. This should work for
+   * files in media galleries as well as other DOM filesystems.
+   */
+  Future<MediaMetadata> getMetadata(Blob mediaFile, [MediaMetadataOptions options]) {
+    if (_mediaGalleries == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<MediaMetadata>.oneArg(_createMediaMetadata);
+    _mediaGalleries.callMethod('getMetadata', [jsify(mediaFile), jsify(options), completer.callback]);
+    return completer.future;
   }
 
   void _throwNotAvailable() {
@@ -57,6 +140,26 @@ class GetMediaFileSystemsInteractivity extends ChromeEnum {
   const GetMediaFileSystemsInteractivity._(String str): super(str);
 }
 
+class GetMetadataType extends ChromeEnum {
+  static const GetMetadataType ALL = const GetMetadataType._('all');
+  static const GetMetadataType MIME_TYPE_ONLY = const GetMetadataType._('mimeTypeOnly');
+
+  static const List<GetMetadataType> VALUES = const[ALL, MIME_TYPE_ONLY];
+
+  const GetMetadataType._(String str): super(str);
+}
+
+class ScanProgressType extends ChromeEnum {
+  static const ScanProgressType START = const ScanProgressType._('start');
+  static const ScanProgressType CANCEL = const ScanProgressType._('cancel');
+  static const ScanProgressType FINISH = const ScanProgressType._('finish');
+  static const ScanProgressType ERROR = const ScanProgressType._('error');
+
+  static const List<ScanProgressType> VALUES = const[START, CANCEL, FINISH, ERROR];
+
+  const ScanProgressType._(String str): super(str);
+}
+
 class MediaFileSystemsDetails extends ChromeObject {
   MediaFileSystemsDetails({GetMediaFileSystemsInteractivity interactive}) {
     if (interactive != null) this.interactive = interactive;
@@ -67,13 +170,24 @@ class MediaFileSystemsDetails extends ChromeObject {
   set interactive(GetMediaFileSystemsInteractivity value) => jsProxy['interactive'] = jsify(value);
 }
 
+class MediaMetadataOptions extends ChromeObject {
+  MediaMetadataOptions({GetMetadataType metadataType}) {
+    if (metadataType != null) this.metadataType = metadataType;
+  }
+  MediaMetadataOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  GetMetadataType get metadataType => _createGetMetadataType(jsProxy['metadataType']);
+  set metadataType(GetMetadataType value) => jsProxy['metadataType'] = jsify(value);
+}
+
 class MediaFileSystemMetadata extends ChromeObject {
-  MediaFileSystemMetadata({String name, String galleryId, String deviceId, bool isRemovable, bool isMediaDevice}) {
+  MediaFileSystemMetadata({String name, String galleryId, String deviceId, bool isRemovable, bool isMediaDevice, bool isAvailable}) {
     if (name != null) this.name = name;
     if (galleryId != null) this.galleryId = galleryId;
     if (deviceId != null) this.deviceId = deviceId;
     if (isRemovable != null) this.isRemovable = isRemovable;
     if (isMediaDevice != null) this.isMediaDevice = isMediaDevice;
+    if (isAvailable != null) this.isAvailable = isAvailable;
   }
   MediaFileSystemMetadata.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -91,8 +205,117 @@ class MediaFileSystemMetadata extends ChromeObject {
 
   bool get isMediaDevice => jsProxy['isMediaDevice'];
   set isMediaDevice(bool value) => jsProxy['isMediaDevice'] = value;
+
+  bool get isAvailable => jsProxy['isAvailable'];
+  set isAvailable(bool value) => jsProxy['isAvailable'] = value;
 }
 
+class ScanProgressDetails extends ChromeObject {
+  ScanProgressDetails({ScanProgressType type, int galleryCount, int audioCount, int imageCount, int videoCount}) {
+    if (type != null) this.type = type;
+    if (galleryCount != null) this.galleryCount = galleryCount;
+    if (audioCount != null) this.audioCount = audioCount;
+    if (imageCount != null) this.imageCount = imageCount;
+    if (videoCount != null) this.videoCount = videoCount;
+  }
+  ScanProgressDetails.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  ScanProgressType get type => _createScanProgressType(jsProxy['type']);
+  set type(ScanProgressType value) => jsProxy['type'] = jsify(value);
+
+  int get galleryCount => jsProxy['galleryCount'];
+  set galleryCount(int value) => jsProxy['galleryCount'] = value;
+
+  int get audioCount => jsProxy['audioCount'];
+  set audioCount(int value) => jsProxy['audioCount'] = value;
+
+  int get imageCount => jsProxy['imageCount'];
+  set imageCount(int value) => jsProxy['imageCount'] = value;
+
+  int get videoCount => jsProxy['videoCount'];
+  set videoCount(int value) => jsProxy['videoCount'] = value;
+}
+
+class MediaMetadata extends ChromeObject {
+  MediaMetadata({String mimeType, int height, int width, num duration, int rotation, String album, String artist, String comment, String copyright, int disc, String genre, String language, String title, int track}) {
+    if (mimeType != null) this.mimeType = mimeType;
+    if (height != null) this.height = height;
+    if (width != null) this.width = width;
+    if (duration != null) this.duration = duration;
+    if (rotation != null) this.rotation = rotation;
+    if (album != null) this.album = album;
+    if (artist != null) this.artist = artist;
+    if (comment != null) this.comment = comment;
+    if (copyright != null) this.copyright = copyright;
+    if (disc != null) this.disc = disc;
+    if (genre != null) this.genre = genre;
+    if (language != null) this.language = language;
+    if (title != null) this.title = title;
+    if (track != null) this.track = track;
+  }
+  MediaMetadata.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get mimeType => jsProxy['mimeType'];
+  set mimeType(String value) => jsProxy['mimeType'] = value;
+
+  int get height => jsProxy['height'];
+  set height(int value) => jsProxy['height'] = value;
+
+  int get width => jsProxy['width'];
+  set width(int value) => jsProxy['width'] = value;
+
+  num get duration => jsProxy['duration'];
+  set duration(num value) => jsProxy['duration'] = jsify(value);
+
+  int get rotation => jsProxy['rotation'];
+  set rotation(int value) => jsProxy['rotation'] = value;
+
+  String get album => jsProxy['album'];
+  set album(String value) => jsProxy['album'] = value;
+
+  String get artist => jsProxy['artist'];
+  set artist(String value) => jsProxy['artist'] = value;
+
+  String get comment => jsProxy['comment'];
+  set comment(String value) => jsProxy['comment'] = value;
+
+  String get copyright => jsProxy['copyright'];
+  set copyright(String value) => jsProxy['copyright'] = value;
+
+  int get disc => jsProxy['disc'];
+  set disc(int value) => jsProxy['disc'] = value;
+
+  String get genre => jsProxy['genre'];
+  set genre(String value) => jsProxy['genre'] = value;
+
+  String get language => jsProxy['language'];
+  set language(String value) => jsProxy['language'] = value;
+
+  String get title => jsProxy['title'];
+  set title(String value) => jsProxy['title'] = value;
+
+  int get track => jsProxy['track'];
+  set track(int value) => jsProxy['track'] = value;
+}
+
+/**
+ * The return type for [addUserSelectedFolder].
+ */
+class AddUserSelectedFolderResult {
+  static AddUserSelectedFolderResult _create(mediaFileSystems, selectedFileSystemName) {
+    return new AddUserSelectedFolderResult._(listify(mediaFileSystems, _createDOMFileSystem), selectedFileSystemName);
+  }
+
+  List<FileSystem> mediaFileSystems;
+  String selectedFileSystemName;
+
+  AddUserSelectedFolderResult._(this.mediaFileSystems, this.selectedFileSystemName);
+}
+
+ScanProgressDetails _createScanProgressDetails(JsObject jsProxy) => jsProxy == null ? null : new ScanProgressDetails.fromProxy(jsProxy);
 FileSystem _createDOMFileSystem(JsObject jsProxy) => jsProxy == null ? null : new CrFileSystem.fromProxy(jsProxy);
 MediaFileSystemMetadata _createMediaFileSystemMetadata(JsObject jsProxy) => jsProxy == null ? null : new MediaFileSystemMetadata.fromProxy(jsProxy);
+MediaMetadata _createMediaMetadata(JsObject jsProxy) => jsProxy == null ? null : new MediaMetadata.fromProxy(jsProxy);
 GetMediaFileSystemsInteractivity _createGetMediaFileSystemsInteractivity(String value) => GetMediaFileSystemsInteractivity.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+GetMetadataType _createGetMetadataType(String value) => GetMetadataType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+ScanProgressType _createScanProgressType(String value) => ScanProgressType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

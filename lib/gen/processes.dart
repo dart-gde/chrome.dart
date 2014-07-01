@@ -155,11 +155,13 @@ class OnExitedEvent {
  * An object containing information about one of the browser's processes.
  */
 class Process extends ChromeObject {
-  Process({int id, int osProcessId, String type, String profile, List<int> tabs, var cpu, var network, var privateMemory, var jsMemoryAllocated, var jsMemoryUsed, var sqliteMemory, var fps, Cache imageCache, Cache scriptCache, Cache cssCache}) {
+  Process({int id, int osProcessId, String title, String type, String profile, int naclDebugPort, List<int> tabs, var cpu, var network, var privateMemory, var jsMemoryAllocated, var jsMemoryUsed, var sqliteMemory, var fps, Cache imageCache, Cache scriptCache, Cache cssCache}) {
     if (id != null) this.id = id;
     if (osProcessId != null) this.osProcessId = osProcessId;
+    if (title != null) this.title = title;
     if (type != null) this.type = type;
     if (profile != null) this.profile = profile;
+    if (naclDebugPort != null) this.naclDebugPort = naclDebugPort;
     if (tabs != null) this.tabs = tabs;
     if (cpu != null) this.cpu = cpu;
     if (network != null) this.network = network;
@@ -187,6 +189,12 @@ class Process extends ChromeObject {
   set osProcessId(int value) => jsProxy['osProcessId'] = value;
 
   /**
+   * The title of the process as seen in the task manager.
+   */
+  String get title => jsProxy['title'];
+  set title(String value) => jsProxy['title'] = value;
+
+  /**
    * The type of process.
    * enum of `browser`, `renderer`, `extension`, `notification`, `plugin`,
    * `worker`, `nacl`, `utility`, `gpu`, `other`
@@ -199,6 +207,13 @@ class Process extends ChromeObject {
    */
   String get profile => jsProxy['profile'];
   set profile(String value) => jsProxy['profile'] = value;
+
+  /**
+   * The debugging port for Native Client processes. Zero for other process
+   * types and for NaCl processes that do not have debugging enabled.
+   */
+  int get naclDebugPort => jsProxy['naclDebugPort'];
+  set naclDebugPort(int value) => jsProxy['naclDebugPort'] = value;
 
   /**
    * Array of Tab IDs that have a page rendered by this process. The list will

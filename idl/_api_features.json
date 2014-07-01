@@ -4,8 +4,20 @@
 
 // See c/c/e/features/* to understand this file, in particular feature.h,
 // simple_feature.h, and base_feature_provider.h.
+//
+// Note that specifying "web_page", "blessed_web_page", or "all" as a context
+// type will require manually updating chrome/renderer/resources/dispatcher.cc.
 
 {
+  "accessibilityFeatures": [{
+    "platforms": ["chromeos"],
+    "dependencies": ["permission:accessibilityFeatures.modify"],
+    "contexts": ["blessed_extension"]
+  }, {
+    "platforms": ["chromeos"],
+    "dependencies": ["permission:accessibilityFeatures.read"],
+    "contexts": ["blessed_extension"]
+  }],
   "activityLogPrivate": {
     "dependencies": ["permission:activityLogPrivate"],
     "contexts": ["blessed_extension"]
@@ -22,7 +34,11 @@
     "channel": "stable",
     "extension_types": ["hosted_app", "extension", "legacy_packaged_app"],
     "contexts": [
-      "blessed_extension", "unblessed_extension", "content_script", "web_page"
+      "blessed_extension",
+      "unblessed_extension",
+      "content_script",
+      "web_page",
+      "blessed_web_page"
     ],
     "matches": [
       "http://*/*", "https://*/*", "chrome-extension://*/*", "file://*/*"
@@ -46,9 +62,9 @@
     "channel": "stable",
     "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
   },
-  "app.currentWindowInternal.setAlwaysOnTop": {
-    "channel": "dev",
-    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+  "app.currentWindowInternal.setShape": {
+    "dependencies": ["permission:app.window.shape"],
+    "contexts": ["blessed_extension"]
   },
   "app.getDetails": {
     "contexts": ["blessed_extension", "unblessed_extension", "content_script"],
@@ -74,12 +90,21 @@
     "dependencies": ["permission:audio"],
     "contexts": ["blessed_extension"]
   },
+  "automationInternal": {
+    "internal": true,
+    "dependencies": ["permission:automation"],
+    "contexts": ["blessed_extension"]
+  },
+  "automation": {
+    "dependencies": ["permission:automation"],
+    "contexts": ["blessed_extension"]
+  },
   "autotestPrivate": {
     "dependencies": ["permission:autotestPrivate"],
     "contexts": ["blessed_extension"]
   },
   "bluetooth": {
-    "dependencies": ["permission:bluetooth"],
+    "dependencies": ["manifest:bluetooth"],
     "contexts": ["blessed_extension"]
   },
   "bookmarkManagerPrivate": {
@@ -134,6 +159,18 @@
     "dependencies": ["permission:cast"],
     "contexts": ["blessed_extension"]
   },
+  "cast.streaming.rtpStream": {
+    "dependencies": ["permission:cast.streaming"],
+    "contexts": ["blessed_extension"]
+  },
+  "cast.streaming.session": {
+    "dependencies": ["permission:cast.streaming"],
+    "contexts": ["blessed_extension"]
+  },
+  "cast.streaming.udpTransport": {
+    "dependencies": ["permission:cast.streaming"],
+    "contexts": ["blessed_extension"]
+  },
   "chromeosInfoPrivate": {
     "platforms": ["chromeos"],
     "dependencies": ["permission:chromeosInfoPrivate"],
@@ -157,6 +194,11 @@
   },
   "contextMenus": {
     "dependencies": ["permission:contextMenus"],
+    "contexts": ["blessed_extension"]
+  },
+  "contextMenusInternal": {
+    "internal": true,
+    "channel": "stable",
     "contexts": ["blessed_extension"]
   },
   "cookies": {
@@ -231,9 +273,7 @@
     "internal": true,
     "channel": "stable",
     "extension_types": ["platform_app", "extension"],
-    "contexts": [
-      "blessed_extension", "unblessed_extension", "content_script", "web_page"
-    ],
+    "contexts": "all",
     "matches": ["<all_urls>"]
   },
   "experimental.accessibility": {
@@ -250,18 +290,6 @@
     "extension_types": ["platform_app"],
     "contexts": ["blessed_extension"]
   },
-  "experimental.discovery": {
-    "dependencies": ["permission:experimental"],
-    "contexts": ["blessed_extension"]
-  },
-  "experimental.history": {
-    "dependencies": ["permission:history", "permission:experimental"],
-    "contexts": ["blessed_extension"]
-  },
-  "experimental.identity": {
-    "dependencies": ["permission:experimental"],
-    "contexts": ["blessed_extension"]
-  },
   "extension": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"],
@@ -270,6 +298,22 @@
   "extension.getURL": {
     "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
   },
+  "extension.getViews": [
+    {
+      "channel": "stable",
+      "contexts": ["blessed_extension"],
+      "extension_types": ["extension", "legacy_packaged_app"]
+    },
+    {
+      // TODO(yoz): Eliminate this usage.
+      "channel": "stable",
+      "contexts": ["blessed_extension"],
+      "extension_types": ["platform_app"],
+      "whitelist": [
+        "A948368FC53BE437A55FEB414106E207925482F5"  // File manager
+      ]
+    }
+  ],
   "extension.inIncognitoContext": {
     "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
   },
@@ -300,6 +344,12 @@
     "channel": "stable",
     "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
   },
+  "screenlockPrivate": {
+    "platforms": ["chromeos"],
+    "dependencies": ["permission:screenlockPrivate"],
+    "extension_types": ["platform_app"],
+    "contexts": ["blessed_extension", "unblessed_extension"]
+  },
   "fileBrowserPrivate": {
     "platforms": ["chromeos"],
     "dependencies": ["permission:fileBrowserPrivate"],
@@ -309,8 +359,21 @@
     "dependencies": ["permission:fileSystem"],
     "contexts": ["blessed_extension"]
   },
+  "fileSystemProvider": {
+    "dependencies": ["permission:fileSystemProvider"],
+    "contexts": ["blessed_extension"]
+  },
+  "firstRunPrivate": {
+    "platforms": ["chromeos"],
+    "dependencies": ["permission:firstRunPrivate"],
+    "contexts": ["blessed_extension"]
+  },
   "fontSettings": {
     "dependencies": ["permission:fontSettings"],
+    "contexts": ["blessed_extension"]
+  },
+  "gcm": {
+    "dependencies": ["permission:gcm"],
     "contexts": ["blessed_extension"]
   },
   "hangoutsPrivate": {
@@ -324,8 +387,16 @@
       "eggnbpckecmjlblplehfpjjdhhidfdoj"
     ]
   },
+  "hid": {
+    "dependencies": ["permission:hid"],
+    "contexts": ["blessed_extension"]
+  },
   "history": {
     "dependencies": ["permission:history"],
+    "contexts": ["blessed_extension"]
+  },
+  "hotwordPrivate": {
+    "dependencies": ["permission:hotwordPrivate"],
     "contexts": ["blessed_extension"]
   },
   "i18n": {
@@ -334,11 +405,6 @@
     "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
   },
   "identity": {
-    "dependencies": ["permission:identity"],
-    "contexts": ["blessed_extension"]
-  },
-  "identity.onSignInChanged": {
-    "channel": "dev",
     "dependencies": ["permission:identity"],
     "contexts": ["blessed_extension"]
   },
@@ -402,6 +468,11 @@
     "dependencies": ["permission:mediaGalleries"],
     "contexts": ["blessed_extension"]
   },
+  "mediaGalleries.getMetadata": {
+    "channel": "dev",
+    "dependencies": ["permission:mediaGalleries"],
+    "contexts": ["blessed_extension"]
+  },
   "mediaGalleriesPrivate": {
     "dependencies": ["permission:mediaGalleriesPrivate"],
     "contexts": ["blessed_extension"]
@@ -424,7 +495,7 @@
     "contexts": ["blessed_extension"]
   },
   "networkingPrivate": {
-    "platforms": ["chromeos"],
+    "platforms": ["chromeos", "mac", "win"],
     "dependencies": ["permission:networkingPrivate"],
     "contexts": ["blessed_extension"]
   },
@@ -451,8 +522,7 @@
   "permissions": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
-    "contexts": "all",
-    "matches": ["<all_urls>"]
+    "contexts": ["blessed_extension"]
   },
   "power": {
     "dependencies": ["permission:power"],
@@ -487,6 +557,10 @@
     "extension_types": ["platform_app"],
     "contexts": ["blessed_extension"]
   },
+  "readingListPrivate": {
+    "dependencies": ["permission:readingListPrivate"],
+    "contexts": ["blessed_extension"]
+  },
   "rtcPrivate": {
     "dependencies": ["permission:rtcPrivate"],
     "contexts": ["blessed_extension"]
@@ -511,6 +585,7 @@
   },
   "runtime.lastError": {
     "contexts": "all",
+    "extension_types": "all",
     "matches": ["<all_urls>"]
   },
   "runtime.onConnect": {
@@ -529,7 +604,7 @@
     "contexts": "all",
     "matches": ["<all_urls>"]
   },
-  "runtime.setUninstallUrl": {
+  "runtime.setUninstallURL": {
     "channel": "dev",
     "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
   },
@@ -555,17 +630,14 @@
   },
   "sockets.tcp": {
     "dependencies": ["manifest:sockets"],
-    "channel": "dev",
     "contexts": ["blessed_extension"]
   },
   "sockets.tcpServer": {
     "dependencies": ["manifest:sockets"],
-    "channel": "dev",
     "contexts": ["blessed_extension"]
   },
   "sockets.udp": {
     "dependencies": ["manifest:sockets"],
-    "channel": "dev",
     "contexts": ["blessed_extension"]
   },
   "storage": {
@@ -596,6 +668,10 @@
     "dependencies": ["permission:system.memory"],
     "contexts": ["blessed_extension"]
   },
+  "system.network": {
+    "dependencies": ["permission:system.network"],
+    "contexts": ["blessed_extension"]
+  },
   "system.storage": {
     "dependencies": ["permission:system.storage"],
     "contexts": ["blessed_extension"]
@@ -622,6 +698,7 @@
     "contexts": ["blessed_extension"]
   },
   "test": {
+    "internal": true,
     "channel": "stable",
     "extension_types": "all",
     "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
@@ -692,7 +769,7 @@
     // Hosted apps can use the webstore API from within a blessed context.
     "channel": "stable",
     "extension_types": ["hosted_app"],
-    "contexts": ["blessed_extension", "web_page"],
+    "contexts": ["blessed_web_page", "web_page"],
     // Any webpage can use the webstore API.
     "matches": ["http://*/*", "https://*/*"]
   },
@@ -700,16 +777,12 @@
     "dependencies": ["permission:webstorePrivate"],
     "contexts": ["blessed_extension"]
   },
-  "webrtc.castSendTransport": {
-    "dependencies": ["permission:webrtc"],
-    "contexts": ["blessed_extension"]
-  },
-  "webrtc.castUdpTransport": {
-    "dependencies": ["permission:webrtc"],
-    "contexts": ["blessed_extension"]
-  },
   "webview": {
     "internal": true,
+    "dependencies": ["permission:webview"],
+    "contexts": ["blessed_extension", "unblessed_extension"]
+  },
+  "webViewRequest": {
     "dependencies": ["permission:webview"],
     "contexts": ["blessed_extension", "unblessed_extension"]
   },

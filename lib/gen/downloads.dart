@@ -293,6 +293,7 @@ class InterruptReason extends ChromeEnum {
   static const InterruptReason NETWORK_TIMEOUT = const InterruptReason._('NETWORK_TIMEOUT');
   static const InterruptReason NETWORK_DISCONNECTED = const InterruptReason._('NETWORK_DISCONNECTED');
   static const InterruptReason NETWORK_SERVER_DOWN = const InterruptReason._('NETWORK_SERVER_DOWN');
+  static const InterruptReason NETWORK_INVALID_REQUEST = const InterruptReason._('NETWORK_INVALID_REQUEST');
   static const InterruptReason SERVER_FAILED = const InterruptReason._('SERVER_FAILED');
   static const InterruptReason SERVER_NO_RANGE = const InterruptReason._('SERVER_NO_RANGE');
   static const InterruptReason SERVER_PRECONDITION = const InterruptReason._('SERVER_PRECONDITION');
@@ -301,7 +302,7 @@ class InterruptReason extends ChromeEnum {
   static const InterruptReason USER_SHUTDOWN = const InterruptReason._('USER_SHUTDOWN');
   static const InterruptReason CRASH = const InterruptReason._('CRASH');
 
-  static const List<InterruptReason> VALUES = const[FILE_FAILED, FILE_ACCESS_DENIED, FILE_NO_SPACE, FILE_NAME_TOO_LONG, FILE_TOO_LARGE, FILE_VIRUS_INFECTED, FILE_TRANSIENT_ERROR, FILE_BLOCKED, FILE_SECURITY_CHECK_FAILED, FILE_TOO_SHORT, NETWORK_FAILED, NETWORK_TIMEOUT, NETWORK_DISCONNECTED, NETWORK_SERVER_DOWN, SERVER_FAILED, SERVER_NO_RANGE, SERVER_PRECONDITION, SERVER_BAD_CONTENT, USER_CANCELED, USER_SHUTDOWN, CRASH];
+  static const List<InterruptReason> VALUES = const[FILE_FAILED, FILE_ACCESS_DENIED, FILE_NO_SPACE, FILE_NAME_TOO_LONG, FILE_TOO_LARGE, FILE_VIRUS_INFECTED, FILE_TRANSIENT_ERROR, FILE_BLOCKED, FILE_SECURITY_CHECK_FAILED, FILE_TOO_SHORT, NETWORK_FAILED, NETWORK_TIMEOUT, NETWORK_DISCONNECTED, NETWORK_SERVER_DOWN, NETWORK_INVALID_REQUEST, SERVER_FAILED, SERVER_NO_RANGE, SERVER_PRECONDITION, SERVER_BAD_CONTENT, USER_CANCELED, USER_SHUTDOWN, CRASH];
 
   const InterruptReason._(String str): super(str);
 }
@@ -415,7 +416,7 @@ class DownloadOptions extends ChromeObject {
  * The state of the process of downloading a file.
  */
 class DownloadItem extends ChromeObject {
-  DownloadItem({int id, String url, String referrer, String filename, bool incognito, DangerType danger, String mime, String startTime, String endTime, String estimatedEndTime, State state, bool paused, bool canResume, InterruptReason error, int bytesReceived, int totalBytes, int fileSize, bool exists, String byExtensionId, String byExtensionName}) {
+  DownloadItem({int id, String url, String referrer, String filename, bool incognito, DangerType danger, String mime, String startTime, String endTime, String estimatedEndTime, State state, bool paused, bool canResume, InterruptReason error, num bytesReceived, num totalBytes, num fileSize, bool exists, String byExtensionId, String byExtensionName}) {
     if (id != null) this.id = id;
     if (url != null) this.url = url;
     if (referrer != null) this.referrer = referrer;
@@ -481,14 +482,14 @@ class DownloadItem extends ChromeObject {
   InterruptReason get error => _createInterruptReason(jsProxy['error']);
   set error(InterruptReason value) => jsProxy['error'] = jsify(value);
 
-  int get bytesReceived => jsProxy['bytesReceived'];
-  set bytesReceived(int value) => jsProxy['bytesReceived'] = value;
+  num get bytesReceived => jsProxy['bytesReceived'];
+  set bytesReceived(num value) => jsProxy['bytesReceived'] = jsify(value);
 
-  int get totalBytes => jsProxy['totalBytes'];
-  set totalBytes(int value) => jsProxy['totalBytes'] = value;
+  num get totalBytes => jsProxy['totalBytes'];
+  set totalBytes(num value) => jsProxy['totalBytes'] = jsify(value);
 
-  int get fileSize => jsProxy['fileSize'];
-  set fileSize(int value) => jsProxy['fileSize'] = value;
+  num get fileSize => jsProxy['fileSize'];
+  set fileSize(num value) => jsProxy['fileSize'] = jsify(value);
 
   bool get exists => jsProxy['exists'];
   set exists(bool value) => jsProxy['exists'] = value;
@@ -501,7 +502,7 @@ class DownloadItem extends ChromeObject {
 }
 
 class DownloadQuery extends ChromeObject {
-  DownloadQuery({List<String> query, String startedBefore, String startedAfter, String endedBefore, String endedAfter, int totalBytesGreater, int totalBytesLess, String filenameRegex, String urlRegex, int limit, List<String> orderBy, int id, String url, String filename, DangerType danger, String mime, String startTime, String endTime, State state, bool paused, InterruptReason error, int bytesReceived, int totalBytes, int fileSize, bool exists}) {
+  DownloadQuery({List<String> query, String startedBefore, String startedAfter, String endedBefore, String endedAfter, num totalBytesGreater, num totalBytesLess, String filenameRegex, String urlRegex, int limit, List<String> orderBy, int id, String url, String filename, DangerType danger, String mime, String startTime, String endTime, State state, bool paused, InterruptReason error, num bytesReceived, num totalBytes, num fileSize, bool exists}) {
     if (query != null) this.query = query;
     if (startedBefore != null) this.startedBefore = startedBefore;
     if (startedAfter != null) this.startedAfter = startedAfter;
@@ -545,11 +546,11 @@ class DownloadQuery extends ChromeObject {
   String get endedAfter => jsProxy['endedAfter'];
   set endedAfter(String value) => jsProxy['endedAfter'] = value;
 
-  int get totalBytesGreater => jsProxy['totalBytesGreater'];
-  set totalBytesGreater(int value) => jsProxy['totalBytesGreater'] = value;
+  num get totalBytesGreater => jsProxy['totalBytesGreater'];
+  set totalBytesGreater(num value) => jsProxy['totalBytesGreater'] = jsify(value);
 
-  int get totalBytesLess => jsProxy['totalBytesLess'];
-  set totalBytesLess(int value) => jsProxy['totalBytesLess'] = value;
+  num get totalBytesLess => jsProxy['totalBytesLess'];
+  set totalBytesLess(num value) => jsProxy['totalBytesLess'] = jsify(value);
 
   String get filenameRegex => jsProxy['filenameRegex'];
   set filenameRegex(String value) => jsProxy['filenameRegex'] = value;
@@ -593,14 +594,14 @@ class DownloadQuery extends ChromeObject {
   InterruptReason get error => _createInterruptReason(jsProxy['error']);
   set error(InterruptReason value) => jsProxy['error'] = jsify(value);
 
-  int get bytesReceived => jsProxy['bytesReceived'];
-  set bytesReceived(int value) => jsProxy['bytesReceived'] = value;
+  num get bytesReceived => jsProxy['bytesReceived'];
+  set bytesReceived(num value) => jsProxy['bytesReceived'] = jsify(value);
 
-  int get totalBytes => jsProxy['totalBytes'];
-  set totalBytes(int value) => jsProxy['totalBytes'] = value;
+  num get totalBytes => jsProxy['totalBytes'];
+  set totalBytes(num value) => jsProxy['totalBytes'] = jsify(value);
 
-  int get fileSize => jsProxy['fileSize'];
-  set fileSize(int value) => jsProxy['fileSize'] = value;
+  num get fileSize => jsProxy['fileSize'];
+  set fileSize(num value) => jsProxy['fileSize'] = jsify(value);
 
   bool get exists => jsProxy['exists'];
   set exists(bool value) => jsProxy['exists'] = value;
@@ -620,18 +621,18 @@ class StringDelta extends ChromeObject {
   set current(String value) => jsProxy['current'] = value;
 }
 
-class LongDelta extends ChromeObject {
-  LongDelta({int previous, int current}) {
+class DoubleDelta extends ChromeObject {
+  DoubleDelta({num previous, num current}) {
     if (previous != null) this.previous = previous;
     if (current != null) this.current = current;
   }
-  LongDelta.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  DoubleDelta.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
-  int get previous => jsProxy['previous'];
-  set previous(int value) => jsProxy['previous'] = value;
+  num get previous => jsProxy['previous'];
+  set previous(num value) => jsProxy['previous'] = jsify(value);
 
-  int get current => jsProxy['current'];
-  set current(int value) => jsProxy['current'] = value;
+  num get current => jsProxy['current'];
+  set current(num value) => jsProxy['current'] = jsify(value);
 }
 
 class BooleanDelta extends ChromeObject {
@@ -652,7 +653,7 @@ class BooleanDelta extends ChromeObject {
  * Encapsulates a change in a DownloadItem.
  */
 class DownloadDelta extends ChromeObject {
-  DownloadDelta({int id, StringDelta url, StringDelta filename, StringDelta danger, StringDelta mime, StringDelta startTime, StringDelta endTime, StringDelta state, BooleanDelta canResume, BooleanDelta paused, StringDelta error, LongDelta totalBytes, LongDelta fileSize, BooleanDelta exists}) {
+  DownloadDelta({int id, StringDelta url, StringDelta filename, StringDelta danger, StringDelta mime, StringDelta startTime, StringDelta endTime, StringDelta state, BooleanDelta canResume, BooleanDelta paused, StringDelta error, DoubleDelta totalBytes, DoubleDelta fileSize, BooleanDelta exists}) {
     if (id != null) this.id = id;
     if (url != null) this.url = url;
     if (filename != null) this.filename = filename;
@@ -703,11 +704,11 @@ class DownloadDelta extends ChromeObject {
   StringDelta get error => _createStringDelta(jsProxy['error']);
   set error(StringDelta value) => jsProxy['error'] = jsify(value);
 
-  LongDelta get totalBytes => _createLongDelta(jsProxy['totalBytes']);
-  set totalBytes(LongDelta value) => jsProxy['totalBytes'] = jsify(value);
+  DoubleDelta get totalBytes => _createDoubleDelta(jsProxy['totalBytes']);
+  set totalBytes(DoubleDelta value) => jsProxy['totalBytes'] = jsify(value);
 
-  LongDelta get fileSize => _createLongDelta(jsProxy['fileSize']);
-  set fileSize(LongDelta value) => jsProxy['fileSize'] = jsify(value);
+  DoubleDelta get fileSize => _createDoubleDelta(jsProxy['fileSize']);
+  set fileSize(DoubleDelta value) => jsProxy['fileSize'] = jsify(value);
 
   BooleanDelta get exists => _createBooleanDelta(jsProxy['exists']);
   set exists(BooleanDelta value) => jsProxy['exists'] = jsify(value);
@@ -735,5 +736,5 @@ State _createState(String value) => State.VALUES.singleWhere((ChromeEnum e) => e
 InterruptReason _createInterruptReason(String value) => InterruptReason.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 StringDelta _createStringDelta(JsObject jsProxy) => jsProxy == null ? null : new StringDelta.fromProxy(jsProxy);
 BooleanDelta _createBooleanDelta(JsObject jsProxy) => jsProxy == null ? null : new BooleanDelta.fromProxy(jsProxy);
-LongDelta _createLongDelta(JsObject jsProxy) => jsProxy == null ? null : new LongDelta.fromProxy(jsProxy);
+DoubleDelta _createDoubleDelta(JsObject jsProxy) => jsProxy == null ? null : new DoubleDelta.fromProxy(jsProxy);
 SuggestFilenameCallback _createSuggestFilenameCallback(JsObject jsProxy) => jsProxy == null ? null : new SuggestFilenameCallback.fromProxy(jsProxy);

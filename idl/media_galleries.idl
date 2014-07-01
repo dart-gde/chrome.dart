@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// Use the <code>chrome.mediaGalleries</code> API to access media files (images,
-// video, audio) from the user's local disks (with the user's consent).
+// Use the <code>chrome.mediaGalleries</code> API to access media files (audio,
+// images, video) from the user's local disks (with the user's consent).
 namespace mediaGalleries {
 
   [inline_doc] enum GetMediaFileSystemsInteractivity {
@@ -16,6 +16,25 @@ namespace mediaGalleries {
     if_needed
   };
 
+  [inline_doc] enum GetMetadataType {
+    // Retrieve all available metadata.
+    all,
+    // Retrieve only the mime type.
+    mimeTypeOnly
+  };
+
+  [inline_doc] enum ScanProgressType {
+    // The scan started.
+    start,
+    // The scan was cancelled.
+    cancel,
+    // The scan finished but none of the result have been added,
+    // addScanResults() has to be called to ask the user for permission.
+    finish,
+    // The scan encountered an error and could not proceed.
+    error
+  };
+
   [inline_doc] dictionary MediaFileSystemsDetails {
     // Whether to prompt the user for permission to additional media galleries
     // before returning the permitted set. Default is silent.  If the value
@@ -25,8 +44,18 @@ namespace mediaGalleries {
     GetMediaFileSystemsInteractivity? interactive;
   };
 
+  [inline_doc] dictionary MediaMetadataOptions {
+    // Specifies which subset of the metadata to retrieve. Defaults to 'all'
+    // if the option is omitted.
+    GetMetadataType? metadataType;
+  };
+
   callback MediaFileSystemsCallback =
       void ([instanceOf=DOMFileSystem] optional object[] mediaFileSystems);
+
+  callback AddUserFolderCallback =
+      void ([instanceOf=DOMFileSystem] optional object[] mediaFileSystems,
+            DOMString selectedFileSystemName);
 
   [inline_doc] dictionary MediaFileSystemMetadata {
     // The name of the file system.
@@ -36,7 +65,7 @@ namespace mediaGalleries {
     DOMString galleryId;
 
     // If the media gallery is on a removable device, a unique id for the
-    // device.
+    // device while the device is online.
     DOMString? deviceId;
 
     // True if the media gallery is on a removable device.
@@ -45,7 +74,55 @@ namespace mediaGalleries {
     // True if the device the media gallery is on was detected as a media
     // device.  i.e. a PTP or MTP device, or a DCIM directory is present.
     boolean isMediaDevice;
+
+    // True if the device is currently available.
+    boolean isAvailable;
   };
+
+  [inline_doc] dictionary ScanProgressDetails {
+    // The type of progress event, i.e. start, finish, etc.
+    ScanProgressType type;
+
+    // The number of Galleries found.
+    long? galleryCount;
+
+    // Appoximate number of media files found; some file types can be either
+    // audio or video and are included in both counts.
+    long? audioCount;
+    long? imageCount;
+    long? videoCount;
+  };
+
+  callback MediaFileSystemsMetadataCallback =
+      void (MediaFileSystemMetadata[] metadata);
+
+  dictionary MediaMetadata {
+    // The browser sniffed mime type.
+    DOMString mimeType;
+
+    // Defined for images and video. In pixels.
+    long? height;
+    long? width;
+
+    // Defined for audio and video. In seconds.
+    double? duration;
+    
+    // Defined for images and video. In degrees.
+    long? rotation;
+
+    // Generic metadata tags.
+    DOMString? album;
+    DOMString? artist;
+    DOMString? comment;
+    DOMString? copyright;
+    long? disc;
+    DOMString? genre;
+    DOMString? language;
+    DOMString? title;
+    long? track;
+  };
+
+  callback MediaMetadataCallback = void (MediaMetadata metadata);
 
   interface Functions {
     // Get the media galleries configured in this user agent. If none are
@@ -53,9 +130,47 @@ namespace mediaGalleries {
     static void getMediaFileSystems(optional MediaFileSystemsDetails details,
                                     MediaFileSystemsCallback callback);
 
+    // Present a directory picker to the user and add the selected directory
+    // as a gallery. If the user cancels the picker, selectedFileSystemName
+    // will be empty.
+    // A user gesture is required for the dialog to display. Without a user
+    // gesture, the callback will run as though the user canceled.
+    static void addUserSelectedFolder(AddUserFolderCallback callback);
+
+    // Start a scan of the user's hard disks for directories containing media.
+    // The scan may take a long time so progress and completion is communicated
+    // by events. No permission is granted as a result of the scan, see
+    // addScanResults.
+    static void startMediaScan();
+
+    // Cancel any pending media scan.  Well behaved apps should provide a way
+    // for the user to cancel scans they start.
+    static void cancelMediaScan();
+
+    // Show the user the scan results and let them add any or all of them as
+    // galleries. This should be used after the 'finish' onScanProgress()
+    // event has happened. All galleries the app has access to are returned, not
+    // just the newly added galleries.
+    static void addScanResults(MediaFileSystemsCallback callback);
+
     // Get metadata about a specific media file system.
     [nocompile] static MediaFileSystemMetadata getMediaFileSystemMetadata(
         [instanceOf=DOMFileSystem] object mediaFileSystem);
+
+    // Get metadata for all available media galleries.
+    static void getAllMediaFileSystemMetadata(
+        MediaFileSystemsMetadataCallback callback);
+
+    // Gets the media-specific metadata for a media file. This should work
+    // for files in media galleries as well as other DOM filesystems.
+    static void getMetadata([instanceOf=Blob] object mediaFile,
+                            optional MediaMetadataOptions options,
+                            MediaMetadataCallback callback);
   };
 
+  interface Events {
+    // The pending media scan has changed state. See details for more
+    // information.
+    static void onScanProgress(ScanProgressDetails details);
+  };
 };

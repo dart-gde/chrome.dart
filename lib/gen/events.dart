@@ -1,7 +1,8 @@
 /* This file has been generated from events.json - do not edit */
 
 /**
- * Use the `chrome.events` API to notify you when something interesting happens.
+ * The `chrome.events` namespace contains common types used by APIs dispatching
+ * events to notify you when something interesting happens.
  */
 library chrome.events;
 
@@ -107,15 +108,18 @@ class ChromeEvent extends ChromeObject {
    * 
    * [eventName] Name of the event this function affects.
    * 
+   * [webViewInstanceId] If provided, this is an integer that uniquely identfies
+   * the <webview> associated with this function call.
+   * 
    * [rules] Rules to be registered. These do not replace previously registered
    * rules.
    * 
    * Returns:
    * Rules that were registered, the optional parameters are filled with values.
    */
-  Future<List<Rule>> addRules(String eventName, List<Rule> rules) {
+  Future<List<Rule>> addRules(String eventName, int webViewInstanceId, List<Rule> rules) {
     var completer = new ChromeCompleter<List<Rule>>.oneArg((e) => listify(e, _createRule));
-    jsProxy.callMethod('addRules', [eventName, jsify(rules), completer.callback]);
+    jsProxy.callMethod('addRules', [eventName, webViewInstanceId, jsify(rules), completer.callback]);
     return completer.future;
   }
 
@@ -124,15 +128,18 @@ class ChromeEvent extends ChromeObject {
    * 
    * [eventName] Name of the event this function affects.
    * 
+   * [webViewInstanceId] If provided, this is an integer that uniquely identfies
+   * the <webview> associated with this function call.
+   * 
    * [ruleIdentifiers] If an array is passed, only rules with identifiers
    * contained in this array are returned.
    * 
    * Returns:
    * Rules that were registered, the optional parameters are filled with values.
    */
-  Future<List<Rule>> getRules(String eventName, [List<String> ruleIdentifiers]) {
+  Future<List<Rule>> getRules(String eventName, int webViewInstanceId, [List<String> ruleIdentifiers]) {
     var completer = new ChromeCompleter<List<Rule>>.oneArg((e) => listify(e, _createRule));
-    jsProxy.callMethod('getRules', [eventName, jsify(ruleIdentifiers), completer.callback]);
+    jsProxy.callMethod('getRules', [eventName, webViewInstanceId, jsify(ruleIdentifiers), completer.callback]);
     return completer.future;
   }
 
@@ -141,12 +148,15 @@ class ChromeEvent extends ChromeObject {
    * 
    * [eventName] Name of the event this function affects.
    * 
+   * [webViewInstanceId] If provided, this is an integer that uniquely identfies
+   * the <webview> associated with this function call.
+   * 
    * [ruleIdentifiers] If an array is passed, only rules with identifiers
    * contained in this array are unregistered.
    */
-  Future removeRules(String eventName, [List<String> ruleIdentifiers]) {
+  Future removeRules(String eventName, int webViewInstanceId, [List<String> ruleIdentifiers]) {
     var completer = new ChromeCompleter.noArgs();
-    jsProxy.callMethod('removeRules', [eventName, jsify(ruleIdentifiers), completer.callback]);
+    jsProxy.callMethod('removeRules', [eventName, webViewInstanceId, jsify(ruleIdentifiers), completer.callback]);
     return completer.future;
   }
 }

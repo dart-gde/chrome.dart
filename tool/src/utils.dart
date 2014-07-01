@@ -67,6 +67,11 @@ String convertHtmlToDartdoc(String str) {
   str = str.replaceAll('<p>', '');
   str = str.replaceAll('</p>', '');
 
+  // $(ref:sessions) ==> [sessions]
+  str = str.replaceAllMapped(
+      new RegExp(r"\$\(ref:([\.\w]*)\)"),
+      (Match m) => "[${m.group(1)}]");
+
   // $ref:runtime.onConnect ==> [runtime.onConnect]
   str = str.replaceAllMapped(
       new RegExp(r"\$ref:([\.\w]*)"),

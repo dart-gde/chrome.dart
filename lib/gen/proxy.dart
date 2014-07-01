@@ -55,7 +55,7 @@ class ProxyServer extends ChromeObject {
 
   /**
    * The scheme (protocol) of the proxy server itself. Defaults to 'http'.
-   * enum of `http`, `https`, `socks4`, `socks5`
+   * enum of `http`, `https`, `quic`, `socks4`, `socks5`
    */
   String get scheme => this.jsProxy['scheme'];
   set scheme(String value) => this.jsProxy['scheme'] = value;
