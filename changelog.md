@@ -1,5 +1,13 @@
 # Changelog - chrome.dart
 
+## 0.6.0 2014-07-01 (SDK 1.5.1 r37644)
+
+- Updated the APIs to M35 (current Chrome stable)
+- Added the `chrome.bluetoothLowEnergy` API
+- Added the `chrome.bluetoothSocket` API
+- Added the `chrome.commands` API
+- Added the `chrome.hid` API
+
 ## 0.5.6 2014-04-29 (SDK 1.4.0-dev.4.0 r35362)
 
 - Added speculative performance fix for array performance issue
