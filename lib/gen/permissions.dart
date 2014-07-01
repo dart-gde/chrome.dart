@@ -2,8 +2,8 @@
 
 /**
  * Use the `chrome.permissions` API to request [declared optional
- * permissions](#manifest) at run time rather than install time, so users
- * understand why the permissions are needed and grant only those that are
+ * permissions](permissions#manifest) at run time rather than install time, so
+ * users understand why the permissions are needed and grant only those that are
  * necessary.
  */
 library chrome.permissions;
@@ -110,13 +110,18 @@ class Permissions extends ChromeObject {
   Permissions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   /**
-   * List of named permissions (does not include hosts or origins).
+   * List of named permissions (does not include hosts or origins).  Anything
+   * listed here must appear in the `optional_permissions` list in the manifest.
    */
   List<String> get permissions => listify(jsProxy['permissions']);
   set permissions(List<String> value) => jsProxy['permissions'] = jsify(value);
 
   /**
-   * List of origin permissions.
+   * List of origin permissions. Anything listed here must be a subset of a host
+   * that appears in the `optional_permissions` list in the manifest. For
+   * example, if `http://\*.example.com/` or `http:///` appears in
+   * `optional_permissions`, you can request an origin of
+   * `http://help.example.com/`. Any path is ignored.
    */
   List<String> get origins => listify(jsProxy['origins']);
   set origins(List<String> value) => jsProxy['origins'] = jsify(value);

@@ -77,7 +77,7 @@ class ChromeContentSettings extends ChromeApi {
 
 /**
  * The only content type using resource identifiers is
- * [contentSettings.plugins.] For more information, see [Resource
+ * [contentSettings.plugins]. For more information, see [Resource
  * Identifiers](contentSettings.html#resource-identifiers).
  */
 class ResourceIdentifier extends ChromeObject {

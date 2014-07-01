@@ -25,7 +25,7 @@ class ChromeBrowser extends ChromeApi {
    * and Chrome profile. If no browser window for the Chrome profile is opened,
    * a new one is opened prior to creating the new tab. The initial URL of the
    * new tab is specified in [options].
-   * [options]: The $(ref:OpenTabOptions) for this function.
+   * [options]: The [OpenTabOptions] for this function.
    * [callback]: Called to indicate success or failure.
    */
   Future openTab(OpenTabOptions options) {
@@ -42,7 +42,7 @@ class ChromeBrowser extends ChromeApi {
 }
 
 /**
- * Options for the $(ref:openTab) function.
+ * Options for the [openTab] function.
  */
 class OpenTabOptions extends ChromeObject {
   OpenTabOptions({String url}) {

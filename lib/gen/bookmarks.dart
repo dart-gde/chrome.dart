@@ -154,13 +154,14 @@ class ChromeBookmarks extends ChromeApi {
   }
 
   /**
-   * Searches for BookmarkTreeNodes matching the given query.
+   * Searches for BookmarkTreeNodes matching the given query. Queries specified
+   * with an object produce BookmarkTreeNodes matching all specified properties.
    */
-  Future<List<BookmarkTreeNode>> search(String query) {
+  Future<List<BookmarkTreeNode>> search(dynamic query) {
     if (_bookmarks == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<List<BookmarkTreeNode>>.oneArg((e) => listify(e, _createBookmarkTreeNode));
-    _bookmarks.callMethod('search', [query, completer.callback]);
+    _bookmarks.callMethod('search', [jsify(query), completer.callback]);
     return completer.future;
   }
 

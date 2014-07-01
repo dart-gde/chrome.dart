@@ -7,6 +7,7 @@
 library chrome.tabs;
 
 import 'runtime.dart';
+import 'types.dart';
 import 'windows.dart';
 import '../src/common.dart';
 
@@ -36,19 +37,21 @@ class ChromeTabs extends ChromeApi {
    * Fired when a tab is moved within a window. Only one move event is fired,
    * representing the tab the user directly moved. Move events are not fired for
    * the other tabs that must move in response. This event is not fired when a
-   * tab is moved between windows. For that, see [onDetached.]
+   * tab is moved between windows. For that, see [tabs.onDetached].
    */
   Stream<TabsOnMovedEvent> get onMoved => _onMoved.stream;
   ChromeStreamController<TabsOnMovedEvent> _onMoved;
 
   /**
-   * Deprecated. Please use onActivated.
+   * Fires when the selected tab in a window changes.
    */
   Stream<OnSelectionChangedEvent> get onSelectionChanged => _onSelectionChanged.stream;
   ChromeStreamController<OnSelectionChangedEvent> _onSelectionChanged;
 
   /**
-   * Deprecated. Please use onActivated.
+   * Fires when the selected tab in a window changes. Note that the tab's URL
+   * may not be set at the time this event fired, but you can listen to
+   * [tabs.onUpdated] events to be notified when a URL is set.
    */
   Stream<OnActiveChangedEvent> get onActiveChanged => _onActiveChanged.stream;
   ChromeStreamController<OnActiveChangedEvent> _onActiveChanged;
@@ -62,7 +65,7 @@ class ChromeTabs extends ChromeApi {
   ChromeStreamController<Map> _onActivated;
 
   /**
-   * Deprecated. Please use onHighlighted.
+   * Fired when the highlighted or selected tabs in a window changes.
    */
   Stream<Map> get onHighlightChanged => _onHighlightChanged.stream;
   ChromeStreamController<Map> _onHighlightChanged;
@@ -160,7 +163,10 @@ class ChromeTabs extends ChromeApi {
   }
 
   /**
-   * Deprecated: Please use sendMessage.
+   * Sends a single request to the content script(s) in the specified tab, with
+   * an optional callback to run when a response is sent back.  The
+   * [extension.onRequest] event is fired in each content script running in the
+   * specified tab for the current extension.
    * 
    * Returns:
    * The JSON response object sent by the handler of the request. If an error
@@ -195,8 +201,7 @@ class ChromeTabs extends ChromeApi {
   }
 
   /**
-   * Deprecated. Please use query({'active': true}). Gets the tab that is
-   * selected in the specified window.
+   * Gets the tab that is selected in the specified window.
    * 
    * [windowId] Defaults to the [current window](windows.html#current-window).
    */
@@ -209,8 +214,7 @@ class ChromeTabs extends ChromeApi {
   }
 
   /**
-   * Deprecated. Please use query({'windowId': windowId}). Gets details about
-   * all tabs in the specified window.
+   * Gets details about all tabs in the specified window.
    * 
    * [windowId] Defaults to the [current window](windows.html#current-window).
    */
@@ -374,14 +378,11 @@ class ChromeTabs extends ChromeApi {
    * [windowId] The target window. Defaults to the [current
    * window](windows.html#current-window).
    * 
-   * [options] Set parameters of image capture, such as the format of the
-   * resulting image.
-   * 
    * Returns:
    * A data URL which encodes an image of the visible area of the captured tab.
    * May be assigned to the 'src' property of an HTML Image element for display.
    */
-  Future<String> captureVisibleTab([int windowId, TabsCaptureVisibleTabParams options]) {
+  Future<String> captureVisibleTab([int windowId, ImageDetails options]) {
     if (_tabs == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<String>.oneArg();
@@ -454,7 +455,7 @@ class OnUpdatedEvent {
  * Fired when a tab is moved within a window. Only one move event is fired,
  * representing the tab the user directly moved. Move events are not fired for
  * the other tabs that must move in response. This event is not fired when a tab
- * is moved between windows. For that, see [onDetached.]
+ * is moved between windows. For that, see [tabs.onDetached].
  */
 class TabsOnMovedEvent {
   final int tabId;
@@ -465,7 +466,7 @@ class TabsOnMovedEvent {
 }
 
 /**
- * Deprecated. Please use onActivated.
+ * Fires when the selected tab in a window changes.
  */
 class OnSelectionChangedEvent {
   /**
@@ -479,7 +480,9 @@ class OnSelectionChangedEvent {
 }
 
 /**
- * Deprecated. Please use onActivated.
+ * Fires when the selected tab in a window changes. Note that the tab's URL may
+ * not be set at the time this event fired, but you can listen to
+ * [tabs.onUpdated] events to be notified when a URL is set.
  */
 class OnActiveChangedEvent {
   /**
@@ -539,11 +542,12 @@ class OnReplacedEvent {
 }
 
 class Tab extends ChromeObject {
-  Tab({int id, int index, int windowId, int openerTabId, bool highlighted, bool active, bool pinned, String url, String title, String favIconUrl, String status, bool incognito, int width, int height, String sessionId}) {
+  Tab({int id, int index, int windowId, int openerTabId, bool selected, bool highlighted, bool active, bool pinned, String url, String title, String favIconUrl, String status, bool incognito, int width, int height, String sessionId}) {
     if (id != null) this.id = id;
     if (index != null) this.index = index;
     if (windowId != null) this.windowId = windowId;
     if (openerTabId != null) this.openerTabId = openerTabId;
+    if (selected != null) this.selected = selected;
     if (highlighted != null) this.highlighted = highlighted;
     if (active != null) this.active = active;
     if (pinned != null) this.pinned = pinned;
@@ -585,6 +589,12 @@ class Tab extends ChromeObject {
    */
   int get openerTabId => jsProxy['openerTabId'];
   set openerTabId(int value) => jsProxy['openerTabId'] = value;
+
+  /**
+   * Whether the tab is selected.
+   */
+  bool get selected => jsProxy['selected'];
+  set selected(bool value) => jsProxy['selected'] = value;
 
   /**
    * Whether the tab is highlighted.
@@ -716,11 +726,12 @@ class TabsConnectParams extends ChromeObject {
 }
 
 class TabsCreateParams extends ChromeObject {
-  TabsCreateParams({int windowId, int index, String url, bool active, bool pinned, int openerTabId}) {
+  TabsCreateParams({int windowId, int index, String url, bool active, bool selected, bool pinned, int openerTabId}) {
     if (windowId != null) this.windowId = windowId;
     if (index != null) this.index = index;
     if (url != null) this.url = url;
     if (active != null) this.active = active;
+    if (selected != null) this.selected = selected;
     if (pinned != null) this.pinned = pinned;
     if (openerTabId != null) this.openerTabId = openerTabId;
   }
@@ -755,6 +766,13 @@ class TabsCreateParams extends ChromeObject {
    */
   bool get active => jsProxy['active'];
   set active(bool value) => jsProxy['active'] = value;
+
+  /**
+   * Whether the tab should become the selected tab in the window. Defaults to
+   * [true]
+   */
+  bool get selected => jsProxy['selected'];
+  set selected(bool value) => jsProxy['selected'] = value;
 
   /**
    * Whether the tab should be pinned. Defaults to [false]
@@ -878,10 +896,11 @@ class TabsHighlightParams extends ChromeObject {
 }
 
 class TabsUpdateParams extends ChromeObject {
-  TabsUpdateParams({String url, bool active, bool highlighted, bool pinned, int openerTabId}) {
+  TabsUpdateParams({String url, bool active, bool highlighted, bool selected, bool pinned, int openerTabId}) {
     if (url != null) this.url = url;
     if (active != null) this.active = active;
     if (highlighted != null) this.highlighted = highlighted;
+    if (selected != null) this.selected = selected;
     if (pinned != null) this.pinned = pinned;
     if (openerTabId != null) this.openerTabId = openerTabId;
   }
@@ -905,6 +924,12 @@ class TabsUpdateParams extends ChromeObject {
    */
   bool get highlighted => jsProxy['highlighted'];
   set highlighted(bool value) => jsProxy['highlighted'] = value;
+
+  /**
+   * Whether the tab should be selected.
+   */
+  bool get selected => jsProxy['selected'];
+  set selected(bool value) => jsProxy['selected'] = value;
 
   /**
    * Whether the tab should be pinned.
@@ -952,30 +977,6 @@ class TabsReloadParams extends ChromeObject {
    */
   bool get bypassCache => jsProxy['bypassCache'];
   set bypassCache(bool value) => jsProxy['bypassCache'] = value;
-}
-
-class TabsCaptureVisibleTabParams extends ChromeObject {
-  TabsCaptureVisibleTabParams({String format, int quality}) {
-    if (format != null) this.format = format;
-    if (quality != null) this.quality = quality;
-  }
-  TabsCaptureVisibleTabParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-
-  /**
-   * The format of the resulting image.  Default is jpeg.
-   * enum of `jpeg`, `png`
-   */
-  String get format => jsProxy['format'];
-  set format(String value) => jsProxy['format'] = value;
-
-  /**
-   * When format is 'jpeg', controls the quality of the resulting image.  This
-   * value is ignored for PNG images.  As quality is decreased, the resulting
-   * image will have more visual artifacts, and the number of bytes needed to
-   * store it will decrease.
-   */
-  int get quality => jsProxy['quality'];
-  set quality(int value) => jsProxy['quality'] = value;
 }
 
 Tab _createTab(JsObject jsProxy) => jsProxy == null ? null : new Tab.fromProxy(jsProxy);

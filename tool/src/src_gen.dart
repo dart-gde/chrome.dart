@@ -35,6 +35,8 @@ class DartGenerator {
     }
 
     docs = wrap(docs.trim(), colBoundary - _indent.length - 3);
+    docs = docs.replaceAll('*/', '/');
+    docs = docs.replaceAll('/*', r'/\*');
 
     if (!docs.contains('\n') && preferSingle) {
       _writeln("/// ${docs}", true);

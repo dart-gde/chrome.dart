@@ -3,8 +3,16 @@
 // found in the LICENSE file.
 
 // Use the <code>chrome.bluetooth</code> API to connect to a Bluetooth
-// device.
+// device. All functions report failures via chrome.runtime.lastError.
 namespace bluetooth {
+  // Allocation authorities for Vendor IDs.
+  enum VendorIdSource {bluetooth, usb};
+
+  // Common device types recognized by Chrome.
+  enum DeviceType {computer, phone, modem, audio, carAudio, video, peripheral,
+                   joystick, gamepad, keyboard, mouse, tablet,
+                   keyboardMouseCombo};
+
   dictionary AdapterState {
     // The address of the adapter, in the format 'XX:XX:XX:XX:XX:XX'.
     DOMString address;
@@ -29,11 +37,34 @@ namespace bluetooth {
     // The human-readable name of the device.
     DOMString? name;
 
+    // The class of the device, a bit-field defined by
+    // http://www.bluetooth.org/en-us/specification/assigned-numbers/baseband.
+    long? deviceClass;
+
+    // The Device ID record of the device, where available.
+    VendorIdSource? vendorIdSource;
+    long? vendorId;
+    long? productId;
+    long? deviceId;
+
+    // The type of the device, if recognized by Chrome. This is obtained from
+    // the |deviceClass| field and only represents a small fraction of the
+    // possible device types. When in doubt you should use the |deviceClass|
+    // field directly.
+    DeviceType? type;
+
     // Indicates whether or not the device is paired with the system.
     boolean? paired;
 
     // Indicates whether the device is currently connected to the system.
     boolean? connected;
+
+    // UUIDs of protocols, profiles and services advertised by the device.
+    // For classic Bluetooth devices, this list is obtained from EIR data and
+    // SDP tables. For Low Energy devices, this list is obtained from AD and
+    // GATT primary services. For dual mode devices this may be obtained from
+    // both.
+    DOMString[]? uuids;
   };
 
   dictionary Profile {
@@ -101,43 +132,16 @@ namespace bluetooth {
   };
 
   callback AdapterStateCallback = void(AdapterState result);
-  callback AddressCallback = void (DOMString result);
-  callback BooleanCallback = void (boolean result);
-  callback DataCallback = void (optional ArrayBuffer result);
-  callback DeviceCallback = void (Device device);
-  callback DevicesCallback = void (Device[] result);
-  callback NameCallback = void (DOMString result);
-  callback OutOfBandPairingDataCallback = void (OutOfBandPairingData data);
-  callback ProfilesCallback = void(Profile[] result);
-  callback ResultCallback = void ();
-  callback ServicesCallback = void(ServiceRecord[] result);
-  callback SizeCallback = void (long result);
-  callback SocketCallback = void (Socket result);
-
-  // Options for the getDevices function. If |profile| is not provided, all
-  // devices known to the system are returned.
-  dictionary GetDevicesOptions {
-    // Only devices providing |profile| will be returned.
-    Profile? profile;
-
-    // Called for each matching device.  Note that a service discovery request
-    // must be made to each non-matching device before it can be definitively
-    // excluded.  This can take some time.
-    DeviceCallback deviceCallback;
-  };
-
-  // Options for the getProfiles function.
-  dictionary GetProfilesOptions {
-    // The remote Bluetooth device to retrieve the exported profiles list from.
-    Device device;
-  };
-
-  // Options for the getServices function.
-  dictionary GetServicesOptions {
-    // The address of the device to inquire about. |deviceAddress| should be
-    // in the format 'XX:XX:XX:XX:XX:XX'.
-    DOMString deviceAddress;
-  };
+  callback AddressCallback = void(DOMString result);
+  callback BooleanCallback = void(boolean result);
+  callback DataCallback = void(optional ArrayBuffer result);
+  callback DeviceCallback = void(Device result);
+  callback DevicesCallback = void(Device[] result);
+  callback NameCallback = void(DOMString result);
+  callback OutOfBandPairingDataCallback = void(OutOfBandPairingData data);
+  callback ResultCallback = void();
+  callback SizeCallback = void(long result);
+  callback SocketCallback = void(Socket result);
 
   // Options for the connect function.
   dictionary ConnectOptions {
@@ -180,12 +184,6 @@ namespace bluetooth {
     OutOfBandPairingData? data;
   };
 
-  // Options for the startDiscovery function.
-  dictionary StartDiscoveryOptions {
-    // Called for each device that is discovered.
-    DeviceCallback deviceCallback;
-  };
-
   // These functions all report failures via chrome.runtime.lastError.
   interface Functions {
     // Registers the JavaScript application as an implementation for the given
@@ -202,24 +200,15 @@ namespace bluetooth {
     //              state.
     static void getAdapterState(AdapterStateCallback callback);
 
-    // Get a bluetooth devices known to the system.  Known devices are either
-    // currently paired, or have been paired in the past.
-    // |options|  : Controls which devices are returned and provides
-    //              |deviceCallback|, which is called for each matching device.
+    // Get a list of Bluetooth devices known to the system, including paired
+    // and recently discovered devices.
     // |callback| : Called when the search is completed.
-    //              |options.deviceCallback| will not be called after
-    //              |callback| has been called.
-    static void getDevices(GetDevicesOptions options,
-                           ResultCallback callback);
+    static void getDevices(DevicesCallback callback);
 
-    // Returns the set of exported profiles for the device specified in options.
-    // This function will not initiate a connection to the remote device.
-    static void getProfiles(GetProfilesOptions options,
-                            ProfilesCallback callback);
-
-    // Get a list of services provided by a device.
-    static void getServices(GetServicesOptions options,
-                            ServicesCallback callback);
+    // Get information about a Bluetooth device known to the system.
+    // |deviceAddress| : Address of device to get.
+    // |callback| : Called with the Device object describing the device.
+    static void getDevice(DOMString deviceAddress, DeviceCallback callback);
 
     // Connect to a service on a device.
     // |options|  : The options for the connection.
@@ -233,9 +222,11 @@ namespace bluetooth {
     static void disconnect(DisconnectOptions options,
                            optional ResultCallback callback);
 
-    // Read data from a Bluetooth connection.
+    // Read data from a Bluetooth connection. The |callback| will be called
+    // with the current data in the buffer even if it is empty. This function
+    // should be polled to read incoming data.
     // |options|  : The options for this function.
-    // |callback| : Called with the data when it is available.
+    // |callback| : Called with the data read from the socket buffer.
     static void read(ReadOptions options,
                      DataCallback callback);
 
@@ -257,14 +248,16 @@ namespace bluetooth {
     static void setOutOfBandPairingData(SetOutOfBandPairingDataOptions options,
                                         optional ResultCallback callback);
 
-    // Start discovery. Discovered devices will be returned via the
-    // |onDeviceDiscovered| callback.  Discovery will fail to start if it is
-    // already in progress.  Discovery can be resource intensive: stopDiscovery
+    // Start discovery. Newly discovered devices will be returned via the
+    // onDeviceAdded event. Previously discovered devices already known to
+    // the adapter must be obtained using getDevices and will only be updated
+    // using the |onDeviceChanged| event if information about them changes.
+    //
+    // Discovery will fail to start if this application has already called
+    // startDiscovery.  Discovery can be resource intensive: stopDiscovery
     // should be called as soon as possible.
-    // |options|  : The options for this function.
     // |callback| : Called to indicate success or failure.
     static void startDiscovery(
-        StartDiscoveryOptions options,
         optional ResultCallback callback);
 
     // Stop discovery.
@@ -277,6 +270,17 @@ namespace bluetooth {
     // Fired when the state of the Bluetooth adapter changes.
     // |state| : The new state of the adapter.
     static void onAdapterStateChanged(AdapterState state);
+
+    // Fired when information about a new Bluetooth device is available.
+    static void onDeviceAdded(Device device);
+
+    // Fired when information about a known Bluetooth device has changed.
+    static void onDeviceChanged(Device device);
+
+    // Fired when a Bluetooth device that was previously discovered has been
+    // out of range for long enough to be considered unavailable again, and
+    // when a paired device is removed.
+    static void onDeviceRemoved(Device device);
 
     // Fired when a connection has been made for a registered profile.
     // |socket| : The socket for the connection.

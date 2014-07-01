@@ -20,6 +20,11 @@ void main() {
   action("getInfo()", handleAudioGetInfo);
   br();
 
+  label('browser');
+  action('available', handleBrowserAvailable);
+  action('openTab()', handleBrowserOpenTab);
+  br();
+
   label('bluetooth');
   action('available', handleBluetoothAvailable);
   action('getAdapterState()', handleBluetoothGetAdapterState);
@@ -473,6 +478,15 @@ void handleFileDelete() {
   });
 
   summaryFuture(f);
+}
+
+void handleBrowserAvailable() {
+  summary("available = ${chrome.browser.available}");
+}
+
+void handleBrowserOpenTab() {
+  summaryFuture(chrome.browser.openTab(
+      new chrome.OpenTabOptions(url: 'http://www.google.com')));
 }
 
 void handleBluetoothAvailable() {

@@ -22,7 +22,7 @@ class ChromeI18N extends ChromeApi {
 
   /**
    * Gets the accept-languages of the browser. This is different from the locale
-   * used by the browser; to get the locale, use `window.navigator.language`.
+   * used by the browser; to get the locale, use [i18n.getUILanguage].
    * 
    * Returns:
    * Array of the accept languages of the browser, such as en-US,en,zh-CN
@@ -54,6 +54,19 @@ class ChromeI18N extends ChromeApi {
     if (_i18n == null) _throwNotAvailable();
 
     return _i18n.callMethod('getMessage', [messageName, jsify(substitutions)]);
+  }
+
+  /**
+   * Gets the browser UI language of the browser. This is different from
+   * [i18n.getAcceptLanguages] which returns the preferred user languages.
+   * 
+   * Returns:
+   * The browser UI language code such as en-US or fr-FR.
+   */
+  String getUILanguage() {
+    if (_i18n == null) _throwNotAvailable();
+
+    return _i18n.callMethod('getUILanguage');
   }
 
   void _throwNotAvailable() {

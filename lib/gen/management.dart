@@ -66,7 +66,7 @@ class ChromeManagement extends ChromeApi {
    * Returns information about the installed extension, app, or theme that has
    * the given ID.
    * 
-   * [id] The ID from an item of [ExtensionInfo.]
+   * [id] The ID from an item of [management.ExtensionInfo].
    */
   Future<ExtensionInfo> get(String id) {
     if (_management == null) _throwNotAvailable();
@@ -108,7 +108,7 @@ class ChromeManagement extends ChromeApi {
   /**
    * Enables or disables an app or extension.
    * 
-   * [id] This should be the id from an item of [ExtensionInfo.]
+   * [id] This should be the id from an item of [management.ExtensionInfo].
    * 
    * [enabled] Whether this item should be enabled or disabled.
    */
@@ -123,7 +123,7 @@ class ChromeManagement extends ChromeApi {
   /**
    * Uninstalls a currently installed app or extension.
    * 
-   * [id] This should be the id from an item of [ExtensionInfo.]
+   * [id] This should be the id from an item of [management.ExtensionInfo].
    */
   Future uninstall(String id, [ManagementUninstallParams options]) {
     if (_management == null) _throwNotAvailable();
@@ -193,7 +193,7 @@ class IconInfo extends ChromeObject {
  * Information about an installed extension, app, or theme.
  */
 class ExtensionInfo extends ChromeObject {
-  ExtensionInfo({String id, String name, String shortName, String description, String version, bool mayDisable, bool enabled, String disabledReason, String type, String appLaunchUrl, String homepageUrl, String updateUrl, bool offlineEnabled, String optionsUrl, List<IconInfo> icons, List<String> permissions, List<String> hostPermissions, String installType}) {
+  ExtensionInfo({String id, String name, String shortName, String description, String version, bool mayDisable, bool enabled, String disabledReason, bool isApp, String type, String appLaunchUrl, String homepageUrl, String updateUrl, bool offlineEnabled, String optionsUrl, List<IconInfo> icons, List<String> permissions, List<String> hostPermissions, String installType}) {
     if (id != null) this.id = id;
     if (name != null) this.name = name;
     if (shortName != null) this.shortName = shortName;
@@ -202,6 +202,7 @@ class ExtensionInfo extends ChromeObject {
     if (mayDisable != null) this.mayDisable = mayDisable;
     if (enabled != null) this.enabled = enabled;
     if (disabledReason != null) this.disabledReason = disabledReason;
+    if (isApp != null) this.isApp = isApp;
     if (type != null) this.type = type;
     if (appLaunchUrl != null) this.appLaunchUrl = appLaunchUrl;
     if (homepageUrl != null) this.homepageUrl = homepageUrl;
@@ -263,6 +264,12 @@ class ExtensionInfo extends ChromeObject {
    */
   String get disabledReason => jsProxy['disabledReason'];
   set disabledReason(String value) => jsProxy['disabledReason'] = value;
+
+  /**
+   * True if this is an app.
+   */
+  bool get isApp => jsProxy['isApp'];
+  set isApp(bool value) => jsProxy['isApp'] = value;
 
   /**
    * The type of this extension, app, or theme.

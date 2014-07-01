@@ -62,6 +62,11 @@
             "description": "This voice's gender.",
             "enum": ["male", "female"]
           },
+          "remote": {
+            "type": "boolean",
+            "optional": true,
+            "description": "If true, the synthesis engine is a remote network resource. It may be higher latency and may incur bandwidth costs."
+          },
           "extensionId": {
             "type": "string",
             "optional": true,
@@ -226,7 +231,7 @@
                 "type": "array",
                 "name": "voices",
                 "items": { "$ref": "TtsVoice" },
-                "description": "Array of $ref:TtsVoice objects representing the available voices for speech synthesis."
+                "description": "Array of $(ref:tts.TtsVoice) objects representing the available voices for speech synthesis."
               }
             ]
           }

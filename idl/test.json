@@ -23,6 +23,19 @@
                     "optional": true,
                     "description": "Additional string argument to pass to test."
                   },
+                  "ftpServer": {
+                    "type": "object",
+                    "optional": true,
+                    "description": "Details on the FTP server used to mock network responses.  Will be set only if test calls ExtensionApiTest::StartFTPServer().",
+                    "properties": {
+                      "port": {
+                        "type": "integer",
+                        "description": "The port on which the FTP server is listening.",
+                        "minimum": 1024,
+                        "maximum": 65535
+                      }
+                    }
+                  },
                   "testServer": {
                     "type": "object",
                     "optional": true,
@@ -351,6 +364,21 @@
             "type": "function",
             "name": "callback",
             "parameters": []
+          }
+        ]
+      },
+      {
+        "name": "waitForRoundTrip",
+        "type": "function",
+        "description": "Sends a string message one round trip from the renderer to the browser process and back.",
+        "parameters": [
+          {"type": "string", "name": "message"},
+          {
+            "type": "function",
+            "name": "callback",
+            "parameters": [
+              {"type": "string", "name": "message"}
+            ]
           }
         ]
       }

@@ -99,8 +99,8 @@ class ChromeTts extends ChromeApi {
    * Gets an array of all available voices.
    * 
    * Returns:
-   * Array of [TtsVoice] objects representing the available voices for speech
-   * synthesis.
+   * Array of [tts.TtsVoice] objects representing the available voices for
+   * speech synthesis.
    */
   Future<List<TtsVoice>> getVoices() {
     if (_tts == null) _throwNotAvailable();
@@ -160,10 +160,11 @@ class TtsEvent extends ChromeObject {
  * A description of a voice available for speech synthesis.
  */
 class TtsVoice extends ChromeObject {
-  TtsVoice({String voiceName, String lang, String gender, String extensionId, List<String> eventTypes}) {
+  TtsVoice({String voiceName, String lang, String gender, bool remote, String extensionId, List<String> eventTypes}) {
     if (voiceName != null) this.voiceName = voiceName;
     if (lang != null) this.lang = lang;
     if (gender != null) this.gender = gender;
+    if (remote != null) this.remote = remote;
     if (extensionId != null) this.extensionId = extensionId;
     if (eventTypes != null) this.eventTypes = eventTypes;
   }
@@ -188,6 +189,13 @@ class TtsVoice extends ChromeObject {
    */
   String get gender => jsProxy['gender'];
   set gender(String value) => jsProxy['gender'] = value;
+
+  /**
+   * If true, the synthesis engine is a remote network resource. It may be
+   * higher latency and may incur bandwidth costs.
+   */
+  bool get remote => jsProxy['remote'];
+  set remote(bool value) => jsProxy['remote'] = value;
 
   /**
    * The ID of the extension providing this voice.

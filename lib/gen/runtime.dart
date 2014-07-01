@@ -185,10 +185,10 @@ class ChromeRuntime extends ChromeApi {
    * up server-side data, do analytics, and implement surveys. Maximum 255
    * characters.
    */
-  void setUninstallUrl(String url) {
+  void setUninstallURL(String url) {
     if (_runtime == null) _throwNotAvailable();
 
-    _runtime.callMethod('setUninstallUrl', [url]);
+    _runtime.callMethod('setUninstallURL', [url]);
   }
 
   /**
@@ -228,19 +228,23 @@ class ChromeRuntime extends ChromeApi {
   }
 
   /**
-   * Attempts to connect to other listeners within the extension/app (such as
+   * Attempts to connect to connect listeners within an extension/app (such as
    * the background page), or other extensions/apps. This is useful for content
-   * scripts connecting to their extension processes. Note that this does not
-   * connect to any listeners in a content script. Extensions may connect to
-   * content scripts embedded in tabs via [tabs.connect.]
+   * scripts connecting to their extension processes, inter-app/extension
+   * communication, and [web messaging](manifest/externally_connectable.html).
+   * Note that this does not connect to any listeners in a content script.
+   * Extensions may connect to content scripts embedded in tabs via
+   * [tabs.connect].
    * 
-   * [extensionId] The ID of the extension/app you want to connect to. If
-   * omitted, default is your own extension.
+   * [extensionId] The ID of the extension or app to connect to. If omitted, a
+   * connection will be attempted with your own extension. Required if sending
+   * messages from a web page for [web
+   * messaging](manifest/externally_connectable.html).
    * 
    * Returns:
    * Port through which messages can be sent and received. The port's
-   * [][runtime.Port onDisconnect] event is fired if the extension/app does not
-   * exist.
+   * $(ref:runtime.Port onDisconnect) event is fired if the extension/app does
+   * not exist.
    */
   Port connect([String extensionId, RuntimeConnectParams connectInfo]) {
     if (_runtime == null) _throwNotAvailable();
@@ -263,15 +267,18 @@ class ChromeRuntime extends ChromeApi {
   }
 
   /**
-   * Sends a single message to onMessage event listeners within the extension
-   * (or another extension/app). Similar to chrome.runtime.connect, but only
-   * sends a single message with an optional response. The [runtime.onMessage]
-   * event is fired in each extension page of the extension. Note that
-   * extensions cannot send messages to content scripts using this method. To
-   * send messages to content scripts, use [tabs.sendMessage.]
+   * Sends a single message to event listeners within your extension/app or a
+   * different extension/app. Similar to [runtime.connect] but only sends a
+   * single message, with an optional response. If sending to your extension,
+   * the [runtime.onMessage] event will be fired in each page, or
+   * [runtime.onMessageExternal], if a different extension. Note that extensions
+   * cannot send messages to content scripts using this method. To send messages
+   * to content scripts, use [tabs.sendMessage].
    * 
-   * [extensionId] The extension ID of the extension you want to connect to. If
-   * omitted, default is your own extension.
+   * [extensionId] The ID of the extension/app to send the message to. If
+   * omitted, the message will be sent to your own extension/app. Required if
+   * sending messages from a web page for [web
+   * messaging](manifest/externally_connectable.html).
    * 
    * Returns:
    * The JSON response object sent by the handler of the message. If an error
@@ -294,7 +301,7 @@ class ChromeRuntime extends ChromeApi {
    * [message] The message that will be passed to the native messaging host.
    * 
    * Returns:
-   * The response message send by the native messaging host. If an error occurs
+   * The response message sent by the native messaging host. If an error occurs
    * while connecting to the native messaging host, the callback will be called
    * with no arguments and [runtime.lastError] will be set to the error message.
    */

@@ -255,13 +255,25 @@ class ReceiveError extends ChromeEnum {
 }
 
 class DeviceInfo extends ChromeObject {
-  DeviceInfo({String path}) {
+  DeviceInfo({String path, int vendorId, int productId, String displayName}) {
     if (path != null) this.path = path;
+    if (vendorId != null) this.vendorId = vendorId;
+    if (productId != null) this.productId = productId;
+    if (displayName != null) this.displayName = displayName;
   }
   DeviceInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   String get path => jsProxy['path'];
   set path(String value) => jsProxy['path'] = value;
+
+  int get vendorId => jsProxy['vendorId'];
+  set vendorId(int value) => jsProxy['vendorId'] = value;
+
+  int get productId => jsProxy['productId'];
+  set productId(int value) => jsProxy['productId'] = value;
+
+  String get displayName => jsProxy['displayName'];
+  set displayName(String value) => jsProxy['displayName'] = value;
 }
 
 class ConnectionOptions extends ChromeObject {

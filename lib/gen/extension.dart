@@ -21,13 +21,14 @@ class ChromeExtension extends ChromeApi {
   JsObject get _extension => chrome['extension'];
 
   /**
-   * Deprecated: please use onMessage.
+   * Fired when a request is sent from either an extension process or a content
+   * script.
    */
   Stream<OnRequestEvent> get onRequest => _onRequest.stream;
   ChromeStreamController<OnRequestEvent> _onRequest;
 
   /**
-   * Deprecated: please use onMessageExternal.
+   * Fired when a request is sent from another extension.
    */
   Stream<OnRequestExternalEvent> get onRequestExternal => _onRequestExternal.stream;
   ChromeStreamController<OnRequestExternalEvent> _onRequestExternal;
@@ -55,7 +56,10 @@ class ChromeExtension extends ChromeApi {
   bool get inIncognitoContext => _extension['inIncognitoContext'];
 
   /**
-   * Deprecated: Please use sendMessage.
+   * Sends a single request to other listeners within the extension. Similar to
+   * [runtime.connect], but only sends a single request with an optional
+   * response. The [extension.onRequest] event is fired in each page of the
+   * extension.
    * 
    * [extensionId] The extension ID of the extension you want to connect to. If
    * omitted, default is your own extension.
@@ -115,10 +119,9 @@ class ChromeExtension extends ChromeApi {
   }
 
   /**
-   * Deprecated. Please use getViews({type: 'TAB'}). Returns an array of the
-   * JavaScript 'window' objects for each of the tabs running inside the current
-   * extension. If windowId is specified, returns only the 'window' objects of
-   * tabs attached to the specified window.
+   * Returns an array of the JavaScript 'window' objects for each of the tabs
+   * running inside the current extension. If `windowId` is specified, returns
+   * only the 'window' objects of tabs attached to the specified window.
    * 
    * Returns:
    * Array of global window objects
@@ -177,7 +180,8 @@ class ChromeExtension extends ChromeApi {
 }
 
 /**
- * Deprecated: please use onMessage.
+ * Fired when a request is sent from either an extension process or a content
+ * script.
  */
 class OnRequestEvent {
   /**
@@ -202,7 +206,7 @@ class OnRequestEvent {
 }
 
 /**
- * Deprecated: please use onMessageExternal.
+ * Fired when a request is sent from another extension.
  */
 class OnRequestExternalEvent {
   /**

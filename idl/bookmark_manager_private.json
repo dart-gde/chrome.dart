@@ -151,6 +151,11 @@
             "type": "array",
             "items": {"type": "string"},
             "minItems": 1
+          },
+          {
+            "name": "isFromTouch",
+            "type": "boolean",
+            "description": "True if the drag was initiated from touch"
           }
         ]
       },
@@ -243,6 +248,123 @@
         "description": "",
         "nodoc": "true",
         "parameters": []
+      },
+      {
+        "name": "getMetaInfo",
+        "type": "function",
+        "description": "Gets a meta info field from a bookmark node",
+        "nodoc": "true",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The id of the bookmark to retrieve meta info from",
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "description": "The key for the meta info to retrieve",
+            "type": "string"
+          },
+          {
+            "type": "function",
+            "name": "callback",
+            "parameters": [
+              {
+                "name": "value",
+                "description": "The value of the meta info, if present",
+                "optional": true,
+                "type": "string"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "setMetaInfo",
+        "type": "function",
+        "description": "Sets a meta info value for a bookmark node",
+        "nodoc": "true",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "The id of the bookmark node to set the meta info on",
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "description": "The key of the meta info to set",
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "description": "The meta info to set",
+            "type": "string"
+          },
+          {
+            "name": "callback",
+            "type": "function",
+            "optional": true,
+            "parameters": []
+          }
+        ]
+      },
+      {
+        "name": "undo",
+        "type": "function",
+        "description": "Performs an undo of the last change to the bookmark model",
+        "nodoc": "true",
+        "parameters": []
+      },
+      {
+        "name": "redo",
+        "type": "function",
+        "description": "Performs a redo of last undone change to the bookmark model",
+        "nodoc": "true",
+        "parameters": []
+      },
+      {
+        "name": "getUndoInfo",
+        "type": "function",
+        "description": "Gets the information for the undo if available",
+        "nodoc": "true",
+        "parameters": [
+          {
+            "type": "function",
+            "name": "callback",
+            "parameters": [
+              {
+                "name": "result",
+                "type": "object",
+                "properties": {
+                  "enabled" : {"type": "boolean", "description": "Whether there is an action to undo"},
+                  "label" : {"type": "string", "description": "The i18n label to use for the undo action"}
+				}
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "getRedoInfo",
+        "type": "function",
+        "description": "Gets the information for the redo if available",
+        "nodoc": "true",
+        "parameters": [
+          {
+            "type": "function",
+            "name": "callback",
+            "parameters": [
+              {
+                "name": "result",
+                "type": "object",
+                "properties": {
+                  "enabled" : {"type": "boolean", "description": "Whether there is an action to redo"},
+                  "label" : {"type": "string", "description": "The i18n label to use for the redo action"}
+				}
+              }
+            ]
+          }
+        ]
       }
     ],
     "events": [
@@ -268,6 +390,14 @@
         "description": "Fired when the user drops bookmarks on the document",
         "parameters": [
           {"name": "bookmarkNodeData", "$ref": "BookmarkNodeData"}
+        ]
+      },
+      {
+        "name": "onMetaInfoChanged",
+        "type": "function",
+        "description": "Fired when the meta info of a node changes.",
+        "parameters": [
+          {"name": "id", "type": "string"}
         ]
       }
     ]

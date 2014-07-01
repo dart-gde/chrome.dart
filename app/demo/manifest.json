@@ -14,6 +14,7 @@
 
   "permissions": [
     "alarms",
+    "browser",
     { "fileSystem": ["write", "retainEntries", "directory"] },
     "idle",
     "identity",
@@ -25,7 +26,7 @@
     { "socket" : ["tcp-connect", "tcp-listen"] },
     "tts"
   ],
-  
+
   "oauth2": {
     // client_id below is specifc to the application key. Follow the
     // documentation to obtain one for your app.

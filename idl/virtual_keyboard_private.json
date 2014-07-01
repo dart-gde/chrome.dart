@@ -18,6 +18,7 @@
           "type": {"type": "string", "description": "One of keyup or keydown.", "enum": ["keyup", "keydown"]},
           "charValue": {"type": "integer", "description": "Unicode value of the key."},
           "keyCode": {"type": "integer", "description": "Virtual key code, which is independent of the keyboard layout or modifier state."},
+          "keyName": {"type": "string", "description": "Name of the key, which is independent of modifier state."},
           "modifiers": {"type": "integer", "optional": true, "description": "Flag for modifiers that are active. None = 0, Shift = 2, Control = 4, Alt = 8."}
         }
       }
@@ -92,6 +93,17 @@
         ]
       },
       {
+        "name": "lockKeyboard",
+        "type": "function",
+        "description": "Sets the lock state of the virtual keyboard. A locked keyboard remains visible even after a text area loses input focus.",
+        "parameters": [
+          {
+            "type": "boolean",
+            "name": "lock"
+          }
+        ]
+      },
+      {
         "name": "keyboardLoaded",
         "type": "function",
         "description": "Inform the system that the keyboard has loaded.",
@@ -101,6 +113,36 @@
             "optional": true,
             "description": "Called when load acknowledgement is complete.",
             "parameters": []
+          }
+        ]
+      },
+      {
+        "name": "getKeyboardConfig",
+        "type": "function",
+        "description": "Gets the virtual keyboard configuration.",
+        "parameters": [
+          {
+            "type": "function",
+            "name": "callback",
+            "optional": true,
+            "description": "Called when querying virtual keyboard configuration is complete.",
+            "parameters": [
+              {
+                "type": "object",
+                "name": "config",
+                "properties": {
+                  "layout": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Virtual keyboard layout string."
+                  },
+                  "a11ymode": {
+                    "type": "boolean",
+                    "description": "True if accessbility virtual keyboard is enabled."
+                  }
+                }
+              }
+            ]
           }
         ]
       }

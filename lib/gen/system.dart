@@ -61,11 +61,49 @@ class ChromeSystemCpu extends ChromeApi {
   }
 }
 
+/**
+ * Counters for assessing CPU utilization. Each field is monotonically
+ * increasing while the processor is powered on. Values are in milliseconds.
+ */
+class CpuTime extends ChromeObject {
+  CpuTime({num user, num kernel, num idle, num total}) {
+    if (user != null) this.user = user;
+    if (kernel != null) this.kernel = kernel;
+    if (idle != null) this.idle = idle;
+    if (total != null) this.total = total;
+  }
+  CpuTime.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  num get user => jsProxy['user'];
+  set user(num value) => jsProxy['user'] = jsify(value);
+
+  num get kernel => jsProxy['kernel'];
+  set kernel(num value) => jsProxy['kernel'] = jsify(value);
+
+  num get idle => jsProxy['idle'];
+  set idle(num value) => jsProxy['idle'] = jsify(value);
+
+  num get total => jsProxy['total'];
+  set total(num value) => jsProxy['total'] = jsify(value);
+}
+
+class ProcessorInfo extends ChromeObject {
+  ProcessorInfo({CpuTime usage}) {
+    if (usage != null) this.usage = usage;
+  }
+  ProcessorInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  CpuTime get usage => _createCpuTime(jsProxy['usage']);
+  set usage(CpuTime value) => jsProxy['usage'] = jsify(value);
+}
+
 class CpuInfo extends ChromeObject {
-  CpuInfo({int numOfProcessors, String archName, String modelName}) {
+  CpuInfo({int numOfProcessors, String archName, String modelName, List<String> features, List<ProcessorInfo> processors}) {
     if (numOfProcessors != null) this.numOfProcessors = numOfProcessors;
     if (archName != null) this.archName = archName;
     if (modelName != null) this.modelName = modelName;
+    if (features != null) this.features = features;
+    if (processors != null) this.processors = processors;
   }
   CpuInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -77,9 +115,17 @@ class CpuInfo extends ChromeObject {
 
   String get modelName => jsProxy['modelName'];
   set modelName(String value) => jsProxy['modelName'] = value;
+
+  List<String> get features => listify(jsProxy['features']);
+  set features(List<String> value) => jsProxy['features'] = jsify(value);
+
+  List<ProcessorInfo> get processors => listify(jsProxy['processors'], _createProcessorInfo);
+  set processors(List<ProcessorInfo> value) => jsProxy['processors'] = jsify(value);
 }
 
 CpuInfo _createCpuInfo(JsObject jsProxy) => jsProxy == null ? null : new CpuInfo.fromProxy(jsProxy);
+CpuTime _createCpuTime(JsObject jsProxy) => jsProxy == null ? null : new CpuTime.fromProxy(jsProxy);
+ProcessorInfo _createProcessorInfo(JsObject jsProxy) => jsProxy == null ? null : new ProcessorInfo.fromProxy(jsProxy);
 
 /**
  * Use the `system.display` API to query display metadata.

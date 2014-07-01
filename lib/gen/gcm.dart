@@ -2,8 +2,8 @@
 
 /**
  * Use `chrome.gcm` to enable apps and extensions to send and receive messages
- * through [Google Cloud Messaging for
- * Android](http://developer.android.com/google/gcm/index.html).
+ * through [Google Cloud
+ * Messaging](http://developer.android.com/google/gcm/index.html).
  */
 library chrome.gcm;
 
@@ -24,9 +24,10 @@ class ChromeGcm extends ChromeApi {
   ChromeStreamController<Map> _onMessage;
 
   /**
-   * Fired when a GCM server had to delete messages to the application from its
-   * queue in order to manage its size. The app is expected to handle that case
-   * gracefully, e.g. by running a full sync with its server.
+   * Fired when a GCM server had to delete messages sent by an app server to the
+   * application. See [Messages deleted
+   * event](cloudMessagingV2#messages_deleted_event) section of Cloud Messaging
+   * documentation for details on handling this event.
    */
   Stream get onMessagesDeleted => _onMessagesDeleted.stream;
   ChromeStreamController _onMessagesDeleted;
@@ -72,6 +73,17 @@ class ChromeGcm extends ChromeApi {
   }
 
   /**
+   * Unregisters the application from GCM.
+   */
+  Future unregister() {
+    if (_gcm == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _gcm.callMethod('unregister', [completer.callback]);
+    return completer.future;
+  }
+
+  /**
    * Sends a message according to its contents.
    * 
    * [message] A message to send to the other party via GCM.
@@ -109,25 +121,28 @@ class GcmSendParams extends ChromeObject {
   set destinationId(String value) => jsProxy['destinationId'] = value;
 
   /**
-   * The ID of the message. It must be unique for each message.
+   * The ID of the message. It must be unique for each message in scope of the
+   * applications. See the [Cloud Messaging
+   * documentation](cloudMessagingV2#send_messages) for advice for picking and
+   * handling an ID.
    */
   String get messageId => jsProxy['messageId'];
   set messageId(String value) => jsProxy['messageId'] = value;
 
   /**
    * Time-to-live of the message in seconds. If it is not possible to send the
-   * message wihtin that time an error will be raised. A time-to-live of 0
-   * indicates that the message should be sent immediately or fail if it's not
-   * possible. The maximum and a default value of time-to-live is 2419200
-   * seconds (4 weeks).
+   * message within that time, an onSendError event will be raised. A
+   * time-to-live of 0 indicates that the message should be sent immediately or
+   * fail if it's not possible. The maximum and a default value of time-to-live
+   * is 2419200 seconds (4 weeks).
    */
   int get timeToLive => jsProxy['timeToLive'];
   set timeToLive(int value) => jsProxy['timeToLive'] = value;
 
   /**
-   * Message data to send to the server. `goog.` and `google` are disallowed as
-   * key prefixes. Sum of all key/value pairs should not exceed
-   * [MAX_MESSAGE_SIZE.]
+   * Message data to send to the server. Case-insensitive `goog.` and `google`,
+   * as well as case-sensitive `collapse_key` are disallowed as key prefixes.
+   * Sum of all key/value pairs should not exceed [gcm.MAX_MESSAGE_SIZE].
    */
   Map get data => mapify(jsProxy['data']);
   set data(Map value) => jsProxy['data'] = jsify(value);

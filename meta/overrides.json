@@ -16,6 +16,14 @@
 
   "renameClass": {
     "bluetooth.Device": "BluetoothDevice",
+    "bluetoothSocket.AcceptErrorInfo": "BluetoothAcceptErrorInfo",
+    "bluetoothSocket.AcceptInfo": "BluetoothAcceptInfo",
+    "bluetoothSocket.CreateInfo": "BluetoothCreateInfo",
+    "bluetoothSocket.ReceiveError": "BluetoothReceiveError",
+    "bluetoothSocket.ReceiveErrorInfo": "BluetoothReceiveErrorInfo",
+    "bluetoothSocket.ReceiveInfo": "BluetoothReceiveInfo",
+    "bluetoothSocket.SocketInfo": "BluetoothSocketInfo",
+    "bluetoothSocket.SocketProperties": "BluetoothSocketProperties",
 
     "serial.Device": "SerialDevice",
     "serial.ReadInfo": "SerialReadInfo",
@@ -40,6 +48,8 @@
 
     "syncFileSystem.DOMFileSystem": "FileSystem",
     "mediaGalleries.DOMFileSystem": "FileSystem",
+
+    "hid.GetDevicesOptions": "HidGetDevicesOptions",
 
     "events.Event": "ChromeEvent",
     "runtime.Event": "ChromeEvent"
