@@ -1,6 +1,6 @@
 # Changelog - chrome.dart
 
-## 0.6.0 2014-07-01
+## 0.6.0 2014-07-01 (SDK 1.5.1 r37644)
 
 - Updated the APIs to M35 (current Chrome stable)
 - Added the `chrome.bluetoothLowEnergy` API
