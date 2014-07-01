@@ -245,6 +245,9 @@ class ChromeIDLParser extends LanguageParsers {
       // Attribute where name=value
       (identifier + symbol('=') + identifier
       ^ idlAttributeAssignedValueMapping)
+      // Attribute where [name="string"]
+      | (identifier + symbol('=') + stringLiteral
+      ^ idlAttributeAssignedStringLiteral)
       // Attribute where [maxListeners=1]
       | (identifier + symbol('=') + natural
       ^ (name, _, number) =>

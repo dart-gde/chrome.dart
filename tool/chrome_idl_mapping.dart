@@ -196,6 +196,13 @@ IDLAttributeDeclaration idlAttributeDeclarationMapping(List attributes) =>
 IDLAttribute idlAttributeAssignedValueMapping(String name, _, String value) =>
     new IDLAttribute(_resolveEnum(name), attributeValue: value);
 
+
+/**
+ *  Attribute where [name="string"]
+ */
+IDLAttribute idlAttributeAssignedStringLiteral(String name, _, String value) =>
+    new IDLAttribute(_resolveEnum(name), attributeValue: value);
+
 /**
  *  Attribute where [name=(1,2)]
  */
