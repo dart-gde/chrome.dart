@@ -1,0 +1,123 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// This features file defines extension APIs implemented under src/extensions.
+// See extensions/common/features/* to understand this file, in particular
+// feature.h, simple_feature.h, and base_feature_provider.h.
+//
+// Note that specifying "web_page", "blessed_web_page", or "all" as a context
+// type will require manually updating chrome/renderer/resources/dispatcher.cc.
+
+// To add a new whitelisted ID, SHA-1 it and force it to uppercase. In Bash:
+//
+// $ echo -n "aaaabbbbccccddddeeeeffffgggghhhh" | \
+// sha1sum | tr '[:lower:]' '[:upper:]'
+// 9A0417016F345C934A1A88F55CA17C05014EEEBA  -
+//
+// Google employees: please update http://go/chrome-api-whitelist to map
+// hashes back to ids.
+
+{
+  "app.runtime": [{
+    "channel": "stable",
+    "contexts": ["blessed_extension"],
+    "extension_types": ["platform_app"],
+    "noparent": true
+  }, {
+    "channel": "stable",
+    "component_extensions_auto_granted": false,
+    "contexts": ["blessed_extension"],
+    "extension_types": ["extension"],
+    "noparent": true,
+    "whitelist": [
+      "2FC374607C2DF285634B67C64A2E356C607091C3",  // Quickoffice
+      "3727DD3E564B6055387425027AD74C58784ACC15",  // Quickoffice internal
+      "12E618C3C6E97495AAECF2AC12DEB082353241C6"   // QO component extension
+    ]
+  }],
+  "dns": {
+    "dependencies": ["permission:dns"],
+    "contexts": ["blessed_extension"]
+  },
+  "power": {
+    "dependencies": ["permission:power"],
+    "contexts": ["blessed_extension"]
+  },
+  "runtime": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
+    "contexts": ["blessed_extension"]
+  },
+  "runtime.getManifest": {
+    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+  },
+  "runtime.connect": {
+    "contexts": "all",
+    "matches": ["<all_urls>"]
+  },
+  "runtime.getURL": {
+    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+  },
+  "runtime.id": {
+    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+  },
+  "runtime.lastError": {
+    "contexts": "all",
+    "extension_types": "all",
+    "matches": ["<all_urls>"]
+  },
+  "runtime.onConnect": {
+    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+  },
+  "runtime.onMessage": {
+    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+  },
+  "runtime.sendMessage": {
+    "contexts": "all",
+    "matches": ["<all_urls>"]
+  },
+  "runtime.setUninstallURL": {
+    "channel": "dev"
+  },
+  "socket": {
+    "dependencies": ["permission:socket"],
+    "contexts": ["blessed_extension"]
+  },
+  "sockets.tcp": {
+    "dependencies": ["manifest:sockets"],
+    "contexts": ["blessed_extension"]
+  },
+  "sockets.tcpServer": {
+    "dependencies": ["manifest:sockets"],
+    "contexts": ["blessed_extension"]
+  },
+  "sockets.udp": {
+    "dependencies": ["manifest:sockets"],
+    "contexts": ["blessed_extension"]
+  },
+  "storage": {
+    "dependencies": ["permission:storage"],
+    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+  },
+  "test": {
+    "internal": true,
+    "channel": "stable",
+    "extension_types": "all",
+    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+  },
+  "types": {
+    "channel": "stable",
+    "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
+    "contexts": ["blessed_extension"]
+  },
+  "types.private": {
+    "channel": "dev",
+    "extension_types": ["extension"],
+    "location": "component"
+  },
+  "usb": {
+    "dependencies": ["permission:usb"],
+    "contexts": ["blessed_extension"]
+  }
+}

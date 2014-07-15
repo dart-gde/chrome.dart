@@ -1,0 +1,10 @@
+# *.json
+# See chrome/common/extensions/OWNERS
+
+# For documentation.
+awatson@chromium.org
+mkearney@chromium.org
+mkwst@chromium.org
+
+per-file webview*.json=fsamuel@chromium.org
+per-file webview*.json=lazyboy@chromium.org

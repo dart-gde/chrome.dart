@@ -1,0 +1,27 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// Webcam Private API.
+namespace webcamPrivate {
+  enum PanDirection { stop, right, left };
+  enum TiltDirection { stop, up, down };
+
+  dictionary WebcamConfiguration {
+    double? pan;
+    PanDirection? panDirection;
+    double? tilt;
+    TiltDirection? tiltDirection;
+    double? zoom;
+  };
+
+  callback WebcamConfigurationCallback =
+      void(WebcamConfiguration configuration);
+
+  interface Functions {
+    static void get(DOMString webcamId, WebcamConfigurationCallback callback);
+    static void set(DOMString webcamId, WebcamConfiguration config);
+    static void reset(DOMString webcamId, WebcamConfiguration config);
+  };
+};
+

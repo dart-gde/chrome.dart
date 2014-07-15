@@ -1,0 +1,73 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// The <code>chrome.hotwordPrivate</code> API allows extensions to access and
+// mutate the preference for enabling hotword search. It also provides
+// information on whether the hotword search is available. This API provides an
+// event interface to transmit to the extension a signal that the preference fo
+// hotword search has change.
+//
+// For an FYI, visit http://goo.gl/AyHbkH
+
+[nodoc] namespace hotwordPrivate {
+
+  dictionary StatusDetails {
+    // Whether the hotword preference has been set.
+    boolean enabledSet;
+
+    // If the hotword extension is enabled. Will always be false if |available|
+    // is false.
+    boolean enabled;
+
+    // Whether the hotword extension is available to be enabled
+    boolean available;
+
+    // Whether the sound of "Ok, Google" plus a few seconds before is sent
+    // back to Google.
+    boolean audioLoggingEnabled;
+  };
+
+  // The type of the recognized hotword. Right now it only has 'search' but
+  // could be expanded to other types of actions in the future.
+  enum HotwordType { search };
+
+  callback GenericDoneCallback = void ();
+  callback StatusDetailsCallback = void(StatusDetails result);
+
+  interface Functions {
+    // Sets the current enabled state of hotword search.
+    // True: enable hotword search. False: disable hotword search.
+    static void setEnabled(boolean state,
+                           optional GenericDoneCallback callback);
+
+    // Retrieves the current state of hotword search.
+    // The result is put into a StatusDetails object.
+    static void getStatus(StatusDetailsCallback callback);
+
+    // Sets the current enabled state of audio logging in the extension.
+    // True: logging enabled. False: no logging.
+    static void setAudioLoggingEnabled(boolean state,
+                                       optional GenericDoneCallback callback);
+
+    // Sets the current state of the browser-requested hotword session.
+    static void setHotwordSessionState(boolean started,
+                                       optional GenericDoneCallback callback);
+
+    // Notifies that a hotword has been recognized in the browser-requested
+    // hotword session.
+    static void notifyHotwordRecognition(HotwordType type,
+                                         optional GenericDoneCallback callback);
+  };
+
+  interface Events {
+    // Fired when the hotword search enabled preference is changed.
+    static void onEnabledChanged();
+
+    // Fired when the browser wants to start a hotword session.
+    static void onHotwordSessionRequested();
+
+    // Fired when the browser wants to stop the requested hotword session.
+    static void onHotwordSessionStopped();
+  };
+};
