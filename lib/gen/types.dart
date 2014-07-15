@@ -26,7 +26,7 @@ class ChromeTypes extends ChromeApi {
 
 /**
  * An interface that allows access to a Chrome browser setting. See
- * [proxy.settings] for an example.
+ * [accessibilityFeatures] for an example.
  */
 class ChromeSetting extends ChromeObject {
   ChromeSetting();

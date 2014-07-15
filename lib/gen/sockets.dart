@@ -28,8 +28,7 @@ class ChromeSockets {
 /**
  * Use the `chrome.sockets.tcp` API to send and receive data over the network
  * using TCP connections. This API supersedes the TCP functionality previously
- * found in the `chrome.socket` API. Note that the socket ids created from this
- * namespace are not compatible with ids created in other namespaces.
+ * found in the `chrome.socket` API.
  */
 class ChromeSocketsTcp extends ChromeApi {
   JsObject get _sockets_tcp => chrome['sockets']['tcp'];
@@ -393,8 +392,7 @@ ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null :
 /**
  * Use the `chrome.sockets.tcpServer` API to create server applications using
  * TCP connections. This API supersedes the TCP functionality previously found
- * in the `chrome.socket` API. Note that the socket ids created from this
- * namespace are not compatible with ids created in other namespaces.
+ * in the `chrome.socket` API.
  */
 class ChromeSocketsTcpServer extends ChromeApi {
   JsObject get _sockets_tcpServer => chrome['sockets']['tcpServer'];
@@ -592,8 +590,7 @@ AcceptErrorInfo _createAcceptErrorInfo(JsObject jsProxy) => jsProxy == null ? nu
 /**
  * Use the `chrome.sockets.udp` API to send and receive data over the network
  * using UDP connections. This API supersedes the UDP functionality previously
- * found in the "socket" API. Note that the socket ids created from this
- * namespace are not compatible with ids created in other namespaces.
+ * found in the "socket" API.
  */
 class ChromeSocketsUdp extends ChromeApi {
   JsObject get _sockets_udp => chrome['sockets']['udp'];
@@ -613,7 +610,7 @@ class ChromeSocketsUdp extends ChromeApi {
   bool get available => _sockets_udp != null;
 
   /**
-   * Creates a UDP socket.
+   * Creates a UDP socket with the given properties.
    * [properties]: The socket properties (optional).
    * [callback]: Called when the socket has been created.
    * 
@@ -644,11 +641,29 @@ class ChromeSocketsUdp extends ChromeApi {
   }
 
   /**
-   * Binds the local address for socket. When the `bind` operation completes
-   * successfully, `onReceive` events are raised when UDP packets arrive on the
-   * address/port specified. If a network error occurs while the runtime is
-   * receiving packets, an `onReceiveError` event is raised, at which point no
-   * more `onReceive` events will be raised for this socket.
+   * Pauses or unpauses a socket. A paused socket is blocked from firing
+   * `onReceive` events.
+   * [connectionId]: The socket ID.
+   * [paused]: Flag to indicate whether to pause or unpause.
+   * [callback]: Called when the socket has been successfully paused or
+   * unpaused.
+   */
+  Future setPaused(int socketId, bool paused) {
+    if (_sockets_udp == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _sockets_udp.callMethod('setPaused', [socketId, paused, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Binds the local address and port for the socket. For a client socket, it is
+   * recommended to use port 0 to let the platform pick a free port.
+   * 
+   * Once the `bind` operation completes successfully, `onReceive` events are
+   * raised when UDP packets arrive on the address/port specified -- unless the
+   * socket is paused.
+   * 
    * [socketId]: The socket ID.
    * [address]: The address of the local machine. DNS name, IPv4 and IPv6
    * formats are supported. Use "0.0.0.0" to accept packets from all local
@@ -670,7 +685,8 @@ class ChromeSocketsUdp extends ChromeApi {
   }
 
   /**
-   * Sends data on the given UDP socket to the given address and port.
+   * Sends data on the given socket to the given address and port. The socket
+   * must be bound to a local port before calling this method.
    * [socketId]: The socket ID.
    * [data]: The data to send.
    * [address]: The address of the remote machine.
@@ -691,9 +707,9 @@ class ChromeSocketsUdp extends ChromeApi {
 
   /**
    * Closes the socket and releases the address/port the socket is bound to.
-   * Each socket created should be closed after use. The socket id is no no
-   * longer valid as soon at the function is called. However, the socket is
-   * guaranteed to be closed only when the callback is invoked.
+   * Each socket created should be closed after use. The socket id is no longer
+   * valid as soon at the function is called. However, the socket is guaranteed
+   * to be closed only when the callback is invoked.
    * [socketId]: The socket ID.
    * [callback]: Called when the `close` operation completes.
    */

@@ -1,11 +1,12 @@
 /* This file has been generated from declarative_web_request.json - do not edit */
 
 /**
- * Use the `chrome.declarativeWebRequest` API to intercept, block, or modify
- * requests in-flight. It is significantly faster than the <a
- * href='webRequest.html'>`chrome.webRequest` API</a> because you can register
- * rules that are evaluated in the browser rather than the JavaScript engine
- * with reduces roundtrip latencies and allows higher efficiency.
+ * _*Note:* this API is currently on hold, without concrete plans to move to
+ * stable._ Use the `chrome.declarativeWebRequest` API to intercept, block, or
+ * modify requests in-flight. It is significantly faster than the <a
+ * href='webRequest'>`chrome.webRequest` API</a> because you can register rules
+ * that are evaluated in the browser rather than the JavaScript engine with
+ * reduces roundtrip latencies and allows higher efficiency.
  */
 library chrome.declarativeWebRequest;
 

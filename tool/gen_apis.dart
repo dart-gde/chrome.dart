@@ -141,17 +141,17 @@ class GenApis {
       String fileName = _convertJSLibNameToFileName(name);
       String locateName = fileName.replaceFirst("devtools_", "devtools/");
 
-      File jsonFile = new File("${idlDir.path}/${locateName}.json");
-      File idlFile = new File("${idlDir.path}/${locateName}.idl");
-
-      if (jsonFile.existsSync()) {
-        return new GenApiFile(jsonFile, overrides: overrides,
-            generator: generator);
-      } else if (idlFile.existsSync()) {
-        return new GenApiFile(idlFile, overrides: overrides,
-            generator: generator);
-      } else {
+      File definitionFile = _locateDefinitionFile(locateName);
+      if (definitionFile == null) {
         throw new UnsupportedError("Unable to locate idl or json file for '${locateName}'.");
+      }
+
+      if (definitionFile.path.endsWith('.json')) {
+        return new GenApiFile(
+            definitionFile, overrides: overrides, generator: generator);
+      } else {
+        return new GenApiFile(
+            definitionFile, overrides: overrides, generator: generator);
       }
     });
 
@@ -198,21 +198,20 @@ class GenApis {
 
   void _generateFile(Overrides overrides, String jsLibName) {
     String fileName = _convertJSLibNameToFileName(jsLibName);
-    //String locateName = fileName.replaceFirst("devtools_", "devtools/");
 
-    File jsonFile = new File("${idlDir.path}/${fileName}.json");
-    File idlFile = new File("${idlDir.path}/${fileName}.idl");
+    File definitionFile = _locateDefinitionFile(fileName);
+    if (definitionFile == null) {
+      throw new UnsupportedError("Unable to locate idl or json file for '${fileName}'.");
+    }
 
     File outFile = new File(pathos.join(outDirPath, 'gen', "${fileName}.dart"));
 
-    if (jsonFile.existsSync()) {
-      GenApiFile apiGen = new GenApiFile(jsonFile, overrides: overrides);
-      apiGen.generate(outFile);
-    } else if (idlFile.existsSync()) {
-      GenApiFile apiGen = new GenApiFile(idlFile, overrides: overrides);
+    if (definitionFile.path.endsWith('.json')) {
+      GenApiFile apiGen = new GenApiFile(definitionFile, overrides: overrides);
       apiGen.generate(outFile);
     } else {
-      throw new UnsupportedError("Unable to locate idl or json file for '${jsLibName}'.");
+      GenApiFile apiGen = new GenApiFile(definitionFile, overrides: overrides);
+      apiGen.generate(outFile);
     }
   }
 
@@ -241,4 +240,19 @@ class GenApis {
     return jsLibName;
   }
 
+  File _locateDefinitionFile(String name) {
+    File file = new File("${idlDir.path}/chrome/${name}.json");
+    if (file.existsSync()) return file;
+
+    file = new File("${idlDir.path}/chrome/${name}.idl");
+    if (file.existsSync()) return file;
+
+    file = new File("${idlDir.path}/extensions/${name}.json");
+    if (file.existsSync()) return file;
+
+    file = new File("${idlDir.path}/extensions/${name}.idl");
+    if (file.existsSync()) return file;
+
+    return null;
+  }
 }

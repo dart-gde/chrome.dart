@@ -54,7 +54,7 @@ class ChromeWindows extends ChromeApi {
 
   /**
    * The windowId value that represents the [current
-   * window](windows.html#current-window).
+   * window](windows#current-window).
    */
   int get WINDOW_ID_CURRENT => _windows['WINDOW_ID_CURRENT'];
 

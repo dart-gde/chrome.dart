@@ -146,14 +146,50 @@ class ChromeHid extends ChromeApi {
 }
 
 /**
+ * HID top-level collection attributes. Each enumerated device interface exposes
+ * an array of these objects.
+ * [usagePage]: HID usage page identifier.
+ * [usage]: Page-defined usage identifier.
+ * [reportIds]: Report IDs which belong to the collection and to its children.
+ */
+class HidCollectionInfo extends ChromeObject {
+  HidCollectionInfo({int usagePage, int usage, List<int> reportIds}) {
+    if (usagePage != null) this.usagePage = usagePage;
+    if (usage != null) this.usage = usage;
+    if (reportIds != null) this.reportIds = reportIds;
+  }
+  HidCollectionInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get usagePage => jsProxy['usagePage'];
+  set usagePage(int value) => jsProxy['usagePage'] = value;
+
+  int get usage => jsProxy['usage'];
+  set usage(int value) => jsProxy['usage'] = value;
+
+  List<int> get reportIds => listify(jsProxy['reportIds']);
+  set reportIds(List<int> value) => jsProxy['reportIds'] = jsify(value);
+}
+
+/**
  * Returned by `getDevices` functions to describes a connected HID device. Use
  * `connect` to connect to any of the returned devices.
+ * [deviceId]: Device opaque ID.
+ * [vendorId]: Vendor ID.
+ * [productId]: Product ID.
+ * [collections]: Top-level collections from this device's report descriptor.
+ * [maxInputReportSize]: Top-level collection's max input report size.
+ * [maxOutputReportSize]: Top-level collection's max output report size.
+ * [maxFeatureReportSize]: Top-level collection's max feature report size.
  */
 class HidDeviceInfo extends ChromeObject {
-  HidDeviceInfo({int deviceId, int vendorId, int productId}) {
+  HidDeviceInfo({int deviceId, int vendorId, int productId, List<HidCollectionInfo> collections, int maxInputReportSize, int maxOutputReportSize, int maxFeatureReportSize}) {
     if (deviceId != null) this.deviceId = deviceId;
     if (vendorId != null) this.vendorId = vendorId;
     if (productId != null) this.productId = productId;
+    if (collections != null) this.collections = collections;
+    if (maxInputReportSize != null) this.maxInputReportSize = maxInputReportSize;
+    if (maxOutputReportSize != null) this.maxOutputReportSize = maxOutputReportSize;
+    if (maxFeatureReportSize != null) this.maxFeatureReportSize = maxFeatureReportSize;
   }
   HidDeviceInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -165,6 +201,18 @@ class HidDeviceInfo extends ChromeObject {
 
   int get productId => jsProxy['productId'];
   set productId(int value) => jsProxy['productId'] = value;
+
+  List<HidCollectionInfo> get collections => listify(jsProxy['collections'], _createHidCollectionInfo);
+  set collections(List<HidCollectionInfo> value) => jsProxy['collections'] = jsify(value);
+
+  int get maxInputReportSize => jsProxy['maxInputReportSize'];
+  set maxInputReportSize(int value) => jsProxy['maxInputReportSize'] = value;
+
+  int get maxOutputReportSize => jsProxy['maxOutputReportSize'];
+  set maxOutputReportSize(int value) => jsProxy['maxOutputReportSize'] = value;
+
+  int get maxFeatureReportSize => jsProxy['maxFeatureReportSize'];
+  set maxFeatureReportSize(int value) => jsProxy['maxFeatureReportSize'] = value;
 }
 
 /**
@@ -201,3 +249,4 @@ class HidGetDevicesOptions extends ChromeObject {
 HidDeviceInfo _createHidDeviceInfo(JsObject jsProxy) => jsProxy == null ? null : new HidDeviceInfo.fromProxy(jsProxy);
 HidConnectInfo _createHidConnectInfo(JsObject jsProxy) => jsProxy == null ? null : new HidConnectInfo.fromProxy(jsProxy);
 ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
+HidCollectionInfo _createHidCollectionInfo(JsObject jsProxy) => jsProxy == null ? null : new HidCollectionInfo.fromProxy(jsProxy);

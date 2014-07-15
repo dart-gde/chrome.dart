@@ -209,8 +209,8 @@ void handleGetVoices() {
 }
 
 void handleGetPlatformInfo() {
-  chrome.runtime.getPlatformInfo().then((Map m) {
-    summary(m.toString());
+  chrome.runtime.getPlatformInfo().then((chrome.PlatformInfo info) {
+    summary(info.toString());
   });
 }
 

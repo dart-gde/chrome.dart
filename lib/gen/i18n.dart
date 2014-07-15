@@ -43,7 +43,7 @@ class ChromeI18N extends ChromeApi {
    * `undefined`.
    * 
    * [messageName] The name of the message, as specified in the <a
-   * href='i18n-messages.html'>`messages.json`</a> file.
+   * href='i18n-messages'>`messages.json`</a> file.
    * 
    * [substitutions] Up to 9 substitution strings, if the message requires any.
    * 

@@ -3,7 +3,7 @@
 /**
  * Use the `chrome.privacy` API to control usage of the features in Chrome that
  * can affect a user's privacy. This API relies on the [ChromeSetting prototype
- * of the type API](types.html#ChromeSetting) for getting and setting Chrome's
+ * of the type API](types#ChromeSetting) for getting and setting Chrome's
  * configuration.
  */
 library chrome.privacy;
@@ -74,6 +74,12 @@ class ServicesPrivacy extends ChromeObject {
    * value is a boolean, defaulting to `true`.
    */
   ChromeSetting get autofillEnabled => _createChromeSetting(jsProxy['autofillEnabled']);
+
+  /**
+   * If enabled, the password manager will ask if you want to save passwords.
+   * This preference's value is a boolean, defaulting to `true`.
+   */
+  ChromeSetting get passwordSavingEnabled => _createChromeSetting(jsProxy['passwordSavingEnabled']);
 
   /**
    * If enabled, Chrome does its best to protect you from phishing and malware.

@@ -48,6 +48,10 @@ class ChromeSyncFileSystem extends ChromeApi {
    * Calling this multiple times from the same app will return the same handle
    * to the same file system.
    * 
+   * Note this call can fail. For example, if the user is not signed in to
+   * Chrome or if there is no network operation. To handle these errors it is
+   * important chrome.runtime.lastError is checked in the callback.
+   * 
    * Returns:
    * A callback type for requestFileSystem.
    */

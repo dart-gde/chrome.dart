@@ -78,7 +78,7 @@ class ChromeContentSettings extends ChromeApi {
 /**
  * The only content type using resource identifiers is
  * [contentSettings.plugins]. For more information, see [Resource
- * Identifiers](contentSettings.html#resource-identifiers).
+ * Identifiers](contentSettings#resource-identifiers).
  */
 class ResourceIdentifier extends ChromeObject {
   ResourceIdentifier({String id, String description}) {
@@ -212,7 +212,7 @@ class ContentSettingsSetParams extends ChromeObject {
 
   /**
    * The pattern for the primary URL. For details on the format of a pattern,
-   * see [Content Setting Patterns](contentSettings.html#patterns).
+   * see [Content Setting Patterns](contentSettings#patterns).
    */
   String get primaryPattern => jsProxy['primaryPattern'];
   set primaryPattern(String value) => jsProxy['primaryPattern'] = value;
@@ -220,7 +220,7 @@ class ContentSettingsSetParams extends ChromeObject {
   /**
    * The pattern for the secondary URL. Defaults to matching all URLs. For
    * details on the format of a pattern, see [Content Setting
-   * Patterns](contentSettings.html#patterns).
+   * Patterns](contentSettings#patterns).
    */
   String get secondaryPattern => jsProxy['secondaryPattern'];
   set secondaryPattern(String value) => jsProxy['secondaryPattern'] = value;

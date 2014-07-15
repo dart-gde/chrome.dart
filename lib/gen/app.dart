@@ -32,6 +32,9 @@ class ChromeApp {
 class ChromeAppRuntime extends ChromeApi {
   JsObject get _app_runtime => chrome['app']['runtime'];
 
+  Stream<EmbedRequest> get onEmbedRequested => _onEmbedRequested.stream;
+  ChromeStreamController<EmbedRequest> _onEmbedRequested;
+
   Stream<LaunchData> get onLaunched => _onLaunched.stream;
   ChromeStreamController<LaunchData> _onLaunched;
 
@@ -40,6 +43,7 @@ class ChromeAppRuntime extends ChromeApi {
 
   ChromeAppRuntime._() {
     var getApi = () => _app_runtime;
+    _onEmbedRequested = new ChromeStreamController<EmbedRequest>.oneArg(getApi, 'onEmbedRequested', _createEmbedRequest);
     _onLaunched = new ChromeStreamController<LaunchData>.oneArg(getApi, 'onLaunched', _createLaunchData);
     _onRestarted = new ChromeStreamController.noArgs(getApi, 'onRestarted');
   }
@@ -95,6 +99,39 @@ class LaunchData extends ChromeObject {
   set isKioskSession(bool value) => jsProxy['isKioskSession'] = value;
 }
 
+/**
+ * This object specifies details and operations to perform on the embedding
+ * request. The app to be embedded can make a decision on whether or not to
+ * allow the embedding and what to embed based on the embedder making the
+ * request.
+ */
+class EmbedRequest extends ChromeObject {
+  EmbedRequest({String embedderId}) {
+    if (embedderId != null) this.embedderId = embedderId;
+  }
+  EmbedRequest.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get embedderId => jsProxy['embedderId'];
+  set embedderId(String value) => jsProxy['embedderId'] = value;
+
+  /**
+   * Allows `embedderId` to embed this app in an &lt;appview&gt; element. The
+   * `url` specifies the content to embed.
+   */
+  void allow(String url) {
+    jsProxy.callMethod('allow', [url]);
+  }
+
+  /**
+   * Prevents ` embedderId` from embedding this app in an &lt;appview&gt;
+   * element.
+   */
+  void deny() {
+    jsProxy.callMethod('deny');
+  }
+}
+
+EmbedRequest _createEmbedRequest(JsObject jsProxy) => jsProxy == null ? null : new EmbedRequest.fromProxy(jsProxy);
 LaunchData _createLaunchData(JsObject jsProxy) => jsProxy == null ? null : new LaunchData.fromProxy(jsProxy);
 FileEntry _createFileEntry(JsObject jsProxy) => jsProxy == null ? null : new ChromeFileEntry.fromProxy(jsProxy);
 LaunchItem _createLaunchItem(JsObject jsProxy) => jsProxy == null ? null : new LaunchItem.fromProxy(jsProxy);
@@ -102,7 +139,9 @@ LaunchItem _createLaunchItem(JsObject jsProxy) => jsProxy == null ? null : new L
 /**
  * Use the `chrome.app.window` API to create windows. Windows have an optional
  * frame with title bar and size controls. They are not associated with any
- * Chrome browser windows.
+ * Chrome browser windows. See the <a
+ * href="https://github.com/GoogleChrome/chrome-app-samples/tree/master/window-state">
+ * Window State Sample</a> for a demonstration of these options.
  */
 class _ChromeAppWindow extends ChromeApi {
   JsObject get _app_window => chrome['app']['window'];
@@ -125,6 +164,9 @@ class _ChromeAppWindow extends ChromeApi {
   Stream get onRestored => _onRestored.stream;
   ChromeStreamController _onRestored;
 
+  Stream get onWindowFirstShown => _onWindowFirstShown.stream;
+  ChromeStreamController _onWindowFirstShown;
+
   _ChromeAppWindow._() {
     var getApi = () => _app_window;
     _onBoundsChanged = new ChromeStreamController.noArgs(getApi, 'onBoundsChanged');
@@ -133,6 +175,7 @@ class _ChromeAppWindow extends ChromeApi {
     _onMaximized = new ChromeStreamController.noArgs(getApi, 'onMaximized');
     _onMinimized = new ChromeStreamController.noArgs(getApi, 'onMinimized');
     _onRestored = new ChromeStreamController.noArgs(getApi, 'onRestored');
+    _onWindowFirstShown = new ChromeStreamController.noArgs(getApi, 'onWindowFirstShown');
   }
 
   bool get available => _app_window != null;
@@ -142,10 +185,13 @@ class _ChromeAppWindow extends ChromeApi {
    * ways. The most simple option is not specifying anything at all, in which
    * case a default size and platform dependent position will be used.
    * 
-   * Another option is to use the `bounds` property, which will put the window
-   * at the specified coordinates with the specified size. If the window has a
-   * frame, it's total size will be the size given plus the size of the frame;
-   * that is, the size in bounds is the content size, not the window size.
+   * To set the position, size and constraints of the window, use the
+   * `innerBounds` or `outerBounds` properties. Inner bounds do not include
+   * window decorations. Outer bounds include the window's title bar and frame.
+   * Note that the padding between the inner and outer bounds is determined by
+   * the OS. Therefore setting the same property for both inner and outer bounds
+   * is considered an error (for example, setting both `innerBounds.left` and
+   * `outerBounds.left`).
    * 
    * To automatically remember the positions of windows you can give them ids.
    * If a window has an id, This id is used to remember the size and position of
@@ -309,9 +355,11 @@ class BoundsSpecification extends ChromeObject {
 }
 
 class FrameOptions extends ChromeObject {
-  FrameOptions({String type, String color}) {
+  FrameOptions({String type, String color, String activeColor, String inactiveColor}) {
     if (type != null) this.type = type;
     if (color != null) this.color = color;
+    if (activeColor != null) this.activeColor = activeColor;
+    if (inactiveColor != null) this.inactiveColor = inactiveColor;
   }
   FrameOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -320,6 +368,12 @@ class FrameOptions extends ChromeObject {
 
   String get color => jsProxy['color'];
   set color(String value) => jsProxy['color'] = value;
+
+  String get activeColor => jsProxy['activeColor'];
+  set activeColor(String value) => jsProxy['activeColor'] = value;
+
+  String get inactiveColor => jsProxy['inactiveColor'];
+  set inactiveColor(String value) => jsProxy['inactiveColor'] = value;
 }
 
 class CreateWindowOptions extends ChromeObject {
@@ -429,9 +483,11 @@ class CreateWindowOptions extends ChromeObject {
 }
 
 class _AppWindow extends ChromeObject {
-  _AppWindow({bool hasFrameColor, int frameColor, Window contentWindow, String id, Bounds innerBounds, Bounds outerBounds}) {
+  _AppWindow({bool hasFrameColor, int activeFrameColor, int inactiveFrameColor, bool firstShowHasHappened, Window contentWindow, String id, Bounds innerBounds, Bounds outerBounds}) {
     if (hasFrameColor != null) this.hasFrameColor = hasFrameColor;
-    if (frameColor != null) this.frameColor = frameColor;
+    if (activeFrameColor != null) this.activeFrameColor = activeFrameColor;
+    if (inactiveFrameColor != null) this.inactiveFrameColor = inactiveFrameColor;
+    if (firstShowHasHappened != null) this.firstShowHasHappened = firstShowHasHappened;
     if (contentWindow != null) this.contentWindow = contentWindow;
     if (id != null) this.id = id;
     if (innerBounds != null) this.innerBounds = innerBounds;
@@ -442,8 +498,14 @@ class _AppWindow extends ChromeObject {
   bool get hasFrameColor => jsProxy['hasFrameColor'];
   set hasFrameColor(bool value) => jsProxy['hasFrameColor'] = value;
 
-  int get frameColor => jsProxy['frameColor'];
-  set frameColor(int value) => jsProxy['frameColor'] = value;
+  int get activeFrameColor => jsProxy['activeFrameColor'];
+  set activeFrameColor(int value) => jsProxy['activeFrameColor'] = value;
+
+  int get inactiveFrameColor => jsProxy['inactiveFrameColor'];
+  set inactiveFrameColor(int value) => jsProxy['inactiveFrameColor'] = value;
+
+  bool get firstShowHasHappened => jsProxy['firstShowHasHappened'];
+  set firstShowHasHappened(bool value) => jsProxy['firstShowHasHappened'] = value;
 
   Window get contentWindow => _createWindow(jsProxy['contentWindow']);
   set contentWindow(Window value) => jsProxy['contentWindow'] = jsify(value);
@@ -469,8 +531,8 @@ class _AppWindow extends ChromeObject {
    * 
    * The user will be able to restore the window by pressing ESC. An
    * application can prevent the fullscreen state to be left when ESC is pressed
-   * by requesting the <b>app.window.fullscreen.overrideEsc</b> permission and
-   * canceling the event by calling .preventDefault(), like this:
+   * by requesting the <b>overrideEscFullscreen</b> permission and canceling the
+   * event by calling .preventDefault(), like this:
    * 
    * `window.onKeyDown = function(e) { if (e.keyCode == 27 / ESC /) {
    * e.preventDefault(); } };`
@@ -619,7 +681,7 @@ class _AppWindow extends ChromeObject {
 
   /**
    * Set whether the window should stay above most other windows. Requires the
-   * `"app.window.alwaysOnTop"` permission.
+   * `"alwaysOnTopWindows"` permission.
    */
   void setAlwaysOnTop(bool alwaysOnTop) {
     jsProxy.callMethod('setAlwaysOnTop', [alwaysOnTop]);

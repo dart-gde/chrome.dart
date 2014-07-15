@@ -2,9 +2,8 @@
 
 /**
  * Use the `chrome.tts` API to play synthesized text-to-speech (TTS). See also
- * the related
- * [ttsEngine](http://developer.chrome.com/extensions/ttsEngine.html) API, which
- * allows an extension to implement a speech engine.
+ * the related [ttsEngine](http://developer.chrome.com/extensions/ttsEngine)
+ * API, which allows an extension to implement a speech engine.
  */
 library chrome.tts;
 

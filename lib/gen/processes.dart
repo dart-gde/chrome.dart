@@ -155,7 +155,7 @@ class OnExitedEvent {
  * An object containing information about one of the browser's processes.
  */
 class Process extends ChromeObject {
-  Process({int id, int osProcessId, String title, String type, String profile, int naclDebugPort, List<int> tabs, var cpu, var network, var privateMemory, var jsMemoryAllocated, var jsMemoryUsed, var sqliteMemory, var fps, Cache imageCache, Cache scriptCache, Cache cssCache}) {
+  Process({int id, int osProcessId, String title, String type, String profile, int naclDebugPort, List<int> tabs, var cpu, var network, var privateMemory, var jsMemoryAllocated, var jsMemoryUsed, var sqliteMemory, Cache imageCache, Cache scriptCache, Cache cssCache}) {
     if (id != null) this.id = id;
     if (osProcessId != null) this.osProcessId = osProcessId;
     if (title != null) this.title = title;
@@ -169,7 +169,6 @@ class Process extends ChromeObject {
     if (jsMemoryAllocated != null) this.jsMemoryAllocated = jsMemoryAllocated;
     if (jsMemoryUsed != null) this.jsMemoryUsed = jsMemoryUsed;
     if (sqliteMemory != null) this.sqliteMemory = sqliteMemory;
-    if (fps != null) this.fps = fps;
     if (imageCache != null) this.imageCache = imageCache;
     if (scriptCache != null) this.scriptCache = scriptCache;
     if (cssCache != null) this.cssCache = cssCache;
@@ -269,14 +268,6 @@ class Process extends ChromeObject {
    */
   dynamic get sqliteMemory => jsProxy['sqliteMemory'];
   set sqliteMemory(var value) => jsProxy['sqliteMemory'] = jsify(value);
-
-  /**
-   * The most recent measurement of the process frames per second. Only
-   * available when receiving the object as part of a callback from onUpdated or
-   * onUpdatedWithMemory.
-   */
-  dynamic get fps => jsProxy['fps'];
-  set fps(var value) => jsProxy['fps'] = jsify(value);
 
   /**
    * The most recent information about the image cache for the process. Only

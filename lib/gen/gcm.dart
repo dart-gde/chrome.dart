@@ -2,8 +2,8 @@
 
 /**
  * Use `chrome.gcm` to enable apps and extensions to send and receive messages
- * through [Google Cloud
- * Messaging](http://developer.android.com/google/gcm/index.html).
+ * through the [Google Cloud Messaging
+ * Service](http://developer.android.com/google/gcm/).
  */
 library chrome.gcm;
 

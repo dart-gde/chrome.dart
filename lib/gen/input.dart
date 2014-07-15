@@ -413,12 +413,13 @@ class UsageInputIme extends ChromeObject {
  * See http://www.w3.org/TR/DOM-Level-3-Events/#events-KeyboardEvent
  */
 class KeyboardEvent extends ChromeObject {
-  KeyboardEvent({String type, String requestId, String extensionId, String key, String code, bool altKey, bool ctrlKey, bool shiftKey, bool capsLock}) {
+  KeyboardEvent({String type, String requestId, String extensionId, String key, String code, int keyCode, bool altKey, bool ctrlKey, bool shiftKey, bool capsLock}) {
     if (type != null) this.type = type;
     if (requestId != null) this.requestId = requestId;
     if (extensionId != null) this.extensionId = extensionId;
     if (key != null) this.key = key;
     if (code != null) this.code = code;
+    if (keyCode != null) this.keyCode = keyCode;
     if (altKey != null) this.altKey = altKey;
     if (ctrlKey != null) this.ctrlKey = ctrlKey;
     if (shiftKey != null) this.shiftKey = shiftKey;
@@ -457,6 +458,14 @@ class KeyboardEvent extends ChromeObject {
    */
   String get code => jsProxy['code'];
   set code(String value) => jsProxy['code'] = value;
+
+  /**
+   * The deprecated HTML keyCode, which is system- and implementation-dependent
+   * numerical code signifying the unmodified identifier associated with the key
+   * pressed.
+   */
+  int get keyCode => jsProxy['keyCode'];
+  set keyCode(int value) => jsProxy['keyCode'] = value;
 
   /**
    * Whether or not the ALT key is pressed.
@@ -502,7 +511,7 @@ class InputContext extends ChromeObject {
 
   /**
    * Type of value this text field edits, (Text, Number, URL, etc)
-   * enum of `text`, `search`, `tel`, `url`, `email`, `number`
+   * enum of `text`, `search`, `tel`, `url`, `email`, `number`, `password`
    */
   String get type => jsProxy['type'];
   set type(String value) => jsProxy['type'] = value;

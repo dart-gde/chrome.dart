@@ -2,8 +2,8 @@
 
 /**
  * Use the `chrome.proxy` API to manage Chrome's proxy settings. This API relies
- * on the [ChromeSetting prototype of the type API](types.html#ChromeSetting)
- * for getting and setting the proxy configuration.
+ * on the [ChromeSetting prototype of the type API](types#ChromeSetting) for
+ * getting and setting the proxy configuration.
  */
 library chrome.proxy;
 
