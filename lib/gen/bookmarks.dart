@@ -2,8 +2,8 @@
 
 /**
  * Use the `chrome.bookmarks` API to create, organize, and otherwise manipulate
- * bookmarks. Also see [Override Pages](override.html), which you can use to
- * create a custom Bookmark Manager page.
+ * bookmarks. Also see [Override Pages](override), which you can use to create a
+ * custom Bookmark Manager page.
  */
 library chrome.bookmarks;
 
@@ -156,6 +156,11 @@ class ChromeBookmarks extends ChromeApi {
   /**
    * Searches for BookmarkTreeNodes matching the given query. Queries specified
    * with an object produce BookmarkTreeNodes matching all specified properties.
+   * 
+   * [query] Either a string of words and quoted phrases that are matched
+   * against bookmark URLs and titles, or an object. If an object, the
+   * properties `query`, `url`, and `title` may be specified and bookmarks
+   * matching all specified properties will be produced.
    */
   Future<List<BookmarkTreeNode>> search(dynamic query) {
     if (_bookmarks == null) _throwNotAvailable();
@@ -169,7 +174,7 @@ class ChromeBookmarks extends ChromeApi {
    * Creates a bookmark or folder under the specified parentId.  If url is NULL
    * or missing, it will be a folder.
    */
-  Future<BookmarkTreeNode> create(BookmarksCreateParams bookmark) {
+  Future<BookmarkTreeNode> create(CreateDetails bookmark) {
     if (_bookmarks == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<BookmarkTreeNode>.oneArg(_createBookmarkTreeNode);
@@ -314,7 +319,7 @@ class OnChildrenReorderedEvent {
  * ordered within their parent folder.
  */
 class BookmarkTreeNode extends ChromeObject {
-  BookmarkTreeNode({String id, String parentId, int index, String url, String title, var dateAdded, var dateGroupModified, List<BookmarkTreeNode> children}) {
+  BookmarkTreeNode({String id, String parentId, int index, String url, String title, var dateAdded, var dateGroupModified, String unmodifiable, List<BookmarkTreeNode> children}) {
     if (id != null) this.id = id;
     if (parentId != null) this.parentId = parentId;
     if (index != null) this.index = index;
@@ -322,6 +327,7 @@ class BookmarkTreeNode extends ChromeObject {
     if (title != null) this.title = title;
     if (dateAdded != null) this.dateAdded = dateAdded;
     if (dateGroupModified != null) this.dateGroupModified = dateGroupModified;
+    if (unmodifiable != null) this.unmodifiable = unmodifiable;
     if (children != null) this.children = children;
   }
   BookmarkTreeNode.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -372,20 +378,33 @@ class BookmarkTreeNode extends ChromeObject {
   set dateGroupModified(var value) => jsProxy['dateGroupModified'] = jsify(value);
 
   /**
+   * Indicates the reason why this node is unmodifiable. The [managed] value
+   * indicates that this node was configured by the system administrator.
+   * Omitted if the node can be modified by the user and the extension
+   * (default).
+   * enum of `managed`
+   */
+  String get unmodifiable => jsProxy['unmodifiable'];
+  set unmodifiable(String value) => jsProxy['unmodifiable'] = value;
+
+  /**
    * An ordered list of children of this node.
    */
   List<BookmarkTreeNode> get children => listify(jsProxy['children'], _createBookmarkTreeNode);
   set children(List<BookmarkTreeNode> value) => jsProxy['children'] = jsify(value);
 }
 
-class BookmarksCreateParams extends ChromeObject {
-  BookmarksCreateParams({String parentId, int index, String title, String url}) {
+/**
+ * Object passed to the create() function.
+ */
+class CreateDetails extends ChromeObject {
+  CreateDetails({String parentId, int index, String title, String url}) {
     if (parentId != null) this.parentId = parentId;
     if (index != null) this.index = index;
     if (title != null) this.title = title;
     if (url != null) this.url = url;
   }
-  BookmarksCreateParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  CreateDetails.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   /**
    * Defaults to the Other Bookmarks folder.

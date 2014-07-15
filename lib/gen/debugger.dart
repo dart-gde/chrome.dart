@@ -3,8 +3,8 @@
 /**
  * The `chrome.debugger` API serves as an alternate transport for Chrome's
  * [remote debugging
- * protocol](http://code.google.com/chrome/devtools/docs/remote-debugging.html).
- * Use `chrome.debugger` to attach to one or more tabs to instrument network
+ * protocol](http://code.google.com/chrome/devtools/docs/remote-debugging). Use
+ * `chrome.debugger` to attach to one or more tabs to instrument network
  * interaction, debug JavaScript, mutate the DOM and CSS, etc. Use the Debuggee
  * `tabId` to target tabs with sendCommand and route events by `tabId` from
  * onEvent callbacks.
@@ -51,7 +51,7 @@ class ChromeDebugger extends ChromeApi {
    * [requiredVersion] Required debugging protocol version ("0.1"). One can only
    * attach to the debuggee with matching major version and greater or equal
    * minor version. List of the protocol versions can be obtained
-   * [here](http://code.google.com/chrome/devtools/docs/remote-debugging.html).
+   * [here](http://code.google.com/chrome/devtools/docs/remote-debugging).
    */
   Future attach(Debuggee target, String requiredVersion) {
     if (_debugger == null) _throwNotAvailable();
@@ -81,14 +81,15 @@ class ChromeDebugger extends ChromeApi {
    * 
    * [method] Method name. Should be one of the methods defined by the [remote
    * debugging
-   * protocol](http://code.google.com/chrome/devtools/docs/remote-debugging.html).
+   * protocol](http://code.google.com/chrome/devtools/docs/remote-debugging).
    * 
    * [commandParams] JSON object with request parameters. This object must
    * conform to the remote debugging params scheme for given method.
    * 
    * Returns:
    * JSON object with the response. Structure of the response varies depending
-   * on the method and is defined by the remote debugging protocol.
+   * on the method name and is defined by the 'returns' attribute of the command
+   * description in the remote debugging protocol.
    */
   Future<Map<String, dynamic>> sendCommand(Debuggee target, String method, [Map<String, dynamic> commandParams]) {
     if (_debugger == null) _throwNotAvailable();
@@ -129,17 +130,19 @@ class OnEventEvent {
   /**
    * Method name. Should be one of the notifications defined by the [remote
    * debugging
-   * protocol](http://code.google.com/chrome/devtools/docs/remote-debugging.html).
+   * protocol](http://code.google.com/chrome/devtools/docs/remote-debugging).
    */
   final String method;
 
   /**
-   * JSON object with the response. Structure of the response varies depending
-   * on the method and is defined by the remote debugging protocol.
+   * JSON object with the parameters. Structure of the parameters varies
+   * depending on the method name and is defined by the 'parameters' attribute
+   * of the event description in the remote debugging protocol.
    * `optional`
    * 
-   * JSON object with the response. Structure of the response varies depending
-   * on the method and is defined by the remote debugging protocol.
+   * JSON object with the parameters. Structure of the parameters varies
+   * depending on the method name and is defined by the 'parameters' attribute
+   * of the event description in the remote debugging protocol.
    */
   final Map<String, dynamic> params;
 
@@ -185,8 +188,8 @@ class Debuggee extends ChromeObject {
 
   /**
    * The id of the extension which you intend to debug. Attaching to an
-   * extension background page is only possible when 'enable-silent-debugging'
-   * flag is enabled on the target browser.
+   * extension background page is only possible when
+   * 'silent-debugger-extension-api' flag is enabled on the target browser.
    */
   String get extensionId => jsProxy['extensionId'];
   set extensionId(String value) => jsProxy['extensionId'] = value;

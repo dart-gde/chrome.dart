@@ -17,11 +17,15 @@ final ChromeMediaGalleries mediaGalleries = new ChromeMediaGalleries._();
 class ChromeMediaGalleries extends ChromeApi {
   JsObject get _mediaGalleries => chrome['mediaGalleries'];
 
+  Stream<GalleryChangeDetails> get onGalleryChanged => _onGalleryChanged.stream;
+  ChromeStreamController<GalleryChangeDetails> _onGalleryChanged;
+
   Stream<ScanProgressDetails> get onScanProgress => _onScanProgress.stream;
   ChromeStreamController<ScanProgressDetails> _onScanProgress;
 
   ChromeMediaGalleries._() {
     var getApi = () => _mediaGalleries;
+    _onGalleryChanged = new ChromeStreamController<GalleryChangeDetails>.oneArg(getApi, 'onGalleryChanged', _createGalleryChangeDetails);
     _onScanProgress = new ChromeStreamController<ScanProgressDetails>.oneArg(getApi, 'onScanProgress', _createScanProgressDetails);
   }
 
@@ -31,10 +35,10 @@ class ChromeMediaGalleries extends ChromeApi {
    * Get the media galleries configured in this user agent. If none are
    * configured or available, the callback will receive an empty array.
    */
-  Future<List<FileSystem>> getMediaFileSystems([MediaFileSystemsDetails details]) {
+  Future<FileSystem> getMediaFileSystems([MediaFileSystemsDetails details]) {
     if (_mediaGalleries == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<List<FileSystem>>.oneArg((e) => listify(e, _createDOMFileSystem));
+    var completer = new ChromeCompleter<FileSystem>.oneArg(_createDOMFileSystem);
     _mediaGalleries.callMethod('getMediaFileSystems', [jsify(details), completer.callback]);
     return completer.future;
   }
@@ -54,6 +58,17 @@ class ChromeMediaGalleries extends ChromeApi {
 
     var completer = new ChromeCompleter<AddUserSelectedFolderResult>.twoArgs(AddUserSelectedFolderResult._create);
     _mediaGalleries.callMethod('addUserSelectedFolder', [completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Give up access to a given media gallery.
+   */
+  Future dropPermissionForMediaFileSystem(String galleryId) {
+    if (_mediaGalleries == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _mediaGalleries.callMethod('dropPermissionForMediaFileSystem', [galleryId, completer.callback]);
     return completer.future;
   }
 
@@ -85,10 +100,10 @@ class ChromeMediaGalleries extends ChromeApi {
    * has happened. All galleries the app has access to are returned, not just
    * the newly added galleries.
    */
-  Future<List<FileSystem>> addScanResults() {
+  Future<FileSystem> addScanResults() {
     if (_mediaGalleries == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<List<FileSystem>>.oneArg((e) => listify(e, _createDOMFileSystem));
+    var completer = new ChromeCompleter<FileSystem>.oneArg(_createDOMFileSystem);
     _mediaGalleries.callMethod('addScanResults', [completer.callback]);
     return completer.future;
   }
@@ -130,6 +145,15 @@ class ChromeMediaGalleries extends ChromeApi {
   }
 }
 
+class GalleryChangeType extends ChromeEnum {
+  static const GalleryChangeType CONTENTS_CHANGED = const GalleryChangeType._('contents_changed');
+  static const GalleryChangeType WATCH_DROPPED = const GalleryChangeType._('watch_dropped');
+
+  static const List<GalleryChangeType> VALUES = const[CONTENTS_CHANGED, WATCH_DROPPED];
+
+  const GalleryChangeType._(String str): super(str);
+}
+
 class GetMediaFileSystemsInteractivity extends ChromeEnum {
   static const GetMediaFileSystemsInteractivity NO = const GetMediaFileSystemsInteractivity._('no');
   static const GetMediaFileSystemsInteractivity YES = const GetMediaFileSystemsInteractivity._('yes');
@@ -142,9 +166,10 @@ class GetMediaFileSystemsInteractivity extends ChromeEnum {
 
 class GetMetadataType extends ChromeEnum {
   static const GetMetadataType ALL = const GetMetadataType._('all');
+  static const GetMetadataType MIME_TYPE_AND_TAGS = const GetMetadataType._('mimeTypeAndTags');
   static const GetMetadataType MIME_TYPE_ONLY = const GetMetadataType._('mimeTypeOnly');
 
-  static const List<GetMetadataType> VALUES = const[ALL, MIME_TYPE_ONLY];
+  static const List<GetMetadataType> VALUES = const[ALL, MIME_TYPE_AND_TAGS, MIME_TYPE_ONLY];
 
   const GetMetadataType._(String str): super(str);
 }
@@ -158,6 +183,20 @@ class ScanProgressType extends ChromeEnum {
   static const List<ScanProgressType> VALUES = const[START, CANCEL, FINISH, ERROR];
 
   const ScanProgressType._(String str): super(str);
+}
+
+class GalleryChangeDetails extends ChromeObject {
+  GalleryChangeDetails({GalleryChangeType type, String galleryId}) {
+    if (type != null) this.type = type;
+    if (galleryId != null) this.galleryId = galleryId;
+  }
+  GalleryChangeDetails.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  GalleryChangeType get type => _createGalleryChangeType(jsProxy['type']);
+  set type(GalleryChangeType value) => jsProxy['type'] = jsify(value);
+
+  String get galleryId => jsProxy['galleryId'];
+  set galleryId(String value) => jsProxy['galleryId'] = value;
 }
 
 class MediaFileSystemsDetails extends ChromeObject {
@@ -236,13 +275,36 @@ class ScanProgressDetails extends ChromeObject {
   set videoCount(int value) => jsProxy['videoCount'] = value;
 }
 
+class StreamInfo extends ChromeObject {
+  StreamInfo({String type, var tags}) {
+    if (type != null) this.type = type;
+    if (tags != null) this.tags = tags;
+  }
+  StreamInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get type => jsProxy['type'];
+  set type(String value) => jsProxy['type'] = value;
+
+  dynamic get tags => jsProxy['tags'];
+  set tags(var value) => jsProxy['tags'] = jsify(value);
+}
+
 class MediaMetadata extends ChromeObject {
-  MediaMetadata({String mimeType, int height, int width, num duration, int rotation, String album, String artist, String comment, String copyright, int disc, String genre, String language, String title, int track}) {
+  MediaMetadata({String mimeType, int height, int width, num xResolution, num yResolution, num duration, int rotation, String cameraMake, String cameraModel, num exposureTimeSeconds, bool flashFired, num fNumber, num focalLengthMm, num isoEquivalent, String album, String artist, String comment, String copyright, int disc, String genre, String language, String title, int track, List<StreamInfo> rawTags, List<dynamic> attachedImages}) {
     if (mimeType != null) this.mimeType = mimeType;
     if (height != null) this.height = height;
     if (width != null) this.width = width;
+    if (xResolution != null) this.xResolution = xResolution;
+    if (yResolution != null) this.yResolution = yResolution;
     if (duration != null) this.duration = duration;
     if (rotation != null) this.rotation = rotation;
+    if (cameraMake != null) this.cameraMake = cameraMake;
+    if (cameraModel != null) this.cameraModel = cameraModel;
+    if (exposureTimeSeconds != null) this.exposureTimeSeconds = exposureTimeSeconds;
+    if (flashFired != null) this.flashFired = flashFired;
+    if (fNumber != null) this.fNumber = fNumber;
+    if (focalLengthMm != null) this.focalLengthMm = focalLengthMm;
+    if (isoEquivalent != null) this.isoEquivalent = isoEquivalent;
     if (album != null) this.album = album;
     if (artist != null) this.artist = artist;
     if (comment != null) this.comment = comment;
@@ -252,6 +314,8 @@ class MediaMetadata extends ChromeObject {
     if (language != null) this.language = language;
     if (title != null) this.title = title;
     if (track != null) this.track = track;
+    if (rawTags != null) this.rawTags = rawTags;
+    if (attachedImages != null) this.attachedImages = attachedImages;
   }
   MediaMetadata.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -264,11 +328,38 @@ class MediaMetadata extends ChromeObject {
   int get width => jsProxy['width'];
   set width(int value) => jsProxy['width'] = value;
 
+  num get xResolution => jsProxy['xResolution'];
+  set xResolution(num value) => jsProxy['xResolution'] = jsify(value);
+
+  num get yResolution => jsProxy['yResolution'];
+  set yResolution(num value) => jsProxy['yResolution'] = jsify(value);
+
   num get duration => jsProxy['duration'];
   set duration(num value) => jsProxy['duration'] = jsify(value);
 
   int get rotation => jsProxy['rotation'];
   set rotation(int value) => jsProxy['rotation'] = value;
+
+  String get cameraMake => jsProxy['cameraMake'];
+  set cameraMake(String value) => jsProxy['cameraMake'] = value;
+
+  String get cameraModel => jsProxy['cameraModel'];
+  set cameraModel(String value) => jsProxy['cameraModel'] = value;
+
+  num get exposureTimeSeconds => jsProxy['exposureTimeSeconds'];
+  set exposureTimeSeconds(num value) => jsProxy['exposureTimeSeconds'] = jsify(value);
+
+  bool get flashFired => jsProxy['flashFired'];
+  set flashFired(bool value) => jsProxy['flashFired'] = value;
+
+  num get fNumber => jsProxy['fNumber'];
+  set fNumber(num value) => jsProxy['fNumber'] = jsify(value);
+
+  num get focalLengthMm => jsProxy['focalLengthMm'];
+  set focalLengthMm(num value) => jsProxy['focalLengthMm'] = jsify(value);
+
+  num get isoEquivalent => jsProxy['isoEquivalent'];
+  set isoEquivalent(num value) => jsProxy['isoEquivalent'] = jsify(value);
 
   String get album => jsProxy['album'];
   set album(String value) => jsProxy['album'] = value;
@@ -296,6 +387,12 @@ class MediaMetadata extends ChromeObject {
 
   int get track => jsProxy['track'];
   set track(int value) => jsProxy['track'] = value;
+
+  List<StreamInfo> get rawTags => listify(jsProxy['rawTags'], _createStreamInfo);
+  set rawTags(List<StreamInfo> value) => jsProxy['rawTags'] = jsify(value);
+
+  List<dynamic> get attachedImages => listify(jsProxy['attachedImages']);
+  set attachedImages(List<dynamic> value) => jsProxy['attachedImages'] = jsify(value);
 }
 
 /**
@@ -303,19 +400,22 @@ class MediaMetadata extends ChromeObject {
  */
 class AddUserSelectedFolderResult {
   static AddUserSelectedFolderResult _create(mediaFileSystems, selectedFileSystemName) {
-    return new AddUserSelectedFolderResult._(listify(mediaFileSystems, _createDOMFileSystem), selectedFileSystemName);
+    return new AddUserSelectedFolderResult._(_createDOMFileSystem(mediaFileSystems), selectedFileSystemName);
   }
 
-  List<FileSystem> mediaFileSystems;
+  FileSystem mediaFileSystems;
   String selectedFileSystemName;
 
   AddUserSelectedFolderResult._(this.mediaFileSystems, this.selectedFileSystemName);
 }
 
+GalleryChangeDetails _createGalleryChangeDetails(JsObject jsProxy) => jsProxy == null ? null : new GalleryChangeDetails.fromProxy(jsProxy);
 ScanProgressDetails _createScanProgressDetails(JsObject jsProxy) => jsProxy == null ? null : new ScanProgressDetails.fromProxy(jsProxy);
 FileSystem _createDOMFileSystem(JsObject jsProxy) => jsProxy == null ? null : new CrFileSystem.fromProxy(jsProxy);
 MediaFileSystemMetadata _createMediaFileSystemMetadata(JsObject jsProxy) => jsProxy == null ? null : new MediaFileSystemMetadata.fromProxy(jsProxy);
 MediaMetadata _createMediaMetadata(JsObject jsProxy) => jsProxy == null ? null : new MediaMetadata.fromProxy(jsProxy);
+GalleryChangeType _createGalleryChangeType(String value) => GalleryChangeType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 GetMediaFileSystemsInteractivity _createGetMediaFileSystemsInteractivity(String value) => GetMediaFileSystemsInteractivity.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 GetMetadataType _createGetMetadataType(String value) => GetMetadataType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ScanProgressType _createScanProgressType(String value) => ScanProgressType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+StreamInfo _createStreamInfo(JsObject jsProxy) => jsProxy == null ? null : new StreamInfo.fromProxy(jsProxy);

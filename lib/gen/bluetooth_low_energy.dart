@@ -185,7 +185,6 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
 
   /**
    * Retrieve the value of a specified characteristic from a remote peripheral.
-   * This function will fail if the characteristic is local.
    * [characteristicId]: The instance ID of the GATT characteristic whose value
    * should be read from the remote device.
    * [callback]: Called with the Characteristic object whose value was
@@ -202,7 +201,6 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
 
   /**
    * Write the value of a specified characteristic from a remote peripheral.
-   * This function will fail if the characteristic is local.
    * [characteristicId]: The instance ID of the GATT characteristic whose value
    * should be written to.
    * [value]: The value that should be sent to the remote characteristic as part
@@ -218,8 +216,41 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
   }
 
   /**
+   * Enable value notifications/indications from the specified characteristic.
+   * Once enabled, an application can listen to notifications using the
+   * [onCharacteristicValueChanged] event.
+   * [characteristicId]: The instance ID of the GATT characteristic that
+   * notifications should be enabled on.
+   * [properties]: Notification session properties (optional).
+   * [callback]: Called when the request has completed.
+   */
+  Future startCharacteristicNotifications(String characteristicId, [NotificationProperties properties]) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _bluetoothLowEnergy.callMethod('startCharacteristicNotifications', [characteristicId, jsify(properties), completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Disable value notifications/indications from the specified characteristic.
+   * After a successful call, the application will stop receiving
+   * notifications/indications from this characteristic.
+   * [characteristicId]: The instance ID of the GATT characteristic on which
+   * this app's notification session should be stopped.
+   * [callback]: Called when the request has completed (optional).
+   */
+  Future stopCharacteristicNotifications(String characteristicId) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _bluetoothLowEnergy.callMethod('stopCharacteristicNotifications', [characteristicId, completer.callback]);
+    return completer.future;
+  }
+
+  /**
    * Retrieve the value of a specified characteristic descriptor from a remote
-   * peripheral. This function will fail if the descriptor is local.
+   * peripheral.
    * [descriptorId]: The instance ID of the GATT characteristic descriptor whose
    * value should be read from the remote device.
    * [callback]: Called with the Descriptor object whose value was requested.
@@ -236,7 +267,7 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
 
   /**
    * Write the value of a specified characteristic descriptor from a remote
-   * peripheral. This function will fail if the descriptor is local.
+   * peripheral.
    * [descriptorId]: The instance ID of the GATT characteristic descriptor whose
    * value should be written to.
    * [value]: The value that should be sent to the remote descriptor as part of
@@ -379,6 +410,20 @@ class ConnectProperties extends ChromeObject {
     if (persistent != null) this.persistent = persistent;
   }
   ConnectProperties.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  bool get persistent => jsProxy['persistent'];
+  set persistent(bool value) => jsProxy['persistent'] = value;
+}
+
+/**
+ * Optional characteristic notification session properties specified during a
+ * call to [startCharacteristicNotifications].
+ */
+class NotificationProperties extends ChromeObject {
+  NotificationProperties({bool persistent}) {
+    if (persistent != null) this.persistent = persistent;
+  }
+  NotificationProperties.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   bool get persistent => jsProxy['persistent'];
   set persistent(bool value) => jsProxy['persistent'] = value;

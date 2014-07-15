@@ -3,7 +3,7 @@
 /**
  * The `chrome.management` API provides ways to manage the list of
  * extensions/apps that are installed and running. It is particularly useful for
- * extensions that [override](override.html) the built-in New Tab page.
+ * extensions that [override](override) the built-in New Tab page.
  */
 library chrome.management;
 
@@ -77,8 +77,8 @@ class ChromeManagement extends ChromeApi {
   }
 
   /**
-   * Returns a list of [permission warnings](permission_warnings.html) for the
-   * given extension id.
+   * Returns a list of [permission warnings](permission_warnings) for the given
+   * extension id.
    * 
    * [id] The ID of an already installed extension.
    */
@@ -91,8 +91,8 @@ class ChromeManagement extends ChromeApi {
   }
 
   /**
-   * Returns a list of [permission warnings](permission_warnings.html) for the
-   * given extension manifest string. Note: This function can be used without
+   * Returns a list of [permission warnings](permission_warnings) for the given
+   * extension manifest string. Note: This function can be used without
    * requesting the 'management' permission in the manifest.
    * 
    * [manifestStr] Extension manifest JSON string.
@@ -158,6 +158,54 @@ class ChromeManagement extends ChromeApi {
     return completer.future;
   }
 
+  /**
+   * Display options to create shortcuts for an app. On Mac, only packaged app
+   * shortcuts can be created. This function is new in Chrome 37.
+   * 
+   * [id] This should be the id from an app item of [management.ExtensionInfo].
+   */
+  Future createAppShortcut(String id) {
+    if (_management == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _management.callMethod('createAppShortcut', [id, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Set the launch type of an app. This function is new in Chrome 37.
+   * 
+   * [id] This should be the id from an app item of [management.ExtensionInfo].
+   * 
+   * [launchType] The target launch type. Always check and make sure this launch
+   * type is in [ExtensionInfo.availableLaunchTypes], because the available
+   * launch types vary on different platforms and configurations.
+   */
+  Future setLaunchType(String id, LaunchType launchType) {
+    if (_management == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _management.callMethod('setLaunchType', [id, jsify(launchType), completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Generate an app for a URL. Returns the generated bookmark app. This
+   * function is new in Chrome 37.
+   * 
+   * [url] The URL of a web page. The scheme of the URL can only be "http" or
+   * "https".
+   * 
+   * [title] The title of the generated app.
+   */
+  Future<ExtensionInfo> generateAppForLink(String url, String title) {
+    if (_management == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<ExtensionInfo>.oneArg(_createExtensionInfo);
+    _management.callMethod('generateAppForLink', [url, title, completer.callback]);
+    return completer.future;
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.management' is not available");
   }
@@ -190,10 +238,20 @@ class IconInfo extends ChromeObject {
 }
 
 /**
+ * These are all possible app launch types.
+ * enum of `OPEN_AS_REGULAR_TAB`, `OPEN_AS_PINNED_TAB`, `OPEN_AS_WINDOW`,
+ * `OPEN_FULL_SCREEN`
+ */
+class LaunchType extends ChromeObject {
+  LaunchType();
+  LaunchType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
  * Information about an installed extension, app, or theme.
  */
 class ExtensionInfo extends ChromeObject {
-  ExtensionInfo({String id, String name, String shortName, String description, String version, bool mayDisable, bool enabled, String disabledReason, bool isApp, String type, String appLaunchUrl, String homepageUrl, String updateUrl, bool offlineEnabled, String optionsUrl, List<IconInfo> icons, List<String> permissions, List<String> hostPermissions, String installType}) {
+  ExtensionInfo({String id, String name, String shortName, String description, String version, bool mayDisable, bool enabled, String disabledReason, bool isApp, String type, String appLaunchUrl, String homepageUrl, String updateUrl, bool offlineEnabled, String optionsUrl, List<IconInfo> icons, List<String> permissions, List<String> hostPermissions, String installType, LaunchType launchType, List<LaunchType> availableLaunchTypes}) {
     if (id != null) this.id = id;
     if (name != null) this.name = name;
     if (shortName != null) this.shortName = shortName;
@@ -213,6 +271,8 @@ class ExtensionInfo extends ChromeObject {
     if (permissions != null) this.permissions = permissions;
     if (hostPermissions != null) this.hostPermissions = hostPermissions;
     if (installType != null) this.installType = installType;
+    if (launchType != null) this.launchType = launchType;
+    if (availableLaunchTypes != null) this.availableLaunchTypes = availableLaunchTypes;
   }
   ExtensionInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -241,7 +301,7 @@ class ExtensionInfo extends ChromeObject {
   set description(String value) => jsProxy['description'] = value;
 
   /**
-   * The [version](manifest/version.html) of this extension, app, or theme.
+   * The [version](manifest/version) of this extension, app, or theme.
    */
   String get version => jsProxy['version'];
   set version(String value) => jsProxy['version'] = value;
@@ -314,7 +374,7 @@ class ExtensionInfo extends ChromeObject {
    * in the manifest, and the actual image at that url may be larger or smaller
    * than what was declared, so you might consider using explicit width and
    * height attributes on img tags referencing these images. See the [manifest
-   * documentation on icons](manifest/icons.html) for more details.
+   * documentation on icons](manifest/icons) for more details.
    */
   List<IconInfo> get icons => listify(jsProxy['icons'], _createIconInfo);
   set icons(List<IconInfo> value) => jsProxy['icons'] = jsify(value);
@@ -342,6 +402,20 @@ class ExtensionInfo extends ChromeObject {
    */
   String get installType => jsProxy['installType'];
   set installType(String value) => jsProxy['installType'] = value;
+
+  /**
+   * The app launch type (only present for apps). This property is new in Chrome
+   * 37.
+   */
+  LaunchType get launchType => _createLaunchType(jsProxy['launchType']);
+  set launchType(LaunchType value) => jsProxy['launchType'] = jsify(value);
+
+  /**
+   * The currently available launch types (only present for apps). This property
+   * is new in Chrome 37.
+   */
+  List<LaunchType> get availableLaunchTypes => listify(jsProxy['availableLaunchTypes'], _createLaunchType);
+  set availableLaunchTypes(List<LaunchType> value) => jsProxy['availableLaunchTypes'] = jsify(value);
 }
 
 class ManagementUninstallParams extends ChromeObject {
@@ -352,7 +426,8 @@ class ManagementUninstallParams extends ChromeObject {
 
   /**
    * Whether or not a confirm-uninstall dialog should prompt the user. Defaults
-   * to false.
+   * to false for self uninstalls. If an extension uninstalls another extension,
+   * this parameter is ignored and the dialog is always shown.
    */
   bool get showConfirmDialog => jsProxy['showConfirmDialog'];
   set showConfirmDialog(bool value) => jsProxy['showConfirmDialog'] = value;
@@ -374,3 +449,4 @@ class ManagementUninstallSelfParams extends ChromeObject {
 
 ExtensionInfo _createExtensionInfo(JsObject jsProxy) => jsProxy == null ? null : new ExtensionInfo.fromProxy(jsProxy);
 IconInfo _createIconInfo(JsObject jsProxy) => jsProxy == null ? null : new IconInfo.fromProxy(jsProxy);
+LaunchType _createLaunchType(JsObject jsProxy) => jsProxy == null ? null : new LaunchType.fromProxy(jsProxy);

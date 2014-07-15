@@ -2,7 +2,9 @@
 
 /**
  * Use the `chrome.socket` API to send and receive data over the network using
- * TCP and UDP connections.
+ * TCP and UDP connections. <b>Note:</b> Starting with Chrome 33, this API is
+ * deprecated in favor of the [sockets.udp], [sockets.tcp] and
+ * [sockets.tcpServer] APIs.
  */
 library chrome.socket;
 
@@ -459,9 +461,10 @@ class SocketInfo extends ChromeObject {
 }
 
 class NetworkInterface extends ChromeObject {
-  NetworkInterface({String name, String address}) {
+  NetworkInterface({String name, String address, int prefixLength}) {
     if (name != null) this.name = name;
     if (address != null) this.address = address;
+    if (prefixLength != null) this.prefixLength = prefixLength;
   }
   NetworkInterface.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -470,6 +473,9 @@ class NetworkInterface extends ChromeObject {
 
   String get address => jsProxy['address'];
   set address(String value) => jsProxy['address'] = value;
+
+  int get prefixLength => jsProxy['prefixLength'];
+  set prefixLength(int value) => jsProxy['prefixLength'] = value;
 }
 
 CreateInfo _createCreateInfo(JsObject jsProxy) => jsProxy == null ? null : new CreateInfo.fromProxy(jsProxy);

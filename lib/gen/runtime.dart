@@ -58,7 +58,13 @@ class ChromeRuntime extends ChromeApi {
    * Fired when an update is available, but isn't installed immediately because
    * the app is currently running. If you do nothing, the update will be
    * installed the next time the background page gets unloaded, if you want it
-   * to be installed sooner you can explicitly call chrome.runtime.reload().
+   * to be installed sooner you can explicitly call chrome.runtime.reload(). If
+   * your extension is using a persistent background page, the background page
+   * of course never gets unloaded, so unless you call chrome.runtime.reload()
+   * manually in response to this event the update will not get installed until
+   * the next time chrome itself restarts. If no handlers are listening for this
+   * event, and your extension has a persistent background page, it behaves as
+   * if chrome.runtime.reload() is called in response to this event.
    */
   Stream<Map<String, dynamic>> get onUpdateAvailable => _onUpdateAvailable.stream;
   ChromeStreamController<Map<String, dynamic>> _onUpdateAvailable;
@@ -233,8 +239,8 @@ class ChromeRuntime extends ChromeApi {
    * scripts connecting to their extension processes, inter-app/extension
    * communication, and [web messaging](manifest/externally_connectable.html).
    * Note that this does not connect to any listeners in a content script.
-   * Extensions may connect to content scripts embedded in tabs via
-   * [tabs.connect].
+   * Extensions may connect to content scripts embedded in tabs via <a
+   * href="extensions/tabs#method-connect">tabs.connect</a>.
    * 
    * [extensionId] The ID of the extension or app to connect to. If omitted, a
    * connection will be attempted with your own extension. Required if sending
@@ -273,7 +279,8 @@ class ChromeRuntime extends ChromeApi {
    * the [runtime.onMessage] event will be fired in each page, or
    * [runtime.onMessageExternal], if a different extension. Note that extensions
    * cannot send messages to content scripts using this method. To send messages
-   * to content scripts, use [tabs.sendMessage].
+   * to content scripts, use <a
+   * href="extensions/tabs#method-sendMessage">tabs.sendMessage</a>.
    * 
    * [extensionId] The ID of the extension/app to send the message to. If
    * omitted, the message will be sent to your own extension/app. Required if
@@ -316,10 +323,10 @@ class ChromeRuntime extends ChromeApi {
   /**
    * Returns information about the current platform.
    */
-  Future<Map> getPlatformInfo() {
+  Future<PlatformInfo> getPlatformInfo() {
     if (_runtime == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<Map>.oneArg(mapify);
+    var completer = new ChromeCompleter<PlatformInfo>.oneArg(_createPlatformInfo);
     _runtime.callMethod('getPlatformInfo', [completer.callback]);
     return completer.future;
   }
@@ -488,6 +495,40 @@ class MessageSender extends ChromeObject {
   set tlsChannelId(String value) => jsProxy['tlsChannelId'] = value;
 }
 
+/**
+ * An object containing information about the current platform.
+ */
+class PlatformInfo extends ChromeObject {
+  PlatformInfo({String os, String arch, String nacl_arch}) {
+    if (os != null) this.os = os;
+    if (arch != null) this.arch = arch;
+    if (nacl_arch != null) this.nacl_arch = nacl_arch;
+  }
+  PlatformInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  /**
+   * The operating system chrome is running on.
+   * enum of `mac`, `win`, `android`, `cros`, `linux`, `openbsd`
+   */
+  String get os => jsProxy['os'];
+  set os(String value) => jsProxy['os'] = value;
+
+  /**
+   * The machine's processor architecture.
+   * enum of `arm`, `x86-32`, `x86-64`
+   */
+  String get arch => jsProxy['arch'];
+  set arch(String value) => jsProxy['arch'] = value;
+
+  /**
+   * The native client architecture. This may be different from arch on some
+   * platforms.
+   * enum of `arm`, `x86-32`, `x86-64`
+   */
+  String get nacl_arch => jsProxy['nacl_arch'];
+  set nacl_arch(String value) => jsProxy['nacl_arch'] = value;
+}
+
 class RuntimeConnectParams extends ChromeObject {
   RuntimeConnectParams({String name, bool includeTlsChannelId}) {
     if (name != null) this.name = name;
@@ -545,6 +586,7 @@ OnMessageExternalEvent _createOnMessageExternalEvent(JsObject message, JsObject 
     new OnMessageExternalEvent(message, _createMessageSender(sender), sendResponse);
 LastErrorRuntime _createLastErrorRuntime(JsObject jsProxy) => jsProxy == null ? null : new LastErrorRuntime.fromProxy(jsProxy);
 Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
+PlatformInfo _createPlatformInfo(JsObject jsProxy) => jsProxy == null ? null : new PlatformInfo.fromProxy(jsProxy);
 DirectoryEntry _createDirectoryEntry(JsObject jsProxy) => jsProxy == null ? null : new CrDirectoryEntry.fromProxy(jsProxy);
 ChromeEvent _createEvent(JsObject jsProxy) => jsProxy == null ? null : new ChromeEvent.fromProxy(jsProxy);
 MessageSender _createMessageSender(JsObject jsProxy) => jsProxy == null ? null : new MessageSender.fromProxy(jsProxy);

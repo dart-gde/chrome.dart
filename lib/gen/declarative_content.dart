@@ -64,8 +64,8 @@ class PageStateMatcher extends ChromeObject {
 /**
  * Declarative event action that shows the extension's $(ref:pageAction page
  * action) while the corresponding conditions are met.  This action can be used
- * without [host permissions](declare_permissions.html#host-permissions), but
- * the extension must have a page action.  If the extension takes the
+ * without [host permissions](declare_permissions#host-permissions), but the
+ * extension must have a page action.  If the extension takes the
  * [activeTab](activeTab.html) permission, a click on the page action will grant
  * access to the active tab.
  */

@@ -18,7 +18,17 @@ final ChromeSessions sessions = new ChromeSessions._();
 class ChromeSessions extends ChromeApi {
   JsObject get _sessions => chrome['sessions'];
 
-  ChromeSessions._();
+  /**
+   * Fired when recently closed tabs and/or windows are changed. This event does
+   * not monitor synced sessions changes.
+   */
+  Stream get onChanged => _onChanged.stream;
+  ChromeStreamController _onChanged;
+
+  ChromeSessions._() {
+    var getApi = () => _sessions;
+    _onChanged = new ChromeStreamController.noArgs(getApi, 'onChanged');
+  }
 
   bool get available => _sessions != null;
 
@@ -33,8 +43,8 @@ class ChromeSessions extends ChromeApi {
    * 
    * Returns:
    * The list of closed entries in reverse order that they were closed (the most
-   * recently closed tab or window will be at index `0`).The entries may contain
-   * either tabs or windows.
+   * recently closed tab or window will be at index `0`). The entries may
+   * contain either tabs or windows.
    */
   Future<List<Session>> getRecentlyClosed([Filter filter]) {
     if (_sessions == null) _throwNotAvailable();
@@ -66,7 +76,8 @@ class ChromeSessions extends ChromeApi {
    * when the entry has been restored.
    * 
    * [sessionId] The [windows.Window.sessionId], or [tabs.Tab.sessionId] to
-   * restore.
+   * restore. If this parameter is not specified, the most recently closed
+   * session is restored.
    * 
    * Returns:
    * A [sessions.Session] containing the restored [windows.Window] or [tabs.Tab]
@@ -131,17 +142,17 @@ class Session extends ChromeObject {
 }
 
 class Device extends ChromeObject {
-  Device({String info, List<Session> sessions}) {
-    if (info != null) this.info = info;
+  Device({String deviceName, List<Session> sessions}) {
+    if (deviceName != null) this.deviceName = deviceName;
     if (sessions != null) this.sessions = sessions;
   }
   Device.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   /**
-   * Represents all information about a foreign device.
+   * The name of the foreign device.
    */
-  String get info => jsProxy['info'];
-  set info(String value) => jsProxy['info'] = value;
+  String get deviceName => jsProxy['deviceName'];
+  set deviceName(String value) => jsProxy['deviceName'] = value;
 
   /**
    * A list of open window sessions for the foreign device, sorted from most
