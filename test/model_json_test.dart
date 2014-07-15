@@ -12,7 +12,7 @@ import '../tool/json_parser.dart' as json_parser;
 void main() {
   group('json_model', () {
     // Define a test for each .json file in idl/
-    File testFile = new File('idl/runtime.json');
+    File testFile = new File('idl/extensions/runtime.json');
 
     // The unittest script likes to be run with the cwd set to the project root.
     if (testFile.existsSync()) {
@@ -34,7 +34,7 @@ void main() {
 
   group("json model parameters", () {
     test("parse browser_action.json", () {
-      File file = new File('idl/browser_action.json');
+      File file = new File('idl/chrome/browser_action.json');
       json_model.JsonNamespace namespace =
           json_parser.parse(file.readAsStringSync());
       expect(namespace.namespace, isNotNull);
