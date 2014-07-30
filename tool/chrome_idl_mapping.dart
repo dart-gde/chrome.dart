@@ -141,6 +141,16 @@ IDLField idlFieldBasedTypeMapping(List<String> documentation,
         attribute: attributeMaybe.isDefined ? attributeMaybe.value : null);
 
 /**
+ * Mapping of field based type with or choice specified.
+ */
+IDLField idlFieldBasedOrTypeMapping(List<String> documentation, /* ( */ _0,
+  Option attributeMaybe0, IDLType type0, /* or */ __, Option attributeMaybe1,
+  IDLType type1, /* ) */ ___, Option<String> optional, String name,
+  /* ; */ ____) => new IDLField(name, new IDLType("object"),
+      isOptional: optional.isDefined, documentation: documentation,
+      attribute: null);
+
+/**
  * Mapping of field with attribute based type specificed.
  */
 IDLField idlFieldAttributeBasedTypeMapping(List<String> documentation,

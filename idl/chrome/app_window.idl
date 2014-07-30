@@ -215,7 +215,7 @@ namespace app.window {
     // can be used to mark regions draggable. <code>no-drag</code> can be used
     // to disable this style on nested elements.<br>
     // Use of <code>FrameOptions</code> is new in M36.
-    DOMString? frame;
+    (DOMString or FrameOptions)? frame;
 
     // Size and position of the content in the window (excluding the titlebar).
     // If an id is also specified and a window with a matching id has been shown
