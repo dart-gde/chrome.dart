@@ -69,10 +69,10 @@ namespace mediaGalleries {
   };
 
   callback MediaFileSystemsCallback =
-      void ([instanceOf=DOMFileSystem] object mediaFileSystems);
+      void ([instanceOf=DOMFileSystem] object[] mediaFileSystems);
 
   callback AddUserFolderCallback =
-      void ([instanceOf=DOMFileSystem] object mediaFileSystems,
+      void ([instanceOf=DOMFileSystem] object[] mediaFileSystems,
             DOMString selectedFileSystemName);
 
   callback DropPermissionForMediaFileSystemCallback = void ();
