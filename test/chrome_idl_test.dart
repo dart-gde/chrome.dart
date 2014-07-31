@@ -790,6 +790,20 @@ void chromeIDLParserTypeBodyTests() {
     expect(typeField[0].isOptional, isTrue);
   });
 
+  test('field type outer attribute with `or` for choice types', () {
+    List<IDLField> typeField = chromeIDLParser.typeBody
+        .parse("[nodoc] (DOMString or FrameOptions)? frame;");
+    expect(typeField, isNotNull);
+    expect(typeField.length, 1);
+    expect(typeField[0].name, equals("frame"));
+    // TODO(adam): Maybe type needs to be an array of possible types.
+    expect(typeField[0].type.name, equals("object"));
+    expect(typeField[0].type.isArray, isFalse);
+    expect(typeField[0].isOptional, isTrue);
+    expect(typeField[0].attribute.attributes[0].attributeType,
+        equals(IDLAttributeTypeEnum.NODOC));
+  });
+
   test('field void method no parameters', () {
     List<IDLMethod> typeFieldMethod = chromeIDLParser.typeBody
         .parse("static void size();");

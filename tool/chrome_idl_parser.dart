@@ -108,7 +108,7 @@ class ChromeIDLParser extends LanguageParsers {
       // TODO(adam): is it possible to have <type> or <type> or <type>,
       // question for the chrome apps team.
       // (DOMString or FrameOptions)? frame;
-      (docString + symbol('(') + attributeDeclaration.maybe + fieldType
+      (docString + attributeDeclaration.maybe + symbol('(') + attributeDeclaration.maybe + fieldType
           + symbol('or') + attributeDeclaration.maybe + fieldType + symbol(')')
           + symbol('?').maybe + identifier + semi
           ^ idlFieldBasedOrTypeMapping)
