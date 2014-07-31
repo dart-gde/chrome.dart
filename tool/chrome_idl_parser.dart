@@ -184,6 +184,12 @@ class ChromeIDLParser extends LanguageParsers {
           ^ (attribute, __, name) =>
               idlParameterAttributeBasedTypeMapping(name, attribute))
       |
+      // [instanceOf=DOMFileSystem] object[] mediaFileSystems
+      (attributeDeclaration + reserved["object"] + symbol('[') + symbol(']')
+          + identifier ^ (attribute, __, ___, ____, name) =>
+              idlParameterAttributeBasedTypeMapping(name, attribute,
+                  isArray: true))
+      |
       (attributeDeclaration
       + reserved["optional"]
       + callbackParameterType

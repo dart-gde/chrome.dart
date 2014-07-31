@@ -96,26 +96,26 @@ IDLParameter idlParameterMapping(String name, IDLType type,
 /*
  * Mapping the type of an attribute.
  */
-IDLType _idlAttributeTypeMapping(IDLAttributeDeclaration attribute) {
+IDLType _idlAttributeTypeMapping(IDLAttributeDeclaration attribute, {isArray: false}) {
   IDLAttributeTypeEnum t = attribute.attributes[0].attributeType;
   if (t != IDLAttributeTypeEnum.INSTANCE_OF) {
     throw new ArgumentError(
         "attribute was not IDLAttributeTypeEnum.INSTANCE_OF");
   }
-  return new IDLType(attribute.attributes[0].attributeValue);
+  return new IDLType(attribute.attributes[0].attributeValue, isArray: isArray);
 }
 
 /**
  * Mapping of parameter with attribute based type specificed.
  */
 IDLParameter idlParameterAttributeBasedTypeMapping(String name,
-  IDLAttributeDeclaration attribute) {
+  IDLAttributeDeclaration attribute, {isArray: false}) {
 
   // Check if its a callback by name.
   bool isCallback = name == 'callback' || name == 'responseCallback';
 
   return new IDLParameter(name,
-      _idlAttributeTypeMapping(attribute),
+      _idlAttributeTypeMapping(attribute, isArray: isArray),
       attribute: attribute, isCallback: isCallback);
 }
 

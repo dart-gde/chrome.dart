@@ -375,6 +375,24 @@ void chromeIDLParserCallbackParameterTypeTests() {
     expect(callbackParameterType.name, equals("Device"));
     expect(callbackParameterType.isArray, isFalse);
   });
+
+  test('callback parameter type with object array', () {
+
+    IDLType callbackParameterType = chromeIDLParser.callbackParameterType
+        .parse("object[]");
+    expect(callbackParameterType, isNotNull);
+    expect(callbackParameterType.name, equals("object"));
+    expect(callbackParameterType.isArray, isTrue);
+  });
+
+  test('callback parameter type without object array', () {
+
+    IDLType callbackParameterType = chromeIDLParser.callbackParameterType
+        .parse("object");
+    expect(callbackParameterType, isNotNull);
+    expect(callbackParameterType.name, equals("object"));
+    expect(callbackParameterType.isArray, isFalse);
+  });
 }
 
 void chromeIDLParserCallbackParameterTests() {
@@ -393,6 +411,23 @@ void chromeIDLParserCallbackParameterTests() {
         equals(IDLAttributeTypeEnum.INSTANCE_OF));
     expect(callbackParameter.attribute.attributes[0].attributeValue,
         equals("Entry"));
+  });
+
+  test('callback parameter with attribute object array', () {
+
+    IDLParameter callbackParameter = chromeIDLParser.callbackParameters
+        .parse("[instanceOf=DOMFileSystem] object[] mediaFileSystems");
+
+    expect(callbackParameter, isNotNull);
+    expect(callbackParameter.name, equals("mediaFileSystems"));
+    expect(callbackParameter.isCallback, isFalse);
+    expect(callbackParameter.isOptional, isFalse);
+    expect(callbackParameter.type.isArray, isTrue);
+    expect(callbackParameter.type.name, equals("DOMFileSystem"));
+    expect(callbackParameter.attribute.attributes[0].attributeType,
+        equals(IDLAttributeTypeEnum.INSTANCE_OF));
+    expect(callbackParameter.attribute.attributes[0].attributeValue,
+        equals("DOMFileSystem"));
   });
 
   test('callback parameter with optional', () {
@@ -468,6 +503,28 @@ void chromeIDLParserCallbackMethodTests() {
     expect(parameter.isOptional, isFalse);
     expect(parameter.type.isArray, isFalse);
     expect(parameter.type.name, equals("long"));
+  });
+
+  test('with one attribute parameter', () {
+
+    List<IDLParameter> parameters = chromeIDLParser.callbackMethod
+        .parse("void ([instanceOf=DOMFileSystem] object[] mediaFileSystems)");
+
+    expect(parameters, isNotNull);
+    expect(parameters.length, equals(1));
+    IDLParameter parameter = parameters[0];
+    expect(parameter.name, equals("mediaFileSystems"));
+    expect(parameter.attribute, isNotNull);
+    expect(parameter.attribute.attributes, isNotNull);
+    expect(parameter.attribute.attributes.length, equals(1));
+    expect(parameter.attribute.attributes[0].attributeType,
+        equals(IDLAttributeTypeEnum.INSTANCE_OF));
+    expect(parameter.attribute.attributes[0].attributeValue,
+        equals("DOMFileSystem"));
+    expect(parameter.isCallback, isFalse);
+    expect(parameter.isOptional, isFalse);
+    expect(parameter.type.isArray, isTrue);
+    expect(parameter.type.name, equals("DOMFileSystem"));
   });
 
   test('with multiple parameters', () {
@@ -666,6 +723,24 @@ void chromeIDLParserFieldTypeTests() {
         .parse("Device");
     expect(fieldType, isNotNull);
     expect(fieldType.name, equals("Device"));
+    expect(fieldType.isArray, isFalse);
+  });
+
+  test('field type object with array', () {
+
+    IDLType fieldType = chromeIDLParser.fieldType
+        .parse("object[]");
+    expect(fieldType, isNotNull);
+    expect(fieldType.name, equals("object"));
+    expect(fieldType.isArray, isTrue);
+  });
+
+  test('field type object without array', () {
+
+    IDLType fieldType = chromeIDLParser.fieldType
+        .parse("object");
+    expect(fieldType, isNotNull);
+    expect(fieldType.name, equals("object"));
     expect(fieldType.isArray, isFalse);
   });
 }
