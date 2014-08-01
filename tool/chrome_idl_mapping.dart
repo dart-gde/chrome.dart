@@ -141,17 +141,6 @@ IDLField idlFieldBasedTypeMapping(List<String> documentation,
         attribute: attributeMaybe.isDefined ? attributeMaybe.value : null);
 
 /**
- * Mapping of field based type with or choice specified.
- */
-IDLField idlFieldBasedOrTypeMapping(List<String> documentation,
-  /* attribute */ Option attribute, /* ( */ _0,
-  Option attributeMaybe0, IDLType type0, /* or */ __, Option attributeMaybe1,
-  IDLType type1, /* ) */ ___, Option<String> optional, String name,
-  /* ; */ ____) => new IDLField(name, new IDLType("object"),
-      isOptional: optional.isDefined, documentation: documentation,
-      attribute: attribute.isDefined ? attribute.value : null);
-
-/**
  * Mapping of field with attribute based type specificed.
  */
 IDLField idlFieldAttributeBasedTypeMapping(List<String> documentation,
@@ -163,6 +152,11 @@ IDLField idlFieldAttributeBasedTypeMapping(List<String> documentation,
  */
 IDLType idlTypeMapping(String name, bool isArray) =>
     new IDLType(name, isArray: isArray);
+
+/**
+ * Mapping of `or` type.
+ */
+IDLType idlTypeOrMapping() => new IDLType("object");
 
 /**
  * Method to help find IDLAttributeTypeEnum by String name.
