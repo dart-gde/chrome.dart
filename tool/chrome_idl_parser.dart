@@ -5,7 +5,7 @@ import 'package:parsers/parsers.dart';
 import 'chrome_idl_mapping.dart';
 
 final reservedNames = ["enum", "callback", "optional", "object", "static",
-                       "dictionary", "interface", "namespace"];
+                       "dictionary", "interface", "namespace", "or"];
 
 class ChromeIDLParser extends LanguageParsers {
   ChromeIDLParser() : super(reservedNames: reservedNames,
@@ -105,6 +105,10 @@ class ChromeIDLParser extends LanguageParsers {
       (docString + attributeDeclaration.maybe + fieldType + symbol('?').maybe + identifier + semi
           ^ idlFieldBasedTypeMapping)
       |
+      // [nodoc] (DOMString or FrameOptions)? frame;
+      (docString + attributeDeclaration.maybe + fieldOrType + symbol('?').maybe + identifier + semi
+          ^ idlFieldBasedTypeMapping)
+      |
       // static void resizeTo(long width, long height);
       // [nocompile] static Bounds getBounds();
       // Return type IDLMethod
@@ -129,17 +133,45 @@ class ChromeIDLParser extends LanguageParsers {
         (fieldType + reserved["callback"] ^ (type, name) =>
             idlParameterMapping(name, type, false, true))
         |
+        // (long or DOMString) callback
+        (fieldOrType + reserved["callback"] ^ (type, name) =>
+            idlParameterMapping(name, type, false, true))
+        |
         // optional ResultCallback callback
         (reserved["optional"] + fieldType + reserved["callback"]
+            ^ (_, type, name) => idlParameterMapping(name, type, true, true))
+        |
+        // optional (long or DOMString) callback
+        (reserved["optional"] + fieldOrType + reserved["callback"]
             ^ (_, type, name) => idlParameterMapping(name, type, true, true))
         |
         // optional DOMString responseUrl
         (reserved["optional"] + fieldType + identifier
             ^ (_, type, name) => idlParameterMapping(name, type, true, false))
         |
+        // optional (long or DOMString) height
+        (reserved["optional"] + fieldOrType + identifier
+            ^ (_, type, name) => idlParameterMapping(name, type, true, false))
+        |
         // DOMString responseUrl or DOMString[] urls
         (fieldType + identifier ^ (type, name) =>
+            idlParameterMapping(name, type, false, false))
+        |
+        // (long or DOMString) height
+        (fieldOrType + identifier ^ (type, name) =>
             idlParameterMapping(name, type, false, false));
+
+  // define or as a symbol.
+  Parser<String> get or => symbol('or') % 'or';
+
+  // TODO(adam): return idl type with attribute. Not propagating at the moment.
+  Parser get fieldSingleOrTypeDeclaration =>
+      // [instanceOf=Device] object
+      attributeDeclaration.maybe + fieldType ^ (_, __) => null;
+
+  Parser get fieldOrType =>
+      // (Device or DOMString)
+      parens(fieldSingleOrTypeDeclaration.sepBy(or)) ^ (_) => idlTypeOrMapping();
 
   // TODO: refactor with callbackParameterType
   Parser get fieldType =>
@@ -218,7 +250,10 @@ class ChromeIDLParser extends LanguageParsers {
       (identifier ^ (name) => idlTypeMapping(name, false))
       |
       // object
-      (reserved["object"] ^ (name) => idlTypeMapping(name, false));
+      (reserved["object"] ^ (name) => idlTypeMapping(name, false))
+      |
+      // (long or DOMString)
+      (fieldOrType ^ (_) => idlTypeOrMapping());
 
   /**
    * Parse the enum declarations.

@@ -7,6 +7,12 @@
 [nodoc] namespace idl_basics {
   // Enum description
   enum EnumType {
+    // comment1
+    name1,
+    name2
+  };
+
+  [nodoc] enum EnumTypeWithNoDoc {
     name1,
     name2
   };
@@ -74,6 +80,12 @@
     static void function17(Callback7 cb);
     // |cb|: Override callback comment.
     static void function18(Callback7 cb);
+
+    static long function24();
+    static MyType1 function25();
+    static MyType1[] function26();
+    static EnumType function27();
+    static EnumType[] function28();
   };
 
   interface Events {

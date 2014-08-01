@@ -28,6 +28,8 @@ void main() {
         chromeIDLParserCallbackDeclarationTests);
   group('ChromeIDLParser.fieldType.parse',
         chromeIDLParserFieldTypeTests);
+  group('ChromeIDLParser.fieldOrType.parse',
+        chromeIDLParserFieldOrTypeTests);
   group('ChromeIDLParser.fieldMethodParameters.parse',
         chromeIDLParserFieldMethodParametersTests);
   group('ChromeIDLParser.typeBody.parse',
@@ -583,6 +585,38 @@ InputDeviceInfo[] inputInfo)""");
     expect(parameter.type.isArray, isTrue);
     expect(parameter.type.name, equals("DOMString"));
   });
+
+  test('with `or` parameter type', () {
+    // void ((long or DOMString) x)
+    List<IDLParameter> parameters = chromeIDLParser.callbackMethod
+        .parse("void ((long or DOMString) x)");
+
+    expect(parameters, isNotNull);
+    expect(parameters.length, equals(1));
+    IDLParameter parameter = parameters[0];
+    expect(parameter.name, equals("x"));
+    expect(parameter.attribute, isNull);
+    expect(parameter.isCallback, isFalse);
+    expect(parameter.isOptional, isFalse);
+    expect(parameter.type.isArray, isFalse);
+    expect(parameter.type.name, equals("object"));
+  });
+
+  test('with `or` parameter optional type', () {
+    // void (optional (long or DOMString) x);
+    List<IDLParameter> parameters = chromeIDLParser.callbackMethod
+        .parse("void (optional (long or DOMString) x)");
+
+    expect(parameters, isNotNull);
+    expect(parameters.length, equals(1));
+    IDLParameter parameter = parameters[0];
+    expect(parameter.name, equals("x"));
+    expect(parameter.attribute, isNull);
+    expect(parameter.isCallback, isFalse);
+    expect(parameter.isOptional, isTrue);
+    expect(parameter.type.isArray, isFalse);
+    expect(parameter.type.name, equals("object"));
+  });
 }
 
 void chromeIDLParserCallbackDeclarationTests() {
@@ -745,6 +779,32 @@ void chromeIDLParserFieldTypeTests() {
   });
 }
 
+void chromeIDLParserFieldOrTypeTests() {
+  test('field type `or` two choices', () {
+    IDLType fieldType = chromeIDLParser.fieldOrType
+        .parse("(Device or DOMString)");
+    expect(fieldType, isNotNull);
+    expect(fieldType.name, equals("object"));
+    expect(fieldType.isArray, isFalse);
+  });
+
+  test('field type `or` three choices', () {
+    IDLType fieldType = chromeIDLParser.fieldOrType
+        .parse("(Device or DOMString or DeviceTwo)");
+    expect(fieldType, isNotNull);
+    expect(fieldType.name, equals("object"));
+    expect(fieldType.isArray, isFalse);
+  });
+
+  test('field type `or` five choices', () {
+    IDLType fieldType = chromeIDLParser.fieldOrType
+        .parse("(Device or DOMString or DeviceTwo or DOMStringTwo or DeviceThree)");
+    expect(fieldType, isNotNull);
+    expect(fieldType.name, equals("object"));
+    expect(fieldType.isArray, isFalse);
+  });
+}
+
 void chromeIDLParserFieldMethodParametersTests() {
   test('with attribute', () {
 
@@ -789,6 +849,30 @@ void chromeIDLParserFieldMethodParametersTests() {
     expect(fieldMethodParameter.isOptional, isFalse);
     expect(fieldMethodParameter.type.isArray, isTrue);
     expect(fieldMethodParameter.type.name, equals("DOMString"));
+  });
+
+  test('with `or` type', () {
+    IDLParameter fieldMethodParameter = chromeIDLParser.fieldMethodParameters
+        .parse("(DOMString or Device) thingy");
+    expect(fieldMethodParameter, isNotNull);
+    expect(fieldMethodParameter.name, equals("thingy"));
+    expect(fieldMethodParameter.attribute, isNull);
+    expect(fieldMethodParameter.isCallback, isFalse);
+    expect(fieldMethodParameter.isOptional, isFalse);
+    expect(fieldMethodParameter.type.isArray, isFalse);
+    expect(fieldMethodParameter.type.name, equals("object"));
+  });
+
+  test('with `or` three type', () {
+    IDLParameter fieldMethodParameter = chromeIDLParser.fieldMethodParameters
+        .parse("(DOMString or Device or DOMNode) thingy");
+    expect(fieldMethodParameter, isNotNull);
+    expect(fieldMethodParameter.name, equals("thingy"));
+    expect(fieldMethodParameter.attribute, isNull);
+    expect(fieldMethodParameter.isCallback, isFalse);
+    expect(fieldMethodParameter.isOptional, isFalse);
+    expect(fieldMethodParameter.type.isArray, isFalse);
+    expect(fieldMethodParameter.type.name, equals("object"));
   });
 }
 
@@ -851,6 +935,32 @@ void chromeIDLParserTypeBodyTests() {
     expect(typeField[0].type.name, equals("DOMString"));
     expect(typeField[0].type.isArray, isTrue);
     expect(typeField[0].isOptional, isFalse);
+  });
+
+  test('field type with `or` for choice types', () {
+    List<IDLField> typeField = chromeIDLParser.typeBody
+        .parse("(DOMString or FrameOptions)? frame;");
+    expect(typeField, isNotNull);
+    expect(typeField.length, 1);
+    expect(typeField[0].name, equals("frame"));
+    // TODO(adam): Maybe type needs to be an array of possible types.
+    expect(typeField[0].type.name, equals("object"));
+    expect(typeField[0].type.isArray, isFalse);
+    expect(typeField[0].isOptional, isTrue);
+  });
+
+  test('field type outer attribute with `or` for choice types', () {
+    List<IDLField> typeField = chromeIDLParser.typeBody
+        .parse("[nodoc] (DOMString or FrameOptions)? frame;");
+    expect(typeField, isNotNull);
+    expect(typeField.length, 1);
+    expect(typeField[0].name, equals("frame"));
+    // TODO(adam): Maybe type needs to be an array of possible types.
+    expect(typeField[0].type.name, equals("object"));
+    expect(typeField[0].type.isArray, isFalse);
+    expect(typeField[0].isOptional, isTrue);
+    expect(typeField[0].attribute.attributes[0].attributeType,
+        equals(IDLAttributeTypeEnum.NODOC));
   });
 
   test('field void method no parameters', () {
@@ -1124,6 +1234,24 @@ void chromeIDLParserMethodsTests() {
     expect(methods[0].returnType.isArray, isTrue);
     expect(methods[0].documentation, isEmpty);
 
+  });
+
+  test('method defined with `or` type', () {
+    // static void union_params((long or DOMString) x);
+    List<IDLMethod> methods = chromeIDLParser.methods
+        .parse("static void union_params((long or DOMString) x);");
+
+    expect(methods, isNotNull);
+    expect(methods.length, 1);
+    expect(methods[0].name, equals("union_params"));
+    expect(methods[0].parameters.length, 1);
+    IDLParameter parameter = methods[0].parameters[0];
+    expect(parameter.name, equals("x"));
+    expect(parameter.type.name, equals("object"));
+    expect(methods[0].attribute, isNull);
+    expect(methods[0].returnType.name, equals("void"));
+    expect(methods[0].returnType.isArray, isFalse);
+    expect(methods[0].documentation, isEmpty);
   });
 }
 

@@ -154,6 +154,11 @@ IDLType idlTypeMapping(String name, bool isArray) =>
     new IDLType(name, isArray: isArray);
 
 /**
+ * Mapping of `or` type.
+ */
+IDLType idlTypeOrMapping() => new IDLType("object");
+
+/**
  * Method to help find IDLAttributeTypeEnum by String name.
  */
 IDLAttributeTypeEnum _resolveEnum(String name) {
