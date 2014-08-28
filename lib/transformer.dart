@@ -43,13 +43,13 @@ class ChromeTransformer extends Transformer {
    * Change:
    *     <script src="demo.dart" type="application/dart"></script>
    * to:
-   *     <script src="demo.dart.precompiled.js"></script>
+   *     <script src="demo.dart.js"></script>
    */
   String rewriteContent(String content) {
     Iterable<Match> matches = _regex1.allMatches(content).toList().reversed;
 
     for (Match match in matches) {
-      String newScript ='<script src="${match.group(1)}.precompiled.js"></script>';
+      String newScript ='<script src="${match.group(1)}.js"></script>';
       content = content.substring(0, match.start)
           + newScript + content.substring(match.end);
     }
@@ -57,7 +57,7 @@ class ChromeTransformer extends Transformer {
     matches = _regex2.allMatches(content).toList().reversed;
 
     for (Match match in matches) {
-      String newScript ='<script src="${match.group(1)}.precompiled.js"></script>';
+      String newScript ='<script src="${match.group(1)}.js"></script>';
       content = content.substring(0, match.start)
           + newScript + content.substring(match.end);
     }
