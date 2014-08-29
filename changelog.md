@@ -1,5 +1,19 @@
 # Changelog - chrome.dart
 
+
+## 0.6.2 2014-08-29 (SDK 1.6.0)
+- moved a script from `bin` to `tool` in order to avoid exposing in in the `bin` directory
+
+## 0.6.1 2014-08-28 (SDK 1.6.0)
+
+- updated the APIs to M37
+- changed the bootstrap script and the chrome transformer to expect the csp file in foo.dart.js instead of foo.dart.precompiled.js
+- clients must now include the csp parameter to the dart2js transformer:
+    transformers:
+      chrome
+      $dart2js:
+        csp: true
+
 ## 0.6.0 2014-07-01 (SDK 1.5.1 r37644)
 
 - Updated the APIs to M35 (current Chrome stable)
