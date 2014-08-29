@@ -7,8 +7,9 @@ dartanalyzer tool/gen_apis.dart
 dartanalyzer test/all.dart
 dartanalyzer bin/setup_app.dart
 
+# TODO(adam): https://github.com/dart-gde/chrome.dart/issues/196
 # generate the APIs; ensure the gen tool is happy
-dart tool/gen_apis.dart
+#dart tool/gen_apis.dart
 
 # ensure the generated code is warning free
 dartanalyzer lib/chrome_app.dart
