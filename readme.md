@@ -37,9 +37,9 @@ to your `pubspec.yaml` file.
 Documentation is available at:
 
 * [Chrome Apps
-  API](http://dart-gde.github.io/chrome.dart/index.html#chrome/chrome_app)
+  API](http://www.dartdocs.org/documentation/chrome/latest/index.html#chrome/chrome_app)
 * [Chrome Extensions
-  API](http://dart-gde.github.io/chrome.dart/index.html#chrome/chrome_ext)
+  API](http://www.dartdocs.org/documentation/chrome/latest/index.html#chrome/chrome_ext)
 
 ## Breaking Changes
 
