@@ -6,7 +6,7 @@ set -e
 pub get 
 dartanalyzer tool/gen_apis.dart
 dartanalyzer test/all.dart
-dartanalyzer bin/setup_app.dart
+dartanalyzer tool/setup_app.dart
 
 # TODO(adam): https://github.com/dart-gde/chrome.dart/issues/196
 # generate the APIs; ensure the gen tool is happy
@@ -20,12 +20,11 @@ dartanalyzer lib/chrome_ext.dart
 dart test/all.dart
 
 # ensure app folder builds and is warning free
-dart bin/setup_app.dart app/demo demo.dart  
+dart tool/setup_app.dart app/demo demo.dart  
 dartanalyzer app/demo/demo.dart
 
-dart bin/setup_app.dart app/test_app harness.dart
+dart tool/setup_app.dart app/test_app harness.dart
 dartanalyzer app/test_app/harness.dart
 
-dart bin/setup_app.dart app/test_ext harness.dart
+dart tool/setup_app.dart app/test_ext harness.dart
 dartanalyzer app/test_ext/harness.dart
-
