@@ -19,25 +19,25 @@ defineTests() {
     test('test1', () {
       _check(
           '<script src="demo.dart" type="application/dart"></script>',
-          '<script src="demo.dart.precompiled.js"></script>');
+          '<script src="demo.dart.js"></script>');
     });
 
     test('test2', () {
       _check(
           "<script src='demo.dart' type='application/dart'></script>",
-          '<script src="demo.dart.precompiled.js"></script>');
+          '<script src="demo.dart.js"></script>');
     });
 
     test('test3', () {
       _check(
           '<script type="application/dart" src="demo.dart"></script>',
-          '<script src="demo.dart.precompiled.js"></script>');
+          '<script src="demo.dart.js"></script>');
     });
 
     test('test4', () {
       _check(
           "<script type='application/dart' src='demo.dart'></script>",
-          '<script src="demo.dart.precompiled.js"></script>');
+          '<script src="demo.dart.js"></script>');
     });
   });
 }
