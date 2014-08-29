@@ -5,10 +5,23 @@ import 'dart:async';
 import 'dart:js';
 //import 'dart:html' show EventStreamProvider;
 
-import 'common.dart';
+import 'dart:html' show
+    Blob,
+    DirectoryEntry, DirectoryReader,
+    Entry, EventTarget,
+    File, FileEntry, FileError, FileReader, FileSystem, FileWriter,
+    Metadata,
+    ProgressEvent;
 
-import '../src/files_exp.dart';
-export '../src/files_exp.dart';
+export 'dart:html' show
+    Blob,
+    DirectoryEntry, DirectoryReader,
+    Entry, EventTarget,
+    File, FileEntry, FileError, FileReader, FileSystem, FileWriter,
+    Metadata,
+    ProgressEvent;
+
+import 'common.dart';
 
 class CrFileSystem extends ChromeObject implements FileSystem {
   static Map _fileSystems = {};
