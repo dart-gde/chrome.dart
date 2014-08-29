@@ -1,5 +1,7 @@
 # Changelog - chrome.dart
 
+## 0.6.3 2014-08-29 (SDK 1.6.0-dev.9.7 r39537)
+- removed dependency loop in `files_exp.dart` and `files.dart`
 
 ## 0.6.2 2014-08-29 (SDK 1.6.0)
 - moved a script from `bin` to `tool` in order to avoid exposing in in the `bin` directory
