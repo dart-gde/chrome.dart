@@ -296,7 +296,7 @@ class ChromeRuntime extends ChromeApi {
     if (_runtime == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<dynamic>.oneArg();
-    _runtime.callMethod('sendMessage', [extensionId, jsify(message), jsify(options), completer.callback]);
+    _runtime.callMethod('sendMessage', [extensionId, jsify(message), jsify(options)]);
     return completer.future;
   }
 
