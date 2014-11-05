@@ -7,6 +7,8 @@
  */
 library chrome.contextMenus;
 
+//import 'context_menus_internal.dart';
+//import 'tabs.dart';
 import '../src/common.dart';
 
 /**

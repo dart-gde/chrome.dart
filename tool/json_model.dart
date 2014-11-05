@@ -189,7 +189,9 @@ class JsonConverter {
 
     library.methods.addAll(namespace.functions.map(_convertMethod));
     library.properties.addAll(namespace.properties.map((p) => _convertProperty(p, true)));
-    library.types.addAll(namespace.types.map(_convertDeclaredType));
+    // We call `toList` on the intermediate iterable because a side effect of
+    // lazily traversing the list is to modify the `library.types` list.
+    library.types.addAll(namespace.types.map(_convertDeclaredType).toList());
     library.types.addAll(addtionalDeclaredTypes.map(_convertDeclaredType));
     library.events.addAll(namespace.events.map(_convertEvent));
 

@@ -102,7 +102,7 @@ class DefaultBackend extends Backend {
 
     library.eventTypes.forEach(_printEventType);
     library.enumTypes.forEach(_printEnumType);
-    library.types..where((t) => !createdClasses.contains(t.name)).forEach((t) {
+    library.types.where((t) => !createdClasses.contains(t.name)).forEach((t) {
       createdClasses.add(t.name);
       _printDeclaredType(t);
     });

@@ -35,10 +35,10 @@ class ChromeMediaGalleries extends ChromeApi {
    * Get the media galleries configured in this user agent. If none are
    * configured or available, the callback will receive an empty array.
    */
-  Future<FileSystem> getMediaFileSystems([MediaFileSystemsDetails details]) {
+  Future<List<FileSystem>> getMediaFileSystems([MediaFileSystemsDetails details]) {
     if (_mediaGalleries == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<FileSystem>.oneArg(_createDOMFileSystem);
+    var completer = new ChromeCompleter<List<FileSystem>>.oneArg((e) => listify(e, _createDOMFileSystem));
     _mediaGalleries.callMethod('getMediaFileSystems', [jsify(details), completer.callback]);
     return completer.future;
   }
@@ -100,10 +100,10 @@ class ChromeMediaGalleries extends ChromeApi {
    * has happened. All galleries the app has access to are returned, not just
    * the newly added galleries.
    */
-  Future<FileSystem> addScanResults() {
+  Future<List<FileSystem>> addScanResults() {
     if (_mediaGalleries == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<FileSystem>.oneArg(_createDOMFileSystem);
+    var completer = new ChromeCompleter<List<FileSystem>>.oneArg((e) => listify(e, _createDOMFileSystem));
     _mediaGalleries.callMethod('addScanResults', [completer.callback]);
     return completer.future;
   }
@@ -400,10 +400,10 @@ class MediaMetadata extends ChromeObject {
  */
 class AddUserSelectedFolderResult {
   static AddUserSelectedFolderResult _create(mediaFileSystems, selectedFileSystemName) {
-    return new AddUserSelectedFolderResult._(_createDOMFileSystem(mediaFileSystems), selectedFileSystemName);
+    return new AddUserSelectedFolderResult._(listify(mediaFileSystems, _createDOMFileSystem), selectedFileSystemName);
   }
 
-  FileSystem mediaFileSystems;
+  List<FileSystem> mediaFileSystems;
   String selectedFileSystemName;
 
   AddUserSelectedFolderResult._(this.mediaFileSystems, this.selectedFileSystemName);

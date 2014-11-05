@@ -377,7 +377,7 @@ class FrameOptions extends ChromeObject {
 }
 
 class CreateWindowOptions extends ChromeObject {
-  CreateWindowOptions({String id, BoundsSpecification innerBounds, BoundsSpecification outerBounds, int defaultWidth, int defaultHeight, int defaultLeft, int defaultTop, int width, int height, int left, int top, int minWidth, int minHeight, int maxWidth, int maxHeight, WindowType type, String frame, ContentBounds bounds, bool transparentBackground, State state, bool hidden, bool resizable, bool singleton, bool alwaysOnTop, bool focused}) {
+  CreateWindowOptions({String id, BoundsSpecification innerBounds, BoundsSpecification outerBounds, int defaultWidth, int defaultHeight, int defaultLeft, int defaultTop, int width, int height, int left, int top, int minWidth, int minHeight, int maxWidth, int maxHeight, WindowType type, var frame, ContentBounds bounds, bool transparentBackground, State state, bool hidden, bool resizable, bool singleton, bool alwaysOnTop, bool focused}) {
     if (id != null) this.id = id;
     if (innerBounds != null) this.innerBounds = innerBounds;
     if (outerBounds != null) this.outerBounds = outerBounds;
@@ -454,8 +454,8 @@ class CreateWindowOptions extends ChromeObject {
   WindowType get type => _createWindowType(jsProxy['type']);
   set type(WindowType value) => jsProxy['type'] = jsify(value);
 
-  String get frame => jsProxy['frame'];
-  set frame(String value) => jsProxy['frame'] = value;
+  dynamic get frame => jsProxy['frame'];
+  set frame(var value) => jsProxy['frame'] = jsify(value);
 
   ContentBounds get bounds => _createContentBounds(jsProxy['bounds']);
   set bounds(ContentBounds value) => jsProxy['bounds'] = jsify(value);
