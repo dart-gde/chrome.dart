@@ -138,6 +138,20 @@ class OnAuthRequiredEvent {
   OnAuthRequiredEvent(this.details, this.callback);
 }
 
+class AuthCredentialsWebRequest extends ChromeObject {
+  AuthCredentialsWebRequest({String username, String password}) {
+    if (username != null) this.username = username;
+    if (password != null) this.password = password;
+  }
+  AuthCredentialsWebRequest.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get username => jsProxy['username'];
+  set username(String value) => jsProxy['username'] = value;
+
+  String get password => jsProxy['password'];
+  set password(String value) => jsProxy['password'] = value;
+}
+
 /**
  * An object describing filters to apply to webRequest events.
  */
@@ -178,20 +192,6 @@ class RequestFilter extends ChromeObject {
 class HttpHeaders extends ChromeObject {
   HttpHeaders();
   HttpHeaders.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-class AuthCredentialsWebRequest extends ChromeObject {
-  AuthCredentialsWebRequest({String username, String password}) {
-    if (username != null) this.username = username;
-    if (password != null) this.password = password;
-  }
-  AuthCredentialsWebRequest.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-
-  String get username => jsProxy['username'];
-  set username(String value) => jsProxy['username'] = value;
-
-  String get password => jsProxy['password'];
-  set password(String value) => jsProxy['password'] = value;
 }
 
 /**

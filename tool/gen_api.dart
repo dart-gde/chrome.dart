@@ -123,7 +123,7 @@ void _printUsage(ArgParser parser) {
   print('usage: dart gen_api <options> path/to/idl_or_json_file');
   print('');
   print('where <options> is one or more of:');
-  print(parser.getUsage().replaceAll('\n\n', '\n'));
+  print(parser.usage.replaceAll('\n\n', '\n'));
 }
 
 final logging.Logger _logger = new logging.Logger('GenApi');
