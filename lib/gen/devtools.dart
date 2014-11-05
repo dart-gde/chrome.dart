@@ -363,7 +363,7 @@ class ChromeDevtoolsPanels extends ChromeApi {
   Future<ExtensionPanel> create(String title, String iconPath, String pagePath) {
     if (_devtools_panels == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<ExtensionPanel>.oneArg(_createExtensionPanel);
+    var completer = new ChromeCompleter<ExtensionPanel>.twoArgs(_createExtensionPanel);
     _devtools_panels.callMethod('create', [title, iconPath, pagePath, completer.callback]);
     return completer.future;
   }
@@ -517,6 +517,6 @@ class Button extends ChromeObject {
 }
 
 ElementsPanel _createElementsPanel(JsObject jsProxy) => jsProxy == null ? null : new ElementsPanel.fromProxy(jsProxy);
-ExtensionPanel _createExtensionPanel(JsObject jsProxy) => jsProxy == null ? null : new ExtensionPanel.fromProxy(jsProxy);
+ExtensionPanel _createExtensionPanel(JsObject jsProxy, JsObject status) => jsProxy == null ? null : new ExtensionPanel.fromProxy(jsProxy);
 ExtensionSidebarPane _createExtensionSidebarPane(JsObject jsProxy) => jsProxy == null ? null : new ExtensionSidebarPane.fromProxy(jsProxy);
 Button _createButton(JsObject jsProxy) => jsProxy == null ? null : new Button.fromProxy(jsProxy);

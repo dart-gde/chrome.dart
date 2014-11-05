@@ -419,12 +419,11 @@ class LastErrorRuntime extends ChromeObject {
  * An object which allows two way communication with other pages.
  */
 class Port extends ChromeObject {
-  Port({String name, var disconnect, ChromeEvent onDisconnect, ChromeEvent onMessage, var postMessage, MessageSender sender}) {
+  Port({String name, var disconnect, ChromeEvent onDisconnect, ChromeEvent onMessage, MessageSender sender}) {
     if (name != null) this.name = name;
     if (disconnect != null) this.disconnect = disconnect;
     if (onDisconnect != null) this.onDisconnect = onDisconnect;
     if (onMessage != null) this.onMessage = onMessage;
-    if (postMessage != null) this.postMessage = postMessage;
     if (sender != null) this.sender = sender;
   }
   Port.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -438,11 +437,21 @@ class Port extends ChromeObject {
   ChromeEvent get onDisconnect => _createEvent(jsProxy['onDisconnect']);
   set onDisconnect(ChromeEvent value) => jsProxy['onDisconnect'] = jsify(value);
 
+  /*
   ChromeEvent get onMessage => _createEvent(jsProxy['onMessage']);
   set onMessage(ChromeEvent value) => jsProxy['onMessage'] = jsify(value);
+ */
+  
+  ChromeStreamController<OnMessageEvent> _onMessage;
+  Stream<OnMessageEvent> get onMessage {
+    if (_onMessage == null) {
+      _onMessage = new ChromeStreamController<OnMessageEvent>.threeArgs(()=>jsProxy, 'onMessage', _createOnMessageEvent);
+    }
+    return _onMessage.stream;
+  }
 
-  dynamic get postMessage => jsProxy['postMessage'];
-  set postMessage(var value) => jsProxy['postMessage'] = jsify(value);
+  void postMessage(dynamic message) =>
+      jsProxy.callMethod('postMessage', [jsify(message)]);
 
   /**
    * This property will <b>only</b> be present on ports passed to
