@@ -68,7 +68,7 @@ void main() {
 
     test('update -- listener', () {
       chrome.ContextMenusUpdateParams updateProperties =
-          new chrome.ContextMenusUpdateParams(onclick: (_) { });
+          new chrome.ContextMenusUpdateParams();
 
       // TODO(DrMarcII): figure out a mechanism for selecting menu
       chrome.contextMenus.update(id, updateProperties)
