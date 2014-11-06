@@ -286,17 +286,14 @@ class DefaultBackend extends Backend {
 
      if (type != null) {
        generator.writeln("Stream<${typeName}> get ${event.name} => _${event.name}.stream;");
-     } else {
-       generator.writeln("Stream get ${event.name} => _${event.name}.stream;");
-     }
-     if (type != null) {
        generator.writeln("ChromeStreamController<${typeName}> _${event.name};");
      } else {
+       generator.writeln("Stream get ${event.name} => _${event.name}.stream;");
        generator.writeln("ChromeStreamController _${event.name};");
      }
   }
 
-  void _printEventAssign(ChromeEvent event) {
+  void _printEventAssign(ChromeEvent event, {String api: "getApi"}) {
      ChromeType type = event.calculateType(library);
      String typeName = type == null ? null : type.toReturnString();
 
@@ -307,10 +304,10 @@ class DefaultBackend extends Backend {
 
        String argCallArity = ['noArgs', 'oneArg', 'twoArgs', 'threeArgs'][type.arity];
        generator.writeln("new ChromeStreamController<${typeName}>.${argCallArity}("
-           "getApi, '${event.name}', ${converter});");
+           "${api}, '${event.name}', ${converter});");
      } else {
        generator.writeln("_${event.name} = new ChromeStreamController.noArgs("
-           "getApi, '${event.name}');");
+           "${api}, '${event.name}');");
      }
   }
 
@@ -380,10 +377,11 @@ class DefaultBackend extends Backend {
     generator.writeDocs(type.documentation);
     generator.writeln("class ${className} extends ${superName} {");
     if (props.isNotEmpty && !type.noSetters) {
+      var actualProps = props.where((p) => p.type.type != 'function' && p.type.refName != 'Event');
       generator.write("${className}({");
-      generator.write(props.map((p) => "${p.type} ${p.name}").join(', '));
+      generator.write(actualProps.map((p) => "${p.type} ${p.name}").join(', '));
       generator.writeln('}) {');
-      props.forEach((ChromeProperty p) {
+      actualProps.forEach((ChromeProperty p) {
         generator.writeln("if (${p.name} != null) this.${p.name} = ${p.name};");
       });
       generator.writeln('}');
@@ -392,16 +390,56 @@ class DefaultBackend extends Backend {
     }
     generator.writeln("${className}.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);");
 
+    var propRefString;
     if (library.name != 'proxy') {
-      props.forEach((p) => _printPropertyRef(p, 'jsProxy', !type.noSetters));
+      propRefString = 'jsProxy';
     } else {
-      props.forEach((p) => _printPropertyRef(p, 'this.jsProxy', !type.noSetters));
+      propRefString = 'this.jsProxy';
     }
+    props.forEach((p) {
+      if (p.type.refName == "Event") {
+        _printDeclaredTypeEventProperty(p, propRefString);
+      } else if (p.type.type == "function") {
+        _printDeclaredTypeFunction(p, propRefString);
+      } else {
+        _printPropertyRef(p, propRefString, !type.noSetters);
+      }
+    });
 
     type.methods.forEach((m) => _printMethod(
         m, thisOverride: 'jsProxy', checkApi: false));
 
     generator.writeln("}");
+  }
+
+  void _printDeclaredTypeEventProperty(ChromeProperty p, String refString) {
+    String typeName = titleCase(p.name)+"Event";
+    ChromeEvent event = library.events.firstWhere(
+        (e) => p.name == e.name,
+        orElse: () => new ChromeEvent()..name = p.name);
+
+    generator.writeln();
+
+    ChromeType type = event.calculateType(library);
+    if (type != null) {
+      generator.writeln("ChromeStreamController<${typeName}> _${event.name};");
+      generator.writeln("Stream<${typeName}> get ${event.name} {");
+    } else {
+      generator.writeln("ChromeStreamController _${event.name};");
+      generator.writeln("Stream get ${event.name} {");
+    }
+
+    generator.writeln("if (_${event.name} == null)");
+    generator.write("  ");_printEventAssign(event, api: "()=>${refString}");
+    generator.writeln("return _${event.name}.stream;");
+    generator.writeln("}");
+
+  }
+
+  void _printDeclaredTypeFunction(ChromeProperty p, String refString) {
+    generator.writeln();
+    generator.writeln("void ${p.name}([var arg1]) =>");
+    generator.writeln("       ${refString}.callMethod('${p.name}', [jsify(arg1)]);");
   }
 
   void _printReturnType(ChromeReturnType type) {

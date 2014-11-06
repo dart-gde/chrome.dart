@@ -210,7 +210,7 @@ class TtsVoice extends ChromeObject {
 }
 
 class TtsSpeakParams extends ChromeObject {
-  TtsSpeakParams({bool enqueue, String voiceName, String extensionId, String lang, String gender, var rate, var pitch, var volume, List<String> requiredEventTypes, List<String> desiredEventTypes, var onEvent}) {
+  TtsSpeakParams({bool enqueue, String voiceName, String extensionId, String lang, String gender, var rate, var pitch, var volume, List<String> requiredEventTypes, List<String> desiredEventTypes}) {
     if (enqueue != null) this.enqueue = enqueue;
     if (voiceName != null) this.voiceName = voiceName;
     if (extensionId != null) this.extensionId = extensionId;
@@ -221,7 +221,6 @@ class TtsSpeakParams extends ChromeObject {
     if (volume != null) this.volume = volume;
     if (requiredEventTypes != null) this.requiredEventTypes = requiredEventTypes;
     if (desiredEventTypes != null) this.desiredEventTypes = desiredEventTypes;
-    if (onEvent != null) this.onEvent = onEvent;
   }
   TtsSpeakParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -298,12 +297,8 @@ class TtsSpeakParams extends ChromeObject {
   List<String> get desiredEventTypes => listify(jsProxy['desiredEventTypes']);
   set desiredEventTypes(List<String> value) => jsProxy['desiredEventTypes'] = jsify(value);
 
-  /**
-   * This function is called with events that occur in the process of speaking
-   * the utterance.
-   */
-  dynamic get onEvent => jsProxy['onEvent'];
-  set onEvent(var value) => jsProxy['onEvent'] = jsify(value);
+  void onEvent([var arg1]) =>
+         jsProxy.callMethod('onEvent', [jsify(arg1)]);
 }
 
 TtsEvent _createTtsEvent(JsObject jsProxy) => jsProxy == null ? null : new TtsEvent.fromProxy(jsProxy);
