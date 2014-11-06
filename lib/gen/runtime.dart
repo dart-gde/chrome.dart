@@ -419,12 +419,8 @@ class LastErrorRuntime extends ChromeObject {
  * An object which allows two way communication with other pages.
  */
 class Port extends ChromeObject {
-  Port({String name, var disconnect, ChromeEvent onDisconnect, ChromeEvent onMessage, var postMessage, MessageSender sender}) {
+  Port({String name, MessageSender sender}) {
     if (name != null) this.name = name;
-    if (disconnect != null) this.disconnect = disconnect;
-    if (onDisconnect != null) this.onDisconnect = onDisconnect;
-    if (onMessage != null) this.onMessage = onMessage;
-    if (postMessage != null) this.postMessage = postMessage;
     if (sender != null) this.sender = sender;
   }
   Port.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -432,17 +428,25 @@ class Port extends ChromeObject {
   String get name => jsProxy['name'];
   set name(String value) => jsProxy['name'] = value;
 
-  dynamic get disconnect => jsProxy['disconnect'];
-  set disconnect(var value) => jsProxy['disconnect'] = jsify(value);
+  void disconnect([var arg1]) =>
+         jsProxy.callMethod('disconnect', [jsify(arg1)]);
 
-  ChromeEvent get onDisconnect => _createEvent(jsProxy['onDisconnect']);
-  set onDisconnect(ChromeEvent value) => jsProxy['onDisconnect'] = jsify(value);
+  ChromeStreamController _onDisconnect;
+  Stream get onDisconnect {
+    if (_onDisconnect == null)
+      _onDisconnect = new ChromeStreamController.noArgs(()=>jsProxy, 'onDisconnect');
+    return _onDisconnect.stream;
+  }
 
-  ChromeEvent get onMessage => _createEvent(jsProxy['onMessage']);
-  set onMessage(ChromeEvent value) => jsProxy['onMessage'] = jsify(value);
+  ChromeStreamController<OnMessageEvent> _onMessage;
+  Stream<OnMessageEvent> get onMessage {
+    if (_onMessage == null)
+      _onMessage = new ChromeStreamController<OnMessageEvent>.threeArgs(()=>jsProxy, 'onMessage', _createOnMessageEvent);
+    return _onMessage.stream;
+  }
 
-  dynamic get postMessage => jsProxy['postMessage'];
-  set postMessage(var value) => jsProxy['postMessage'] = jsify(value);
+  void postMessage([var arg1]) =>
+         jsProxy.callMethod('postMessage', [jsify(arg1)]);
 
   /**
    * This property will <b>only</b> be present on ports passed to
@@ -588,6 +592,5 @@ LastErrorRuntime _createLastErrorRuntime(JsObject jsProxy) => jsProxy == null ? 
 Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
 PlatformInfo _createPlatformInfo(JsObject jsProxy) => jsProxy == null ? null : new PlatformInfo.fromProxy(jsProxy);
 DirectoryEntry _createDirectoryEntry(JsObject jsProxy) => jsProxy == null ? null : new CrDirectoryEntry.fromProxy(jsProxy);
-ChromeEvent _createEvent(JsObject jsProxy) => jsProxy == null ? null : new ChromeEvent.fromProxy(jsProxy);
 MessageSender _createMessageSender(JsObject jsProxy) => jsProxy == null ? null : new MessageSender.fromProxy(jsProxy);
 Tab _createTab(JsObject jsProxy) => jsProxy == null ? null : new Tab.fromProxy(jsProxy);

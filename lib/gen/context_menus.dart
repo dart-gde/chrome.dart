@@ -33,11 +33,11 @@ class ChromeContextMenus extends ChromeApi {
    * Creates a new context menu item. Note that if an error occurs during
    * creation, you may not find out until the creation callback fires (the
    * details will be in chrome.runtime.lastError).
-   *
+   * 
    * [callback] Called when the item has been created in the browser. If there
    * were any problems creating the item, details will be available in
    * chrome.runtime.lastError.
-   *
+   * 
    * Returns:
    * The ID of the newly created item.
    */
@@ -49,9 +49,9 @@ class ChromeContextMenus extends ChromeApi {
 
   /**
    * Updates a previously created context menu item.
-   *
+   * 
    * [id] The ID of the item to update.
-   *
+   * 
    * [updateProperties] The properties to update. Accepts the same values as the
    * create function.
    */
@@ -65,7 +65,7 @@ class ChromeContextMenus extends ChromeApi {
 
   /**
    * Removes a context menu item.
-   *
+   * 
    * [menuItemId] The ID of the context menu item to remove.
    */
   Future remove(dynamic menuItemId) {
@@ -93,13 +93,12 @@ class ChromeContextMenus extends ChromeApi {
 }
 
 class ContextMenusCreateParams extends ChromeObject {
-  ContextMenusCreateParams({String type, String id, String title, bool checked, List<String> contexts, var onclick, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
+  ContextMenusCreateParams({String type, String id, String title, bool checked, List<String> contexts, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
     if (type != null) this.type = type;
     if (id != null) this.id = id;
     if (title != null) this.title = title;
     if (checked != null) this.checked = checked;
     if (contexts != null) this.contexts = contexts;
-    if (onclick != null) this.onclick = onclick;
     if (parentId != null) this.parentId = parentId;
     if (documentUrlPatterns != null) this.documentUrlPatterns = documentUrlPatterns;
     if (targetUrlPatterns != null) this.targetUrlPatterns = targetUrlPatterns;
@@ -151,13 +150,8 @@ class ContextMenusCreateParams extends ChromeObject {
   List<String> get contexts => listify(jsProxy['contexts']);
   set contexts(List<String> value) => jsProxy['contexts'] = jsify(value);
 
-  /**
-   * A function that will be called back when the menu item is clicked. Event
-   * pages cannot use this; instead, they should register a listener for
-   * chrome.contextMenus.onClicked.
-   */
-  dynamic get onclick => jsProxy['onclick'];
-  set onclick(var value) => jsProxy['onclick'] = jsify(value);
+  void onclick([var arg1]) =>
+         jsProxy.callMethod('onclick', [jsify(arg1)]);
 
   /**
    * The ID of a parent menu item; this makes the item a child of a previously
@@ -189,12 +183,11 @@ class ContextMenusCreateParams extends ChromeObject {
 }
 
 class ContextMenusUpdateParams extends ChromeObject {
-  ContextMenusUpdateParams({String type, String title, bool checked, List<String> contexts, var onclick, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
+  ContextMenusUpdateParams({String type, String title, bool checked, List<String> contexts, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
     if (type != null) this.type = type;
     if (title != null) this.title = title;
     if (checked != null) this.checked = checked;
     if (contexts != null) this.contexts = contexts;
-    if (onclick != null) this.onclick = onclick;
     if (parentId != null) this.parentId = parentId;
     if (documentUrlPatterns != null) this.documentUrlPatterns = documentUrlPatterns;
     if (targetUrlPatterns != null) this.targetUrlPatterns = targetUrlPatterns;
@@ -217,8 +210,8 @@ class ContextMenusUpdateParams extends ChromeObject {
   List<String> get contexts => listify(jsProxy['contexts']);
   set contexts(List<String> value) => jsProxy['contexts'] = jsify(value);
 
-  dynamic get onclick => jsProxy['onclick'];
-  set onclick(var value) => jsProxy['onclick'] = jsify(value);
+  void onclick([var arg1]) =>
+         jsProxy.callMethod('onclick', [jsify(arg1)]);
 
   /**
    * Note: You cannot change an item to be a child of one of its own

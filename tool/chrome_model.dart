@@ -230,7 +230,7 @@ class ChromeType extends ChromeElement {
 
   ChromeType({this.type, this.refName});
 
-  bool get isAny => type == 'var';
+  bool get isAny => (type == 'var' || type == 'function');
   bool get isReferencedType => isAny && refName != null;
   bool get isVoid => type == 'void';
   bool get isFuture => type == 'Future';

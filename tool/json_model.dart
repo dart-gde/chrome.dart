@@ -375,6 +375,8 @@ class JsonConverter {
       }
 
       type.refName = names.last;
+    } else if (t.type == "function") {
+      type.type = "function";
     } else {
       type.type = "var";
     }
