@@ -1,5 +1,5 @@
 name: chrome
-version: 0.6.5
+version: 0.6.6-dev
 environment:
   sdk: ">=1.0.0 <2.0.0"
 authors:
