@@ -7,7 +7,7 @@ authors:
 - Adam Singer <financeCoding@gmail.com>
 - Kevin Moore <kevin@thinkpixellab.com>
 description: >
-  An library for accessing the Chrome APIs in a packaged app or extension.
+  A library for accessing the Chrome APIs in a packaged app or extension.
 homepage: https://github.com/dart-gde/chrome.dart
 dependencies:
   barback: any
