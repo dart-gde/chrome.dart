@@ -46,7 +46,7 @@ struct FileBrowserHandlerInfo : public extensions::Extension::ManifestData {
   FileBrowserHandler::List file_browser_handlers;
 
   FileBrowserHandlerInfo();
-  virtual ~FileBrowserHandlerInfo();
+  ~FileBrowserHandlerInfo() override;
 };
 
 FileBrowserHandlerInfo::FileBrowserHandlerInfo() {
@@ -195,7 +195,7 @@ FileBrowserHandler* LoadFileBrowserHandler(
             errors::kInvalidFileFilterValue, base::IntToString(i));
         return NULL;
       }
-      StringToLowerASCII(&filter);
+      base::StringToLowerASCII(&filter);
       if (!StartsWithASCII(filter,
                            std::string(url::kFileSystemScheme) + ':',
                            true)) {

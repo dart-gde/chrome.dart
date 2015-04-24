@@ -66,6 +66,15 @@
         }
       },
       {
+        "id": "RowDetails",
+        "type": "object",
+        "description": "Additional accessibility information about a table row.",
+        "properties": {
+          "itemCount": {"type": "integer", "description": "The number of rows in this table."},
+          "itemIndex": {"type": "integer", "description": "The 0-based index of the active row."}
+        }
+      },
+      {
         "id": "SliderDetails",
         "type": "object",
         "description": "Information about the state of a slider.",
@@ -80,6 +89,13 @@
         "properties": {
           "itemCount": {"type": "integer", "description": "The number of tabs in this group."},
           "itemIndex": {"type": "integer", "description": "The 0-based index of this tab in this group."}
+        }
+      },
+      {
+        "id": "TableDetails",
+        "type": "object",
+        "description": "Additional accessibility information about a table.",
+        "properties": {
         }
       },
       {
@@ -124,6 +140,17 @@
         }
       },
       {
+        "id": "ScreenRect",
+        "type": "object",
+        "description": "Bounding rectangle in global screen coordinates.",
+        "properties": {
+          "left": {"type": "integer", "description": "Left coordinate in global screen coordinates."},
+          "top": {"type": "integer", "description": "Top coordinate in global screen coordinates."},
+          "width": {"type": "integer", "description": "Width in pixels."},
+          "height": {"type": "integer", "description": "Height in pixels."}
+        }
+      },
+      {
         "id": "AccessibilityObject",
         "type": "object",
         "description": "Parent class for accessibility information about an object.",
@@ -131,7 +158,7 @@
           "type": {
             "type": "string",
             "description": "The type of this object, which determines the contents of 'details'.",
-            "enum": ["alert", "button", "checkbox", "combobox", "link", "menu", "menuitem", "radiobutton", "slider", "tab", "textbox", "tree", "treeitem", "window"]
+            "enum": ["alert", "button", "checkbox", "combobox", "link", "menu", "menuitem", "radiobutton", "row", "slider", "tab", "table", "textbox", "tree", "treeitem", "window"]
           },
           "name": {
             "type": "string",
@@ -151,12 +178,19 @@
               { "$ref": "MenuDetails" },
               { "$ref": "MenuItemDetails" },
               { "$ref": "RadioButtonDetails" },
+              { "$ref": "RowDetails"},
               { "$ref": "SliderDetails" },
               { "$ref": "TabDetails" },
               { "$ref": "TextBoxDetails" },
               { "$ref": "TreeDetails" },
-              { "$ref": "TreeItemDetails" }
+              { "$ref": "TreeItemDetails" },
+              { "$ref": "TableDetails" }
             ]
+          },
+          "bounds": {
+            "$ref": "ScreenRect",
+            "description": "The bounds of the object, in global screen coordinates.",
+            "optional": true
           }
         }
       }
@@ -226,6 +260,19 @@
                 "description": "Alerts being shown on the given tab."
               }
             ]
+          }
+        ]
+      },
+      {
+        "name": "setFocusRing",
+        "type": "function",
+        "description": "Set the bounds of the accessibility focus ring.",
+        "parameters": [
+          {
+            "name": "rects",
+            "type": "array",
+            "items": { "$ref": "ScreenRect" },
+            "description": "Array of rectangles to draw the accessibility focus ring around."
           }
         ]
       }

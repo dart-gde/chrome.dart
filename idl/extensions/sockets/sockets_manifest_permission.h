@@ -22,11 +22,12 @@ class Extension;
 
 namespace extensions {
 
+typedef std::set<SocketPermissionEntry> SocketPermissionEntrySet;
+
 class SocketsManifestPermission : public ManifestPermission {
  public:
-  typedef std::set<SocketPermissionEntry> SocketPermissionEntrySet;
   SocketsManifestPermission();
-  virtual ~SocketsManifestPermission();
+  ~SocketsManifestPermission() override;
 
   // Tries to construct the info based on |value|, as it would have appeared in
   // the manifest. Sets |error| and returns an empty scoped_ptr on failure.
@@ -40,32 +41,24 @@ class SocketsManifestPermission : public ManifestPermission {
   void AddPermission(const SocketPermissionEntry& entry);
 
   // extensions::ManifestPermission overrides.
-  virtual std::string name() const OVERRIDE;
-  virtual std::string id() const OVERRIDE;
-  virtual bool HasMessages() const OVERRIDE;
-  virtual PermissionMessages GetMessages() const OVERRIDE;
-  virtual bool FromValue(const base::Value* value) OVERRIDE;
-  virtual scoped_ptr<base::Value> ToValue() const OVERRIDE;
-  virtual ManifestPermission* Clone() const OVERRIDE;
-  virtual ManifestPermission* Diff(const ManifestPermission* rhs) const
-      OVERRIDE;
-  virtual ManifestPermission* Union(const ManifestPermission* rhs) const
-      OVERRIDE;
-  virtual ManifestPermission* Intersect(const ManifestPermission* rhs) const
-      OVERRIDE;
-  virtual bool Contains(const ManifestPermission* rhs) const OVERRIDE;
-  virtual bool Equal(const ManifestPermission* rhs) const OVERRIDE;
-  virtual void Write(IPC::Message* m) const OVERRIDE;
-  virtual bool Read(const IPC::Message* m, PickleIterator* iter) OVERRIDE;
-  virtual void Log(std::string* log) const OVERRIDE;
+  std::string name() const override;
+  std::string id() const override;
+  PermissionIDSet GetPermissions() const override;
+  bool HasMessages() const override;
+  PermissionMessages GetMessages() const override;
+  bool FromValue(const base::Value* value) override;
+  scoped_ptr<base::Value> ToValue() const override;
+  ManifestPermission* Diff(const ManifestPermission* rhs) const override;
+  ManifestPermission* Union(const ManifestPermission* rhs) const override;
+  ManifestPermission* Intersect(const ManifestPermission* rhs) const override;
 
   const SocketPermissionEntrySet& entries() const { return permissions_; }
 
- private:
-  bool AddAnyHostMessage(PermissionMessages& messages) const;
-  void AddSubdomainHostMessage(PermissionMessages& messages) const;
-  void AddSpecificHostMessage(PermissionMessages& messages) const;
-  void AddNetworkListMessage(PermissionMessages& messages) const;
+  // Adds the permissions from |sockets| into the permission lists |ids| and
+  // |messages|. If either is NULL, that list is ignored.
+  static void AddSocketHostPermissions(const SocketPermissionEntrySet& sockets,
+                                       PermissionIDSet* ids,
+                                       PermissionMessages* messages);
 
   SocketPermissionEntrySet permissions_;
 };

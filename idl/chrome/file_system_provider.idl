@@ -4,11 +4,11 @@
 
 // Use the <code>chrome.fileSystemProvider</code> API to create file systems,
 // that can be accessible from the file manager on Chrome OS.
-[platforms=("chromeos"),
- implemented_in="chrome/browser/chromeos/extensions/file_system_provider/file_system_provider_api.h"]
+[implemented_in="chrome/browser/chromeos/extensions/file_system_provider/file_system_provider_api.h"]
 namespace fileSystemProvider {
-  // Error codes used by providing extensions in response to requests. For
-  // success, <code>OK</code> should be used.
+  // Error codes used by providing extensions in response to requests as well
+  // as in case of errors when calling methods of the API. For success, <code>
+  // OK</code> must be used.
   enum ProviderError {
     OK,
     FAILED,
@@ -35,12 +35,18 @@ namespace fileSystemProvider {
     WRITE
   };
 
+  // Type of a change detected on the observed directory.
+  enum ChangeType {
+    CHANGED,
+    DELETED
+  };
+
   // Represents metadata of a file or a directory.
   dictionary EntryMetadata {
     // True if it is a directory.
     boolean isDirectory;
 
-    // Name of this entry (not full path name).
+    // Name of this entry (not full path name). Must not contain '/'.
     DOMString name;
 
     // File size in bytes.
@@ -50,143 +56,431 @@ namespace fileSystemProvider {
     [instanceOf=Date] object modificationTime;
 
     // Mime type for the entry.
-    DOMString? mimeType; 
+    DOMString? mimeType;
+
+    // Thumbnail image as a data URI in either PNG, JPEG or WEBP format, at most
+    // 32 KB in size. Optional, but can be provided only when explicitly
+    // requested by the <code>onGetMetadataRequested</code> event.
+    DOMString? thumbnail;
+  };
+
+  // Represents a watcher.
+  dictionary Watcher {
+    // The path of the entry being observed.
+    DOMString entryPath;
+
+    // Whether watching should include all child entries recursively. It can be
+    // true for directories only.
+    boolean recursive;
+
+    // Tag used by the last notification for the watcher.
+    DOMString? lastTag;
+  };
+
+  // Represents a mounted file system.
+  dictionary FileSystemInfo {
+    // The identifier of the file system.
+    DOMString fileSystemId;
+
+    // A human-readable name for the file system. 
+    DOMString displayName;
+
+    // Whether the file system supports operations which may change contents
+    // of the file system (such as creating, deleting or writing to files).
+    boolean writable;
+
+    // Whether the file system supports the <code>tag</code> field for observing
+    // directories.
+    [nodoc] boolean? supportsNotifyTag;
+
+    // List of watchers.
+    [nodoc] Watcher[] watchers;
   };
 
   // Options for the <code>mount()</code> method.
   dictionary MountOptions {
+    // The string indentifier of the file system. Must be unique per each
+    // extension.
     DOMString fileSystemId;
+
+    // A human-readable name for the file system. 
     DOMString displayName;
-    [nodoc] boolean? writable;
+
+    // Whether the file system supports operations which may change contents
+    // of the file system (such as creating, deleting or writing to files).
+    boolean? writable;
+
+    // The maximum number of files that can be opened at once. If not specified,
+    // then not limited.
+    long? openedFilesLimit;
+
+    // Whether the file system supports the <code>tag</code> field for observed
+    // directories. Required in order to enable the internal cache.
+    [nodoc] boolean? supportsNotifyTag;
   };
 
   // Options for the <code>unmount()</code> method.
   dictionary UnmountOptions {
+    // The identifier of the file system to be unmounted.
     DOMString fileSystemId;
   };
 
   // Options for the <code>onUnmountRequested()</code> event.
   dictionary UnmountRequestedOptions {
+    // The identifier of the file system to be unmounted.
     DOMString fileSystemId;
     long requestId;
   };
 
   // Options for the <code>onGetMetadataRequested()</code> event.
   dictionary GetMetadataRequestedOptions {
+    // The identifier of the file system related to this operation.
     DOMString fileSystemId;
+
+    // The unique identifier of this request.
     long requestId;
+
+    // The path of the entry to fetch metadata about.
     DOMString entryPath;
+
+    // Set to <code>true</code> if the thumbnail is requested.
+    boolean thumbnail;
   };
 
   // Options for the <code>onReadDirectoryRequested()</code> event.
   dictionary ReadDirectoryRequestedOptions {
+    // The identifier of the file system related to this operation.
     DOMString fileSystemId;
+
+    // The unique identifier of this request.
     long requestId;
+
+    // The path of the directory which contents are requested. 
     DOMString directoryPath;
   };
 
   // Options for the <code>onOpenFileRequested()</code> event.
   dictionary OpenFileRequestedOptions {
+    // The identifier of the file system related to this operation.
     DOMString fileSystemId;
+
+    // A request ID which will be used by consecutive read/write and close
+    // requests.
     long requestId;
+
+    // The path of the file to be opened.
     DOMString filePath;
+
+    // Whether the file will be used for reading or writing.
     OpenFileMode mode;
   };
 
   // Options for the <code>onCloseFileRequested()</code> event.
   dictionary CloseFileRequestedOptions {
+    // The identifier of the file system related to this operation.
     DOMString fileSystemId;
+
+    // The unique identifier of this request.
     long requestId;
+
+    // A request ID used to open the file.
     long openRequestId;
   };
 
   // Options for the <code>onReadFileRequested()</code> event.
   dictionary ReadFileRequestedOptions {
+    // The identifier of the file system related to this operation.
     DOMString fileSystemId;
+
+    // The unique identifier of this request.
     long requestId;
+
+    // A request ID used to open the file.
     long openRequestId;
+
+    // Position in the file (in bytes) to start reading from.
     double offset;
+
+    // Number of bytes to be returned.
     double length;
   };
 
   // Options for the <code>onCreateDirectoryRequested()</code> event.
   dictionary CreateDirectoryRequestedOptions {
+    // The identifier of the file system related to this operation.
     DOMString fileSystemId;
+
+    // The unique identifier of this request.
     long requestId;
+
+    // The path of the directory to be created.
     DOMString directoryPath;
-    boolean exclusive;
+
+    // Whether the operation is recursive (for directories only).
     boolean recursive;
   };
 
   // Options for the <code>onDeleteEntryRequested()</code> event.
   dictionary DeleteEntryRequestedOptions {
+    // The identifier of the file system related to this operation.
     DOMString fileSystemId;
+
+    // The unique identifier of this request.
     long requestId;
+
+    // The path of the entry to be deleted.
     DOMString entryPath;
+
+    // Whether the operation is recursive (for directories only).
     boolean recursive;
   };
 
-  // Callback to receive the result of mount() function.
-  callback MountCallback = void([nodoc, instanceOf=DOMError] object error);
+  // Options for the <code>onCreateFileRequested()</code> event.
+  dictionary CreateFileRequestedOptions {
+    // The identifier of the file system related to this operation.
+    DOMString fileSystemId;
 
-  // Callback to receive the result of unmount() function.
-  callback UnmountCallback = void([nodoc, instanceOf=DOMError] object error);
+    // The unique identifier of this request.
+    long requestId;
 
-  // Callback to handle an error raised from the browser.
-  [nocompile] callback ErrorCallback = void([instanceOf=DOMError] object error);
+    // The path of the file to be created.
+    DOMString filePath;
+  };
+
+  // Options for the <code>onCopyEntryRequested()</code> event.
+  dictionary CopyEntryRequestedOptions {
+    // The identifier of the file system related to this operation.
+    DOMString fileSystemId;
+
+    // The unique identifier of this request.
+    long requestId;
+
+    // The source path of the entry to be copied.
+    DOMString sourcePath;
+
+    // The destination path for the copy operation.
+    DOMString targetPath;
+  };
+
+  // Options for the <code>onMoveEntryRequested()</code> event.
+  dictionary MoveEntryRequestedOptions {
+    // The identifier of the file system related to this operation.
+    DOMString fileSystemId;
+
+    // The unique identifier of this request.
+    long requestId;
+
+    // The source path of the entry to be moved into a new place.
+    DOMString sourcePath;
+
+    // The destination path for the copy operation.
+    DOMString targetPath;
+  };
+
+  // Options for the <code>onTruncateRequested()</code> event.
+  dictionary TruncateRequestedOptions {
+    // The identifier of the file system related to this operation.
+    DOMString fileSystemId;
+
+    // The unique identifier of this request.
+    long requestId;
+
+    // The path of the file to be truncated.
+    DOMString filePath;
+
+    // Number of bytes to be retained after the operation completes.
+    double length;
+  };
+
+  // Options for the <code>onWriteFileRequested()</code> event.
+  dictionary WriteFileRequestedOptions {
+    // The identifier of the file system related to this operation.
+    DOMString fileSystemId;
+
+    // The unique identifier of this request.
+    long requestId;
+
+    // A request ID used to open the file.
+    long openRequestId;
+
+    // Position in the file (in bytes) to start writing the bytes from.
+    double offset;
+
+    // Buffer of bytes to be written to the file.
+    ArrayBuffer data;
+  };
+
+  // Options for the <code>onAbortRequested()</code> event.
+  dictionary AbortRequestedOptions {
+    // The identifier of the file system related to this operation.
+    DOMString fileSystemId;
+
+    // The unique identifier of this request.
+    long requestId;
+
+    // An ID of the request to be aborted.
+    long operationRequestId;
+  };
+
+  // Options for the <code>onAddWatcherRequested()</code> event.
+  dictionary AddWatcherRequestedOptions {
+    // The identifier of the file system related to this operation.
+    DOMString fileSystemId;
+
+    // The unique identifier of this request.
+    long requestId;
+
+    // The path of the entry to be observed.
+    DOMString entryPath;
+
+    // Whether observing should include all child entries recursively. It can be
+    // true for directories only.
+    boolean recursive;
+  };
+
+  // Options for the <code>onRemoveWatcherRequested()</code> event.
+  dictionary RemoveWatcherRequestedOptions {
+    // The identifier of the file system related to this operation.
+    DOMString fileSystemId;
+
+    // The unique identifier of this request.
+    long requestId;
+
+    // The path of the watched entry.
+    DOMString entryPath;
+
+    // Mode of the watcher.
+    boolean recursive;
+  };
+
+  // Information about a change happened to an entry within the observed
+  // directory (including the entry itself).
+  dictionary Change {
+    // The path of the changed entry.
+    DOMString entryPath;
+
+    // The type of the change which happened to the entry.
+    ChangeType changeType;
+  };
+
+  // Options for the <code>Notify()</code> method.
+  dictionary NotifyOptions {
+    // The identifier of the file system related to this change.
+    DOMString fileSystemId;
+
+    // The path of the observed entry.
+    DOMString observedPath;
+
+    // Mode of the observed entry.
+    boolean recursive;
+
+    // The type of the change which happened to the observed entry. If it is
+    // DELETED, then the observed entry will be automatically removed from the
+    // list of observed entries.
+    ChangeType changeType;
+
+    // List of changes to entries within the observed directory (including the
+    // entry itself)
+    Change[]? changes;
+
+    // Tag for the notification. Required if the file system was mounted with
+    // the <code>supportsNotifyTag</code> option. Note, that this flag is
+    // necessary to provide notifications about changes which changed even
+    // when the system was shutdown.
+    DOMString? tag;
+  };
+
+  // Callback to receive the result of getAll() function.
+  callback GetAllCallback = void(FileSystemInfo[] fileSystems);
 
   // Callback to be called by the providing extension in case of a success.
-  callback ProviderSuccessCallback = void();
+  [nocompile] callback ProviderSuccessCallback = void();
 
   // Callback to be called by the providing extension in case of an error.
-  callback ProviderErrorCallback = void(ProviderError error);
+  [nocompile] callback ProviderErrorCallback = void(ProviderError error);
 
   // Success callback for the <code>onGetMetadataRequested</code> event.
-  callback MetadataCallback = void(EntryMetadata metadata);
+  [nocompile] callback MetadataCallback = void(
+      EntryMetadata metadata);
 
   // Success callback for the <code>onReadDirectoryRequested</code> event. If
   // more entries will be returned, then <code>hasMore</code> must be true, and
   // it has to be called again with additional entries. If no more entries are
   // available, then <code>hasMore</code> must be set to false.
-  callback EntriesCallback = void(EntryMetadata[] entries, boolean hasMore);
+  [nocompile] callback EntriesCallback = void(
+      EntryMetadata[] entries, boolean hasMore);
 
   // Success callback for the <code>onReadFileRequested</code> event. If more
   // data will be returned, then <code>hasMore</code> must be true, and it
   // has to be called again with additional entries. If no more data is
   // available, then <code>hasMore</code> must be set to false.
-  callback FileDataCallback = void(ArrayBuffer data, boolean hasMore);
+  [nocompile] callback FileDataCallback = void(
+      ArrayBuffer data, boolean hasMore);
+
+  // A generic result callback to indicate success or failure.
+  callback ResultCallback = void();
 
   interface Functions {
     // Mounts a file system with the given <code>fileSystemId</code> and <code>
     // displayName</code>. <code>displayName</code> will be shown in the left
     // panel of Files.app. <code>displayName</code> can contain any characters
     // including '/', but cannot be an empty string. <code>displayName</code>
-    // should be descriptive but doesn't have to be unique. Duplicate display
-    // names are uniquified by adding suffix like "(1)" in the Files app UI.
-    //
-    // If a file system with the passed <code>fileSystemId</code> is already
-    // mounted by this extension, then <code>errorCallback</code> will be called
-    // with <code>ProviderError.EXISTS</code> value. The <code>fileSystemId
+    // must be descriptive but doesn't have to be unique. The <code>fileSystemId
     // </code> must not be an empty string.
+    //
+    // In case of an error, <code>chrome.runtime.lastError</code> will be set
+    // will a corresponding error code.
     static void mount(MountOptions options,
-                      MountCallback successCallback,
-                      [nocompile] ErrorCallback errorCallback);
+                      optional ResultCallback callback);
 
     // Unmounts a file system with the given <code>fileSystemId</code>. It
-    // should be called after <code>onUnmountRequested</code> is invoked. Also,
+    // must be called after <code>onUnmountRequested</code> is invoked. Also,
     // the providing extension can decide to perform unmounting if not requested
-    // (eg. in case of lost connection, or a file error). If there is no file
-    // system with the requested id, or unmounting fails, then the
-    // <code>errorCallback</code> will be called.
+    // (eg. in case of lost connection, or a file error).
+    //
+    // In case of an error, <code>chrome.runtime.lastError</code> will be set
+    // will a corresponding error code.
     static void unmount(UnmountOptions options,
-                        UnmountCallback successCallback,
-                        [nocompile] ErrorCallback errorCallback);
+                        optional ResultCallback callback);
+
+    // Returns all file systems mounted by the extension.
+    static void getAll(GetAllCallback callback);
+
+    // Notifies about changes in the watched directory at <code>
+    // observedPath</code> in <code>recursive</code mode. If the file system is
+    // mounted with <code>supportsNofityTag</code>, then <code>tag</code> must
+    // be provided, and all changes since the last notification always reported,
+    // even if the system was shutdown. The last tag can be obtained with <code>
+    // getAll()</code>. Note, that <code>tag</code> is required in order to
+    // enable the internal cache.
+    //
+    // Value of <code>tag</code> can be any string which is unique per call,
+    // so it's possible to identify the last registered notification. Eg. if
+    // the providing extension starts after a reboot, and the last registered
+    // notification's tag is equal to "123", then it should call notify() for
+    // all changes which happened since the change tagged as "123". It cannot
+    // be an empty string.
+    //
+    // Not all providers are able to provide a tag, but if the file system has
+    // a changelog, then the tag can be eg. a change number, or a revision
+    // number.
+    //
+    // Note that if a parent directory is removed, then all descendant entries
+    // are also removed, and if they are watched, then the API must be notified
+    // about the fact. Also, if a directory is renamed, then all descendant
+    // entries are in fact removed, as there is no entry under their original
+    // paths anymore.
+    //
+    // In case of an error, <code>chrome.runtime.lastError</code> will be set
+    // will a corresponding error code.
+    [nodoc] static void notify(NotifyOptions options,
+                               optional ResultCallback callback);
   };
 
   interface Events {
     // Raised when unmounting for the file system with the <code>fileSystemId
     // </code> identifier is requested. In the response, the <code>unmount
-    // </code> API method should be called together with <code>successCallback
+    // </code> API method must be called together with <code>successCallback
     // </code>. If unmounting is not possible (eg. due to a pending operation),
     // then <code>errorCallback</code> must be called.
     [maxListeners=1] static void onUnmountRequested(
@@ -195,7 +489,7 @@ namespace fileSystemProvider {
         ProviderErrorCallback errorCallback);
 
     // Raised when metadata of a file or a directory at <code>entryPath</code>
-    // is requested. The metadata should be returned with the <code>
+    // is requested. The metadata must be returned with the <code>
     // successCallback</code> call. In case of an error, <code>errorCallback
     // </code> must be called.
     [maxListeners=1] static void onGetMetadataRequested(
@@ -204,7 +498,7 @@ namespace fileSystemProvider {
         ProviderErrorCallback errorCallback);
 
     // Raised when contents of a directory at <code>directoryPath</code> are
-    // requested. The results should be returned in chunks by calling the <code>
+    // requested. The results must be returned in chunks by calling the <code>
     // successCallback</code> several times. In case of an error, <code>
     // errorCallback</code> must be called.
     [maxListeners=1] static void onReadDirectoryRequested(
@@ -213,7 +507,8 @@ namespace fileSystemProvider {
         ProviderErrorCallback errorCallback);
 
     // Raised when opening a file at <code>filePath</code> is requested. If the
-    // file does not exist, then the operation must fail.
+    // file does not exist, then the operation must fail. Maximum number of
+    // files opened at once can be specified with <code>MountOptions</code>.
     [maxListeners=1] static void onOpenFileRequested(
         OpenFileRequestedOptions options,
         ProviderSuccessCallback successCallback,
@@ -226,20 +521,20 @@ namespace fileSystemProvider {
         ProviderSuccessCallback successCallback,
         ProviderErrorCallback errorCallback);
 
-    // Raised when contents of a file opened previously with <code>openRequestId
-    // </code>. The results should be returned in chunks by calling <code>
-    // successCallback</code> several times. In case of an error, <code>
-    // errorCallback</code> must be called.
+    // Raised when reading contents of a file opened previously with <code>
+    // openRequestId</code> is requested. The results must be returned in
+    // chunks by calling <code>successCallback</code> several times. In case of
+    // an error, <code>errorCallback</code> must be called.
     [maxListeners=1] static void onReadFileRequested(
         ReadFileRequestedOptions options,
         FileDataCallback successCallback,
         ProviderErrorCallback errorCallback);
 
-    // Raised when creating a directory is requested. If <code>exclusive</code>
-    // is set to true, then the operation must fail if the target directory
-    // already exists. If <code>recursive</code> is true, then all of the
-    // missing directories on the directory path must be created.
-    [maxListeners=1, nodoc] static void onCreateDirectoryRequested(
+    // Raised when creating a directory is requested. The operation must fail
+    // with the EXISTS error if the target directory already exists.
+    // If <code>recursive</code> is true, then all of the missing directories
+    // on the directory path must be created.
+    [maxListeners=1] static void onCreateDirectoryRequested(
         CreateDirectoryRequestedOptions options,
         ProviderSuccessCallback successCallback,
         ProviderErrorCallback errorCallback);
@@ -247,10 +542,72 @@ namespace fileSystemProvider {
     // Raised when deleting an entry is requested. If <code>recursive</code> is
     // true, and the entry is a directory, then all of the entries inside
     // must be recursively deleted as well.
-    [maxListeners=1, nodoc] static void onDeleteEntryRequested(
+    [maxListeners=1] static void onDeleteEntryRequested(
         DeleteEntryRequestedOptions options,
         ProviderSuccessCallback successCallback,
         ProviderErrorCallback errorCallback);
+
+    // Raised when creating a file is requested. If the file already exists,
+    // then <code>errorCallback</code> must be called with the <code>EXISTS
+    // </code> error code.
+    [maxListeners=1] static void onCreateFileRequested(
+        CreateFileRequestedOptions options,
+        ProviderSuccessCallback successCallback,
+        ProviderErrorCallback errorCallback);
+
+    // Raised when copying an entry (recursively if a directory) is requested.
+    // If an error occurs, then <code>errorCallback</code> must be called.
+    [maxListeners=1] static void onCopyEntryRequested(
+        CopyEntryRequestedOptions options,
+        ProviderSuccessCallback successCallback,
+        ProviderErrorCallback errorCallback);
+
+    // Raised when moving an entry (recursively if a directory) is requested.
+    // If an error occurs, then <code>errorCallback</code> must be called.
+    [maxListeners=1] static void onMoveEntryRequested(
+        MoveEntryRequestedOptions options,
+        ProviderSuccessCallback successCallback,
+        ProviderErrorCallback errorCallback);
+
+    // Raised when truncating a file to a desired length is requested.
+    // If an error occurs, then <code>errorCallback</code> must be called.
+    [maxListeners=1] static void onTruncateRequested(
+        TruncateRequestedOptions options,
+        ProviderSuccessCallback successCallback,
+        ProviderErrorCallback errorCallback);
+
+    // Raised when writing contents to a file opened previously with <code>
+    // openRequestId</code> is requested.
+    [maxListeners=1] static void onWriteFileRequested(
+        WriteFileRequestedOptions options,
+        ProviderSuccessCallback successCallback,
+        ProviderErrorCallback errorCallback);
+
+    // Raised when aborting an operation with <code>operationRequestId</code>
+    // is requested. The operation executed with <code>operationRequestId</code>
+    // must be immediately stopped and <code>successCallback</code> of this
+    // abort request executed. If aborting fails, then <code>errorCallback
+    // </code> must be called. Note, that callbacks of the aborted operation
+    // must not be called, as they will be ignored. Despite calling <code>
+    // errorCallback</code>, the request may be forcibly aborted. 
+    [maxListeners=1] static void onAbortRequested(
+        AbortRequestedOptions options,
+        ProviderSuccessCallback successCallback,
+        ProviderErrorCallback errorCallback);
+
+    // Raised when setting a new directory watcher is requested. If an error
+    // occurs, then <code>errorCallback</code> must be called.
+    [maxListeners=1, nodoc] static void onAddWatcherRequested(
+      AddWatcherRequestedOptions options,
+      ProviderSuccessCallback successCallback,
+      ProviderErrorCallback errorCallback);
+
+    // Raised when the watcher should be removed. If an error occurs, then
+    // <code>errorCallback</code> must be called.
+    [maxListeners=1, nodoc] static void onRemoveWatcherRequested(
+      RemoveWatcherRequestedOptions options,
+      ProviderSuccessCallback successCallback,
+      ProviderErrorCallback errorCallback);
   };
 };
 
