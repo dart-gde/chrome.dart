@@ -20,7 +20,17 @@ final ChromeFileSystem fileSystem = new ChromeFileSystem._();
 class ChromeFileSystem extends ChromeApi {
   JsObject get _fileSystem => chrome['fileSystem'];
 
-  ChromeFileSystem._();
+  Stream<EntryChangedEvent> get onEntryChanged => _onEntryChanged.stream;
+  ChromeStreamController<EntryChangedEvent> _onEntryChanged;
+
+  Stream<EntryRemovedEvent> get onEntryRemoved => _onEntryRemoved.stream;
+  ChromeStreamController<EntryRemovedEvent> _onEntryRemoved;
+
+  ChromeFileSystem._() {
+    var getApi = () => _fileSystem;
+    _onEntryChanged = new ChromeStreamController<EntryChangedEvent>.oneArg(getApi, 'onEntryChanged', _createEntryChangedEvent);
+    _onEntryRemoved = new ChromeStreamController<EntryRemovedEvent>.oneArg(getApi, 'onEntryRemoved', _createEntryRemovedEvent);
+  }
 
   bool get available => _fileSystem != null;
 
@@ -79,7 +89,7 @@ class ChromeFileSystem extends ChromeApi {
 
   /**
    * Returns the file entry with the given id if it can be restored. This call
-   * will fail with a runtime error otherwise. This method is new in Chrome 31.
+   * will fail with a runtime error otherwise.
    */
   Future<Entry> restoreEntry(String id) {
     if (_fileSystem == null) _throwNotAvailable();
@@ -91,7 +101,7 @@ class ChromeFileSystem extends ChromeApi {
 
   /**
    * Returns whether the app has permission to restore the entry with the given
-   * id. This method is new in Chrome 31.
+   * id.
    */
   Future<bool> isRestorable(String id) {
     if (_fileSystem == null) _throwNotAvailable();
@@ -107,12 +117,52 @@ class ChromeFileSystem extends ChromeApi {
    * where calls to retainEntry and restoreEntry count as use. If the app has
    * the 'retainEntries' permission under 'fileSystem', entries are retained
    * indefinitely. Otherwise, entries are retained only while the app is running
-   * and across restarts. This method is new in Chrome 31.
+   * and across restarts.
    */
   String retainEntry(Entry entry) {
     if (_fileSystem == null) _throwNotAvailable();
 
     return _fileSystem.callMethod('retainEntry', [jsify(entry)]);
+  }
+
+  /**
+   * Observes a directory entry. Emits an event if the tracked directory is
+   * changed (including the list of files on it), or removed. If ` recursive` is
+   * set to true, then also all accessible subdirectories will be tracked.
+   * Observers are automatically removed once the extension is closed or
+   * suspended, unless `entry` is retained using
+   * `chrome.fileSystem.retainEntry`.
+   * 
+   * In such case of retained entries, the observer stays active across restarts
+   * until `unobserveEntry` is explicitly called. Note, that once the `entry` is
+   * not retained anymore, the observer will be removed automatically. Observed
+   * entries are also automatically restored when either `getObservers` is
+   * called, or an observing event for it is invoked.
+   */
+  void observeDirectory(DirectoryEntry entry, [bool recursive]) {
+    if (_fileSystem == null) _throwNotAvailable();
+
+    _fileSystem.callMethod('observeDirectory', [jsify(entry), recursive]);
+  }
+
+  /**
+   * Unobserves a previously observed either a file or a directory.
+   */
+  void unobserveEntry(Entry entry) {
+    if (_fileSystem == null) _throwNotAvailable();
+
+    _fileSystem.callMethod('unobserveEntry', [jsify(entry)]);
+  }
+
+  /**
+   * Lists all observed entries.
+   */
+  Future<List<Entry>> getObservedEntries() {
+    if (_fileSystem == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<List<Entry>>.oneArg((e) => listify(e, _createEntry));
+    _fileSystem.callMethod('getObservedEntries', [completer.callback]);
+    return completer.future;
   }
 
   void _throwNotAvailable() {
@@ -129,6 +179,19 @@ class ChooseEntryType extends ChromeEnum {
   static const List<ChooseEntryType> VALUES = const[OPEN_FILE, OPEN_WRITABLE_FILE, SAVE_FILE, OPEN_DIRECTORY];
 
   const ChooseEntryType._(String str): super(str);
+}
+
+/**
+ * Type of a change happened to a child entry within a tracked directory.
+ */
+class ChildChangeType extends ChromeEnum {
+  static const ChildChangeType CREATED = const ChildChangeType._('created');
+  static const ChildChangeType REMOVED = const ChildChangeType._('removed');
+  static const ChildChangeType CHANGED = const ChildChangeType._('changed');
+
+  static const List<ChildChangeType> VALUES = const[CREATED, REMOVED, CHANGED];
+
+  const ChildChangeType._(String str): super(str);
 }
 
 class AcceptOption extends ChromeObject {
@@ -176,6 +239,54 @@ class ChooseEntryOptions extends ChromeObject {
 }
 
 /**
+ * Change to an entry within a tracked directory.
+ */
+class ChildChange extends ChromeObject {
+  ChildChange({Entry entry, ChildChangeType type}) {
+    if (entry != null) this.entry = entry;
+    if (type != null) this.type = type;
+  }
+  ChildChange.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  Entry get entry => _createEntry(jsProxy['entry']);
+  set entry(Entry value) => jsProxy['entry'] = jsify(value);
+
+  ChildChangeType get type => _createChildChangeType(jsProxy['type']);
+  set type(ChildChangeType value) => jsProxy['type'] = jsify(value);
+}
+
+/**
+ * Event notifying about a change in a file or a directory, including its
+ * contents.
+ */
+class EntryChangedEvent extends ChromeObject {
+  EntryChangedEvent({Entry target, List<ChildChange> childChanges}) {
+    if (target != null) this.target = target;
+    if (childChanges != null) this.childChanges = childChanges;
+  }
+  EntryChangedEvent.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  Entry get target => _createEntry(jsProxy['target']);
+  set target(Entry value) => jsProxy['target'] = jsify(value);
+
+  List<ChildChange> get childChanges => listify(jsProxy['childChanges'], _createChildChange);
+  set childChanges(List<ChildChange> value) => jsProxy['childChanges'] = jsify(value);
+}
+
+/**
+ * Event notifying about a tracked file or a directory being removed.
+ */
+class EntryRemovedEvent extends ChromeObject {
+  EntryRemovedEvent({Entry target}) {
+    if (target != null) this.target = target;
+  }
+  EntryRemovedEvent.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  Entry get target => _createEntry(jsProxy['target']);
+  set target(Entry value) => jsProxy['target'] = jsify(value);
+}
+
+/**
  * The return type for [chooseEntry].
  */
 class ChooseEntryResult {
@@ -189,7 +300,11 @@ class ChooseEntryResult {
   ChooseEntryResult._(this.entry, this.fileEntries);
 }
 
+EntryChangedEvent _createEntryChangedEvent(JsObject jsProxy) => jsProxy == null ? null : new EntryChangedEvent.fromProxy(jsProxy);
+EntryRemovedEvent _createEntryRemovedEvent(JsObject jsProxy) => jsProxy == null ? null : new EntryRemovedEvent.fromProxy(jsProxy);
 Entry _createEntry(JsObject jsProxy) => jsProxy == null ? null : new CrEntry.fromProxy(jsProxy);
 ChooseEntryType _createChooseEntryType(String value) => ChooseEntryType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 AcceptOption _createAcceptOption(JsObject jsProxy) => jsProxy == null ? null : new AcceptOption.fromProxy(jsProxy);
+ChildChangeType _createChildChangeType(String value) => ChildChangeType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+ChildChange _createChildChange(JsObject jsProxy) => jsProxy == null ? null : new ChildChange.fromProxy(jsProxy);
 FileEntry _createFileEntry(JsObject jsProxy) => jsProxy == null ? null : new ChromeFileEntry.fromProxy(jsProxy);

@@ -15,6 +15,28 @@ namespace app.runtime {
     DOMString type;
   };
 
+  // Enumeration of app launch sources.
+  enum LaunchSource {
+    app_launcher,
+    new_tab_page,
+    reload,
+    restart,
+    load_and_launch,
+    command_line,
+    file_handler,
+    url_handler,
+    system_tray,
+    about_page,
+    keyboard,
+    extensions_page,
+    management_api,
+    ephemeral_app,
+    background,
+    kiosk,
+    chrome_internal,
+    test
+  };
+
   // Optional data for the launch. Either <code>items</code>, or
   // the pair (<code>url, referrerUrl</code>) can be present for any given
   // launch.
@@ -40,6 +62,9 @@ namespace app.runtime {
     // href="https://support.google.com/chromebook/answer/3134673">Chrome OS
     // kiosk session</a>.
     boolean? isKioskSession;
+
+    // Where the app is launched from.
+    LaunchSource? source;
   };
 
   // This object specifies details and operations to perform on the embedding
@@ -48,6 +73,10 @@ namespace app.runtime {
   // request.
   dictionary EmbedRequest {
     DOMString embedderId;
+
+    // Optional developer specified data that the app to be embedded can use
+    // when making an embedding decision.
+    any? data;
 
     // Allows <code>embedderId</code> to embed this app in an &lt;appview&gt;
     // element. The <code>url</code> specifies the content to embed.
@@ -67,7 +96,11 @@ namespace app.runtime {
     static void onLaunched(optional LaunchData launchData);
 
     // Fired at Chrome startup to apps that were running when Chrome last shut
-    // down.
+    // down, or when apps have been requested to restart from their previous
+    // state for other reasons (e.g. when the user revokes access to an app's
+    // retained files the runtime will restart the app). In these situations if
+    // apps do not have an <code>onRestarted</code> handler they will be sent
+    // an <code>onLaunched </code> event instead.
     static void onRestarted();
   };
 };

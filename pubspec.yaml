@@ -1,21 +1,20 @@
 name: chrome
-version: 0.6.6-dev
-environment:
-  sdk: ">=1.0.0 <2.0.0"
+version: 0.7.0-dev1
 authors:
 - Devon Carew <devoncarew@gmail.com>
 - Adam Singer <financeCoding@gmail.com>
 - Kevin Moore <kevin@thinkpixellab.com>
-description: >
-  A library for accessing the Chrome APIs in a packaged app or extension.
+description: A library for accessing the Chrome APIs in a packaged app or extension.
 homepage: https://github.com/dart-gde/chrome.dart
+environment:
+  sdk: '>=1.0.0 <2.0.0'
 dependencies:
   barback: any
 dev_dependencies:
   args: any
   browser: any
   logging: any
-  parsers: ">=0.14.0 <0.15.0"
+  parsers: '>=0.14.0 <0.15.0'
   path: any
   unittest: any
-  unscripted: ">=0.4.0 <0.5.0"
+  unscripted: '>=0.4.0 <0.5.0'

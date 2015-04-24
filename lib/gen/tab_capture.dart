@@ -26,12 +26,13 @@ class ChromeTabCapture extends ChromeApi {
   bool get available => _tabCapture != null;
 
   /**
-   * Captures the visible area of the currently active tab. This method can only
-   * be used on the currently active page after the extension has been
-   * _invoked_, similar to the way that <a href="activeTab.html">activeTab</a>
-   * works.
+   * Captures the visible area of the currently active tab. Capture can only be
+   * started on the currently active tab after the extension has been _invoked_.
+   * Capture is maintained across page navigations within the tab, and stops
+   * when the tab is closed, or the media stream is closed by the extension.
+   * 
    * [options]: Configures the returned media stream.
-   * [callback]: Callback with either the stream returned or null.
+   * [callback]: Callback with either the tab capture stream or `null`.
    */
   Future<LocalMediaStream> capture(CaptureOptions options) {
     if (_tabCapture == null) _throwNotAvailable();
@@ -47,6 +48,7 @@ class ChromeTabCapture extends ChromeApi {
    * inform the user that there is an existing tab capture that would prevent a
    * new tab capture from succeeding (or to prevent redundant requests for the
    * same tab).
+   * [callback]: Callback invoked with CaptureInfo[] for captured tabs.
    */
   Future<List<CaptureInfo>> getCapturedTabs() {
     if (_tabCapture == null) _throwNotAvailable();

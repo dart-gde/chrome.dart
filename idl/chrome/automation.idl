@@ -40,15 +40,13 @@
     scrollPositionChanged,
     scrolledToAnchor,
     selectedChildrenChanged,
-    selectedTextChanged,
     selection,
     selectionAdd,
     selectionRemove,
     show,
     textChanged,
-    textInserted,
-    textRemoved,
     textSelectionChanged,
+    treeChanged,
     valueChanged
   };
 
@@ -60,11 +58,12 @@
     application,
     article,
     banner,
-    browser,
+    blockquote,
     busyIndicator,
     button,
     buttonDropDown,
     canvas,
+    caption,
     cell,
     checkBox,
     client,
@@ -74,35 +73,37 @@
     comboBox,
     complementary,
     contentInfo,
+    date,
+    dateTime,
     definition,
     descriptionListDetail,
+    descriptionList,
     descriptionListTerm,
     desktop,
+    details,
     dialog,
     directory,
     disclosureTriangle,
     div,
     document,
-    drawer,
-    editableText,
     embeddedObject,
+    figcaption,
+    figure,
     footer,
     form,
     grid,
     group,
-    growArea,
     heading,
-    helpTag,
-    horizontalRule,
     iframe,
+    iframePresentational,
     ignored,
     imageMapLink,
     imageMap,
     image,
-    incrementor,
     inlineTextBox,
     labelText,
     legend,
+    lineBreak,
     link,
     listBoxOption,
     listBox,
@@ -113,21 +114,23 @@
     log,
     main,
     marquee,
-    mathElement,
     math,
-    matte,
     menuBar,
     menuButton,
     menuItem,
+    menuItemCheckBox,
+    menuItemRadio,
     menuListOption,
     menuListPopup,
     menu,
+    meter,
     navigation,
     note,
     outline,
     pane,
     paragraph,
     popUpButton,
+    pre,
     presentational,
     progressIndicator,
     radioButton,
@@ -136,23 +139,20 @@
     rootWebArea,
     rowHeader,
     row,
-    rulerMarker,
+    ruby,
     ruler,
     svgRoot,
     scrollArea,
     scrollBar,
     seamlessWebArea,
     search,
-    sheet,
     slider,
     sliderThumb,
     spinButtonPart,
     spinButton,
-    splitGroup,
     splitter,
     staticText,
     status,
-    systemWide,
     tabGroup,
     tabList,
     tabPanel,
@@ -161,6 +161,7 @@
     table,
     textArea,
     textField,
+    time,
     timer,
     titleBar,
     toggleButton,
@@ -170,8 +171,8 @@
     tree,
     unknown,
     tooltip,
-    valueIndicator,
     webArea,
+    webView,
     window
   };
 
@@ -188,6 +189,7 @@
     focusable,
     focused,
     haspopup,
+    horizontal,
     hovered,
     indeterminate,
     invisible,
@@ -211,6 +213,36 @@
     long height;
   };
 
+  // Arguments for the find() and findAll() methods.
+  [nocompile, noinline_doc] dictionary FindParams {
+    automation.RoleType? role;
+
+    // A map of $(ref:automation.StateType) to boolean, indicating for each
+    // state whether it should be set or not. For example:
+    // <code>{ StateType.enabled: false }</code> would only match if
+    // <code>StateType.enabled</code> was <em>not</em> present in the node's
+    // <code>state</code> object.
+    object? state;
+
+    // A map of attribute name to expected value, for example
+    // <code>{ name: 'Root directory', button_mixed: true }</code>.
+    // String attribute values may be specified as a regex, for example
+    // <code>{ name: /stralia$/</code> }</code>.
+    // Unless specifying a regex, the expected value must be an exact match
+    // in type and value for the actual value. Thus, the type of expected value
+    // must be one of:
+    // <ul>
+    // <li>string</li>
+    // <li>integer</li>
+    // <li>float</li>
+    // <li>boolean</li>
+    // </ul>
+    object? attributes;
+  };
+
+  // Called when the result for a <code>query</code> is available.
+  callback QueryCallback = void(AutomationNode node);
+
   // An event in the Automation tree.
   [nocompile, noinline_doc] dictionary AutomationEvent {
     // The $(ref:automation.AutomationNode) to which the event was targeted.
@@ -230,22 +262,61 @@
   // A single node in an Automation tree.
   [nocompile, noinline_doc] dictionary AutomationNode {
     // The root node of the tree containing this AutomationNode.
-    AutomationRootNode root;
+    AutomationNode root;
 
-    // Whether this AutomationNode is an AutomationRootNode.
+    // Whether this AutomationNode is root node.
     boolean isRootNode;
-
-    // Unique ID to identify this node.
-    long id;
 
     // The role of this node.
     automation.RoleType role;
+
+    // TODO(aboxhall): expose states as mixins instead
 
     // The $(ref:automation.StateType)s describing this node.
     object state;
 
     // The rendered location (as a bounding box) of this node within the frame.
     automation.Rect location;
+
+    // The purpose of the node, other than the role, if any.
+    DOMString description;
+
+    // The help text for the node, if any.
+    DOMString help;
+
+    // The accessible name for this node, via the
+    // <a href="http://www.w3.org/TR/wai-aria/roles#namecalculation">
+    // Accessible Name Calculation</a> process.
+    DOMString name;
+
+    // The value for this node: for example the <code>value</code> attribute of
+    // an <code>&lt;input&gt; element.
+    DOMString value;
+
+    // The nodes, if any, which this node is specified to control via
+    // <a href="http://www.w3.org/TR/wai-aria/states_and_properties#aria-controls">
+    // <code>aria-controls</code></a>.
+    AutomationNode[] controls;
+
+    // The nodes, if any, which form a description for this node.
+    AutomationNode[] describedBy;
+
+    // The nodes, if any, which may optionally be navigated to after this
+    // one. See
+    // <a href="http://www.w3.org/TR/wai-aria/states_and_properties#aria-flowto">
+    // <code>aria-flowto</code></a>.
+    AutomationNode[] flowTo;
+
+    // The nodes, if any, which form a label for this element. Generally, the
+    // text from these elements will also be exposed as the element's accessible
+    // name, via the $(ref:automation.AutomationNode.name) attribute.
+    AutomationNode[] labelledBy;
+
+    // The nodes, if any, which are to be considered children of this node but
+    // are not children in the DOM tree.
+    AutomationNode[] owns;
+
+    // TODO(aboxhall): Make this private?
 
     // A collection of this node's other attributes.
     object? attributes;
@@ -254,12 +325,12 @@
     // the root node, this will be undefined.
     long? indexInParent;
 
-    static AutomationNode[] children();
-    static AutomationNode parent();
-    static AutomationNode firstChild();
-    static AutomationNode lastChild();
-    static AutomationNode previousSibling();
-    static AutomationNode nextSibling();
+    AutomationNode[] children;
+    AutomationNode parent;
+    AutomationNode firstChild;
+    AutomationNode lastChild;
+    AutomationNode previousSibling;
+    AutomationNode nextSibling;
 
     // Does the default action based on this node's role. This is generally
     // the same action that would result from clicking the node such as
@@ -283,37 +354,128 @@
     // Removes a listener for the given event type and event phase.
     static void removeEventListener(
         EventType eventType, AutomationListener listener, boolean capture);
+
+    // Gets the first node in this node's subtree which matches the given CSS
+    // selector and is within the same DOM context.
+    //
+    // If this node doesn't correspond directly with an HTML node in the DOM,
+    // querySelector will be run on this node's nearest HTML node ancestor. Note
+    // that this may result in the query returning a node which is not a
+    // descendant of this node.
+    //
+    // If the selector matches a node which doesn't directly correspond to an
+    // automation node (for example an element within an ARIA widget, where the
+    // ARIA widget forms one node of the automation tree, or an element which
+    // is hidden from accessibility via hiding it using CSS or using
+    // aria-hidden), this will return the nearest ancestor which does correspond
+    // to an automation node.
+    static void domQuerySelector(DOMString selector, QueryCallback callback);
+
+    // Finds the first AutomationNode in this node's subtree which matches the
+    // given search parameters.
+    static AutomationNode find(FindParams params);
+
+    // Finds all the AutomationNodes in this node's subtree which matches the
+    // given search parameters.
+    static AutomationNode[] findAll(FindParams params);
+
+    // Returns whether this node matches the given $(ref:automation.FindParams).
+    static boolean matches(FindParams params);
   };
 
-  // Called when the <code>AutomationRootNode</code> for the page is available.
-  callback RootCallback = void(AutomationRootNode rootNode);
-
-  // The root node of the automation tree for a single frame or desktop.
-  // This may be:
-  // <ul>
-  //   <li> The desktop
-  //   <li> The top frame of a page
-  //   <li> A frame or iframe within a page
-  // </ul>
-  // Thus, an <code>AutomationRootNode</code> may be a descendant of one or
-  // more <code>AutomationRootNode</code>s, and in turn have one or more
-  // <code>AutomationRootNode</code>s in its descendants. Thus, the
-  // <code>root</code> property of the <code>AutomationRootNode</code> will be
-  // the immediate parent <code>AutomationRootNode</code>, or <code>null</code>
-  // if this is the top-level <code>AutomationRootNode</code>.
-  //
-  // Extends $(ref:automation.AutomationNode).
-  [nocompile, noinline_doc] dictionary AutomationRootNode {
-    // TODO(aboxhall/dtseng): implement loading. Kept separate to not include
-    // in generated docs.
-
-    // Whether this AutomationRootNode is loaded or not. If false, call load()
-    // to get the contents.
-    boolean loaded;
-
-    // Load the accessibility tree for this AutomationRootNode.
-    static void load(RootCallback callback);
+  dictionary ActiveDescendantMixin {
+    // The node referred to by <code>aria-activedescendant</code>, where
+    // applicable
+    AutomationNode activedescendant;
   };
+
+  // Attributes which are mixed in to an AutomationNode if it is a link.
+  dictionary LinkMixins {
+    // TODO(aboxhall): Add visited state
+
+    // The URL that this link will navigate to.
+    DOMString url;
+  };
+
+  // Attributes which are mixed in to an AutomationNode if it is a document.
+  dictionary DocumentMixins {
+    // The URL of this document.
+    DOMString docUrl;
+
+    // The title of this document.
+    DOMString docTitle;
+
+    // Whether this document has finished loading.
+    boolean docLoaded;
+
+    // The proportion (out of 1.0) that this doc has completed loading.
+    double docLoadingProgress;
+  };
+
+  // TODO(aboxhall): document ScrollableMixins (e.g. what is scrollXMin? is it
+  // ever not 0?)
+
+  // Attributes which are mixed in to an AutomationNode if it is scrollable.
+  dictionary ScrollableMixins {
+    long scrollX;
+    long scrollXMin;
+    long scrollXMax;
+    long scrollY;
+    long scrollYMin;
+    long scrollYMax;
+  };
+
+  // Attributes which are mixed in to an AutomationNode if it is editable text.
+  dictionary EditableTextMixins {
+    // The character index of the start of the selection within this editable
+    // text element; -1 if no selection.
+    long textSelStart;
+
+    // The character index of the end of the selection within this editable
+    // text element; -1 if no selection.
+    long textSelEnd;
+  };
+
+  // Attributes which are mixed in to an AutomationNode if it is a range.
+  dictionary RangeMixins {
+    // The current value for this range.
+    double valueForRange;
+
+    // The minimum possible value for this range.
+    double minValueForRange;
+
+    // The maximum possible value for this range.
+    double maxValueForRange;
+  };
+
+  // TODO(aboxhall): live region mixins.
+
+  // Attributes which are mixed in to an AutomationNode if it is a table.
+  dictionary TableMixins {
+    // The number of rows in this table.
+    long tableRowCount;
+
+    // The number of columns in this table.
+    long tableColumnCount;
+  };
+
+  // Attributes which are mixed in to an AutomationNode if it is a table cell.
+  dictionary TableCellMixins {
+    // The zero-based index of the column that this cell is in.
+    long tableCellColumnIndex;
+
+    // The number of columns that this cell spans (default is 1).
+    long tableCellColumnSpan;
+
+    // The zero-based index of the row that this cell is in.
+    long tableCellRowIndex;
+
+    // The number of rows that this cell spans (default is 1).
+    long tableCellRowSpan;
+  };
+
+  // Called when the <code>AutomationNode</code> for the page is available.
+  callback RootCallback = void(AutomationNode rootNode);
 
   interface Functions {
     // Get the automation tree for the tab with the given tabId, or the current

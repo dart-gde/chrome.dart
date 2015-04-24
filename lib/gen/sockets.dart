@@ -174,6 +174,20 @@ class ChromeSocketsTcp extends ChromeApi {
   }
 
   /**
+   * Start a TLS client connection over the connected TCP client socket.
+   * [socketId]: The existing, connected socket to use.
+   * [options]: Constraints and parameters for the TLS connection.
+   * [callback]: Called when the connection attempt is complete.
+   */
+  Future<int> secure(int socketId, [SecureOptions options]) {
+    if (_sockets_tcp == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<int>.oneArg();
+    _sockets_tcp.callMethod('secure', [socketId, jsify(options), completer.callback]);
+    return completer.future;
+  }
+
+  /**
    * Sends data on the given TCP socket.
    * [socketId]: The socket identifier.
    * [data]: The data to send.
@@ -299,6 +313,30 @@ class SendInfo extends ChromeObject {
   set bytesSent(int value) => jsProxy['bytesSent'] = value;
 }
 
+class TLSVersionConstraints extends ChromeObject {
+  TLSVersionConstraints({String min, String max}) {
+    if (min != null) this.min = min;
+    if (max != null) this.max = max;
+  }
+  TLSVersionConstraints.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get min => jsProxy['min'];
+  set min(String value) => jsProxy['min'] = value;
+
+  String get max => jsProxy['max'];
+  set max(String value) => jsProxy['max'] = value;
+}
+
+class SecureOptions extends ChromeObject {
+  SecureOptions({TLSVersionConstraints tlsVersion}) {
+    if (tlsVersion != null) this.tlsVersion = tlsVersion;
+  }
+  SecureOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  TLSVersionConstraints get tlsVersion => _createTLSVersionConstraints(jsProxy['tlsVersion']);
+  set tlsVersion(TLSVersionConstraints value) => jsProxy['tlsVersion'] = jsify(value);
+}
+
 /**
  * Result of the `getInfo` method.
  */
@@ -387,6 +425,7 @@ ReceiveErrorInfo _createReceiveErrorInfo(JsObject jsProxy) => jsProxy == null ? 
 CreateInfo _createCreateInfo(JsObject jsProxy) => jsProxy == null ? null : new CreateInfo.fromProxy(jsProxy);
 SendInfo _createSendInfo(JsObject jsProxy) => jsProxy == null ? null : new SendInfo.fromProxy(jsProxy);
 SocketInfo _createSocketInfo(JsObject jsProxy) => jsProxy == null ? null : new SocketInfo.fromProxy(jsProxy);
+TLSVersionConstraints _createTLSVersionConstraints(JsObject jsProxy) => jsProxy == null ? null : new TLSVersionConstraints.fromProxy(jsProxy);
 ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
 
 /**

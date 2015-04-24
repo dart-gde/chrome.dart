@@ -9,6 +9,7 @@
 library chrome.runtime;
 
 import '../src/files.dart';
+import 'events.dart';
 import 'tabs.dart';
 import 'windows.dart';
 import '../src/common.dart';
@@ -460,8 +461,9 @@ class Port extends ChromeObject {
  * or request.
  */
 class MessageSender extends ChromeObject {
-  MessageSender({Tab tab, String id, String url, String tlsChannelId}) {
+  MessageSender({Tab tab, int frameId, String id, String url, String tlsChannelId}) {
     if (tab != null) this.tab = tab;
+    if (frameId != null) this.frameId = frameId;
     if (id != null) this.id = id;
     if (url != null) this.url = url;
     if (tlsChannelId != null) this.tlsChannelId = tlsChannelId;
@@ -477,22 +479,30 @@ class MessageSender extends ChromeObject {
   set tab(Tab value) => jsProxy['tab'] = jsify(value);
 
   /**
+   * The [frame](webNavigation#frame_ids) that opened the connection. 0 for
+   * top-level frames, positive for child frames. This will only be set when
+   * `tab` is set.
+   */
+  int get frameId => jsProxy['frameId'];
+  set frameId(int value) => jsProxy['frameId'] = value;
+
+  /**
    * The ID of the extension or app that opened the connection, if any.
    */
   String get id => jsProxy['id'];
   set id(String value) => jsProxy['id'] = value;
 
   /**
-   * The URL of the page or frame that opened the connection, if any. This
-   * property will *only* be present when the connection was opened from a tab
-   * or content script.
+   * The URL of the page or frame that opened the connection. If the sender is
+   * in an iframe, it will be iframe's URL not the URL of the page which hosts
+   * it.
    */
   String get url => jsProxy['url'];
   set url(String value) => jsProxy['url'] = value;
 
   /**
-   * The TLS channel ID of the web page that opened the connection, if requested
-   * by the extension or app, and if available.
+   * The TLS channel ID of the page or frame that opened the connection, if
+   * requested by the extension or app, and if available.
    */
   String get tlsChannelId => jsProxy['tlsChannelId'];
   set tlsChannelId(String value) => jsProxy['tlsChannelId'] = value;

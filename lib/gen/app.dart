@@ -55,6 +55,34 @@ class ChromeAppRuntime extends ChromeApi {
   }
 }
 
+/**
+ * Enumeration of app launch sources.
+ */
+class LaunchSource extends ChromeEnum {
+  static const LaunchSource APP_LAUNCHER = const LaunchSource._('app_launcher');
+  static const LaunchSource NEW_TAB_PAGE = const LaunchSource._('new_tab_page');
+  static const LaunchSource RELOAD = const LaunchSource._('reload');
+  static const LaunchSource RESTART = const LaunchSource._('restart');
+  static const LaunchSource LOAD_AND_LAUNCH = const LaunchSource._('load_and_launch');
+  static const LaunchSource COMMAND_LINE = const LaunchSource._('command_line');
+  static const LaunchSource FILE_HANDLER = const LaunchSource._('file_handler');
+  static const LaunchSource URL_HANDLER = const LaunchSource._('url_handler');
+  static const LaunchSource SYSTEM_TRAY = const LaunchSource._('system_tray');
+  static const LaunchSource ABOUT_PAGE = const LaunchSource._('about_page');
+  static const LaunchSource KEYBOARD = const LaunchSource._('keyboard');
+  static const LaunchSource EXTENSIONS_PAGE = const LaunchSource._('extensions_page');
+  static const LaunchSource MANAGEMENT_API = const LaunchSource._('management_api');
+  static const LaunchSource EPHEMERAL_APP = const LaunchSource._('ephemeral_app');
+  static const LaunchSource BACKGROUND = const LaunchSource._('background');
+  static const LaunchSource KIOSK = const LaunchSource._('kiosk');
+  static const LaunchSource CHROME_INTERNAL = const LaunchSource._('chrome_internal');
+  static const LaunchSource TEST = const LaunchSource._('test');
+
+  static const List<LaunchSource> VALUES = const[APP_LAUNCHER, NEW_TAB_PAGE, RELOAD, RESTART, LOAD_AND_LAUNCH, COMMAND_LINE, FILE_HANDLER, URL_HANDLER, SYSTEM_TRAY, ABOUT_PAGE, KEYBOARD, EXTENSIONS_PAGE, MANAGEMENT_API, EPHEMERAL_APP, BACKGROUND, KIOSK, CHROME_INTERNAL, TEST];
+
+  const LaunchSource._(String str): super(str);
+}
+
 class LaunchItem extends ChromeObject {
   LaunchItem({FileEntry entry, String type}) {
     if (entry != null) this.entry = entry;
@@ -74,12 +102,13 @@ class LaunchItem extends ChromeObject {
  * referrerUrl`) can be present for any given launch.
  */
 class LaunchData extends ChromeObject {
-  LaunchData({String id, List<LaunchItem> items, String url, String referrerUrl, bool isKioskSession}) {
+  LaunchData({String id, List<LaunchItem> items, String url, String referrerUrl, bool isKioskSession, LaunchSource source}) {
     if (id != null) this.id = id;
     if (items != null) this.items = items;
     if (url != null) this.url = url;
     if (referrerUrl != null) this.referrerUrl = referrerUrl;
     if (isKioskSession != null) this.isKioskSession = isKioskSession;
+    if (source != null) this.source = source;
   }
   LaunchData.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -97,6 +126,9 @@ class LaunchData extends ChromeObject {
 
   bool get isKioskSession => jsProxy['isKioskSession'];
   set isKioskSession(bool value) => jsProxy['isKioskSession'] = value;
+
+  LaunchSource get source => _createLaunchSource(jsProxy['source']);
+  set source(LaunchSource value) => jsProxy['source'] = jsify(value);
 }
 
 /**
@@ -106,13 +138,17 @@ class LaunchData extends ChromeObject {
  * request.
  */
 class EmbedRequest extends ChromeObject {
-  EmbedRequest({String embedderId}) {
+  EmbedRequest({String embedderId, any data}) {
     if (embedderId != null) this.embedderId = embedderId;
+    if (data != null) this.data = data;
   }
   EmbedRequest.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   String get embedderId => jsProxy['embedderId'];
   set embedderId(String value) => jsProxy['embedderId'] = value;
+
+  any get data => _createany(jsProxy['data']);
+  set data(any value) => jsProxy['data'] = jsify(value);
 
   /**
    * Allows `embedderId` to embed this app in an &lt;appview&gt; element. The
@@ -135,12 +171,14 @@ EmbedRequest _createEmbedRequest(JsObject jsProxy) => jsProxy == null ? null : n
 LaunchData _createLaunchData(JsObject jsProxy) => jsProxy == null ? null : new LaunchData.fromProxy(jsProxy);
 FileEntry _createFileEntry(JsObject jsProxy) => jsProxy == null ? null : new ChromeFileEntry.fromProxy(jsProxy);
 LaunchItem _createLaunchItem(JsObject jsProxy) => jsProxy == null ? null : new LaunchItem.fromProxy(jsProxy);
+LaunchSource _createLaunchSource(String value) => LaunchSource.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+any _createany(JsObject jsProxy) => jsProxy == null ? null : new any.fromProxy(jsProxy);
 
 /**
  * Use the `chrome.app.window` API to create windows. Windows have an optional
  * frame with title bar and size controls. They are not associated with any
  * Chrome browser windows. See the <a
- * href="https://github.com/GoogleChrome/chrome-app-samples/tree/master/window-state">
+ * href="https://github.com/GoogleChrome/chrome-app-samples/tree/master/samples/window-state">
  * Window State Sample</a> for a demonstration of these options.
  */
 class _ChromeAppWindow extends ChromeApi {
@@ -164,6 +202,9 @@ class _ChromeAppWindow extends ChromeApi {
   Stream get onRestored => _onRestored.stream;
   ChromeStreamController _onRestored;
 
+  Stream get onAlphaEnabledChanged => _onAlphaEnabledChanged.stream;
+  ChromeStreamController _onAlphaEnabledChanged;
+
   Stream get onWindowFirstShown => _onWindowFirstShown.stream;
   ChromeStreamController _onWindowFirstShown;
 
@@ -175,6 +216,7 @@ class _ChromeAppWindow extends ChromeApi {
     _onMaximized = new ChromeStreamController.noArgs(getApi, 'onMaximized');
     _onMinimized = new ChromeStreamController.noArgs(getApi, 'onMinimized');
     _onRestored = new ChromeStreamController.noArgs(getApi, 'onRestored');
+    _onAlphaEnabledChanged = new ChromeStreamController.noArgs(getApi, 'onAlphaEnabledChanged');
     _onWindowFirstShown = new ChromeStreamController.noArgs(getApi, 'onWindowFirstShown');
   }
 
@@ -211,7 +253,7 @@ class _ChromeAppWindow extends ChromeApi {
    * 
    * window.js:
    * 
-   *  `window.onload = function () { foo(); }`
+   * `window.onload = function () { foo(); }`
    */
   Future<AppWindow> create(String url, [CreateWindowOptions options]) {
     if (_app_window == null) _throwNotAvailable();
@@ -257,6 +299,15 @@ class _ChromeAppWindow extends ChromeApi {
     if (_app_window == null) _throwNotAvailable();
 
     return _createAppWindow(_app_window.callMethod('get', [id]));
+  }
+
+  /**
+   * Does the current platform support windows being visible on all workspaces?
+   */
+  bool canSetVisibleOnAllWorkspaces() {
+    if (_app_window == null) _throwNotAvailable();
+
+    return _app_window.callMethod('canSetVisibleOnAllWorkspaces');
   }
 
   void _throwNotAvailable() {
@@ -377,7 +428,7 @@ class FrameOptions extends ChromeObject {
 }
 
 class CreateWindowOptions extends ChromeObject {
-  CreateWindowOptions({String id, BoundsSpecification innerBounds, BoundsSpecification outerBounds, int defaultWidth, int defaultHeight, int defaultLeft, int defaultTop, int width, int height, int left, int top, int minWidth, int minHeight, int maxWidth, int maxHeight, WindowType type, var frame, ContentBounds bounds, bool transparentBackground, State state, bool hidden, bool resizable, bool singleton, bool alwaysOnTop, bool focused}) {
+  CreateWindowOptions({String id, BoundsSpecification innerBounds, BoundsSpecification outerBounds, int defaultWidth, int defaultHeight, int defaultLeft, int defaultTop, int width, int height, int left, int top, int minWidth, int minHeight, int maxWidth, int maxHeight, WindowType type, bool ime, var frame, ContentBounds bounds, bool alphaEnabled, State state, bool hidden, bool resizable, bool singleton, bool alwaysOnTop, bool focused, bool visibleOnAllWorkspaces}) {
     if (id != null) this.id = id;
     if (innerBounds != null) this.innerBounds = innerBounds;
     if (outerBounds != null) this.outerBounds = outerBounds;
@@ -394,15 +445,17 @@ class CreateWindowOptions extends ChromeObject {
     if (maxWidth != null) this.maxWidth = maxWidth;
     if (maxHeight != null) this.maxHeight = maxHeight;
     if (type != null) this.type = type;
+    if (ime != null) this.ime = ime;
     if (frame != null) this.frame = frame;
     if (bounds != null) this.bounds = bounds;
-    if (transparentBackground != null) this.transparentBackground = transparentBackground;
+    if (alphaEnabled != null) this.alphaEnabled = alphaEnabled;
     if (state != null) this.state = state;
     if (hidden != null) this.hidden = hidden;
     if (resizable != null) this.resizable = resizable;
     if (singleton != null) this.singleton = singleton;
     if (alwaysOnTop != null) this.alwaysOnTop = alwaysOnTop;
     if (focused != null) this.focused = focused;
+    if (visibleOnAllWorkspaces != null) this.visibleOnAllWorkspaces = visibleOnAllWorkspaces;
   }
   CreateWindowOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -454,14 +507,17 @@ class CreateWindowOptions extends ChromeObject {
   WindowType get type => _createWindowType(jsProxy['type']);
   set type(WindowType value) => jsProxy['type'] = jsify(value);
 
+  bool get ime => jsProxy['ime'];
+  set ime(bool value) => jsProxy['ime'] = value;
+
   dynamic get frame => jsProxy['frame'];
   set frame(var value) => jsProxy['frame'] = jsify(value);
 
   ContentBounds get bounds => _createContentBounds(jsProxy['bounds']);
   set bounds(ContentBounds value) => jsProxy['bounds'] = jsify(value);
 
-  bool get transparentBackground => jsProxy['transparentBackground'];
-  set transparentBackground(bool value) => jsProxy['transparentBackground'] = value;
+  bool get alphaEnabled => jsProxy['alphaEnabled'];
+  set alphaEnabled(bool value) => jsProxy['alphaEnabled'] = value;
 
   State get state => _createState(jsProxy['state']);
   set state(State value) => jsProxy['state'] = jsify(value);
@@ -480,6 +536,9 @@ class CreateWindowOptions extends ChromeObject {
 
   bool get focused => jsProxy['focused'];
   set focused(bool value) => jsProxy['focused'] = value;
+
+  bool get visibleOnAllWorkspaces => jsProxy['visibleOnAllWorkspaces'];
+  set visibleOnAllWorkspaces(bool value) => jsProxy['visibleOnAllWorkspaces'] = value;
 }
 
 class _AppWindow extends ChromeObject {
@@ -529,20 +588,29 @@ class _AppWindow extends ChromeObject {
   /**
    * Fullscreens the window.
    * 
-   * The user will be able to restore the window by pressing ESC. An
-   * application can prevent the fullscreen state to be left when ESC is pressed
-   * by requesting the <b>overrideEscFullscreen</b> permission and canceling the
-   * event by calling .preventDefault(), like this:
+   * The user will be able to restore the window by pressing ESC. An application
+   * can prevent the fullscreen state to be left when ESC is pressed by
+   * requesting the `app.window.fullscreen.overrideEsc` permission and canceling
+   * the event by calling .preventDefault(), in the keydown and keyup handlers,
+   * like this:
    * 
-   * `window.onKeyDown = function(e) { if (e.keyCode == 27 / ESC /) {
-   * e.preventDefault(); } };`
+   * `window.onkeydown = window.onkeyup = function(e) { if (e.keyCode == 27 /
+   * ESC /) { e.preventDefault(); } };`
+   * 
+   * Note `window.fullscreen()` will cause the entire window to become
+   * fullscreen and does not require a user gesture. The HTML5 fullscreen API
+   * can also be used to enter fullscreen mode (see <a
+   * href="http://developer.chrome.com/apps/api_other.html">Web APIs</a> for
+   * more details).
    */
   void fullscreen() {
     jsProxy.callMethod('fullscreen');
   }
 
   /**
-   * Is the window fullscreen?
+   * Is the window fullscreen? This will be true if the window has been created
+   * fullscreen or was made fullscreen via the `AppWindow` or HTML5 fullscreen
+   * APIs.
    */
   bool isFullscreen() {
     return jsProxy.callMethod('isFullscreen');
@@ -681,10 +749,36 @@ class _AppWindow extends ChromeObject {
 
   /**
    * Set whether the window should stay above most other windows. Requires the
-   * `"alwaysOnTopWindows"` permission.
+   * `alwaysOnTopWindows` permission.
    */
   void setAlwaysOnTop(bool alwaysOnTop) {
     jsProxy.callMethod('setAlwaysOnTop', [alwaysOnTop]);
+  }
+
+  /**
+   * Can the window use alpha transparency? todo(jackhou): Document this
+   * properly before going to stable.
+   */
+  bool alphaEnabled() {
+    return jsProxy.callMethod('alphaEnabled');
+  }
+
+  /**
+   * For platforms that support multiple workspaces, is this window visible on
+   * all of them? This is only available on dev channel.
+   */
+  void setVisibleOnAllWorkspaces(bool alwaysVisible) {
+    jsProxy.callMethod('setVisibleOnAllWorkspaces', [alwaysVisible]);
+  }
+
+  /**
+   * Set whether the window should get all keyboard events including system keys
+   * that are usually not sent. This is best-effort subject to platform specific
+   * constraints. Requires the `"app.window.allKeys"` permission. This is
+   * currently available only in dev channel on Windows.
+   */
+  void setInterceptAllKeys(bool wantAllKeys) {
+    jsProxy.callMethod('setInterceptAllKeys', [wantAllKeys]);
   }
 }
 

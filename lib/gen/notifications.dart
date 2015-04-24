@@ -205,10 +205,12 @@ class NotificationButton extends ChromeObject {
 }
 
 class NotificationOptions extends ChromeObject {
-  NotificationOptions({TemplateType type, String iconUrl, NotificationBitmap iconBitmap, String title, String message, String contextMessage, int priority, num eventTime, List<NotificationButton> buttons, String expandedMessage, String imageUrl, NotificationBitmap imageBitmap, List<NotificationItem> items, int progress, bool isClickable}) {
+  NotificationOptions({TemplateType type, String iconUrl, NotificationBitmap iconBitmap, String appIconMaskUrl, NotificationBitmap appIconMaskBitmap, String title, String message, String contextMessage, int priority, num eventTime, List<NotificationButton> buttons, String expandedMessage, String imageUrl, NotificationBitmap imageBitmap, List<NotificationItem> items, int progress, bool isClickable}) {
     if (type != null) this.type = type;
     if (iconUrl != null) this.iconUrl = iconUrl;
     if (iconBitmap != null) this.iconBitmap = iconBitmap;
+    if (appIconMaskUrl != null) this.appIconMaskUrl = appIconMaskUrl;
+    if (appIconMaskBitmap != null) this.appIconMaskBitmap = appIconMaskBitmap;
     if (title != null) this.title = title;
     if (message != null) this.message = message;
     if (contextMessage != null) this.contextMessage = contextMessage;
@@ -232,6 +234,12 @@ class NotificationOptions extends ChromeObject {
 
   NotificationBitmap get iconBitmap => _createNotificationBitmap(jsProxy['iconBitmap']);
   set iconBitmap(NotificationBitmap value) => jsProxy['iconBitmap'] = jsify(value);
+
+  String get appIconMaskUrl => jsProxy['appIconMaskUrl'];
+  set appIconMaskUrl(String value) => jsProxy['appIconMaskUrl'] = value;
+
+  NotificationBitmap get appIconMaskBitmap => _createNotificationBitmap(jsProxy['appIconMaskBitmap']);
+  set appIconMaskBitmap(NotificationBitmap value) => jsProxy['appIconMaskBitmap'] = jsify(value);
 
   String get title => jsProxy['title'];
   set title(String value) => jsProxy['title'] = value;

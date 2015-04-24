@@ -43,7 +43,6 @@ export 'gen/processes.dart';
 export 'gen/proxy.dart';
 export 'gen/push_messaging.dart';
 export 'gen/runtime.dart';
-export 'gen/script_badge.dart';
 export 'gen/sessions.dart';
 export 'gen/signed_in_devices.dart';
 export 'gen/storage.dart';
