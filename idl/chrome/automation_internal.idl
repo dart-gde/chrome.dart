@@ -38,7 +38,7 @@ namespace automationInternal {
     long nodeIdToClear;
 
     // A vector of nodes to update according to the rules described in
-    // ui/accesibility/ax_tree_update.h.
+    // ui/accessibility/ax_tree_update.h.
     AXNodeData[] nodes;
   };
 
@@ -46,11 +46,8 @@ namespace automationInternal {
   // tree. See ui/accessibility/ax_tree_update.h for an extended explanation of
   // the tree update format.
   dictionary AXEventParams {
-    // The process id of the renderer host.
-    long processID;
-
-    // The routing id of the web contents that this update is for.
-    long routingID;
+    // The tree id of the web contents that this update is for.
+    long treeID;
 
     // ID of the node that the event applies to.
     long targetID;
@@ -73,8 +70,7 @@ namespace automationInternal {
 
   // Arguments required for all actions supplied to performAction.
   dictionary PerformActionRequiredParams {
-    long processID;
-    long routingID;
+    long treeID;
     long automationNodeID;
     ActionType actionType;
   };
@@ -85,18 +81,31 @@ namespace automationInternal {
     long endIndex;
   };
 
-  // Returns the process id and routing id of the tab whose accessibility was
-  // enabled using enable().
-  callback EnableTabCallback = void(long processID, long routingID);
+  // Arguments for the querySelector function.
+  dictionary QuerySelectorRequiredParams {
+    long treeID;
+    long automationNodeID;
+    DOMString selector;
+  };
+
+  // Returns the accessibility tree id of the web contents who's accessibility
+  // was enabled using enableTab().
+  callback EnableTabCallback = void(long tree_id);
 
   // Callback called when enableDesktop() returns.
   callback EnableDesktopCallback = void();
 
+  // Callback called when querySelector() returns.
+  callback QuerySelectorCallback = void(long resultAutomationNodeID);
+
   interface Functions {
     // Enable automation of the tab with the given id, or the active tab if no
-    // tab id is given, and retrieves its process and routing ids for use in
+    // tab id is given, and retrieves accessibility tree id for use in
     // future updates.
     static void enableTab(optional long tabId, EnableTabCallback callback);
+
+    // Enable automation of the frame with the given tree id.
+    static void enableFrame(long tree_id);
 
     // Enables desktop automation.
     static void enableDesktop(EnableDesktopCallback callback);
@@ -104,12 +113,16 @@ namespace automationInternal {
     // Performs an action on an automation node.
     static void performAction(PerformActionRequiredParams args,
                               object opt_args);
+
+    // Performs a query selector query.
+    static void querySelector(QuerySelectorRequiredParams args,
+                              QuerySelectorCallback callback);
   };
 
   interface Events {
     // Fired when an accessibility event occurs
     static void onAccessibilityEvent(AXEventParams update);
 
-    static void onAccessibilityTreeDestroyed(long processID, long routingID);
+    static void onAccessibilityTreeDestroyed(long treeID);
   };
 };

@@ -79,16 +79,12 @@ class ChromeBookmarks extends ChromeApi {
   bool get available => _bookmarks != null;
 
   /**
-   * The maximum number of `move`, `update`, `create`, or `remove` operations
-   * that can be performed each hour. Updates that would cause this limit to be
-   * exceeded fail.
+   * 
    */
   int get MAX_WRITE_OPERATIONS_PER_HOUR => _bookmarks['MAX_WRITE_OPERATIONS_PER_HOUR'];
 
   /**
-   * The maximum number of `move`, `update`, `create`, or `remove` operations
-   * that can be performed each minute, sustained over 10 minutes. Updates that
-   * would cause this limit to be exceeded fail.
+   * 
    */
   int get MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE => _bookmarks['MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE'];
 

@@ -338,6 +338,20 @@ class ChromeSocket extends ChromeApi {
     return completer.future;
   }
 
+  /**
+   * Start a TLS client connection over a connected TCP client socket.
+   * [socketId]: The connected socket to use.
+   * [options]: Constraints and parameters for the TLS connection.
+   * [callback]: Called when the TLS connection attempt is complete.
+   */
+  Future<int> secure(int socketId, [SecureOptions options]) {
+    if (_socket == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<int>.oneArg();
+    _socket.callMethod('secure', [socketId, jsify(options), completer.callback]);
+    return completer.future;
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.socket' is not available");
   }
@@ -478,6 +492,30 @@ class NetworkInterface extends ChromeObject {
   set prefixLength(int value) => jsProxy['prefixLength'] = value;
 }
 
+class TLSVersionConstraints extends ChromeObject {
+  TLSVersionConstraints({String min, String max}) {
+    if (min != null) this.min = min;
+    if (max != null) this.max = max;
+  }
+  TLSVersionConstraints.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get min => jsProxy['min'];
+  set min(String value) => jsProxy['min'] = value;
+
+  String get max => jsProxy['max'];
+  set max(String value) => jsProxy['max'] = value;
+}
+
+class SecureOptions extends ChromeObject {
+  SecureOptions({TLSVersionConstraints tlsVersion}) {
+    if (tlsVersion != null) this.tlsVersion = tlsVersion;
+  }
+  SecureOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  TLSVersionConstraints get tlsVersion => _createTLSVersionConstraints(jsProxy['tlsVersion']);
+  set tlsVersion(TLSVersionConstraints value) => jsProxy['tlsVersion'] = jsify(value);
+}
+
 CreateInfo _createCreateInfo(JsObject jsProxy) => jsProxy == null ? null : new CreateInfo.fromProxy(jsProxy);
 SocketReadInfo _createReadInfo(JsObject jsProxy) => jsProxy == null ? null : new SocketReadInfo.fromProxy(jsProxy);
 SocketWriteInfo _createWriteInfo(JsObject jsProxy) => jsProxy == null ? null : new SocketWriteInfo.fromProxy(jsProxy);
@@ -487,3 +525,4 @@ SocketInfo _createSocketInfo(JsObject jsProxy) => jsProxy == null ? null : new S
 NetworkInterface _createNetworkInterface(JsObject jsProxy) => jsProxy == null ? null : new NetworkInterface.fromProxy(jsProxy);
 ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
 SocketType _createSocketType(String value) => SocketType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+TLSVersionConstraints _createTLSVersionConstraints(JsObject jsProxy) => jsProxy == null ? null : new TLSVersionConstraints.fromProxy(jsProxy);

@@ -138,7 +138,8 @@ class SuggestResult extends ChromeObject {
    * markup for styling. The supported tags are 'url' (for a literal URL),
    * 'match' (for highlighting text that matched what the user's query), and
    * 'dim' (for dim helper text). The styles can be nested, eg.
-   * <dim><match>dimmed match</match></dim>.
+   * <dim><match>dimmed match</match></dim>. You must escape the five predefined
+   * entities to display them as text: stackoverflow.com/a/1091953/89484
    */
   String get description => jsProxy['description'];
   set description(String value) => jsProxy['description'] = value;

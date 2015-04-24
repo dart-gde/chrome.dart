@@ -27,9 +27,9 @@ class ChromeDesktopCapture extends ChromeApi {
    * [sources] Set of sources that should be shown to the user.
    * 
    * [targetTab] Optional tab for which the stream is created. If not specified
-   * then the resulting stream can be used only by the calling extension,
-   * otherwise the stream can be used only by the specified tab. If the tab's
-   * security origin changes before this function returns, the call may fail.
+   * then the resulting stream can be used only by the calling extension. The
+   * stream can only be used by frames in the given tab whose security origin
+   * matches `tab.url`.
    * 
    * Returns:
    * An id that can be passed to cancelChooseDesktopMedia() in case the prompt

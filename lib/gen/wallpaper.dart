@@ -41,11 +41,11 @@ class ChromeWallpaper extends ChromeApi {
 }
 
 class WallpaperSetWallpaperParams extends ChromeObject {
-  WallpaperSetWallpaperParams({var wallpaperData, String url, String layout, String name, bool thumbnail}) {
-    if (wallpaperData != null) this.wallpaperData = wallpaperData;
+  WallpaperSetWallpaperParams({var data, String url, String layout, String filename, bool thumbnail}) {
+    if (data != null) this.data = data;
     if (url != null) this.url = url;
     if (layout != null) this.layout = layout;
-    if (name != null) this.name = name;
+    if (filename != null) this.filename = filename;
     if (thumbnail != null) this.thumbnail = thumbnail;
   }
   WallpaperSetWallpaperParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -53,8 +53,8 @@ class WallpaperSetWallpaperParams extends ChromeObject {
   /**
    * The jpeg or png encoded wallpaper image.
    */
-  dynamic get wallpaperData => jsProxy['wallpaperData'];
-  set wallpaperData(var value) => jsProxy['wallpaperData'] = jsify(value);
+  dynamic get data => jsProxy['data'];
+  set data(var value) => jsProxy['data'] = jsify(value);
 
   /**
    * The URL of the wallpaper to be set.
@@ -72,8 +72,8 @@ class WallpaperSetWallpaperParams extends ChromeObject {
   /**
    * The file name of the saved wallpaper.
    */
-  String get name => jsProxy['name'];
-  set name(String value) => jsProxy['name'] = value;
+  String get filename => jsProxy['filename'];
+  set filename(String value) => jsProxy['filename'] = value;
 
   /**
    * True if a 128x60 thumbnail should be generated.

@@ -5,55 +5,32 @@
 {
   'targets': [
     {
+      # GN version: //extensions/common/api
       'target_name': 'extensions_api',
       'type': 'static_library',
-      'sources': [
-        '<@(schema_files)',
-      ],
       # TODO(jschuh): http://crbug.com/167187 size_t -> int
       'msvs_disabled_warnings': [ 4267 ],
       'includes': [
         '../../../build/json_schema_bundle_compile.gypi',
         '../../../build/json_schema_compile.gypi',
+        'schemas.gypi',
+      ],
+    },
+    {
+      # Protobuf compiler / generator for chrome.cast.channel-related protocol buffers.
+      # GN version: //extensions/browser/api/cast_channel:cast_channel_proto
+      'target_name': 'cast_channel_proto',
+      'type': 'static_library',
+      'sources': [
+          'cast_channel/authority_keys.proto',
+          'cast_channel/cast_channel.proto',
+          'cast_channel/logging.proto',
       ],
       'variables': {
-        'chromium_code': 1,
-        'non_compiled_schema_files': [
-        ],
-        'conditions': [
-          ['enable_extensions==1', {
-            'schema_files': [
-              'app_runtime.idl',
-              'app_view_internal.json',
-              'dns.idl',
-              'extensions_manifest_types.json',
-              'power.idl',
-              'runtime.json',
-              'serial.idl',
-              'socket.idl',
-              'sockets_tcp.idl',
-              'sockets_tcp_server.idl',
-              'sockets_udp.idl',
-              'storage.json',
-              'test.json',
-              'usb.idl',
-            ],
-          }, {
-            # TODO: Eliminate these on Android. See crbug.com/305852.
-            'schema_files': [
-              'extensions_manifest_types.json',
-              'runtime.json',
-            ],
-          }],
-        ],
-        'cc_dir': 'extensions/common/api',
-        'root_namespace': 'extensions::core_api',
-        'impl_dir': 'extensions/browser/api',
+          'proto_in_dir': 'cast_channel',
+          'proto_out_dir': 'extensions/common/api/cast_channel',
       },
-      'dependencies': [
-        '<(DEPTH)/device/serial/serial.gyp:device_serial',
-        '<(DEPTH)/skia/skia.gyp:skia',
-      ],
+      'includes': [ '../../../build/protoc.gypi' ]
     },
   ],
 }

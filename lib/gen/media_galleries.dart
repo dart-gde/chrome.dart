@@ -140,6 +140,47 @@ class ChromeMediaGalleries extends ChromeApi {
     return completer.future;
   }
 
+  /**
+   * Adds a gallery watch for the gallery with the specified gallery ID. The
+   * given callback is then fired with a success or failure result.
+   */
+  Future<AddGalleryWatchResult> addGalleryWatch(String galleryId) {
+    if (_mediaGalleries == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<AddGalleryWatchResult>.oneArg(_createAddGalleryWatchResult);
+    _mediaGalleries.callMethod('addGalleryWatch', [galleryId, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Removes a gallery watch for the gallery with the specified gallery ID.
+   */
+  void removeGalleryWatch(String galleryId) {
+    if (_mediaGalleries == null) _throwNotAvailable();
+
+    _mediaGalleries.callMethod('removeGalleryWatch', [galleryId]);
+  }
+
+  /**
+   * Notifies which galleries are being watched via the given callback.
+   */
+  Future<List<String>> getAllGalleryWatch() {
+    if (_mediaGalleries == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<List<String>>.oneArg(listify);
+    _mediaGalleries.callMethod('getAllGalleryWatch', [completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Removes all gallery watches.
+   */
+  void removeAllGalleryWatch() {
+    if (_mediaGalleries == null) _throwNotAvailable();
+
+    _mediaGalleries.callMethod('removeAllGalleryWatch');
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.mediaGalleries' is not available");
   }
@@ -396,6 +437,23 @@ class MediaMetadata extends ChromeObject {
 }
 
 /**
+ * A dictionary that describes the add gallery watch request results.
+ */
+class AddGalleryWatchResult extends ChromeObject {
+  AddGalleryWatchResult({String galleryId, bool success}) {
+    if (galleryId != null) this.galleryId = galleryId;
+    if (success != null) this.success = success;
+  }
+  AddGalleryWatchResult.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get galleryId => jsProxy['galleryId'];
+  set galleryId(String value) => jsProxy['galleryId'] = value;
+
+  bool get success => jsProxy['success'];
+  set success(bool value) => jsProxy['success'] = value;
+}
+
+/**
  * The return type for [addUserSelectedFolder].
  */
 class AddUserSelectedFolderResult {
@@ -414,6 +472,7 @@ ScanProgressDetails _createScanProgressDetails(JsObject jsProxy) => jsProxy == n
 FileSystem _createDOMFileSystem(JsObject jsProxy) => jsProxy == null ? null : new CrFileSystem.fromProxy(jsProxy);
 MediaFileSystemMetadata _createMediaFileSystemMetadata(JsObject jsProxy) => jsProxy == null ? null : new MediaFileSystemMetadata.fromProxy(jsProxy);
 MediaMetadata _createMediaMetadata(JsObject jsProxy) => jsProxy == null ? null : new MediaMetadata.fromProxy(jsProxy);
+AddGalleryWatchResult _createAddGalleryWatchResult(JsObject jsProxy) => jsProxy == null ? null : new AddGalleryWatchResult.fromProxy(jsProxy);
 GalleryChangeType _createGalleryChangeType(String value) => GalleryChangeType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 GetMediaFileSystemsInteractivity _createGetMediaFileSystemsInteractivity(String value) => GetMediaFileSystemsInteractivity.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 GetMetadataType _createGetMetadataType(String value) => GetMetadataType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
