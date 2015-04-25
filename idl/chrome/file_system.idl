@@ -112,7 +112,7 @@ namespace fileSystem {
       [instanceOf=FileEntry] optional object[] fileEntries);
   callback IsWritableCallback = void (boolean isWritable);
   callback IsRestorableCallback = void (boolean isRestorable);
-  [nodoc] callback GetObservedEntriesCallback = void (
+  callback GetObservedEntriesCallback = void (
       [instanceOf=Entry] object[] entries);
 
   interface Functions {

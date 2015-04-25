@@ -247,7 +247,7 @@ class RemovalOptions extends ChromeObject {
  * A set of data types. Missing data types are interpreted as `false`.
  */
 class DataTypeSet extends ChromeObject {
-  DataTypeSet({bool appcache, bool cache, bool cookies, bool downloads, bool fileSystems, bool formData, bool history, bool indexedDB, bool localStorage, bool serverBoundCertificates, bool pluginData, bool passwords, bool webSQL}) {
+  DataTypeSet({bool appcache, bool cache, bool cookies, bool downloads, bool fileSystems, bool formData, bool history, bool indexedDB, bool localStorage, bool serverBoundCertificates, bool passwords, bool pluginData, bool serviceWorkers, bool webSQL}) {
     if (appcache != null) this.appcache = appcache;
     if (cache != null) this.cache = cache;
     if (cookies != null) this.cookies = cookies;
@@ -258,8 +258,9 @@ class DataTypeSet extends ChromeObject {
     if (indexedDB != null) this.indexedDB = indexedDB;
     if (localStorage != null) this.localStorage = localStorage;
     if (serverBoundCertificates != null) this.serverBoundCertificates = serverBoundCertificates;
-    if (pluginData != null) this.pluginData = pluginData;
     if (passwords != null) this.passwords = passwords;
+    if (pluginData != null) this.pluginData = pluginData;
+    if (serviceWorkers != null) this.serviceWorkers = serviceWorkers;
     if (webSQL != null) this.webSQL = webSQL;
   }
   DataTypeSet.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -326,16 +327,22 @@ class DataTypeSet extends ChromeObject {
   set serverBoundCertificates(bool value) => jsProxy['serverBoundCertificates'] = value;
 
   /**
+   * Stored passwords.
+   */
+  bool get passwords => jsProxy['passwords'];
+  set passwords(bool value) => jsProxy['passwords'] = value;
+
+  /**
    * Plugins' data.
    */
   bool get pluginData => jsProxy['pluginData'];
   set pluginData(bool value) => jsProxy['pluginData'] = value;
 
   /**
-   * Stored passwords.
+   * Service Workers.
    */
-  bool get passwords => jsProxy['passwords'];
-  set passwords(bool value) => jsProxy['passwords'] = value;
+  bool get serviceWorkers => jsProxy['serviceWorkers'];
+  set serviceWorkers(bool value) => jsProxy['serviceWorkers'] = value;
 
   /**
    * Websites' WebSQL data.
