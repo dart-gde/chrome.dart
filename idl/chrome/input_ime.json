@@ -31,7 +31,10 @@
         "description": "Describes an input Context",
         "properties": {
           "contextID": {"type": "integer", "description": "This is used to specify targets of text field operations.  This ID becomes invalid as soon as onBlur is called."},
-          "type": {"type": "string", "description": "Type of value this text field edits, (Text, Number, URL, etc)", "enum": ["text", "search", "tel", "url", "email", "number", "password"]}
+          "type": {"type": "string", "description": "Type of value this text field edits, (Text, Number, URL, etc)", "enum": ["text", "search", "tel", "url", "email", "number", "password"]},
+          "autoCorrect": {"type": "boolean", "description": "Whether the text field wants auto-correct."},
+          "autoComplete": {"type": "boolean", "description": "Whether the text field wants auto-complete."},
+          "spellCheck": {"type": "boolean", "description": "Whether the text field wants spell-check."}
         }
       },
       {
@@ -101,8 +104,8 @@
                       "type": "integer"
                     },
                     "style": {
-                      "description": "How to render this segment",
-                      "enum": ["underline", "doubleUnderline"],
+                      "description": "The type of the underline to modify this segment.",
+                      "enum": ["underline", "doubleUnderline", "noUnderline"],
                       "type": "string"
                     }
                   }
@@ -497,6 +500,12 @@
             "type": "string",
             "name": "engineID",
             "description": "ID of the engine receiving the event"
+          },
+          {
+            "type": "string",
+            "name": "screen",
+            "enum": ["normal", "login", "lock", "secondary-login"],
+            "description": "The screen type under which the IME is activated."
           }
         ]
       },

@@ -193,7 +193,7 @@ class AdapterState extends ChromeObject {
  * Information about the state of a known Bluetooth device.
  */
 class BluetoothDevice extends ChromeObject {
-  BluetoothDevice({String address, String name, int deviceClass, VendorIdSource vendorIdSource, int vendorId, int productId, int deviceId, DeviceType type, bool paired, bool connected, int rssi, int currentHostTransmitPower, int maximumHostTransmitPower, List<String> uuids}) {
+  BluetoothDevice({String address, String name, int deviceClass, VendorIdSource vendorIdSource, int vendorId, int productId, int deviceId, DeviceType type, bool paired, bool connected, List<String> uuids}) {
     if (address != null) this.address = address;
     if (name != null) this.name = name;
     if (deviceClass != null) this.deviceClass = deviceClass;
@@ -204,9 +204,6 @@ class BluetoothDevice extends ChromeObject {
     if (type != null) this.type = type;
     if (paired != null) this.paired = paired;
     if (connected != null) this.connected = connected;
-    if (rssi != null) this.rssi = rssi;
-    if (currentHostTransmitPower != null) this.currentHostTransmitPower = currentHostTransmitPower;
-    if (maximumHostTransmitPower != null) this.maximumHostTransmitPower = maximumHostTransmitPower;
     if (uuids != null) this.uuids = uuids;
   }
   BluetoothDevice.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -240,15 +237,6 @@ class BluetoothDevice extends ChromeObject {
 
   bool get connected => jsProxy['connected'];
   set connected(bool value) => jsProxy['connected'] = value;
-
-  int get rssi => jsProxy['rssi'];
-  set rssi(int value) => jsProxy['rssi'] = value;
-
-  int get currentHostTransmitPower => jsProxy['currentHostTransmitPower'];
-  set currentHostTransmitPower(int value) => jsProxy['currentHostTransmitPower'] = value;
-
-  int get maximumHostTransmitPower => jsProxy['maximumHostTransmitPower'];
-  set maximumHostTransmitPower(int value) => jsProxy['maximumHostTransmitPower'] = value;
 
   List<String> get uuids => listify(jsProxy['uuids']);
   set uuids(List<String> value) => jsProxy['uuids'] = jsify(value);

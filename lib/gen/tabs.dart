@@ -6,8 +6,8 @@
  */
 library chrome.tabs;
 
+import 'extension_types.dart';
 import 'runtime.dart';
-import 'types.dart';
 import 'windows.dart';
 import '../src/common.dart';
 
@@ -199,11 +199,11 @@ class ChromeTabs extends ChromeApi {
    * occurs while connecting to the specified tab, the callback will be called
    * with no arguments and [runtime.lastError] will be set to the error message.
    */
-  Future<dynamic> sendMessage(int tabId, dynamic message) {
+  Future<dynamic> sendMessage(int tabId, dynamic message, [TabsSendMessageParams options]) {
     if (_tabs == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<dynamic>.oneArg();
-    _tabs.callMethod('sendMessage', [tabId, jsify(message), completer.callback]);
+    _tabs.callMethod('sendMessage', [tabId, jsify(message), jsify(options), completer.callback]);
     return completer.future;
   }
 
@@ -744,61 +744,6 @@ class Tab extends ChromeObject {
 }
 
 /**
- * Details of the script or CSS to inject. Either the code or the file property
- * must be set, but both may not be set at the same time.
- */
-class InjectDetails extends ChromeObject {
-  InjectDetails({String code, String file, bool allFrames, bool matchAboutBlank, String runAt}) {
-    if (code != null) this.code = code;
-    if (file != null) this.file = file;
-    if (allFrames != null) this.allFrames = allFrames;
-    if (matchAboutBlank != null) this.matchAboutBlank = matchAboutBlank;
-    if (runAt != null) this.runAt = runAt;
-  }
-  InjectDetails.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-
-  /**
-   * JavaScript or CSS code to inject.<br><br><b>Warning:</b><br>Be careful
-   * using the `code` parameter. Incorrect use of it may open your extension to
-   * [cross site scripting](https://en.wikipedia.org/wiki/Cross-site_scripting)
-   * attacks.
-   */
-  String get code => jsProxy['code'];
-  set code(String value) => jsProxy['code'] = value;
-
-  /**
-   * JavaScript or CSS file to inject.
-   */
-  String get file => jsProxy['file'];
-  set file(String value) => jsProxy['file'] = value;
-
-  /**
-   * If allFrames is `true`, implies that the JavaScript or CSS should be
-   * injected into all frames of current page. By default, it's `false` and is
-   * only injected into the top frame.
-   */
-  bool get allFrames => jsProxy['allFrames'];
-  set allFrames(bool value) => jsProxy['allFrames'] = value;
-
-  /**
-   * If matchAboutBlank is true, then the code is also injected in about:blank
-   * and about:srcdoc frames if your extension has access to its parent
-   * document. Code cannot be inserted in top-level about:-frames. By default it
-   * is `false`.
-   */
-  bool get matchAboutBlank => jsProxy['matchAboutBlank'];
-  set matchAboutBlank(bool value) => jsProxy['matchAboutBlank'] = value;
-
-  /**
-   * The soonest that the JavaScript or CSS will be injected into the tab.
-   * Defaults to "document_idle".
-   * enum of `document_start`, `document_end`, `document_idle`
-   */
-  String get runAt => jsProxy['runAt'];
-  set runAt(String value) => jsProxy['runAt'] = value;
-}
-
-/**
  * Defines how zoom changes in a tab are handled and at what scope.
  */
 class ZoomSettings extends ChromeObject {
@@ -845,8 +790,9 @@ class ZoomSettings extends ChromeObject {
 }
 
 class TabsConnectParams extends ChromeObject {
-  TabsConnectParams({String name}) {
+  TabsConnectParams({String name, int frameId}) {
     if (name != null) this.name = name;
+    if (frameId != null) this.frameId = frameId;
   }
   TabsConnectParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -856,6 +802,27 @@ class TabsConnectParams extends ChromeObject {
    */
   String get name => jsProxy['name'];
   set name(String value) => jsProxy['name'] = value;
+
+  /**
+   * Open a port to a specific [frame](webNavigation#frame_ids) identified by
+   * `frameId` instead of all frames in the tab.
+   */
+  int get frameId => jsProxy['frameId'];
+  set frameId(int value) => jsProxy['frameId'] = value;
+}
+
+class TabsSendMessageParams extends ChromeObject {
+  TabsSendMessageParams({int frameId}) {
+    if (frameId != null) this.frameId = frameId;
+  }
+  TabsSendMessageParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  /**
+   * Send a message to a specific [frame](webNavigation#frame_ids) identified by
+   * `frameId` instead of all frames in the tab.
+   */
+  int get frameId => jsProxy['frameId'];
+  set frameId(int value) => jsProxy['frameId'] = value;
 }
 
 class TabsCreateParams extends ChromeObject {
@@ -922,7 +889,7 @@ class TabsCreateParams extends ChromeObject {
 }
 
 class TabsQueryParams extends ChromeObject {
-  TabsQueryParams({bool active, bool pinned, bool highlighted, bool currentWindow, bool lastFocusedWindow, String status, String title, String url, int windowId, String windowType, int index}) {
+  TabsQueryParams({bool active, bool pinned, bool highlighted, bool currentWindow, bool lastFocusedWindow, String status, String title, var url, int windowId, String windowType, int index}) {
     if (active != null) this.active = active;
     if (pinned != null) this.pinned = pinned;
     if (highlighted != null) this.highlighted = highlighted;
@@ -981,11 +948,11 @@ class TabsQueryParams extends ChromeObject {
   set title(String value) => jsProxy['title'] = value;
 
   /**
-   * Match tabs against a [URL pattern](match_patterns). Note that fragment
-   * identifiers are not matched.
+   * Match tabs against one or more [URL patterns](match_patterns). Note that
+   * fragment identifiers are not matched.
    */
-  String get url => jsProxy['url'];
-  set url(String value) => jsProxy['url'] = value;
+  dynamic get url => jsProxy['url'];
+  set url(var value) => jsProxy['url'] = jsify(value);
 
   /**
    * The ID of the parent window, or [windows.WINDOW_ID_CURRENT] for the

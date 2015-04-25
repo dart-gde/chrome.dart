@@ -29,7 +29,7 @@ class ChromeIdentity extends ChromeApi {
    * Retrieves a list of AccountInfo objects describing the accounts present on
    * the profile.
    * 
-   *  `getAccounts` is only supported on dev channel.
+   * `getAccounts` is only supported on dev channel.
    */
   Future<List<AccountInfo>> getAccounts() {
     if (_identity == null) _throwNotAvailable();

@@ -74,14 +74,14 @@
               "messageId": {
                 "type": "string",
                 "minLength": 1,
-                "description": "The ID of the message. It must be unique for each message in scope of the applications. See the <a href='cloudMessagingV2#send_messages'>Cloud Messaging documentation</a> for advice for picking and handling an ID."
+                "description": "The ID of the message. It must be unique for each message in scope of the applications. See the <a href='cloudMessaging#send_messages'>Cloud Messaging documentation</a> for advice for picking and handling an ID."
               },
               "timeToLive": {
                 "type": "integer",
                 "minimum": 0,
-                "maximum": 2419200,
+                "maximum": 86400,
                 "optional": true,
-                "description": "Time-to-live of the message in seconds. If it is not possible to send the message within that time, an onSendError event will be raised. A time-to-live of 0 indicates that the message should be sent immediately or fail if it's not possible. The maximum and a default value of time-to-live is 2419200 seconds (4 weeks)."
+                "description": "Time-to-live of the message in seconds. If it is not possible to send the message within that time, an onSendError event will be raised. A time-to-live of 0 indicates that the message should be sent immediately or fail if it's not possible. The maximum and a default value of time-to-live is 86400 seconds (1 day)."
               },
               "data": {
                 "type": "object",
@@ -128,10 +128,15 @@
                 },
                 "description": "The message data."
               },
+              "from": {
+                "type": "string",
+                "optional": true,
+                "description": "The sender who issued the message."
+              },
               "collapseKey": {
                 "type": "string",
                 "optional": true,
-                "desctription": "The collapse key of a message. See <a href='cloudMessagingV2#collapsible_messages'>Collapsible Messages</a> section of Cloud Messaging documentation for details."
+                "description": "The collapse key of a message. See <a href='cloudMessaging#collapsible_messages'>Collapsible Messages</a> section of Cloud Messaging documentation for details."
               }
             }
           }
@@ -140,7 +145,7 @@
       {
         "name": "onMessagesDeleted",
         "type": "function",
-        "description": "Fired when a GCM server had to delete messages sent by an app server to the application. See <a href='cloudMessagingV2#messages_deleted_event'>Messages deleted event</a> section of Cloud Messaging documentation for details on handling this event."
+        "description": "Fired when a GCM server had to delete messages sent by an app server to the application. See <a href='cloudMessaging#messages_deleted_event'>Messages deleted event</a> section of Cloud Messaging documentation for details on handling this event."
       },
       {
         "name": "onSendError",

@@ -26,44 +26,6 @@
         ]
       },
       {
-        "name": "installBundle",
-        "description": "Initiates the install process for the given bundle of extensions.",
-        "parameters": [
-          {
-            "name": "details",
-            "description": "An array of extension details to be installed.",
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "The id of the extension to be installed.",
-                  "minLength": 32,
-                  "maxLength": 32
-                },
-                "manifest": {
-                  "type": "string",
-                  "description": "A string with the contents of the extension's manifest.json file. During the install process, the browser will check that the downloaded extension's manifest matches what was passed in here.",
-                  "minLength": 1
-                },
-                "localizedName": {
-                  "type": "string",
-                  "description": "A string to use instead of the raw value of the 'name' key from manifest.json."
-                }
-              }
-            }
-          },
-          {
-            "name": "callback",
-            "type": "function",
-            "description": "Called when the install process completes. Upon failures, chrome.runtime.lastError will be set to 'user_canceled' or 'unknown_error'.",
-            "optional": true,
-            "parameters": []
-          }
-        ]
-      },
-      {
         "name": "beginInstallWithManifest3",
         "description": "Initiates the install process for the given extension.",
         "parameters": [
@@ -129,7 +91,7 @@
               {
                 "name": "result",
                 "type": "string",
-                "description": "A string result code, which will be empty upon success. The possible values in the case of errors include 'unknown_error', 'user_cancelled', 'manifest_error', 'icon_error', 'invalid_id', 'permission_denied', 'invalid_icon_url', 'signin_failed', and 'already_installed'."
+                "description": "A string result code, which will be empty upon success. The possible values in the case of errors include 'unknown_error', 'user_cancelled', 'manifest_error', 'icon_error', 'invalid_id', 'permission_denied', 'invalid_icon_url' and 'already_installed'."
               }
             ]
           }
@@ -259,24 +221,6 @@
         ]
       },
       {
-        "name": "signIn",
-        "description": "Signs the user into Chrome.",
-        "parameters": [
-          {
-            "name": "continue_url",
-            "type": "string",
-            "description": "The continue URL to navigate to once sign-in completes."
-          },
-          {
-            "name": "callback",
-            "type": "function",
-            "description": "Called if the user is already signed in or if the sign-in method was invoked incorrectly (e.g. with an invalid continue URL), sign-in is unavailable (e.g. in Incognito), or the API was not called in response to a user gesture. Upon such a failure, chrome.runtime.lastError will be set to 'invalid_continue_url', 'signin_is_disallowed', 'signin_failed', 'merge_session_failed', or 'user_gesture_required'.",
-            "optional": true,
-            "parameters": []
-          }
-        ]
-      },
-      {
         "name": "getEphemeralAppsEnabled",
         "description": "Returns whether the ephemeral apps feature is enabled.",
         "parameters": [
@@ -307,7 +251,7 @@
               {
                 "name": "result",
                 "type": "string",
-                "enum": ["success", "user_gesture_required", "unknown_error", "feature_disabled", "unsupported_extension_type", "missing_dependencies", "install_error", "user_cancelled", "invalid_id", "blacklisted", "blocked_by_policy", "install_in_progress"],
+                "enum": ["success", "user_gesture_required", "unknown_error", "feature_disabled", "unsupported_extension_type", "missing_dependencies", "install_error", "user_cancelled", "invalid_id", "blacklisted", "blocked_by_policy", "install_in_progress", "launch_in_progress"],
                 "description": "Whether an attempt to launch an app succeeded, or the reason for failure."
               }
             ]

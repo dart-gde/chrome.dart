@@ -7,8 +7,8 @@
  */
 library chrome.contextMenus;
 
-//import 'context_menus_internal.dart';
-//import 'tabs.dart';
+import 'context_menus_internal.dart';
+import 'tabs.dart';
 import '../src/common.dart';
 
 /**
@@ -28,6 +28,12 @@ class ChromeContextMenus extends ChromeApi {
   }
 
   bool get available => _contextMenus != null;
+
+  /**
+   * The maximum number of top level extension items that can be added to an
+   * extension action context menu. Any items beyond this limit will be ignored.
+   */
+  int get ACTION_MENU_TOP_LEVEL_LIMIT => _contextMenus['ACTION_MENU_TOP_LEVEL_LIMIT'];
 
   /**
    * Creates a new context menu item. Note that if an error occurs during
