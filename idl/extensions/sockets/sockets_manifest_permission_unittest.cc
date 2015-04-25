@@ -8,7 +8,6 @@
 #include "base/pickle.h"
 #include "base/values.h"
 #include "extensions/common/api/sockets/sockets_manifest_permission.h"
-#include "extensions/common/extension_messages.h"
 #include "extensions/common/manifest_constants.h"
 #include "ipc/ipc_message.h"
 #include "testing/gtest/include/gtest/gtest.h"
@@ -98,10 +97,9 @@ static testing::AssertionResult CheckFormat(
   // Note: We use multiset because SocketsManifestPermission does not have to
   // store entries in the order found in the json message.
   std::multiset<CheckFormatEntry> parsed_permissions;
-  for (SocketsManifestPermission::SocketPermissionEntrySet::const_iterator it =
+  for (SocketPermissionEntrySet::const_iterator it =
            permission->entries().begin();
-       it != permission->entries().end();
-       ++it) {
+       it != permission->entries().end(); ++it) {
     parsed_permissions.insert(
         CheckFormatEntry(it->pattern().type, it->GetHostPatternAsString()));
   }

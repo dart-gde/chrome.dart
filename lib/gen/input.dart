@@ -27,8 +27,8 @@ class ChromeInputIme extends ChromeApi {
    * This event is sent when an IME is activated. It signals that the IME will
    * be receiving onKeyPress events.
    */
-  Stream<String> get onActivate => _onActivate.stream;
-  ChromeStreamController<String> _onActivate;
+  Stream<OnActivateEvent> get onActivate => _onActivate.stream;
+  ChromeStreamController<OnActivateEvent> _onActivate;
 
   /**
    * This event is sent when an IME is deactivated. It signals that the IME will
@@ -93,7 +93,7 @@ class ChromeInputIme extends ChromeApi {
 
   ChromeInputIme._() {
     var getApi = () => _input_ime;
-    _onActivate = new ChromeStreamController<String>.oneArg(getApi, 'onActivate', selfConverter);
+    _onActivate = new ChromeStreamController<OnActivateEvent>.twoArgs(getApi, 'onActivate', _createOnActivateEvent);
     _onDeactivated = new ChromeStreamController<String>.oneArg(getApi, 'onDeactivated', selfConverter);
     _onFocus = new ChromeStreamController<InputContext>.oneArg(getApi, 'onFocus', _createInputContext);
     _onBlur = new ChromeStreamController<int>.oneArg(getApi, 'onBlur', selfConverter);
@@ -252,6 +252,25 @@ class ChromeInputIme extends ChromeApi {
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.input.ime' is not available");
   }
+}
+
+/**
+ * This event is sent when an IME is activated. It signals that the IME will be
+ * receiving onKeyPress events.
+ */
+class OnActivateEvent {
+  /**
+   * ID of the engine receiving the event
+   */
+  final String engineID;
+
+  /**
+   * The screen type under which the IME is activated.
+   * enum of `normal`, `login`, `lock`, `secondary-login`
+   */
+  final String screen;
+
+  OnActivateEvent(this.engineID, this.screen);
 }
 
 /**
@@ -496,9 +515,12 @@ class KeyboardEvent extends ChromeObject {
  * Describes an input Context
  */
 class InputContext extends ChromeObject {
-  InputContext({int contextID, String type}) {
+  InputContext({int contextID, String type, bool autoCorrect, bool autoComplete, bool spellCheck}) {
     if (contextID != null) this.contextID = contextID;
     if (type != null) this.type = type;
+    if (autoCorrect != null) this.autoCorrect = autoCorrect;
+    if (autoComplete != null) this.autoComplete = autoComplete;
+    if (spellCheck != null) this.spellCheck = spellCheck;
   }
   InputContext.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -515,6 +537,24 @@ class InputContext extends ChromeObject {
    */
   String get type => jsProxy['type'];
   set type(String value) => jsProxy['type'] = value;
+
+  /**
+   * Whether the text field wants auto-correct.
+   */
+  bool get autoCorrect => jsProxy['autoCorrect'];
+  set autoCorrect(bool value) => jsProxy['autoCorrect'] = value;
+
+  /**
+   * Whether the text field wants auto-complete.
+   */
+  bool get autoComplete => jsProxy['autoComplete'];
+  set autoComplete(bool value) => jsProxy['autoComplete'] = value;
+
+  /**
+   * Whether the text field wants spell-check.
+   */
+  bool get spellCheck => jsProxy['spellCheck'];
+  set spellCheck(bool value) => jsProxy['spellCheck'] = value;
 }
 
 /**
@@ -805,6 +845,8 @@ class InputImeDeleteSurroundingTextParams extends ChromeObject {
   set length(int value) => jsProxy['length'] = value;
 }
 
+OnActivateEvent _createOnActivateEvent(String engineID, String screen) =>
+    new OnActivateEvent(engineID, screen);
 InputContext _createInputContext(JsObject jsProxy) => jsProxy == null ? null : new InputContext.fromProxy(jsProxy);
 OnKeyEventEvent _createOnKeyEventEvent(String engineID, JsObject keyData) =>
     new OnKeyEventEvent(engineID, _createKeyboardEvent(keyData));

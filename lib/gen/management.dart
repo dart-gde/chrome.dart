@@ -77,6 +77,19 @@ class ChromeManagement extends ChromeApi {
   }
 
   /**
+   * Returns information about the calling extension, app, or theme. Note: This
+   * function can be used without requesting the 'management' permission in the
+   * manifest.
+   */
+  Future<ExtensionInfo> getSelf() {
+    if (_management == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<ExtensionInfo>.oneArg(_createExtensionInfo);
+    _management.callMethod('getSelf', [completer.callback]);
+    return completer.future;
+  }
+
+  /**
    * Returns a list of [permission warnings](permission_warnings) for the given
    * extension id.
    * 
@@ -160,7 +173,7 @@ class ChromeManagement extends ChromeApi {
 
   /**
    * Display options to create shortcuts for an app. On Mac, only packaged app
-   * shortcuts can be created. This function is new in Chrome 37.
+   * shortcuts can be created.
    * 
    * [id] This should be the id from an app item of [management.ExtensionInfo].
    */
@@ -173,7 +186,7 @@ class ChromeManagement extends ChromeApi {
   }
 
   /**
-   * Set the launch type of an app. This function is new in Chrome 37.
+   * Set the launch type of an app.
    * 
    * [id] This should be the id from an app item of [management.ExtensionInfo].
    * 
@@ -190,8 +203,7 @@ class ChromeManagement extends ChromeApi {
   }
 
   /**
-   * Generate an app for a URL. Returns the generated bookmark app. This
-   * function is new in Chrome 37.
+   * Generate an app for a URL. Returns the generated bookmark app.
    * 
    * [url] The URL of a web page. The scheme of the URL can only be "http" or
    * "https".
@@ -404,15 +416,13 @@ class ExtensionInfo extends ChromeObject {
   set installType(String value) => jsProxy['installType'] = value;
 
   /**
-   * The app launch type (only present for apps). This property is new in Chrome
-   * 37.
+   * The app launch type (only present for apps).
    */
   LaunchType get launchType => _createLaunchType(jsProxy['launchType']);
   set launchType(LaunchType value) => jsProxy['launchType'] = jsify(value);
 
   /**
-   * The currently available launch types (only present for apps). This property
-   * is new in Chrome 37.
+   * The currently available launch types (only present for apps).
    */
   List<LaunchType> get availableLaunchTypes => listify(jsProxy['availableLaunchTypes'], _createLaunchType);
   set availableLaunchTypes(List<LaunchType> value) => jsProxy['availableLaunchTypes'] = jsify(value);

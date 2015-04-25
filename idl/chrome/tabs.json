@@ -31,23 +31,6 @@
         }
       },
       {
-        "id": "InjectDetails",
-        "type": "object",
-        "description": "Details of the script or CSS to inject. Either the code or the file property must be set, but both may not be set at the same time.",
-        "properties": {
-          "code": {"type": "string", "optional": true, "description": "JavaScript or CSS code to inject.<br><br><b>Warning:</b><br>Be careful using the <code>code</code> parameter. Incorrect use of it may open your extension to <a href=\"https://en.wikipedia.org/wiki/Cross-site_scripting\">cross site scripting</a> attacks."},
-          "file": {"type": "string", "optional": true, "description": "JavaScript or CSS file to inject."},
-          "allFrames": {"type": "boolean", "optional": true, "description": "If allFrames is <code>true</code>, implies that the JavaScript or CSS should be injected into all frames of current page. By default, it's <code>false</code> and is only injected into the top frame."},
-          "matchAboutBlank": {"type": "boolean", "optional": true, "description": "If matchAboutBlank is true, then the code is also injected in about:blank and about:srcdoc frames if your extension has access to its parent document. Code cannot be inserted in top-level about:-frames. By default it is <code>false</code>."},
-          "runAt": {
-            "type": "string",
-            "optional": true,
-            "enum": ["document_start", "document_end", "document_idle"],
-            "description": "The soonest that the JavaScript or CSS will be injected into the tab. Defaults to \"document_idle\"."
-          }
-        }
-      },
-      {
         "id": "ZoomSettings",
         "type": "object",
         "description": "Defines how zoom changes in a tab are handled and at what scope.",
@@ -142,7 +125,13 @@
             "type": "object",
             "name": "connectInfo",
             "properties": {
-              "name": { "type": "string", "optional": true, "description": "Will be passed into onConnect for content scripts that are listening for the connection event." }
+              "name": { "type": "string", "optional": true, "description": "Will be passed into onConnect for content scripts that are listening for the connection event." },
+              "frameId": {
+                "type": "integer",
+                "optional": true,
+                "minimum": 0,
+                "description": "Open a port to a specific <a href='webNavigation#frame_ids'>frame</a> identified by <code>frameId</code> instead of all frames in the tab."
+              }
             },
             "optional": true
           }
@@ -196,6 +185,19 @@
           {
             "type": "any",
             "name": "message"
+          },
+          {
+            "type": "object",
+            "name": "options",
+            "properties": {
+              "frameId": {
+                "type": "integer",
+                "optional": true,
+                "minimum": 0,
+                "description": "Send a message to a specific <a href='webNavigation#frame_ids'>frame</a> identified by <code>frameId</code> instead of all frames in the tab."
+              }
+            },
+            "optional": true
           },
           {
             "type": "function",
@@ -391,9 +393,12 @@
                 "description": "Match page titles against a pattern."
               },
               "url": {
-                "type": "string",
+                "choices": [
+                  {"type": "string"},
+                  {"type": "array", "items": {"type": "string"}}
+                ],
                 "optional": true,
-                "description": "Match tabs against a <a href='match_patterns'>URL pattern</a>. Note that fragment identifiers are not matched."
+                "description": "Match tabs against one or more <a href='match_patterns'>URL patterns</a>. Note that fragment identifiers are not matched."
               },
               "windowId": {
                 "type": "integer",
@@ -654,7 +659,7 @@
             "description": "The target window. Defaults to the <a href='windows#current-window'>current window</a>."
           },
           {
-            "$ref": "types.ImageDetails",
+            "$ref": "extensionTypes.ImageDetails",
             "name": "options",
             "optional": true
           },
@@ -672,7 +677,7 @@
         "parameters": [
           {"type": "integer", "name": "tabId", "minimum": 0, "optional": true, "description": "The ID of the tab in which to run the script; defaults to the active tab of the current window."},
           {
-            "$ref": "tabs.InjectDetails",
+            "$ref": "extensionTypes.InjectDetails",
             "name": "details",
             "description": "Details of the script to run."
           },
@@ -700,7 +705,7 @@
         "parameters": [
           {"type": "integer", "name": "tabId", "minimum": 0, "optional": true, "description": "The ID of the tab in which to insert the CSS; defaults to the active tab of the current window."},
           {
-            "$ref": "tabs.InjectDetails",
+            "$ref": "extensionTypes.InjectDetails",
             "name": "details",
             "description": "Details of the CSS text to insert."
           },

@@ -1,4 +1,7 @@
 # Changelog - chrome.dart
+## 0.7.0-dev1 2015-04-25
+- updated the APIs to M41
+- removed scriptBadge api that was dropped in M41
 
 ## 0.6.5 2014-11-06
 - fixed an issue with Port.onMessage() and Port.sendMessage()

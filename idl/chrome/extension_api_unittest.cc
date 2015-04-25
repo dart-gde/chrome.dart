@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-#include "base/file_util.h"
 #include "base/files/file_path.h"
+#include "base/files/file_util.h"
 #include "base/json/json_reader.h"
 #include "base/json/json_writer.h"
 #include "base/memory/ref_counted.h"
@@ -57,7 +57,7 @@ TEST(ExtensionAPITest, Creation) {
     { &empty_instance, false }
   };
 
-  for (size_t i = 0; i < ARRAYSIZE_UNSAFE(test_data); ++i) {
+  for (size_t i = 0; i < arraysize(test_data); ++i) {
     EXPECT_EQ(test_data[i].expect_populated,
               test_data[i].api->GetSchema("bookmarks.create") != NULL);
   }
@@ -75,108 +75,13 @@ TEST(ExtensionAPITest, SplitDependencyName) {
                    {"foo:bar", "foo", "bar"},
                    {"foo:bar.baz", "foo", "bar.baz"}};
 
-  for (size_t i = 0; i < ARRAYSIZE_UNSAFE(test_data); ++i) {
+  for (size_t i = 0; i < arraysize(test_data); ++i) {
     std::string feature_type;
     std::string feature_name;
     ExtensionAPI::SplitDependencyName(
         test_data[i].input, &feature_type, &feature_name);
     EXPECT_EQ(test_data[i].expected_feature_type, feature_type) << i;
     EXPECT_EQ(test_data[i].expected_feature_name, feature_name) << i;
-  }
-}
-
-TEST(ExtensionAPITest, IsAvailableInUntrustedContext) {
-  scoped_ptr<ExtensionAPI> extension_api(
-      ExtensionAPI::CreateWithDefaultConfiguration());
-  scoped_refptr<const Extension> extension =
-      ExtensionBuilder()
-          .SetManifest(DictionaryBuilder()
-                           .Set("name", "extension")
-                           .Set("version", "1")
-                           .Set("permissions", ListBuilder().Append("storage"))
-                           .Set("manifest_version", 2))
-          .Build();
-
-  EXPECT_TRUE(extension_api->IsAvailableInUntrustedContext("runtime.connect",
-                                                           extension.get()));
-  EXPECT_TRUE(extension_api->IsAvailableInUntrustedContext("runtime.onConnect",
-                                                           extension.get()));
-  EXPECT_TRUE(extension_api->IsAvailableInUntrustedContext("runtime.lastError",
-                                                           extension.get()));
-
-  // Exists, but privileged.
-  EXPECT_FALSE(extension_api->IsAvailableInUntrustedContext(
-      "extension.getViews", extension.get()));
-  EXPECT_FALSE(extension_api->IsAvailableInUntrustedContext("history.search",
-                                                            extension.get()));
-
-  // Whole APIs that are unprivileged.
-  EXPECT_TRUE(
-      extension_api->IsAvailableInUntrustedContext("app", extension.get()));
-  EXPECT_TRUE(extension_api->IsAvailableInUntrustedContext("app.getDetails",
-                                                           extension.get()));
-  // There is no feature "app.isInstalled" (it's "app.getIsInstalled") but
-  // this should be available nonetheless.
-  EXPECT_TRUE(extension_api->IsAvailableInUntrustedContext("app.isInstalled",
-                                                           extension.get()));
-  EXPECT_TRUE(extension_api->IsAvailableInUntrustedContext("storage.local",
-                                                           extension.get()));
-  EXPECT_TRUE(extension_api->IsAvailableInUntrustedContext(
-      "storage.local.onChanged", extension.get()));
-  EXPECT_TRUE(extension_api->IsAvailableInUntrustedContext("storage.local.set",
-                                                           extension.get()));
-  EXPECT_TRUE(extension_api->IsAvailableInUntrustedContext(
-      "storage.local.MAX_ITEMS", extension.get()));
-  EXPECT_TRUE(extension_api->IsAvailableInUntrustedContext("storage.set",
-                                                           extension.get()));
-
-  // APIs which override unprivileged APIs.
-  EXPECT_FALSE(extension_api->IsAvailableInUntrustedContext("app.runtime",
-                                                            extension.get()));
-  EXPECT_FALSE(extension_api->IsAvailableInUntrustedContext("app.window",
-                                                            extension.get()));
-}
-
-TEST(ExtensionAPITest, IsAvailableInUntrustedContextFeatures) {
-  struct {
-    std::string api_full_name;
-    bool expect_is_available;
-  } test_data[] = {{"test1", true},
-                   {"test1.foo", false},
-                   {"test2", false},
-                   {"test2.foo", true},
-                   {"test2.bar", true},
-                   {"test2.baz", false},
-                   {"test2.qux", false},
-                   {"test3", true},
-                   {"test3.foo", false},
-                   {"test4", true},
-                   {"test5", true}};
-
-  base::FilePath api_features_path;
-  PathService::Get(chrome::DIR_TEST_DATA, &api_features_path);
-  api_features_path = api_features_path.AppendASCII("extensions")
-      .AppendASCII("extension_api_unittest")
-      .AppendASCII("privileged_api_features.json");
-
-  std::string api_features_str;
-  ASSERT_TRUE(base::ReadFileToString(
-      api_features_path, &api_features_str)) << "privileged_api_features.json";
-
-  scoped_ptr<base::DictionaryValue> value(static_cast<base::DictionaryValue*>(
-      base::JSONReader::Read(api_features_str)));
-  BaseFeatureProvider api_feature_provider(*value, CreateAPIFeature);
-
-  scoped_refptr<Extension> extension =
-      BuildExtension(ExtensionBuilder().Pass()).Build();
-
-  for (size_t i = 0; i < ARRAYSIZE_UNSAFE(test_data); ++i) {
-    ExtensionAPI api;
-    api.RegisterDependencyProvider("api", &api_feature_provider);
-    EXPECT_EQ(test_data[i].expect_is_available,
-              api.IsAvailableInUntrustedContext(test_data[i].api_full_name,
-                                                extension.get()))
-        << i;
   }
 }
 
@@ -268,7 +173,7 @@ TEST(ExtensionAPITest, APIFeatures) {
       base::JSONReader::Read(api_features_str)));
   BaseFeatureProvider api_feature_provider(*value, CreateAPIFeature);
 
-  for (size_t i = 0; i < ARRAYSIZE_UNSAFE(test_data); ++i) {
+  for (size_t i = 0; i < arraysize(test_data); ++i) {
     ExtensionAPI api;
     api.RegisterDependencyProvider("api", &api_feature_provider);
     for (base::DictionaryValue::Iterator iter(*value); !iter.IsAtEnd();
@@ -348,7 +253,7 @@ TEST(ExtensionAPITest, IsAnyFeatureAvailableToContext) {
       base::JSONReader::Read(api_features_str)));
   BaseFeatureProvider api_feature_provider(*value, CreateAPIFeature);
 
-  for (size_t i = 0; i < ARRAYSIZE_UNSAFE(test_data); ++i) {
+  for (size_t i = 0; i < arraysize(test_data); ++i) {
     ExtensionAPI api;
     api.RegisterDependencyProvider("api", &api_feature_provider);
     for (base::DictionaryValue::Iterator iter(*value); !iter.IsAtEnd();
@@ -673,9 +578,9 @@ TEST(ExtensionAPITest, URLMatching) {
   EXPECT_TRUE(MatchesURL(api.get(), "app", "https://blah.net"));
   EXPECT_TRUE(MatchesURL(api.get(), "app", "file://somefile.html"));
 
-  // But not internal URLs.
-  EXPECT_FALSE(MatchesURL(api.get(), "app", "about:flags"));
-  EXPECT_FALSE(MatchesURL(api.get(), "app", "chrome://flags"));
+  // Also to internal URLs.
+  EXPECT_TRUE(MatchesURL(api.get(), "app", "about:flags"));
+  EXPECT_TRUE(MatchesURL(api.get(), "app", "chrome://flags"));
 
   // "app" should be available to chrome-extension URLs.
   EXPECT_TRUE(MatchesURL(api.get(), "app",
@@ -711,7 +616,7 @@ TEST(ExtensionAPITest, GetAPINameFromFullName) {
   };
 
   scoped_ptr<ExtensionAPI> api(ExtensionAPI::CreateWithDefaultConfiguration());
-  for (size_t i = 0; i < ARRAYSIZE_UNSAFE(test_data); ++i) {
+  for (size_t i = 0; i < arraysize(test_data); ++i) {
     std::string child_name;
     std::string api_name = api->GetAPINameFromFullName(test_data[i].input,
                                                        &child_name);
@@ -736,7 +641,7 @@ TEST(ExtensionAPITest, DefaultConfigurationFeatures) {
     { bookmarks_create }
   };
 
-  for (size_t i = 0; i < ARRAYSIZE_UNSAFE(test_data); ++i) {
+  for (size_t i = 0; i < arraysize(test_data); ++i) {
     SimpleFeature* feature = test_data[i].feature;
     ASSERT_TRUE(feature) << i;
 
@@ -772,8 +677,7 @@ TEST(ExtensionAPITest, FeaturesRequireContexts) {
     { api_features2.get(), false }
   };
 
-
-  for (size_t i = 0; i < ARRAYSIZE_UNSAFE(test_data); ++i) {
+  for (size_t i = 0; i < arraysize(test_data); ++i) {
     BaseFeatureProvider api_feature_provider(*test_data[i].api_features,
                                              CreateAPIFeature);
     Feature* feature = api_feature_provider.GetFeature("test");
@@ -894,6 +798,7 @@ TEST(ExtensionAPITest, NoPermissions) {
     { "management.uninstallSelf", true },
     // But other functions in those modules do.
     { "management.getPermissionWarningsById", false },
+    { "runtime.connectNative", false },
   };
 
   scoped_ptr<ExtensionAPI> extension_api(
@@ -901,7 +806,7 @@ TEST(ExtensionAPITest, NoPermissions) {
   scoped_refptr<Extension> extension =
       BuildExtension(ExtensionBuilder().Pass()).Build();
 
-  for (size_t i = 0; i < ARRAYSIZE_UNSAFE(kTests); ++i) {
+  for (size_t i = 0; i < arraysize(kTests); ++i) {
     EXPECT_EQ(kTests[i].expect_success,
               extension_api->IsAvailable(kTests[i].permission_name,
                                          extension.get(),
