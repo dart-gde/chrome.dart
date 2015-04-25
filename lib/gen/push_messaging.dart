@@ -1,8 +1,9 @@
 /* This file has been generated from push_messaging.idl - do not edit */
 
 /**
- * Use `chrome.pushMessaging` to enable apps and extensions to receive message
- * data sent through <a href="cloudMessaging.html">Google Cloud Messaging</a>.
+ * The `chrome.pushMessaging` API is deprecated since Chrome 38, and will no
+ * longer be supported in Chrome 41. Switch to `$(ref:gcm chrome.gcm)` to take
+ * advantage of <a href="cloudMessaging.html">Google Cloud Messaging</a>.
  */
 library chrome.pushMessaging;
 

@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-#include "base/file_util.h"
 #include "base/files/file_path.h"
+#include "base/files/file_util.h"
 #include "base/files/scoped_temp_dir.h"
 #include "base/values.h"
 #include "chrome/common/chrome_version_info.h"
@@ -25,9 +25,9 @@ class StorageSchemaManifestHandlerTest : public testing::Test {
   StorageSchemaManifestHandlerTest()
       : scoped_channel_(chrome::VersionInfo::CHANNEL_DEV) {}
 
-  virtual ~StorageSchemaManifestHandlerTest() {}
+  ~StorageSchemaManifestHandlerTest() override {}
 
-  virtual void SetUp() OVERRIDE {
+  void SetUp() override {
     ASSERT_TRUE(temp_dir_.CreateUniqueTempDir());
 
     manifest_.SetString("name", "test");

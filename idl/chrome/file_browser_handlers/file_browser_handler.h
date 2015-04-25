@@ -48,7 +48,7 @@ class FileBrowserHandler {
   void ClearPatterns();
 
   // Action icon path.
-  const std::string icon_path() const { return default_icon_path_; }
+  const std::string& icon_path() const { return default_icon_path_; }
   void set_icon_path(const std::string& path) {
     default_icon_path_ = path;
   }
@@ -89,13 +89,12 @@ class FileBrowserHandler {
 class FileBrowserHandlerParser : public extensions::ManifestHandler {
  public:
   FileBrowserHandlerParser();
-  virtual ~FileBrowserHandlerParser();
+  ~FileBrowserHandlerParser() override;
 
-  virtual bool Parse(extensions::Extension* extension,
-                     base::string16* error) OVERRIDE;
+  bool Parse(extensions::Extension* extension, base::string16* error) override;
 
  private:
-  virtual const std::vector<std::string> Keys() const OVERRIDE;
+  const std::vector<std::string> Keys() const override;
 };
 
 #endif  // CHROME_COMMON_EXTENSIONS_API_FILE_BROWSER_HANDLERS_FILE_BROWSER_HANDLER_H_

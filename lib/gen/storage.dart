@@ -99,15 +99,26 @@ class SyncStorageArea extends StorageArea {
 
   /**
    * The maximum number of `set`, `remove`, or `clear` operations that can be
-   * performed each hour. Updates that would cause this limit to be exceeded
-   * fail immediately and set [runtime.lastError].
+   * performed each hour. This is 1 every 2 seconds, a lower ceiling than the
+   * short term higher writes-per-minute limit.
+   * 
+   * Updates that would cause this limit to be exceeded fail immediately and set
+   * [runtime.lastError].
    */
   int get MAX_WRITE_OPERATIONS_PER_HOUR => jsProxy['MAX_WRITE_OPERATIONS_PER_HOUR'];
 
   /**
    * The maximum number of `set`, `remove`, or `clear` operations that can be
-   * performed each minute, sustained over 10 minutes. Updates that would cause
-   * this limit to be exceeded fail immediately and set [runtime.lastError].
+   * performed each minute. This is 2 per second, providing higher throughput
+   * than writes-per-hour over a shorter period of time.
+   * 
+   * Updates that would cause this limit to be exceeded fail immediately and set
+   * [runtime.lastError].
+   */
+  int get MAX_WRITE_OPERATIONS_PER_MINUTE => jsProxy['MAX_WRITE_OPERATIONS_PER_MINUTE'];
+
+  /**
+   * 
    */
   int get MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE => jsProxy['MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE'];
 }

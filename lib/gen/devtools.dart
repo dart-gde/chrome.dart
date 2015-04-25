@@ -64,20 +64,28 @@ class ChromeDevtoolsInspectedWindow extends ChromeApi {
   /**
    * Evaluates a JavaScript expression in the context of the main frame of the
    * inspected page. The expression must evaluate to a JSON-compliant object,
-   * otherwise an exception is thrown.
+   * otherwise an exception is thrown. The eval function can report either a
+   * DevTools-side error or a JavaScript exception that occurs during
+   * evaluation. In either case, the `result` parameter of the callback is
+   * `undefined`. In the case of a DevTools-side error, the `isException`
+   * parameter is non-null and has `isError` set to true and `code` set to an
+   * error code. In the case of a JavaScript error, `isException` is set to true
+   * and `value` is set to the string value of thrown object.
    * 
    * [expression] An expression to evaluate.
    * 
+   * [options] The options parameter can contain one or more options.
+   * 
    * Returns:
    * [result] The result of evaluation.
-   * [isException] Set if an exception was caught while evaluating the
-   * expression.
+   * [exceptionInfo] An object providing details if an exception occurred while
+   * evaluating the expression.
    */
-  Future<EvalResult> eval(String expression) {
+  Future<EvalResult> eval(String expression, [DevtoolsInspectedWindowEvalParams options]) {
     if (_devtools_inspectedWindow == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<EvalResult>.twoArgs(EvalResult._create);
-    _devtools_inspectedWindow.callMethod('eval', [expression, completer.callback]);
+    _devtools_inspectedWindow.callMethod('eval', [expression, jsify(options), completer.callback]);
     return completer.future;
   }
 
@@ -175,11 +183,47 @@ class Resource extends ChromeObject {
   }
 }
 
+class DevtoolsInspectedWindowEvalParams extends ChromeObject {
+  DevtoolsInspectedWindowEvalParams({String frameURL, bool useContentScriptContext, String contextSecurityOrigin}) {
+    if (frameURL != null) this.frameURL = frameURL;
+    if (useContentScriptContext != null) this.useContentScriptContext = useContentScriptContext;
+    if (contextSecurityOrigin != null) this.contextSecurityOrigin = contextSecurityOrigin;
+  }
+  DevtoolsInspectedWindowEvalParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  /**
+   * If specified, the expression is evaluated on the iframe whose URL matches
+   * the one specified. By default, the expression is evaluated in the top frame
+   * of the inspected page.
+   */
+  String get frameURL => jsProxy['frameURL'];
+  set frameURL(String value) => jsProxy['frameURL'] = value;
+
+  /**
+   * Evaluate the expression in the context of the content script of the calling
+   * extension, provided that the content script is already injected into the
+   * inspected page. If not, the expression is not evaluated and the callback is
+   * invoked with the exception parameter set to an object that has the
+   * `isError` field set to true and the `code` field set to `E_NOTFOUND`.
+   */
+  bool get useContentScriptContext => jsProxy['useContentScriptContext'];
+  set useContentScriptContext(bool value) => jsProxy['useContentScriptContext'] = value;
+
+  /**
+   * Evaluate the expression in the context of a content script of an extension
+   * that matches the specified origin. If given, contextSecurityOrigin
+   * overrides the 'true' setting on userContentScriptContext.
+   */
+  String get contextSecurityOrigin => jsProxy['contextSecurityOrigin'];
+  set contextSecurityOrigin(String value) => jsProxy['contextSecurityOrigin'] = value;
+}
+
 class DevtoolsInspectedWindowReloadParams extends ChromeObject {
-  DevtoolsInspectedWindowReloadParams({bool ignoreCache, String userAgent, String injectedScript}) {
+  DevtoolsInspectedWindowReloadParams({bool ignoreCache, String userAgent, String injectedScript, String preprocessorScript}) {
     if (ignoreCache != null) this.ignoreCache = ignoreCache;
     if (userAgent != null) this.userAgent = userAgent;
     if (injectedScript != null) this.injectedScript = injectedScript;
+    if (preprocessorScript != null) this.preprocessorScript = preprocessorScript;
   }
   DevtoolsInspectedWindowReloadParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -209,20 +253,31 @@ class DevtoolsInspectedWindowReloadParams extends ChromeObject {
    */
   String get injectedScript => jsProxy['injectedScript'];
   set injectedScript(String value) => jsProxy['injectedScript'] = value;
+
+  /**
+   * If specified, this script evaluates into a function that accepts three
+   * string arguments: the source to preprocess, the URL of the source, and a
+   * function name if the source is an DOM event handler. The
+   * preprocessorerScript function should return a string to be compiled by
+   * Chrome in place of the input source. In the case that the source is a DOM
+   * event handler, the returned source must compile to a single JS function.
+   */
+  String get preprocessorScript => jsProxy['preprocessorScript'];
+  set preprocessorScript(String value) => jsProxy['preprocessorScript'] = value;
 }
 
 /**
  * The return type for [eval].
  */
 class EvalResult {
-  static EvalResult _create(result, isException) {
-    return new EvalResult._(mapify(result), isException);
+  static EvalResult _create(result, exceptionInfo) {
+    return new EvalResult._(mapify(result), mapify(exceptionInfo));
   }
 
   Map<String, dynamic> result;
-  bool isException;
+  Map exceptionInfo;
 
-  EvalResult._(this.result, this.isException);
+  EvalResult._(this.result, this.exceptionInfo);
 }
 
 /**
@@ -347,6 +402,11 @@ class ChromeDevtoolsPanels extends ChromeApi {
   ElementsPanel get elements => _createElementsPanel(_devtools_panels['elements']);
 
   /**
+   * Sources panel.
+   */
+  SourcesPanel get sources => _createSourcesPanel(_devtools_panels['sources']);
+
+  /**
    * Creates an extension panel.
    * 
    * [title] Title that is displayed next to the extension icon in the Developer
@@ -363,7 +423,7 @@ class ChromeDevtoolsPanels extends ChromeApi {
   Future<ExtensionPanel> create(String title, String iconPath, String pagePath) {
     if (_devtools_panels == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<ExtensionPanel>.twoArgs(_createExtensionPanel);
+    var completer = new ChromeCompleter<ExtensionPanel>.oneArg(_createExtensionPanel);
     _devtools_panels.callMethod('create', [title, iconPath, pagePath, completer.callback]);
     return completer.future;
   }
@@ -385,6 +445,22 @@ class ChromeDevtoolsPanels extends ChromeApi {
     return completer.future;
   }
 
+  /**
+   * Requests DevTools to open a URL in a Developer Tools panel.
+   * 
+   * [url] The URL of the resource to open.
+   * 
+   * [lineNumber] Specifies the line number to scroll to when the resource is
+   * loaded.
+   */
+  Future openResource(String url, int lineNumber) {
+    if (_devtools_panels == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _devtools_panels.callMethod('openResource', [url, lineNumber, completer.callback]);
+    return completer.future;
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.devtools.panels' is not available");
   }
@@ -396,6 +472,28 @@ class ChromeDevtoolsPanels extends ChromeApi {
 class ElementsPanel extends ChromeObject {
   ElementsPanel();
   ElementsPanel.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  /**
+   * Creates a pane within panel's sidebar.
+   * 
+   * [title] Text that is displayed in sidebar caption.
+   * 
+   * Returns:
+   * An ExtensionSidebarPane object for created sidebar pane.
+   */
+  Future<ExtensionSidebarPane> createSidebarPane(String title) {
+    var completer = new ChromeCompleter<ExtensionSidebarPane>.oneArg(_createExtensionSidebarPane);
+    jsProxy.callMethod('createSidebarPane', [title, completer.callback]);
+    return completer.future;
+  }
+}
+
+/**
+ * Represents the Sources panel.
+ */
+class SourcesPanel extends ChromeObject {
+  SourcesPanel();
+  SourcesPanel.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   /**
    * Creates a pane within panel's sidebar.
@@ -517,6 +615,7 @@ class Button extends ChromeObject {
 }
 
 ElementsPanel _createElementsPanel(JsObject jsProxy) => jsProxy == null ? null : new ElementsPanel.fromProxy(jsProxy);
-ExtensionPanel _createExtensionPanel(JsObject jsProxy, JsObject status) => jsProxy == null ? null : new ExtensionPanel.fromProxy(jsProxy);
+SourcesPanel _createSourcesPanel(JsObject jsProxy) => jsProxy == null ? null : new SourcesPanel.fromProxy(jsProxy);
+ExtensionPanel _createExtensionPanel(JsObject jsProxy) => jsProxy == null ? null : new ExtensionPanel.fromProxy(jsProxy);
 ExtensionSidebarPane _createExtensionSidebarPane(JsObject jsProxy) => jsProxy == null ? null : new ExtensionSidebarPane.fromProxy(jsProxy);
 Button _createButton(JsObject jsProxy) => jsProxy == null ? null : new Button.fromProxy(jsProxy);

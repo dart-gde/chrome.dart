@@ -26,7 +26,7 @@ class ChromeGcm extends ChromeApi {
   /**
    * Fired when a GCM server had to delete messages sent by an app server to the
    * application. See [Messages deleted
-   * event](cloudMessagingV2#messages_deleted_event) section of Cloud Messaging
+   * event](cloudMessaging#messages_deleted_event) section of Cloud Messaging
    * documentation for details on handling this event.
    */
   Stream get onMessagesDeleted => _onMessagesDeleted.stream;
@@ -123,7 +123,7 @@ class GcmSendParams extends ChromeObject {
   /**
    * The ID of the message. It must be unique for each message in scope of the
    * applications. See the [Cloud Messaging
-   * documentation](cloudMessagingV2#send_messages) for advice for picking and
+   * documentation](cloudMessaging#send_messages) for advice for picking and
    * handling an ID.
    */
   String get messageId => jsProxy['messageId'];
@@ -134,7 +134,7 @@ class GcmSendParams extends ChromeObject {
    * message within that time, an onSendError event will be raised. A
    * time-to-live of 0 indicates that the message should be sent immediately or
    * fail if it's not possible. The maximum and a default value of time-to-live
-   * is 2419200 seconds (4 weeks).
+   * is 86400 seconds (1 day).
    */
   int get timeToLive => jsProxy['timeToLive'];
   set timeToLive(int value) => jsProxy['timeToLive'] = value;
