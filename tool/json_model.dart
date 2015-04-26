@@ -408,8 +408,6 @@ bool _isImplicitInt(JsonType t) {
 
 bool _isInt(var val) {
   if (val is num) {
-    num n = val as num;
-
     if (val.toInt().toDouble() == val.toDouble()) {
       return true;
     }
