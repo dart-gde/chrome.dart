@@ -15,7 +15,7 @@ void main() {
   Future createWindow(function) {
     Completer completer = new Completer();
     Duration duration = new Duration(seconds: 3);
-    Timer timer = new Timer(duration, () {
+    new Timer(duration, () {
       function().then(expectAsync((v) => completer.complete(v)));
     });
     return completer.future;
