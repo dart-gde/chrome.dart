@@ -59,6 +59,7 @@
     "downloads",
     "events",
     "extension",
+    "extensionTypes",
     "fileBrowserHandler",
     "fontSettings",
     "gcm",

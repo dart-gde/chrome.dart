@@ -21,6 +21,7 @@ export 'gen/devtools.dart';
 export 'gen/downloads.dart';
 export 'gen/events.dart';
 export 'gen/extension.dart';
+export 'gen/extension_types.dart';
 export 'gen/file_browser_handler.dart';
 export 'gen/font_settings.dart';
 export 'gen/gcm.dart';
