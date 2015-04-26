@@ -181,7 +181,7 @@
             "description": "The maximum total amount (in bytes) of data that can be stored in sync storage, as measured by the JSON stringification of every value plus every key's length. Updates that would cause this limit to be exceeded fail immediately and set $(ref:runtime.lastError)."
           },
           "QUOTA_BYTES_PER_ITEM": {
-            "value": 4096,
+            "value": 8192,
             "description": "The maximum size (in bytes) of each individual item in sync storage, as measured by the JSON stringification of its value plus its key length. Updates containing items larger than this limit will fail immediately and set $(ref:runtime.lastError)."
           },
           "MAX_ITEMS": {
@@ -189,12 +189,17 @@
             "description": "The maximum number of items that can be stored in sync storage. Updates that would cause this limit to be exceeded will fail immediately and set $(ref:runtime.lastError)."
           },
           "MAX_WRITE_OPERATIONS_PER_HOUR": {
-            "value": 1000,
-            "description": "The maximum number of <code>set</code>, <code>remove</code>, or <code>clear</code> operations that can be performed each hour. Updates that would cause this limit to be exceeded fail immediately and set $(ref:runtime.lastError)."
+            "value": 1800,
+            "description": "<p>The maximum number of <code>set</code>, <code>remove</code>, or <code>clear</code> operations that can be performed each hour. This is 1 every 2 seconds, a lower ceiling than the short term higher writes-per-minute limit.</p><p>Updates that would cause this limit to be exceeded fail immediately and set $(ref:runtime.lastError).</p>"
+          },
+          "MAX_WRITE_OPERATIONS_PER_MINUTE": {
+            "value": 120,
+            "description": "<p>The maximum number of <code>set</code>, <code>remove</code>, or <code>clear</code> operations that can be performed each minute. This is 2 per second, providing higher throughput than writes-per-hour over a shorter period of time.</p><p>Updates that would cause this limit to be exceeded fail immediately and set $(ref:runtime.lastError).</p>"
           },
           "MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE": {
-            "value": 10,
-            "description": "The maximum number of <code>set</code>, <code>remove</code>, or <code>clear</code> operations that can be performed each minute, sustained over 10 minutes. Updates that would cause this limit to be exceeded fail immediately and set $(ref:runtime.lastError)."
+            "value": 1000000,
+            "deprecated": "The storage.sync API no longer has a sustained write operation quota.",
+            "description": ""
           }
         }
       },

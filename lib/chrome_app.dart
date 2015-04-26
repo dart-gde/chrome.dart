@@ -26,7 +26,6 @@ export 'gen/media_galleries.dart';
 export 'gen/notifications.dart';
 export 'gen/permissions.dart';
 export 'gen/power.dart';
-export 'gen/push_messaging.dart';
 export 'gen/runtime.dart';
 export 'gen/serial.dart';
 export 'gen/sockets.dart';

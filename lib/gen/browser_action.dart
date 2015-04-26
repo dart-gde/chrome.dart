@@ -183,9 +183,9 @@ class ColorArray extends ChromeObject {
  * Pixel data for an image. Must be an ImageData object (for example, from a
  * `canvas` element).
  */
-class ImageDataType extends ChromeObject {
-  ImageDataType();
-  ImageDataType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class BrowserActionImageDataType extends ChromeObject {
+  BrowserActionImageDataType();
+  BrowserActionImageDataType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 class BrowserActionSetTitleParams extends ChromeObject {

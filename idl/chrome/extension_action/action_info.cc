@@ -24,7 +24,7 @@ namespace {
 // PageActions and SystemIndicators.
 struct ActionInfoData : public Extension::ManifestData {
   explicit ActionInfoData(ActionInfo* action_info);
-  virtual ~ActionInfoData();
+  ~ActionInfoData() override;
 
   // The action associated with the BrowserAction.
   scoped_ptr<ActionInfo> action_info;
@@ -91,9 +91,12 @@ scoped_ptr<ActionInfo> ActionInfo::Load(const Extension* extension,
     const base::DictionaryValue* icons_value = NULL;
     std::string default_icon;
     if (dict->GetDictionary(keys::kPageActionDefaultIcon, &icons_value)) {
+      int icon_sizes[extension_misc::kNumExtensionActionIconSizes];
+      for (size_t i = 0u; i < extension_misc::kNumExtensionActionIconSizes; ++i)
+        icon_sizes[i] = extension_misc::kExtensionActionIconSizes[i].size;
       if (!manifest_handler_helpers::LoadIconsFromDictionary(
               icons_value,
-              extension_misc::kExtensionActionIconSizes,
+              icon_sizes,
               extension_misc::kNumExtensionActionIconSizes,
               &result->default_icon,
               error)) {
@@ -102,7 +105,11 @@ scoped_ptr<ActionInfo> ActionInfo::Load(const Extension* extension,
     } else if (dict->GetString(keys::kPageActionDefaultIcon, &default_icon) &&
                manifest_handler_helpers::NormalizeAndValidatePath(
                    &default_icon)) {
-      result->default_icon.Add(extension_misc::EXTENSION_ICON_ACTION,
+      // Choose the most optimistic (highest) icon density - e.g. 38 not 19 -
+      // regardless of the actual icon resolution, whatever that happens to be.
+      // Code elsewhere knows how to scale 38 down to 19.
+      result->default_icon.Add(extension_misc::EXTENSION_ICON_ACTION *
+                                   extension_misc::kNumExtensionActionIconSizes,
                                default_icon);
     } else {
       *error = base::ASCIIToUTF16(errors::kInvalidPageActionIconPath);

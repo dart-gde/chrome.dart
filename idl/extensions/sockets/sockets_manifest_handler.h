@@ -21,17 +21,17 @@ namespace extensions {
 class SocketsManifestHandler : public ManifestHandler {
  public:
   SocketsManifestHandler();
-  virtual ~SocketsManifestHandler();
+  ~SocketsManifestHandler() override;
 
   // ManifestHandler overrides.
-  virtual bool Parse(Extension* extension, base::string16* error) OVERRIDE;
-  virtual ManifestPermission* CreatePermission() OVERRIDE;
-  virtual ManifestPermission* CreateInitialRequiredPermission(
-      const Extension* extension) OVERRIDE;
+  bool Parse(Extension* extension, base::string16* error) override;
+  ManifestPermission* CreatePermission() override;
+  ManifestPermission* CreateInitialRequiredPermission(
+      const Extension* extension) override;
 
  private:
   // ManifestHandler overrides.
-  virtual const std::vector<std::string> Keys() const OVERRIDE;
+  const std::vector<std::string> Keys() const override;
 
   DISALLOW_COPY_AND_ASSIGN(SocketsManifestHandler);
 };

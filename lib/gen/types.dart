@@ -69,33 +69,6 @@ class ChromeSetting extends ChromeObject {
   }
 }
 
-/**
- * Details about the format and quality of an image.
- */
-class ImageDetails extends ChromeObject {
-  ImageDetails({String format, int quality}) {
-    if (format != null) this.format = format;
-    if (quality != null) this.quality = quality;
-  }
-  ImageDetails.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-
-  /**
-   * The format of the resulting image.  Default is `"jpeg"`.
-   * enum of `jpeg`, `png`
-   */
-  String get format => jsProxy['format'];
-  set format(String value) => jsProxy['format'] = value;
-
-  /**
-   * When format is `"jpeg"`, controls the quality of the resulting image.  This
-   * value is ignored for PNG images.  As quality is decreased, the resulting
-   * image will have more visual artifacts, and the number of bytes needed to
-   * store it will decrease.
-   */
-  int get quality => jsProxy['quality'];
-  set quality(int value) => jsProxy['quality'] = value;
-}
-
 class TypesGetParams extends ChromeObject {
   TypesGetParams({bool incognito}) {
     if (incognito != null) this.incognito = incognito;
