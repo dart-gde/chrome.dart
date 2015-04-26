@@ -36,10 +36,6 @@ class ChromeProxy extends ChromeApi {
    * object.
    */
   ChromeSetting get settings => _createChromeSetting(_proxy['settings']);
-
-  void _throwNotAvailable() {
-    throw new UnsupportedError("'chrome.proxy' is not available");
-  }
 }
 
 /**

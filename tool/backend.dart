@@ -41,6 +41,8 @@ class DefaultBackend extends Backend {
 
   final Set<String> _neededFactories = new Set<String>();
 
+  int _apiCheckCount = 0;
+
   DefaultBackend(ChromeLibrary library, Overrides overrides, [this.generator]): super(library, overrides) {
     if (generator == null) {
       generator = new DartGenerator();
@@ -152,6 +154,8 @@ class DefaultBackend extends Backend {
 
     String name = overrides.overrideClass(className);
 
+    _apiCheckCount = 0;
+
     generator.writeln("class ${name} extends ChromeApi {");
     generator.writeln("JsObject get ${contextReference} => chrome['${sections.join('\'][\'')}'];");
     library.events.forEach(_printEventDecl);
@@ -171,10 +175,12 @@ class DefaultBackend extends Backend {
     library.filteredProperties.forEach((p) => _printPropertyRef(p, contextReference));
     library.methods.forEach(_printMethod);
 
-    generator.writeln();
-    generator.writeln('void _throwNotAvailable() {');
-    generator.writeln('throw new UnsupportedError("\'chrome.${library.name}\' is not available");');
-    generator.writeln("}");
+    if (_apiCheckCount > 0) {
+      generator.writeln();
+      generator.writeln('void _throwNotAvailable() {');
+      generator.writeln('throw new UnsupportedError("\'chrome.${library.name}\' is not available");');
+      generator.writeln("}");
+    }
 
     generator.writeln("}");
   }
@@ -220,6 +226,7 @@ class DefaultBackend extends Backend {
     }
     generator.writeln(") {");
     if (checkApi) {
+      _apiCheckCount++;
       generator.writeln('if (${contextReference} == null) _throwNotAvailable();');
       generator.writeln();
     }

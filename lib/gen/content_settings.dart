@@ -69,10 +69,6 @@ class ChromeContentSettings extends ChromeApi {
    * URL. The secondary URL is not used.
    */
   ContentSetting get notifications => _createContentSetting(_contentSettings['notifications']);
-
-  void _throwNotAvailable() {
-    throw new UnsupportedError("'chrome.contentSettings' is not available");
-  }
 }
 
 /**

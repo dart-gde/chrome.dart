@@ -49,10 +49,6 @@ class ChromeAppRuntime extends ChromeApi {
   }
 
   bool get available => _app_runtime != null;
-
-  void _throwNotAvailable() {
-    throw new UnsupportedError("'chrome.app.runtime' is not available");
-  }
 }
 
 /**

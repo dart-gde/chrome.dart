@@ -26,10 +26,6 @@ class ChromeDeclarativeContent extends ChromeApi {
   }
 
   bool get available => _declarativeContent != null;
-
-  void _throwNotAvailable() {
-    throw new UnsupportedError("'chrome.declarativeContent' is not available");
-  }
 }
 
 /**
