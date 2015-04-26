@@ -39,10 +39,6 @@ class ChromeDeclarativeWebRequest extends ChromeApi {
   }
 
   bool get available => _declarativeWebRequest != null;
-
-  void _throwNotAvailable() {
-    throw new UnsupportedError("'chrome.declarativeWebRequest' is not available");
-  }
 }
 
 /**
