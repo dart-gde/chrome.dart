@@ -34,7 +34,5 @@ JsonNamespace parse(String jsonText) {
 }
 
 JsonNamespace _parseJson(dynamic json) {
-  Map m = json[0];
-
   return new JsonNamespace(json[0]);
 }

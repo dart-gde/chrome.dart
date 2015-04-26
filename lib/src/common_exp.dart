@@ -118,26 +118,27 @@ class ArrayBuffer extends ChromeObject {
   }
 }
 
-class _Uint8ListArrayBuffer implements ArrayBuffer {
-  List<int> _bytes;
-  JsObject _jsProxy;
-
-  _Uint8ListArrayBuffer( typed_data.Uint8List list) {
-    _bytes = list.toList();
-  }
-
-  List<int> getBytes() => _bytes;
-
-  JsObject get jsProxy {
-    if (_jsProxy == null) {
-      _jsProxy = new ArrayBuffer.fromBytes(_bytes).jsProxy;
-    }
-
-    return _jsProxy;
-  }
-
-  JsObject toJs() => jsProxy;
-}
+// TODO: See ArrayBuffer.fromProxy.
+//class _Uint8ListArrayBuffer implements ArrayBuffer {
+//  List<int> _bytes;
+//  JsObject _jsProxy;
+//
+//  _Uint8ListArrayBuffer( typed_data.Uint8List list) {
+//    _bytes = list.toList();
+//  }
+//
+//  List<int> getBytes() => _bytes;
+//
+//  JsObject get jsProxy {
+//    if (_jsProxy == null) {
+//      _jsProxy = new ArrayBuffer.fromBytes(_bytes).jsProxy;
+//    }
+//
+//    return _jsProxy;
+//  }
+//
+//  JsObject toJs() => jsProxy;
+//}
 
 // TODO: this is a hack, to eliminate analysis warnings. remove as soon as possible
 class DeviceCallback {

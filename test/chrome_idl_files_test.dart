@@ -9,7 +9,6 @@ import 'package:unittest/unittest.dart';
 import '../tool/chrome_idl_parser.dart';
 import '../tool/chrome_idl_convert.dart';
 import '../tool/chrome_idl_model.dart';
-import '../tool/chrome_model.dart';
 
 void main() {
   group('ChromeIDLParser', () {
@@ -34,7 +33,7 @@ void main() {
         ChromeIDLParser chromeIDLParser = new ChromeIDLParser();
         IDLNamespaceDeclaration namespace =
             chromeIDLParser.namespaceDeclaration.parse(webIdl);
-        ChromeLibrary chromeLibrary = convert(namespace);
+        /*ChromeLibrary chromeLibrary =*/ convert(namespace);
       });
     });
   });
