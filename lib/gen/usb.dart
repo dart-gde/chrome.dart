@@ -594,15 +594,15 @@ class TransferResultInfo extends ChromeObject {
   set data(ArrayBuffer value) => jsProxy['data'] = jsify(value);
 }
 
-class DeviceFilter extends ChromeObject {
-  DeviceFilter({int vendorId, int productId, int interfaceClass, int interfaceSubclass, int interfaceProtocol}) {
+class UsbDeviceFilter extends ChromeObject {
+  UsbDeviceFilter({int vendorId, int productId, int interfaceClass, int interfaceSubclass, int interfaceProtocol}) {
     if (vendorId != null) this.vendorId = vendorId;
     if (productId != null) this.productId = productId;
     if (interfaceClass != null) this.interfaceClass = interfaceClass;
     if (interfaceSubclass != null) this.interfaceSubclass = interfaceSubclass;
     if (interfaceProtocol != null) this.interfaceProtocol = interfaceProtocol;
   }
-  DeviceFilter.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  UsbDeviceFilter.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   int get vendorId => jsProxy['vendorId'];
   set vendorId(int value) => jsProxy['vendorId'] = value;
@@ -621,7 +621,7 @@ class DeviceFilter extends ChromeObject {
 }
 
 class EnumerateDevicesOptions extends ChromeObject {
-  EnumerateDevicesOptions({int vendorId, int productId, List<DeviceFilter> filters}) {
+  EnumerateDevicesOptions({int vendorId, int productId, List<UsbDeviceFilter> filters}) {
     if (vendorId != null) this.vendorId = vendorId;
     if (productId != null) this.productId = productId;
     if (filters != null) this.filters = filters;
@@ -634,8 +634,8 @@ class EnumerateDevicesOptions extends ChromeObject {
   int get productId => jsProxy['productId'];
   set productId(int value) => jsProxy['productId'] = value;
 
-  List<DeviceFilter> get filters => listify(jsProxy['filters'], _createDeviceFilter);
-  set filters(List<DeviceFilter> value) => jsProxy['filters'] = jsify(value);
+  List<UsbDeviceFilter> get filters => listify(jsProxy['filters'], _createDeviceFilter);
+  set filters(List<UsbDeviceFilter> value) => jsProxy['filters'] = jsify(value);
 }
 
 class EnumerateDevicesAndRequestAccessOptions extends ChromeObject {
@@ -657,7 +657,7 @@ class EnumerateDevicesAndRequestAccessOptions extends ChromeObject {
 }
 
 class DevicePromptOptions extends ChromeObject {
-  DevicePromptOptions({bool multiple, List<DeviceFilter> filters}) {
+  DevicePromptOptions({bool multiple, List<UsbDeviceFilter> filters}) {
     if (multiple != null) this.multiple = multiple;
     if (filters != null) this.filters = filters;
   }
@@ -666,8 +666,8 @@ class DevicePromptOptions extends ChromeObject {
   bool get multiple => jsProxy['multiple'];
   set multiple(bool value) => jsProxy['multiple'] = value;
 
-  List<DeviceFilter> get filters => listify(jsProxy['filters'], _createDeviceFilter);
-  set filters(List<DeviceFilter> value) => jsProxy['filters'] = jsify(value);
+  List<UsbDeviceFilter> get filters => listify(jsProxy['filters'], _createDeviceFilter);
+  set filters(List<UsbDeviceFilter> value) => jsProxy['filters'] = jsify(value);
 }
 
 Device _createDevice(JsObject jsProxy) => jsProxy == null ? null : new Device.fromProxy(jsProxy);
@@ -684,4 +684,4 @@ EndpointDescriptor _createEndpointDescriptor(JsObject jsProxy) => jsProxy == nul
 Recipient _createRecipient(String value) => Recipient.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 RequestType _createRequestType(String value) => RequestType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 GenericTransferInfo _createGenericTransferInfo(JsObject jsProxy) => jsProxy == null ? null : new GenericTransferInfo.fromProxy(jsProxy);
-DeviceFilter _createDeviceFilter(JsObject jsProxy) => jsProxy == null ? null : new DeviceFilter.fromProxy(jsProxy);
+UsbDeviceFilter _createDeviceFilter(JsObject jsProxy) => jsProxy == null ? null : new UsbDeviceFilter.fromProxy(jsProxy);

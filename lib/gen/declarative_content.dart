@@ -36,9 +36,9 @@ class ChromeDeclarativeContent extends ChromeApi {
  * See <a
  * href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">https://developer.mozilla.org/en-US/docs/Web/API/ImageData</a>.
  */
-class ImageDataType extends ChromeObject {
-  ImageDataType();
-  ImageDataType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class DeclarativeContentImageDataType extends ChromeObject {
+  DeclarativeContentImageDataType();
+  DeclarativeContentImageDataType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 /**

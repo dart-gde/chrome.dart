@@ -207,14 +207,14 @@ class HidConnectInfo extends ChromeObject {
   set connectionId(int value) => jsProxy['connectionId'] = value;
 }
 
-class DeviceFilter extends ChromeObject {
-  DeviceFilter({int vendorId, int productId, int usagePage, int usage}) {
+class HidDeviceFilter extends ChromeObject {
+  HidDeviceFilter({int vendorId, int productId, int usagePage, int usage}) {
     if (vendorId != null) this.vendorId = vendorId;
     if (productId != null) this.productId = productId;
     if (usagePage != null) this.usagePage = usagePage;
     if (usage != null) this.usage = usage;
   }
-  DeviceFilter.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  HidDeviceFilter.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   int get vendorId => jsProxy['vendorId'];
   set vendorId(int value) => jsProxy['vendorId'] = value;
@@ -230,7 +230,7 @@ class DeviceFilter extends ChromeObject {
 }
 
 class HidGetDevicesOptions extends ChromeObject {
-  HidGetDevicesOptions({int vendorId, int productId, List<DeviceFilter> filters}) {
+  HidGetDevicesOptions({int vendorId, int productId, List<HidDeviceFilter> filters}) {
     if (vendorId != null) this.vendorId = vendorId;
     if (productId != null) this.productId = productId;
     if (filters != null) this.filters = filters;
@@ -243,8 +243,8 @@ class HidGetDevicesOptions extends ChromeObject {
   int get productId => jsProxy['productId'];
   set productId(int value) => jsProxy['productId'] = value;
 
-  List<DeviceFilter> get filters => listify(jsProxy['filters'], _createDeviceFilter);
-  set filters(List<DeviceFilter> value) => jsProxy['filters'] = jsify(value);
+  List<HidDeviceFilter> get filters => listify(jsProxy['filters'], _createDeviceFilter);
+  set filters(List<HidDeviceFilter> value) => jsProxy['filters'] = jsify(value);
 }
 
 /**
@@ -265,4 +265,4 @@ HidDeviceInfo _createHidDeviceInfo(JsObject jsProxy) => jsProxy == null ? null :
 HidConnectInfo _createHidConnectInfo(JsObject jsProxy) => jsProxy == null ? null : new HidConnectInfo.fromProxy(jsProxy);
 ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
 HidCollectionInfo _createHidCollectionInfo(JsObject jsProxy) => jsProxy == null ? null : new HidCollectionInfo.fromProxy(jsProxy);
-DeviceFilter _createDeviceFilter(JsObject jsProxy) => jsProxy == null ? null : new DeviceFilter.fromProxy(jsProxy);
+HidDeviceFilter _createDeviceFilter(JsObject jsProxy) => jsProxy == null ? null : new HidDeviceFilter.fromProxy(jsProxy);

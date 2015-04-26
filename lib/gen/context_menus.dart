@@ -7,8 +7,8 @@
  */
 library chrome.contextMenus;
 
-import 'context_menus_internal.dart';
-import 'tabs.dart';
+//import 'context_menus_internal.dart';
+//import 'tabs.dart';
 import '../src/common.dart';
 
 /**
@@ -39,11 +39,11 @@ class ChromeContextMenus extends ChromeApi {
    * Creates a new context menu item. Note that if an error occurs during
    * creation, you may not find out until the creation callback fires (the
    * details will be in chrome.runtime.lastError).
-   * 
+   *
    * [callback] Called when the item has been created in the browser. If there
    * were any problems creating the item, details will be available in
    * chrome.runtime.lastError.
-   * 
+   *
    * Returns:
    * The ID of the newly created item.
    */
@@ -55,9 +55,9 @@ class ChromeContextMenus extends ChromeApi {
 
   /**
    * Updates a previously created context menu item.
-   * 
+   *
    * [id] The ID of the item to update.
-   * 
+   *
    * [updateProperties] The properties to update. Accepts the same values as the
    * create function.
    */
@@ -71,7 +71,7 @@ class ChromeContextMenus extends ChromeApi {
 
   /**
    * Removes a context menu item.
-   * 
+   *
    * [menuItemId] The ID of the context menu item to remove.
    */
   Future remove(dynamic menuItemId) {

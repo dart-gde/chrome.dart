@@ -50,8 +50,14 @@
     "mediaGalleries.DOMFileSystem": "FileSystem",
 
     "hid.GetDevicesOptions": "HidGetDevicesOptions",
+    "hid.DeviceFilter": "HidDeviceFilter",
+    "usb.DeviceFilter": "UsbDeviceFilter",
 
     "events.Event": "ChromeEvent",
-    "runtime.Event": "ChromeEvent"
+    "runtime.Event": "ChromeEvent",
+
+    "browserAction.ImageDataType": "BrowserActionImageDataType",
+    "declarativeContent.ImageDataType": "DeclarativeContentImageDataType"
+
   }
 }
