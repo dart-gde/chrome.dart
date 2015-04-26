@@ -1,8 +1,9 @@
 # chrome.dart
 
-An library for accessing the Chrome APIs in a packaged app or extension.
-
+[![Build Status](https://travis-ci.org/dart-gde/chrome.dart.svg?branch=master)](https://travis-ci.org/dart-gde/chrome.dart)
 [![Build Status](https://drone.io/github.com/dart-gde/chrome.dart/status.png)](https://drone.io/github.com/dart-gde/chrome.dart/latest)
+
+An library for accessing the Chrome APIs in a packaged app or extension.
 
 ## Installing
 
