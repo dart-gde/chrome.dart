@@ -1,17 +1,12 @@
-This directory contains copies of Chromium IDL files.
+The  idl directory contains copies of Chromium IDL and JSON files.
 
 The original files are from:
 
-  https://src.chromium.org/chrome/trunk/src/chrome/common/extensions/api
-  https://src.chromium.org/chrome/trunk/src/extensions/common/api
+  https://chromium.googlesource.com/chromium/src/+/<chrome_version>/chrome/common/extensions/api
+  https://chromium.googlesource.com/chromium/src/+/<chrome_version>/extensions/common/api
 
-SVN revisions available at http://omahaproxy.appspot.com/.
-Current revision: 283104
+GIT revisions available at http://omahaproxy.appspot.com/.
 
 To update:
 
-  rm -rf idl
-  svn co https://src.chromium.org/chrome/trunk/src/chrome/common/extensions/api idl/chrome -r <rev_number>
-  svn co https://src.chromium.org/chrome/trunk/src/extensions/common/api idl/extensions -r <rev_number>
-
-Please see the corresponding LICENSE file at: http://src.chromium.org/svn/trunk/src/LICENSE
+  dart tool/download_idls.dart
