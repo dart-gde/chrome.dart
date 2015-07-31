@@ -11,7 +11,8 @@ void main() {
 
     setUp(() {
       chrome.WindowsCreateParams createData =
-          new chrome.WindowsCreateParams(focused: true, type: "normal");
+          new chrome.WindowsCreateParams(
+              focused: true, type: chrome.CreateType.NORMAL);
 
       return chrome.windows.create(createData)
           .then((chrome.Window _window) => window = _window);

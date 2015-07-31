@@ -164,7 +164,7 @@ class HidCollectionInfo extends ChromeObject {
 }
 
 class HidDeviceInfo extends ChromeObject {
-  HidDeviceInfo({int deviceId, int vendorId, int productId, List<HidCollectionInfo> collections, int maxInputReportSize, int maxOutputReportSize, int maxFeatureReportSize}) {
+  HidDeviceInfo({int deviceId, int vendorId, int productId, List<HidCollectionInfo> collections, int maxInputReportSize, int maxOutputReportSize, int maxFeatureReportSize, ArrayBuffer reportDescriptor}) {
     if (deviceId != null) this.deviceId = deviceId;
     if (vendorId != null) this.vendorId = vendorId;
     if (productId != null) this.productId = productId;
@@ -172,6 +172,7 @@ class HidDeviceInfo extends ChromeObject {
     if (maxInputReportSize != null) this.maxInputReportSize = maxInputReportSize;
     if (maxOutputReportSize != null) this.maxOutputReportSize = maxOutputReportSize;
     if (maxFeatureReportSize != null) this.maxFeatureReportSize = maxFeatureReportSize;
+    if (reportDescriptor != null) this.reportDescriptor = reportDescriptor;
   }
   HidDeviceInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -195,6 +196,9 @@ class HidDeviceInfo extends ChromeObject {
 
   int get maxFeatureReportSize => jsProxy['maxFeatureReportSize'];
   set maxFeatureReportSize(int value) => jsProxy['maxFeatureReportSize'] = value;
+
+  ArrayBuffer get reportDescriptor => _createArrayBuffer(jsProxy['reportDescriptor']);
+  set reportDescriptor(ArrayBuffer value) => jsProxy['reportDescriptor'] = jsify(value);
 }
 
 class HidConnectInfo extends ChromeObject {

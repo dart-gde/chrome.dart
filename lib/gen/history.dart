@@ -116,6 +116,17 @@ class ChromeHistory extends ChromeApi {
 }
 
 /**
+ * The [transition type](#transition_types) for this visit from its referrer.
+ * enum of `link`, `typed`, `auto_bookmark`, `auto_subframe`, `manual_subframe`,
+ * `generated`, `auto_toplevel`, `form_submit`, `reload`, `keyword`,
+ * `keyword_generated`
+ */
+class HistoryTransitionType extends ChromeObject {
+  HistoryTransitionType();
+  HistoryTransitionType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
  * An object encapsulating one result of a history query.
  */
 class HistoryItem extends ChromeObject {
@@ -172,7 +183,7 @@ class HistoryItem extends ChromeObject {
  * An object encapsulating one visit to a URL.
  */
 class VisitItem extends ChromeObject {
-  VisitItem({String id, String visitId, var visitTime, String referringVisitId, String transition}) {
+  VisitItem({String id, String visitId, var visitTime, String referringVisitId, HistoryTransitionType transition}) {
     if (id != null) this.id = id;
     if (visitId != null) this.visitId = visitId;
     if (visitTime != null) this.visitTime = visitTime;
@@ -207,12 +218,9 @@ class VisitItem extends ChromeObject {
 
   /**
    * The [transition type](#transition_types) for this visit from its referrer.
-   * enum of `link`, `typed`, `auto_bookmark`, `auto_subframe`,
-   * `manual_subframe`, `generated`, `auto_toplevel`, `form_submit`, `reload`,
-   * `keyword`, `keyword_generated`
    */
-  String get transition => jsProxy['transition'];
-  set transition(String value) => jsProxy['transition'] = value;
+  HistoryTransitionType get transition => _createTransitionType(jsProxy['transition']);
+  set transition(HistoryTransitionType value) => jsProxy['transition'] = jsify(value);
 }
 
 class HistorySearchParams extends ChromeObject {
@@ -316,3 +324,4 @@ class HistoryDeleteRangeParams extends ChromeObject {
 
 HistoryItem _createHistoryItem(JsObject jsProxy) => jsProxy == null ? null : new HistoryItem.fromProxy(jsProxy);
 VisitItem _createVisitItem(JsObject jsProxy) => jsProxy == null ? null : new VisitItem.fromProxy(jsProxy);
+HistoryTransitionType _createTransitionType(JsObject jsProxy) => jsProxy == null ? null : new HistoryTransitionType.fromProxy(jsProxy);

@@ -104,16 +104,30 @@ class OnInputChangedEvent {
 class OnInputEnteredEvent {
   final String text;
 
-  /**
-   * The window disposition for the omnibox query. This is the recommended
-   * context to display results. For example, if the omnibox command is to
-   * navigate to a certain URL, a disposition of 'newForegroundTab' means the
-   * navigation should take place in a new selected tab.
-   * enum of `currentTab`, `newForegroundTab`, `newBackgroundTab`
-   */
-  final String disposition;
+  final OnInputEnteredDisposition disposition;
 
   OnInputEnteredEvent(this.text, this.disposition);
+}
+
+/**
+ * The style type.
+ * enum of `url`, `match`, `dim`
+ */
+class DescriptionStyleType extends ChromeObject {
+  DescriptionStyleType();
+  DescriptionStyleType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * The window disposition for the omnibox query. This is the recommended context
+ * to display results. For example, if the omnibox command is to navigate to a
+ * certain URL, a disposition of 'newForegroundTab' means the navigation should
+ * take place in a new selected tab.
+ * enum of `currentTab`, `newForegroundTab`, `newBackgroundTab`
+ */
+class OnInputEnteredDisposition extends ChromeObject {
+  OnInputEnteredDisposition();
+  OnInputEnteredDisposition.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 /**
@@ -167,5 +181,6 @@ class DefaultSuggestResult extends ChromeObject {
 
 OnInputChangedEvent _createOnInputChangedEvent(String text, JsObject suggest) =>
     new OnInputChangedEvent(text, suggest);
-OnInputEnteredEvent _createOnInputEnteredEvent(String text, String disposition) =>
-    new OnInputEnteredEvent(text, disposition);
+OnInputEnteredEvent _createOnInputEnteredEvent(String text, JsObject disposition) =>
+    new OnInputEnteredEvent(text, _createOnInputEnteredDisposition(disposition));
+OnInputEnteredDisposition _createOnInputEnteredDisposition(JsObject jsProxy) => jsProxy == null ? null : new OnInputEnteredDisposition.fromProxy(jsProxy);

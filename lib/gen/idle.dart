@@ -22,12 +22,12 @@ class ChromeIdle extends ChromeApi {
    * for a specified number of seconds, and "active" when the user generates
    * input on an idle system.
    */
-  Stream<String> get onStateChanged => _onStateChanged.stream;
-  ChromeStreamController<String> _onStateChanged;
+  Stream<IdleState> get onStateChanged => _onStateChanged.stream;
+  ChromeStreamController<IdleState> _onStateChanged;
 
   ChromeIdle._() {
     var getApi = () => _idle;
-    _onStateChanged = new ChromeStreamController<String>.oneArg(getApi, 'onStateChanged', selfConverter);
+    _onStateChanged = new ChromeStreamController<IdleState>.oneArg(getApi, 'onStateChanged', _createIdleState);
   }
 
   bool get available => _idle != null;
@@ -40,14 +40,11 @@ class ChromeIdle extends ChromeApi {
    * [detectionIntervalInSeconds] The system is considered idle if
    * detectionIntervalInSeconds seconds have elapsed since the last user input
    * detected.
-   * 
-   * Returns:
-   * enum of `active`, `idle`, `locked`
    */
-  Future<String> queryState(int detectionIntervalInSeconds) {
+  Future<IdleState> queryState(int detectionIntervalInSeconds) {
     if (_idle == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<String>.oneArg();
+    var completer = new ChromeCompleter<IdleState>.oneArg(_createIdleState);
     _idle.callMethod('queryState', [detectionIntervalInSeconds, completer.callback]);
     return completer.future;
   }
@@ -69,3 +66,13 @@ class ChromeIdle extends ChromeApi {
     throw new UnsupportedError("'chrome.idle' is not available");
   }
 }
+
+/**
+ * enum of `active`, `idle`, `locked`
+ */
+class IdleState extends ChromeObject {
+  IdleState();
+  IdleState.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+IdleState _createIdleState(JsObject jsProxy) => jsProxy == null ? null : new IdleState.fromProxy(jsProxy);

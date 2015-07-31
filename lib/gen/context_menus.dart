@@ -39,11 +39,11 @@ class ChromeContextMenus extends ChromeApi {
    * Creates a new context menu item. Note that if an error occurs during
    * creation, you may not find out until the creation callback fires (the
    * details will be in chrome.runtime.lastError).
-   *
+   * 
    * [callback] Called when the item has been created in the browser. If there
    * were any problems creating the item, details will be available in
    * chrome.runtime.lastError.
-   *
+   * 
    * Returns:
    * The ID of the newly created item.
    */
@@ -55,9 +55,9 @@ class ChromeContextMenus extends ChromeApi {
 
   /**
    * Updates a previously created context menu item.
-   *
+   * 
    * [id] The ID of the item to update.
-   *
+   * 
    * [updateProperties] The properties to update. Accepts the same values as the
    * create function.
    */
@@ -71,7 +71,7 @@ class ChromeContextMenus extends ChromeApi {
 
   /**
    * Removes a context menu item.
-   *
+   * 
    * [menuItemId] The ID of the context menu item to remove.
    */
   Future remove(dynamic menuItemId) {
@@ -98,8 +98,49 @@ class ChromeContextMenus extends ChromeApi {
   }
 }
 
+/**
+ * The different contexts a menu can appear in. Specifying 'all' is equivalent
+ * to the combination of all other contexts except for 'launcher'. The
+ * 'launcher' context is only supported by apps and is used to add menu items to
+ * the context menu that appears when clicking on the app icon in the
+ * launcher/taskbar/dock/etc. Different platforms might put limitations on what
+ * is actually supported in a launcher context menu.
+ */
+class ContextType extends ChromeEnum {
+  static const ContextType ALL = const ContextType._('all');
+  static const ContextType PAGE = const ContextType._('page');
+  static const ContextType FRAME = const ContextType._('frame');
+  static const ContextType SELECTION = const ContextType._('selection');
+  static const ContextType LINK = const ContextType._('link');
+  static const ContextType EDITABLE = const ContextType._('editable');
+  static const ContextType IMAGE = const ContextType._('image');
+  static const ContextType VIDEO = const ContextType._('video');
+  static const ContextType AUDIO = const ContextType._('audio');
+  static const ContextType LAUNCHER = const ContextType._('launcher');
+  static const ContextType BROWSER_ACTION = const ContextType._('browser_action');
+  static const ContextType PAGE_ACTION = const ContextType._('page_action');
+
+  static const List<ContextType> VALUES = const[ALL, PAGE, FRAME, SELECTION, LINK, EDITABLE, IMAGE, VIDEO, AUDIO, LAUNCHER, BROWSER_ACTION, PAGE_ACTION];
+
+  const ContextType._(String str): super(str);
+}
+
+/**
+ * The type of menu item.
+ */
+class ItemType extends ChromeEnum {
+  static const ItemType NORMAL = const ItemType._('normal');
+  static const ItemType CHECKBOX = const ItemType._('checkbox');
+  static const ItemType RADIO = const ItemType._('radio');
+  static const ItemType SEPARATOR = const ItemType._('separator');
+
+  static const List<ItemType> VALUES = const[NORMAL, CHECKBOX, RADIO, SEPARATOR];
+
+  const ItemType._(String str): super(str);
+}
+
 class ContextMenusCreateParams extends ChromeObject {
-  ContextMenusCreateParams({String type, String id, String title, bool checked, List<String> contexts, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
+  ContextMenusCreateParams({ItemType type, String id, String title, bool checked, List<ContextType> contexts, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
     if (type != null) this.type = type;
     if (id != null) this.id = id;
     if (title != null) this.title = title;
@@ -114,10 +155,9 @@ class ContextMenusCreateParams extends ChromeObject {
 
   /**
    * The type of menu item. Defaults to 'normal' if not specified.
-   * enum of `normal`, `checkbox`, `radio`, `separator`
    */
-  String get type => jsProxy['type'];
-  set type(String value) => jsProxy['type'] = value;
+  ItemType get type => _createItemType(jsProxy['type']);
+  set type(ItemType value) => jsProxy['type'] = jsify(value);
 
   /**
    * The unique ID to assign to this item. Mandatory for event pages. Cannot be
@@ -127,7 +167,7 @@ class ContextMenusCreateParams extends ChromeObject {
   set id(String value) => jsProxy['id'] = value;
 
   /**
-   * The text to be displayed in the item; this is _required_ unless _type_ is
+   * The text to be displayed in the item; this is _required_ unless `type` is
    * 'separator'. When the context is 'selection', you can use `%s` within the
    * string to show the selected text. For example, if this parameter's value is
    * "Translate '%s' to Pig Latin" and the user selects the word "cool", the
@@ -146,15 +186,10 @@ class ContextMenusCreateParams extends ChromeObject {
 
   /**
    * List of contexts this menu item will appear in. Defaults to ['page'] if not
-   * specified. Specifying ['all'] is equivalent to the combination of all other
-   * contexts except for 'launcher'. The 'launcher' context is only supported by
-   * apps and is used to add menu items to the context menu that appears when
-   * clicking on the app icon in the launcher/taskbar/dock/etc. Different
-   * platforms might put limitations on what is actually supported in a launcher
-   * context menu.
+   * specified.
    */
-  List<String> get contexts => listify(jsProxy['contexts']);
-  set contexts(List<String> value) => jsProxy['contexts'] = jsify(value);
+  List<ContextType> get contexts => listify(jsProxy['contexts'], _createContextType);
+  set contexts(List<ContextType> value) => jsProxy['contexts'] = jsify(value);
 
   void onclick([var arg1]) =>
          jsProxy.callMethod('onclick', [jsify(arg1)]);
@@ -189,7 +224,7 @@ class ContextMenusCreateParams extends ChromeObject {
 }
 
 class ContextMenusUpdateParams extends ChromeObject {
-  ContextMenusUpdateParams({String type, String title, bool checked, List<String> contexts, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
+  ContextMenusUpdateParams({ItemType type, String title, bool checked, List<ContextType> contexts, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
     if (type != null) this.type = type;
     if (title != null) this.title = title;
     if (checked != null) this.checked = checked;
@@ -201,11 +236,8 @@ class ContextMenusUpdateParams extends ChromeObject {
   }
   ContextMenusUpdateParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
-  /**
-   * enum of `normal`, `checkbox`, `radio`, `separator`
-   */
-  String get type => jsProxy['type'];
-  set type(String value) => jsProxy['type'] = value;
+  ItemType get type => _createItemType(jsProxy['type']);
+  set type(ItemType value) => jsProxy['type'] = jsify(value);
 
   String get title => jsProxy['title'];
   set title(String value) => jsProxy['title'] = value;
@@ -213,8 +245,8 @@ class ContextMenusUpdateParams extends ChromeObject {
   bool get checked => jsProxy['checked'];
   set checked(bool value) => jsProxy['checked'] = value;
 
-  List<String> get contexts => listify(jsProxy['contexts']);
-  set contexts(List<String> value) => jsProxy['contexts'] = jsify(value);
+  List<ContextType> get contexts => listify(jsProxy['contexts'], _createContextType);
+  set contexts(List<ContextType> value) => jsProxy['contexts'] = jsify(value);
 
   void onclick([var arg1]) =>
          jsProxy.callMethod('onclick', [jsify(arg1)]);
@@ -235,3 +267,6 @@ class ContextMenusUpdateParams extends ChromeObject {
   bool get enabled => jsProxy['enabled'];
   set enabled(bool value) => jsProxy['enabled'] = value;
 }
+
+ItemType _createItemType(String value) => ItemType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+ContextType _createContextType(String value) => ContextType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

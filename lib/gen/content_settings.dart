@@ -2,7 +2,7 @@
 
 /**
  * Use the `chrome.contentSettings` API to change settings that control whether
- * websites can use features such as cookies, JavaScript, and plug-ins. More
+ * websites can use features such as cookies, JavaScript, and plugins. More
  * generally speaking, content settings allow you to customize Chrome's behavior
  * on a per-site basis instead of globally.
  */
@@ -33,31 +33,43 @@ class ChromeContentSettings extends ChromeApi {
 
   /**
    * Whether to show images. One of<br>[allow]: Show images,<br>[block]: Don't
-   * show images. <br>Default is [allow].<br>The primary URL is the main-frame
-   * URL. The secondary URL is the URL of the image.
+   * show images. <br>Default is [allow].<br>The primary URL is the URL of the
+   * top-level frame. The secondary URL is the URL of the image.
    */
   ContentSetting get images => _createContentSetting(_contentSettings['images']);
 
   /**
    * Whether to run JavaScript. One of<br>[allow]: Run JavaScript,<br>[block]:
-   * Don't run JavaScript. <br>Default is [allow].<br>The primary URL is the
-   * main-frame URL. The secondary URL is not used.
+   * Don't run JavaScript. <br>Default is [allow].<br>The primary URL is the URL
+   * of the top-level frame. The secondary URL is not used.
    */
   ContentSetting get javascript => _createContentSetting(_contentSettings['javascript']);
 
   /**
-   * Whether to run plug-ins. One of<br>[allow]: Run plug-ins
-   * automatically,<br>[block]: Don't run plug-ins automatically. <br>Default is
-   * [allow].<br>The primary URL is the main-frame URL. The secondary URL is not
-   * used.
+   * Whether to allow Geolocation. One of <br>[allow]: Allow sites to track your
+   * physical location,<br>[block]: Don't allow sites to track your physical
+   * location,<br>[ask]: Ask before allowing sites to track your physical
+   * location. <br>Default is [ask].<br>The primary URL is the URL of the
+   * document which requested location data. The secondary URL is the URL of the
+   * top-level frame (which may or may not differ from the requesting URL).
+   */
+  ContentSetting get location => _createContentSetting(_contentSettings['location']);
+
+  /**
+   * Whether to run plugins. One of<br>[allow]: Run plugins
+   * automatically,<br>[block]: Don't run plugins
+   * automatically,<br>[detect_important_content]: Only run automatically those
+   * plugins that are detected as the website's main content. <br>Default is
+   * [allow].<br>The primary URL is the URL of the top-level frame. The
+   * secondary URL is not used.
    */
   ContentSetting get plugins => _createContentSetting(_contentSettings['plugins']);
 
   /**
    * Whether to allow sites to show pop-ups. One of<br>[allow]: Allow sites to
    * show pop-ups,<br>[block]: Don't allow sites to show pop-ups. <br>Default is
-   * [block].<br>The primary URL is the main-frame URL. The secondary URL is not
-   * used.
+   * [block].<br>The primary URL is the URL of the top-level frame. The
+   * secondary URL is not used.
    */
   ContentSetting get popups => _createContentSetting(_contentSettings['popups']);
 
@@ -65,10 +77,49 @@ class ChromeContentSettings extends ChromeApi {
    * Whether to allow sites to show desktop notifications. One of<br>[allow]:
    * Allow sites to show desktop notifications,<br>[block]: Don't allow sites to
    * show desktop notifications,<br>[ask]: Ask when a site wants to show desktop
-   * notifications. <br>Default is [ask].<br>The primary URL is the main-frame
-   * URL. The secondary URL is not used.
+   * notifications. <br>Default is [ask].<br>The primary URL is the URL of the
+   * document which wants to show the notification. The secondary URL is not
+   * used.
    */
   ContentSetting get notifications => _createContentSetting(_contentSettings['notifications']);
+
+  /**
+   * Whether to allow sites to toggle the fullscreen mode. One of<br>[allow]:
+   * Allow sites to toggle the fullscreen mode,<br>[ask]: Ask when a site wants
+   * to toggle the fullscreen mode. <br>Default is [ask].<br>The primary URL is
+   * the URL of the document which requested to toggle the fullscreen mode. The
+   * secondary URL is the URL of the top-level frame (which may or may not
+   * differ from the requesting URL).
+   */
+  ContentSetting get fullscreen => _createContentSetting(_contentSettings['fullscreen']);
+
+  /**
+   * Whether to allow sites to disable the mouse cursor. One of <br>[allow]:
+   * Allow sites to disable the mouse cursor,<br>[block]: Don't allow sites to
+   * disable the mouse cursor,<br>[ask]: Ask when a site wants to disable the
+   * mouse cursor. <br>Default is [ask].<br>The primary URL is the URL of the
+   * top-level frame. The secondary URL is not used.
+   */
+  ContentSetting get mouselock => _createContentSetting(_contentSettings['mouselock']);
+
+  /**
+   * Whether to allow sites to run plugins unsandboxed. One of <br>[allow]:
+   * Allow sites to run plugins unsandboxed,<br>[block]: Don't allow sites to
+   * run plugins unsandboxed,<br>[ask]: Ask when a site wants to run a plugin
+   * unsandboxed. <br>Default is [ask].<br>The primary URL is the URL of the
+   * top-level frame. The secondary URL is not used.
+   */
+  ContentSetting get unsandboxedPlugins => _createContentSetting(_contentSettings['unsandboxedPlugins']);
+
+  /**
+   * Whether to allow sites to download multiple files automatically. One of
+   * <br>[allow]: Allow sites to download multiple files
+   * automatically,<br>[block]: Don't allow sites to download multiple files
+   * automatically,<br>[ask]: Ask when a site wants to download files
+   * automatically after the first file. <br>Default is [ask].<br>The primary
+   * URL is the URL of the top-level frame. The secondary URL is not used.
+   */
+  ContentSetting get automaticDownloads => _createContentSetting(_contentSettings['automaticDownloads']);
 }
 
 /**
@@ -94,6 +145,19 @@ class ResourceIdentifier extends ChromeObject {
    */
   String get description => jsProxy['description'];
   set description(String value) => jsProxy['description'] = value;
+}
+
+/**
+ * The scope of the ContentSetting. One of<br>[regular]: setting for regular
+ * profile (which is inherited by the incognito profile if not overridden
+ * elsewhere),<br>[incognito_session_only]: setting for incognito profile that
+ * can only be set during an incognito session and is deleted when the incognito
+ * session ends (overrides regular settings).
+ * enum of `regular`, `incognito_session_only`
+ */
+class Scope extends ChromeObject {
+  Scope();
+  Scope.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 class ContentSetting extends ChromeObject {
@@ -139,22 +203,105 @@ class ContentSetting extends ChromeObject {
   }
 }
 
+/**
+ * enum of `allow`, `block`, `session_only`
+ */
+class CookiesContentSetting extends ChromeObject {
+  CookiesContentSetting();
+  CookiesContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `allow`, `block`
+ */
+class ImagesContentSetting extends ChromeObject {
+  ImagesContentSetting();
+  ImagesContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `allow`, `block`
+ */
+class JavascriptContentSetting extends ChromeObject {
+  JavascriptContentSetting();
+  JavascriptContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `allow`, `block`, `ask`
+ */
+class LocationContentSetting extends ChromeObject {
+  LocationContentSetting();
+  LocationContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `allow`, `block`, `detect_important_content`
+ */
+class PluginsContentSetting extends ChromeObject {
+  PluginsContentSetting();
+  PluginsContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `allow`, `block`
+ */
+class PopupsContentSetting extends ChromeObject {
+  PopupsContentSetting();
+  PopupsContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `allow`, `block`, `ask`
+ */
+class NotificationsContentSetting extends ChromeObject {
+  NotificationsContentSetting();
+  NotificationsContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `allow`, `ask`
+ */
+class FullscreenContentSetting extends ChromeObject {
+  FullscreenContentSetting();
+  FullscreenContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `allow`, `block`, `ask`
+ */
+class MouselockContentSetting extends ChromeObject {
+  MouselockContentSetting();
+  MouselockContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `allow`, `block`, `ask`
+ */
+class PpapiBrokerContentSetting extends ChromeObject {
+  PpapiBrokerContentSetting();
+  PpapiBrokerContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `allow`, `block`, `ask`
+ */
+class MultipleAutomaticDownloadsContentSetting extends ChromeObject {
+  MultipleAutomaticDownloadsContentSetting();
+  MultipleAutomaticDownloadsContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
 class ContentSettingsClearParams extends ChromeObject {
-  ContentSettingsClearParams({String scope}) {
+  ContentSettingsClearParams({Scope scope}) {
     if (scope != null) this.scope = scope;
   }
   ContentSettingsClearParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   /**
-   * Where to clear the setting (default: regular). One of<br>[regular]: setting
-   * for regular profile (which is inherited by the incognito profile if not
-   * overridden elsewhere),<br>[incognito_session_only]: setting for incognito
-   * profile that can only be set during an incognito session and is deleted
-   * when the incognito session ends (overrides regular settings).
-   * enum of `regular`, `incognito_session_only`
+   * Where to clear the setting (default: regular).
    */
-  String get scope => jsProxy['scope'];
-  set scope(String value) => jsProxy['scope'] = value;
+  Scope get scope => _createScope(jsProxy['scope']);
+  set scope(Scope value) => jsProxy['scope'] = jsify(value);
 }
 
 class ContentSettingsGetParams extends ChromeObject {
@@ -197,7 +344,7 @@ class ContentSettingsGetParams extends ChromeObject {
 }
 
 class ContentSettingsSetParams extends ChromeObject {
-  ContentSettingsSetParams({String primaryPattern, String secondaryPattern, ResourceIdentifier resourceIdentifier, var setting, String scope}) {
+  ContentSettingsSetParams({String primaryPattern, String secondaryPattern, ResourceIdentifier resourceIdentifier, var setting, Scope scope}) {
     if (primaryPattern != null) this.primaryPattern = primaryPattern;
     if (secondaryPattern != null) this.secondaryPattern = secondaryPattern;
     if (resourceIdentifier != null) this.resourceIdentifier = resourceIdentifier;
@@ -235,16 +382,12 @@ class ContentSettingsSetParams extends ChromeObject {
   set setting(var value) => jsProxy['setting'] = jsify(value);
 
   /**
-   * Where to set the setting (default: regular). One of<br>[regular]: setting
-   * for regular profile (which is inherited by the incognito profile if not
-   * overridden elsewhere),<br>[incognito_session_only]: setting for incognito
-   * profile that can only be set during an incognito session and is deleted
-   * when the incognito session ends (overrides regular settings).
-   * enum of `regular`, `incognito_session_only`
+   * Where to set the setting (default: regular).
    */
-  String get scope => jsProxy['scope'];
-  set scope(String value) => jsProxy['scope'] = value;
+  Scope get scope => _createScope(jsProxy['scope']);
+  set scope(Scope value) => jsProxy['scope'] = jsify(value);
 }
 
 ContentSetting _createContentSetting(JsObject jsProxy) => jsProxy == null ? null : new ContentSetting.fromProxy(jsProxy);
 ResourceIdentifier _createResourceIdentifier(JsObject jsProxy) => jsProxy == null ? null : new ResourceIdentifier.fromProxy(jsProxy);
+Scope _createScope(JsObject jsProxy) => jsProxy == null ? null : new Scope.fromProxy(jsProxy);

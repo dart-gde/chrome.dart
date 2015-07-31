@@ -110,8 +110,8 @@ class ChromeRuntime extends ChromeApi {
    * after a 24-hour grace period has passed. Currently, this event is only
    * fired for Chrome OS kiosk apps.
    */
-  Stream<String> get onRestartRequired => _onRestartRequired.stream;
-  ChromeStreamController<String> _onRestartRequired;
+  Stream<OnRestartRequiredReason> get onRestartRequired => _onRestartRequired.stream;
+  ChromeStreamController<OnRestartRequiredReason> _onRestartRequired;
 
   ChromeRuntime._() {
     var getApi = () => _runtime;
@@ -125,7 +125,7 @@ class ChromeRuntime extends ChromeApi {
     _onConnectExternal = new ChromeStreamController<Port>.oneArg(getApi, 'onConnectExternal', _createPort);
     _onMessage = new ChromeStreamController<OnMessageEvent>.threeArgs(getApi, 'onMessage', _createOnMessageEvent);
     _onMessageExternal = new ChromeStreamController<OnMessageExternalEvent>.threeArgs(getApi, 'onMessageExternal', _createOnMessageExternalEvent);
-    _onRestartRequired = new ChromeStreamController<String>.oneArg(getApi, 'onRestartRequired', selfConverter);
+    _onRestartRequired = new ChromeStreamController<OnRestartRequiredReason>.oneArg(getApi, 'onRestartRequired', _createOnRestartRequiredReason);
   }
 
   bool get available => _runtime != null;
@@ -154,6 +154,26 @@ class ChromeRuntime extends ChromeApi {
 
     var completer = new ChromeCompleter<Window>.oneArg(_createWindow);
     _runtime.callMethod('getBackgroundPage', [completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Open your Extension's options page, if possible.
+   * 
+   * The precise behavior may depend on your manifest's
+   * `[options_ui](optionsV2)` or `[options_page](options)` key, or what Chrome
+   * happens to support at the time. For example, the page may be opened in a
+   * new tab, within chrome://extensions, within an App, or it may just focus an
+   * open options page. It will never cause the caller page to reload.
+   * 
+   * If your Extension does not declare an options page, or Chrome failed to
+   * create one for some other reason, the callback will set [lastError].
+   */
+  Future openOptionsPage() {
+    if (_runtime == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _runtime.callMethod('openOptionsPage', [completer.callback]);
     return completer.future;
   }
 
@@ -211,7 +231,6 @@ class ChromeRuntime extends ChromeApi {
    * 
    * Returns:
    * [status] Result of the update check.
-   * enum of `throttled`, `no_update`, `update_available`
    * [details] If an update is available, this contains more information about
    * the available update.
    */
@@ -509,10 +528,38 @@ class MessageSender extends ChromeObject {
 }
 
 /**
+ * The operating system chrome is running on.
+ * enum of `mac`, `win`, `android`, `cros`, `linux`, `openbsd`
+ */
+class PlatformOs extends ChromeObject {
+  PlatformOs();
+  PlatformOs.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * The machine's processor architecture.
+ * enum of `arm`, `x86-32`, `x86-64`
+ */
+class PlatformArch extends ChromeObject {
+  PlatformArch();
+  PlatformArch.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * The native client architecture. This may be different from arch on some
+ * platforms.
+ * enum of `arm`, `x86-32`, `x86-64`
+ */
+class PlatformNaclArch extends ChromeObject {
+  PlatformNaclArch();
+  PlatformNaclArch.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
  * An object containing information about the current platform.
  */
 class PlatformInfo extends ChromeObject {
-  PlatformInfo({String os, String arch, String nacl_arch}) {
+  PlatformInfo({PlatformOs os, PlatformArch arch, PlatformNaclArch nacl_arch}) {
     if (os != null) this.os = os;
     if (arch != null) this.arch = arch;
     if (nacl_arch != null) this.nacl_arch = nacl_arch;
@@ -521,25 +568,53 @@ class PlatformInfo extends ChromeObject {
 
   /**
    * The operating system chrome is running on.
-   * enum of `mac`, `win`, `android`, `cros`, `linux`, `openbsd`
    */
-  String get os => jsProxy['os'];
-  set os(String value) => jsProxy['os'] = value;
+  PlatformOs get os => _createPlatformOs(jsProxy['os']);
+  set os(PlatformOs value) => jsProxy['os'] = jsify(value);
 
   /**
    * The machine's processor architecture.
-   * enum of `arm`, `x86-32`, `x86-64`
    */
-  String get arch => jsProxy['arch'];
-  set arch(String value) => jsProxy['arch'] = value;
+  PlatformArch get arch => _createPlatformArch(jsProxy['arch']);
+  set arch(PlatformArch value) => jsProxy['arch'] = jsify(value);
 
   /**
    * The native client architecture. This may be different from arch on some
    * platforms.
-   * enum of `arm`, `x86-32`, `x86-64`
    */
-  String get nacl_arch => jsProxy['nacl_arch'];
-  set nacl_arch(String value) => jsProxy['nacl_arch'] = value;
+  PlatformNaclArch get nacl_arch => _createPlatformNaclArch(jsProxy['nacl_arch']);
+  set nacl_arch(PlatformNaclArch value) => jsProxy['nacl_arch'] = jsify(value);
+}
+
+/**
+ * Result of the update check.
+ * enum of `throttled`, `no_update`, `update_available`
+ */
+class RequestUpdateCheckStatus extends ChromeObject {
+  RequestUpdateCheckStatus();
+  RequestUpdateCheckStatus.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * The reason that this event is being dispatched.
+ * enum of `install`, `update`, `chrome_update`, `shared_module_update`
+ */
+class OnInstalledReason extends ChromeObject {
+  OnInstalledReason();
+  OnInstalledReason.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * The reason that the event is being dispatched. 'app_update' is used when the
+ * restart is needed because the application is updated to a newer version.
+ * 'os_update' is used when the restart is needed because the browser/OS is
+ * updated to a newer version. 'periodic' is used when the system runs for more
+ * than the permitted uptime set in the enterprise policy.
+ * enum of `app_update`, `os_update`, `periodic`
+ */
+class OnRestartRequiredReason extends ChromeObject {
+  OnRestartRequiredReason();
+  OnRestartRequiredReason.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 class RuntimeConnectParams extends ChromeObject {
@@ -583,10 +658,10 @@ class RuntimeSendMessageParams extends ChromeObject {
  */
 class RequestUpdateCheckResult {
   static RequestUpdateCheckResult _create(status, details) {
-    return new RequestUpdateCheckResult._(status, mapify(details));
+    return new RequestUpdateCheckResult._(_createRequestUpdateCheckStatus(status), mapify(details));
   }
 
-  String status;
+  RequestUpdateCheckStatus status;
   Map details;
 
   RequestUpdateCheckResult._(this.status, this.details);
@@ -597,9 +672,14 @@ OnMessageEvent _createOnMessageEvent(JsObject message, JsObject sender, JsObject
     new OnMessageEvent(message, _createMessageSender(sender), sendResponse);
 OnMessageExternalEvent _createOnMessageExternalEvent(JsObject message, JsObject sender, JsObject sendResponse) =>
     new OnMessageExternalEvent(message, _createMessageSender(sender), sendResponse);
+OnRestartRequiredReason _createOnRestartRequiredReason(JsObject jsProxy) => jsProxy == null ? null : new OnRestartRequiredReason.fromProxy(jsProxy);
 LastErrorRuntime _createLastErrorRuntime(JsObject jsProxy) => jsProxy == null ? null : new LastErrorRuntime.fromProxy(jsProxy);
 Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
 PlatformInfo _createPlatformInfo(JsObject jsProxy) => jsProxy == null ? null : new PlatformInfo.fromProxy(jsProxy);
 DirectoryEntry _createDirectoryEntry(JsObject jsProxy) => jsProxy == null ? null : new CrDirectoryEntry.fromProxy(jsProxy);
 MessageSender _createMessageSender(JsObject jsProxy) => jsProxy == null ? null : new MessageSender.fromProxy(jsProxy);
 Tab _createTab(JsObject jsProxy) => jsProxy == null ? null : new Tab.fromProxy(jsProxy);
+PlatformOs _createPlatformOs(JsObject jsProxy) => jsProxy == null ? null : new PlatformOs.fromProxy(jsProxy);
+PlatformArch _createPlatformArch(JsObject jsProxy) => jsProxy == null ? null : new PlatformArch.fromProxy(jsProxy);
+PlatformNaclArch _createPlatformNaclArch(JsObject jsProxy) => jsProxy == null ? null : new PlatformNaclArch.fromProxy(jsProxy);
+RequestUpdateCheckStatus _createRequestUpdateCheckStatus(JsObject jsProxy) => jsProxy == null ? null : new RequestUpdateCheckStatus.fromProxy(jsProxy);

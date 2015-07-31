@@ -500,7 +500,9 @@ class ChromeSocketsTcpServer extends ChromeApi {
    * port/address is in use, the callback indicates a failure.
    * [socketId]: The socket identifier.
    * [address]: The address of the local machine.
-   * [port]: The port of the local machine.
+   * [port]: The port of the local machine. When set to `0`, a free port is
+   * chosen dynamically. The dynamically allocated port can be found by calling
+   * `getInfo`.
    * [backlog]: Length of the socket's listen queue. The default value depends
    * on the Operating System (SOMAXCONN), which ensures a reasonable queue
    * length for most applications.
@@ -907,6 +909,24 @@ class ChromeSocketsUdp extends ChromeApi {
 
     var completer = new ChromeCompleter<List<String>>.oneArg(listify);
     _sockets_udp.callMethod('getJoinedGroups', [socketId, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Enables or disables broadcast packets on this socket.
+   * 
+   * [socketId]: The socket ID.
+   * [enabled]: `true` to enable broadcast packets, `false` to disable them.
+   * 
+   * Returns:
+   * Callback from the `setBroadcast` method.
+   * [result]: The result code returned from the underlying network call.
+   */
+  Future<int> setBroadcast(int socketId, bool enabled) {
+    if (_sockets_udp == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<int>.oneArg();
+    _sockets_udp.callMethod('setBroadcast', [socketId, enabled, completer.callback]);
     return completer.future;
   }
 
