@@ -124,6 +124,10 @@ namespace usb {
 
     // The data to transmit (required only by output transfers).
     ArrayBuffer? data;
+
+    // Request timeout (in milliseconds). The default value <code>0</code>
+    // indicates no timeout.
+    long? timeout;
   };
 
   dictionary GenericTransferInfo {
@@ -139,6 +143,10 @@ namespace usb {
 
     // The data to transmit (required only by output transfers).
     ArrayBuffer? data;
+
+    // Request timeout (in milliseconds). The default value <code>0</code>
+    // indicates no timeout.
+    long? timeout;
   };
 
   dictionary IsochronousTransferInfo {
@@ -210,7 +218,6 @@ namespace usb {
   callback RequestAccessCallback = void (boolean success);
   callback OpenDeviceCallback = void (ConnectionHandle handle);
   callback FindDevicesCallback = void (ConnectionHandle[] handles);
-  callback SetConfigurationCallback = void (boolean success);
   callback GetConfigurationCallback = void (ConfigDescriptor config);
   callback ListInterfacesCallback = void (InterfaceDescriptor[] descriptors);
   callback CloseDeviceCallback = void ();
@@ -278,7 +285,7 @@ namespace usb {
     // |handle|: An open connection to the device.
     static void setConfiguration(ConnectionHandle handle,
                                  long configurationValue,
-                                 SetConfigurationCallback callback);
+                                 VoidCallback callback);
 
     // Gets the configuration descriptor for the currently selected
     // configuration.

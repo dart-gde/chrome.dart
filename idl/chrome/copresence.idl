@@ -145,4 +145,3 @@ namespace copresence {
     static void onStatusUpdated(Status status);
   };
 };
-

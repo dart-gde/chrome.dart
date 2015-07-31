@@ -83,10 +83,31 @@ namespace fileSystem {
     boolean? acceptsMultiple;
   };
 
+  dictionary RequestFileSystemOptions {
+    // The ID of the requested volume.
+    DOMString volumeId;
+
+    // Whether the requested file system should be writeable, or read-only.
+    // By default read-only.
+    boolean? writable;
+  };
+
+  // Represents a mounted volume, which can be accessed via <code>chrome.
+  // fileSystem.requestFileSystem</code>.
+  dictionary Volume {
+    DOMString volumeId;
+    boolean writable;
+  };
+
   // Change to an entry within a tracked directory.
   [nodoc] dictionary ChildChange {
     [instanceOf=Entry] object entry;
     ChildChangeType type;
+  };
+
+  // Event notifying about an inserted or a removed volume from the system.
+  dictionary VolumeListChangedEvent {
+    Volume[] volumes;
   };
 
   // Event notifying about a change in a file or a directory, including its
@@ -112,8 +133,11 @@ namespace fileSystem {
       [instanceOf=FileEntry] optional object[] fileEntries);
   callback IsWritableCallback = void (boolean isWritable);
   callback IsRestorableCallback = void (boolean isRestorable);
-  callback GetObservedEntriesCallback = void (
+  [nodoc] callback GetObservedEntriesCallback = void (
       [instanceOf=Entry] object[] entries);
+  callback RequestFileSystemCallback = void(
+      [instanceOf=FileSystem] optional object fileSystem);
+  callback GetVolumeListCallback = void(optional Volume[] volumes);
 
   interface Functions {
     // Get the display path of an Entry object. The display path is based on
@@ -154,6 +178,25 @@ namespace fileSystem {
     // running and across restarts.
     static DOMString retainEntry([instanceOf=Entry] object entry);
 
+    // Requests access to a file system for a volume represented by <code>
+    // options.volumeId</code>. If <code>options.writable</code> is set to true,
+    // then the file system will be writable. Otherwise, it will be read-only.
+    // The <code>writable</code> option requires the <code>
+    // "fileSystem": {"write"}</code> permission in the manifest. Available to
+    // kiosk apps running in kiosk session only. For manual-launch kiosk mode, a
+    // confirmation dialog will be shown on top of the active app window.
+    // In case of an error, <code>fileSystem</code> will be undefined, and
+    // <code>chrome.runtime.lastError</code> will be set.
+    static void requestFileSystem(RequestFileSystemOptions options,
+                                  RequestFileSystemCallback callback);
+
+    // Returns a list of volumes available for <code>requestFileSystem()</code>.
+    // The <code>"fileSystem": {"requestFileSystem"}</code> manifest permission
+    // is required. Available to kiosk apps running in the kiosk session only.
+    // In case of an error, <code>volumes</code> will be undefined, and <code>
+    // chrome.runtime.lastError</code> will be set.
+    static void getVolumeList(GetVolumeListCallback callback);
+
     // Observes a directory entry. Emits an event if the tracked directory is
     // changed (including the list of files on it), or removed. If <code>
     // recursive</code> is set to true, then also all accessible subdirectories
@@ -179,6 +222,9 @@ namespace fileSystem {
   };
 
   interface Events {
+    // Called when a list of available volumes is changed.
+    static void onVolumeListChanged(VolumeListChangedEvent event);
+
     // Called when an observed entry is changed.
     [nodoc] static void onEntryChanged(EntryChangedEvent event);
 

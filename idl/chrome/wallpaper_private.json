@@ -8,13 +8,12 @@
     "compiler_options": {
       "implemented_in": "chrome/browser/chromeos/extensions/wallpaper_private_api.h"
     },
-    "platforms": ["chromeos"],
     "description": "none",
     "types": [
       {
-        "id": "WallpaperLayout",
+        "id": "WallpaperSource",
         "type": "string",
-        "enum": [ "STRETCH", "CENTER", "CENTER_CROPPED" ]
+        "enum": [ "ONLINE", "OEM" ]
       }
     ],
     "functions": [
@@ -68,7 +67,7 @@
           },
           {
             "name": "layout",
-            "$ref": "WallpaperLayout"
+            "$ref": "wallpaper.WallpaperLayout"
           },
           {
             "type": "function",
@@ -94,7 +93,7 @@
           },
           {
             "name": "layout",
-            "$ref": "WallpaperLayout"
+            "$ref": "wallpaper.WallpaperLayout"
           },
           {
             "type": "string",
@@ -126,7 +125,7 @@
           },
           {
             "name": "layout",
-            "$ref": "WallpaperLayout"
+            "$ref": "wallpaper.WallpaperLayout"
           },
           {
             "type": "boolean",
@@ -158,7 +157,7 @@
         "parameters": [
           {
             "name": "layout",
-            "$ref": "WallpaperLayout"
+            "$ref": "wallpaper.WallpaperLayout"
           },
           {
             "type": "function",
@@ -194,8 +193,7 @@
           },
           {
             "name": "source",
-            "type": "string",
-            "enum": [ "ONLINE", "OEM" ]
+            "$ref": "WallpaperSource"
           },
           {
             "type": "function",
@@ -256,6 +254,13 @@
             ]
           }
         ]
+      }
+    ],
+    "events": [
+      {
+        "name": "onWallpaperChangedBy3rdParty",
+        "type": "function",
+        "description": "This event is sent when the current wallpaper was set by a third party application."
       }
     ]
   }
