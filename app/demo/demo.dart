@@ -180,8 +180,8 @@ void handleRuntimeReload() {
 }
 
 void handleIdleQueryState() {
-  chrome.idle.queryState(15).then((String state) {
-    summary(state);
+  chrome.idle.queryState(15).then((state) {
+    summary(state.toString());
   });
 }
 

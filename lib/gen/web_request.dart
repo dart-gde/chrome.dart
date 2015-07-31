@@ -153,10 +153,83 @@ class AuthCredentialsWebRequest extends ChromeObject {
 }
 
 /**
+ * enum of `main_frame`, `sub_frame`, `stylesheet`, `script`, `image`, `object`,
+ * `xmlhttprequest`, `other`
+ */
+class ResourceType extends ChromeObject {
+  ResourceType();
+  ResourceType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `blocking`, `requestBody`
+ */
+class OnBeforeRequestOptions extends ChromeObject {
+  OnBeforeRequestOptions();
+  OnBeforeRequestOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `requestHeaders`, `blocking`
+ */
+class OnBeforeSendHeadersOptions extends ChromeObject {
+  OnBeforeSendHeadersOptions();
+  OnBeforeSendHeadersOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `requestHeaders`
+ */
+class OnSendHeadersOptions extends ChromeObject {
+  OnSendHeadersOptions();
+  OnSendHeadersOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `blocking`, `responseHeaders`
+ */
+class OnHeadersReceivedOptions extends ChromeObject {
+  OnHeadersReceivedOptions();
+  OnHeadersReceivedOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `responseHeaders`, `blocking`, `asyncBlocking`
+ */
+class OnAuthRequiredOptions extends ChromeObject {
+  OnAuthRequiredOptions();
+  OnAuthRequiredOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `responseHeaders`
+ */
+class OnResponseStartedOptions extends ChromeObject {
+  OnResponseStartedOptions();
+  OnResponseStartedOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `responseHeaders`
+ */
+class OnBeforeRedirectOptions extends ChromeObject {
+  OnBeforeRedirectOptions();
+  OnBeforeRedirectOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `responseHeaders`
+ */
+class OnCompletedOptions extends ChromeObject {
+  OnCompletedOptions();
+  OnCompletedOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
  * An object describing filters to apply to webRequest events.
  */
 class RequestFilter extends ChromeObject {
-  RequestFilter({List<String> urls, List<String> types, int tabId, int windowId}) {
+  RequestFilter({List<String> urls, List<ResourceType> types, int tabId, int windowId}) {
     if (urls != null) this.urls = urls;
     if (types != null) this.types = types;
     if (tabId != null) this.tabId = tabId;
@@ -175,8 +248,8 @@ class RequestFilter extends ChromeObject {
    * A list of request types. Requests that cannot match any of the types will
    * be filtered out.
    */
-  List<String> get types => listify(jsProxy['types']);
-  set types(List<String> value) => jsProxy['types'] = jsify(value);
+  List<ResourceType> get types => listify(jsProxy['types'], _createResourceType);
+  set types(List<ResourceType> value) => jsProxy['types'] = jsify(value);
 
   int get tabId => jsProxy['tabId'];
   set tabId(int value) => jsProxy['tabId'] = value;
@@ -325,6 +398,7 @@ class ChallengerWebRequest extends ChromeObject {
 
 OnAuthRequiredEvent _createOnAuthRequiredEvent(JsObject details, JsObject callback) =>
     new OnAuthRequiredEvent(mapify(details), callback);
+ResourceType _createResourceType(JsObject jsProxy) => jsProxy == null ? null : new ResourceType.fromProxy(jsProxy);
 HttpHeaders _createHttpHeaders(JsObject jsProxy) => jsProxy == null ? null : new HttpHeaders.fromProxy(jsProxy);
 AuthCredentialsWebRequest _createAuthCredentialsWebRequest(JsObject jsProxy) => jsProxy == null ? null : new AuthCredentialsWebRequest.fromProxy(jsProxy);
 UploadData _createUploadData(JsObject jsProxy) => jsProxy == null ? null : new UploadData.fromProxy(jsProxy);

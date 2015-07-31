@@ -282,6 +282,44 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
     return completer.future;
   }
 
+  /**
+   * Create an advertisement and register it for advertising. To call this
+   * function, the app must have the bluetooth:low_energy and
+   * bluetooth:peripheral permissions set to true. See
+   * https://developer.chrome.com/apps/manifest/bluetooth Note: On some hardware
+   * central and peripheral modes at the same time is supported but on hardware
+   * that doesn't support this, making this call will switch the device to
+   * peripheral mode. In the case of hardware which does not support both
+   * central and peripheral mode, attempting to use the device in both modes
+   * will lead to undefined behavior or prevent other central-role applications
+   * from behaving correctly (including the discovery of Bluetooth Low Energy
+   * devices).
+   * [advertisement]: The advertisement to advertise.
+   * [callback]: Called once the registeration is done and we've started
+   * advertising. Returns the id of the created advertisement.
+   */
+  Future<int> registerAdvertisement(Advertisement advertisement) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<int>.oneArg();
+    _bluetoothLowEnergy.callMethod('registerAdvertisement', [jsify(advertisement), completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Unregisters an advertisement and stops its advertising.
+   * [advertisementId]: Id of the advertisement to unregister.
+   * [callback]: Called once the advertisement is unregistered and is no longer
+   * being advertised.
+   */
+  Future unregisterAdvertisement(int advertisementId) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _bluetoothLowEnergy.callMethod('unregisterAdvertisement', [advertisementId, completer.callback]);
+    return completer.future;
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.bluetoothLowEnergy' is not available");
   }
@@ -305,6 +343,20 @@ class CharacteristicProperty extends ChromeEnum {
   static const List<CharacteristicProperty> VALUES = const[BROADCAST, READ, WRITE_WITHOUT_RESPONSE, WRITE, NOTIFY, INDICATE, AUTHENTICATED_SIGNED_WRITES, EXTENDED_PROPERTIES, RELIABLE_WRITE, WRITABLE_AUXILIARIES];
 
   const CharacteristicProperty._(String str): super(str);
+}
+
+/**
+ * Type of advertisement. If 'broadcast' is chosen, the sent advertisement type
+ * will be ADV_NONCONN_IND. If set to 'peripheral', the advertisement type will
+ * be ADV_IND or ADV_SCAN_IND.
+ */
+class AdvertisementType extends ChromeEnum {
+  static const AdvertisementType BROADCAST = const AdvertisementType._('broadcast');
+  static const AdvertisementType PERIPHERAL = const AdvertisementType._('peripheral');
+
+  static const List<AdvertisementType> VALUES = const[BROADCAST, PERIPHERAL];
+
+  const AdvertisementType._(String str): super(str);
 }
 
 /**
@@ -429,8 +481,76 @@ class NotificationProperties extends ChromeObject {
   set persistent(bool value) => jsProxy['persistent'] = value;
 }
 
+/**
+ * Represents an entry of the "Manufacturer Specific Data" field of Bluetooth LE
+ * advertisement data.
+ */
+class ManufacturerData extends ChromeObject {
+  ManufacturerData({int id, List<int> data}) {
+    if (id != null) this.id = id;
+    if (data != null) this.data = data;
+  }
+  ManufacturerData.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get id => jsProxy['id'];
+  set id(int value) => jsProxy['id'] = value;
+
+  List<int> get data => listify(jsProxy['data']);
+  set data(List<int> value) => jsProxy['data'] = jsify(value);
+}
+
+/**
+ * Represents an entry of the "Service Data" field of Bluetooth LE advertisement
+ * data.
+ */
+class ServiceData extends ChromeObject {
+  ServiceData({String uuid, List<int> data}) {
+    if (uuid != null) this.uuid = uuid;
+    if (data != null) this.data = data;
+  }
+  ServiceData.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get uuid => jsProxy['uuid'];
+  set uuid(String value) => jsProxy['uuid'] = value;
+
+  List<int> get data => listify(jsProxy['data']);
+  set data(List<int> value) => jsProxy['data'] = jsify(value);
+}
+
+/**
+ * Represents a Bluetooth LE advertisement instance.
+ */
+class Advertisement extends ChromeObject {
+  Advertisement({AdvertisementType type, List<String> serviceUuids, List<ManufacturerData> manufacturerData, List<String> solicitUuids, List<ServiceData> serviceData}) {
+    if (type != null) this.type = type;
+    if (serviceUuids != null) this.serviceUuids = serviceUuids;
+    if (manufacturerData != null) this.manufacturerData = manufacturerData;
+    if (solicitUuids != null) this.solicitUuids = solicitUuids;
+    if (serviceData != null) this.serviceData = serviceData;
+  }
+  Advertisement.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  AdvertisementType get type => _createAdvertisementType(jsProxy['type']);
+  set type(AdvertisementType value) => jsProxy['type'] = jsify(value);
+
+  List<String> get serviceUuids => listify(jsProxy['serviceUuids']);
+  set serviceUuids(List<String> value) => jsProxy['serviceUuids'] = jsify(value);
+
+  List<ManufacturerData> get manufacturerData => listify(jsProxy['manufacturerData'], _createManufacturerData);
+  set manufacturerData(List<ManufacturerData> value) => jsProxy['manufacturerData'] = jsify(value);
+
+  List<String> get solicitUuids => listify(jsProxy['solicitUuids']);
+  set solicitUuids(List<String> value) => jsProxy['solicitUuids'] = jsify(value);
+
+  List<ServiceData> get serviceData => listify(jsProxy['serviceData'], _createServiceData);
+  set serviceData(List<ServiceData> value) => jsProxy['serviceData'] = jsify(value);
+}
+
 Service _createService(JsObject jsProxy) => jsProxy == null ? null : new Service.fromProxy(jsProxy);
 Characteristic _createCharacteristic(JsObject jsProxy) => jsProxy == null ? null : new Characteristic.fromProxy(jsProxy);
 Descriptor _createDescriptor(JsObject jsProxy) => jsProxy == null ? null : new Descriptor.fromProxy(jsProxy);
 CharacteristicProperty _createCharacteristicProperty(String value) => CharacteristicProperty.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
+AdvertisementType _createAdvertisementType(String value) => AdvertisementType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+ManufacturerData _createManufacturerData(JsObject jsProxy) => jsProxy == null ? null : new ManufacturerData.fromProxy(jsProxy);
+ServiceData _createServiceData(JsObject jsProxy) => jsProxy == null ? null : new ServiceData.fromProxy(jsProxy);

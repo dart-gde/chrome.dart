@@ -48,11 +48,19 @@ class NetworkPrivacy extends ChromeObject {
 
   /**
    * If enabled, Chrome attempts to speed up your web browsing experience by
-   * pre-resolving DNS entries, prerendering sites (`&lt;link rel='prefetch'
-   * ...&gt;`), and preemptively opening TCP and SSL connections to servers.
-   * This preference's value is a boolean, defaulting to `true`.
+   * pre-resolving DNS entries, prerendering sites (`<link rel='prefetch'
+   * ...>`), and preemptively opening TCP and SSL connections to servers.  This
+   * preference's value is a boolean, defaulting to `true`.
    */
   ChromeSetting get networkPredictionEnabled => _createChromeSetting(jsProxy['networkPredictionEnabled']);
+
+  /**
+   * If enabled, Chrome will explore all possible routing options when using
+   * WebRTC to find the most performant path, possibly exposing user's private
+   * IP address. Otherwise, WebRTC traffic will be routed the same way as
+   * regular HTTP. This preference's value is a boolean, defaulting to `true`.
+   */
+  ChromeSetting get webRTCMultipleRoutesEnabled => _createChromeSetting(jsProxy['webRTCMultipleRoutesEnabled']);
 }
 
 class ServicesPrivacy extends ChromeObject {
@@ -72,6 +80,12 @@ class ServicesPrivacy extends ChromeObject {
   ChromeSetting get autofillEnabled => _createChromeSetting(jsProxy['autofillEnabled']);
 
   /**
+   * If enabled, Chrome will enable 'OK, Google' to start a voice search. This
+   * preference's value is a boolean, defaulting to `true`.
+   */
+  ChromeSetting get hotwordSearchEnabled => _createChromeSetting(jsProxy['hotwordSearchEnabled']);
+
+  /**
    * If enabled, the password manager will ask if you want to save passwords.
    * This preference's value is a boolean, defaulting to `true`.
    */
@@ -82,6 +96,13 @@ class ServicesPrivacy extends ChromeObject {
    * This preference's value is a boolean, defaulting to `true`.
    */
   ChromeSetting get safeBrowsingEnabled => _createChromeSetting(jsProxy['safeBrowsingEnabled']);
+
+  /**
+   * If enabled, Chrome will send additional information to Google when
+   * SafeBrowsing blocks a page, such as the content of the blocked page. This
+   * preference's value is a boolean, defaulting to `false`.
+   */
+  ChromeSetting get safeBrowsingExtendedReportingEnabled => _createChromeSetting(jsProxy['safeBrowsingExtendedReportingEnabled']);
 
   /**
    * If enabled, Chrome sends the text you type into the Omnibox to your default
@@ -116,9 +137,9 @@ class WebsitesPrivacy extends ChromeObject {
   ChromeSetting get thirdPartyCookiesAllowed => _createChromeSetting(jsProxy['thirdPartyCookiesAllowed']);
 
   /**
-   * If enabled, Chrome sends auditing pings when requested by a website (`&lt;a
-   * ping&gt;`). The value of this preference is of type boolean, and the
-   * default value is `true`.
+   * If enabled, Chrome sends auditing pings when requested by a website (`<a
+   * ping>`). The value of this preference is of type boolean, and the default
+   * value is `true`.
    */
   ChromeSetting get hyperlinkAuditingEnabled => _createChromeSetting(jsProxy['hyperlinkAuditingEnabled']);
 

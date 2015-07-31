@@ -1,4 +1,13 @@
 # Changelog - chrome.dart
+## 0.8.0-dev1 2015-09-15
+- updated to M44, adding the following APIs
+  - documentScan
+  - fileSystemProvider
+  - printerProvider
+  - vpnProvider
+  - networking.config
+  - wallpaper
+
 ## 0.7.0-dev1 2015-04-25
 - updated the APIs to M41
 - removed scriptBadge api that was dropped in M41

@@ -147,16 +147,15 @@ class EmbedRequest extends ChromeObject {
   set data(dynamic value) => jsProxy['data'] = jsify(value);
 
   /**
-   * Allows `embedderId` to embed this app in an &lt;appview&gt; element. The
-   * `url` specifies the content to embed.
+   * Allows `embedderId` to embed this app in an <appview> element. The `url`
+   * specifies the content to embed.
    */
   void allow(String url) {
     jsProxy.callMethod('allow', [url]);
   }
 
   /**
-   * Prevents ` embedderId` from embedding this app in an &lt;appview&gt;
-   * element.
+   * Prevents ` embedderId` from embedding this app in an <appview> element.
    */
   void deny() {
     jsProxy.callMethod('deny');
@@ -720,22 +719,6 @@ class _AppWindow extends ChromeObject {
   }
 
   /**
-   * Set a badge icon for the window. todo(benwells): Document this properly
-   * before going to stable.
-   */
-  void setBadgeIcon(String iconUrl) {
-    jsProxy.callMethod('setBadgeIcon', [iconUrl]);
-  }
-
-  /**
-   * Clear the current for the window. todo(benwells): Document this properly
-   * before going to stable.
-   */
-  void clearBadge() {
-    jsProxy.callMethod('clearBadge');
-  }
-
-  /**
    * Is the window always on top?
    */
   bool isAlwaysOnTop() {
@@ -760,7 +743,7 @@ class _AppWindow extends ChromeObject {
 
   /**
    * For platforms that support multiple workspaces, is this window visible on
-   * all of them? This is only available on dev channel.
+   * all of them?
    */
   void setVisibleOnAllWorkspaces(bool alwaysVisible) {
     jsProxy.callMethod('setVisibleOnAllWorkspaces', [alwaysVisible]);

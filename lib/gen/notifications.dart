@@ -44,14 +44,19 @@ class ChromeNotifications extends ChromeApi {
 
   /**
    * Creates and displays a notification.
-   * [notificationId]: Identifier of the notification. If it is empty, this
-   * method generates an id. If it matches an existing notification, this method
-   * first clears that notification before proceeding with the create operation.
+   * [notificationId]: Identifier of the notification. If not set or empty, an
+   * ID will automatically be generated. If it matches an existing notification,
+   * this method first clears that notification before proceeding with the
+   * create operation.
+   * 
+   * The `notificationId` parameter is required before Chrome 42.
    * [options]: Contents of the notification.
    * [callback]: Returns the notification id (either supplied or generated) that
    * represents the created notification.
+   * 
+   * The callback is required before Chrome 42.
    */
-  Future<String> create(String notificationId, NotificationOptions options) {
+  Future<String> create(NotificationOptions options, [String notificationId]) {
     if (_notifications == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<String>.oneArg();
@@ -65,6 +70,8 @@ class ChromeNotifications extends ChromeApi {
    * returned by [notifications.create] method.
    * [options]: Contents of the notification to update to.
    * [callback]: Called to indicate whether a matching notification existed.
+   * 
+   * The callback is required before Chrome 42.
    */
   Future<bool> update(String notificationId, NotificationOptions options) {
     if (_notifications == null) _throwNotAvailable();
@@ -79,6 +86,8 @@ class ChromeNotifications extends ChromeApi {
    * [notificationId]: The id of the notification to be cleared. This is
    * returned by [notifications.create] method.
    * [callback]: Called to indicate whether a matching notification existed.
+   * 
+   * The callback is required before Chrome 42.
    */
   Future<bool> clear(String notificationId) {
     if (_notifications == null) _throwNotAvailable();

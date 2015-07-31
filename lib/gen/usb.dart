@@ -132,10 +132,10 @@ class ChromeUsb extends ChromeApi {
    * and so this value is allowed.
    * [handle]: An open connection to the device.
    */
-  Future<bool> setConfiguration(ConnectionHandle handle, int configurationValue) {
+  Future setConfiguration(ConnectionHandle handle, int configurationValue) {
     if (_usb == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<bool>.oneArg();
+    var completer = new ChromeCompleter.noArgs();
     _usb.callMethod('setConfiguration', [jsify(handle), configurationValue, completer.callback]);
     return completer.future;
   }
@@ -503,7 +503,7 @@ class ConfigDescriptor extends ChromeObject {
 }
 
 class ControlTransferInfo extends ChromeObject {
-  ControlTransferInfo({Direction direction, Recipient recipient, RequestType requestType, int request, int value, int index, int length, ArrayBuffer data}) {
+  ControlTransferInfo({Direction direction, Recipient recipient, RequestType requestType, int request, int value, int index, int length, ArrayBuffer data, int timeout}) {
     if (direction != null) this.direction = direction;
     if (recipient != null) this.recipient = recipient;
     if (requestType != null) this.requestType = requestType;
@@ -512,6 +512,7 @@ class ControlTransferInfo extends ChromeObject {
     if (index != null) this.index = index;
     if (length != null) this.length = length;
     if (data != null) this.data = data;
+    if (timeout != null) this.timeout = timeout;
   }
   ControlTransferInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -538,14 +539,18 @@ class ControlTransferInfo extends ChromeObject {
 
   ArrayBuffer get data => _createArrayBuffer(jsProxy['data']);
   set data(ArrayBuffer value) => jsProxy['data'] = jsify(value);
+
+  int get timeout => jsProxy['timeout'];
+  set timeout(int value) => jsProxy['timeout'] = value;
 }
 
 class GenericTransferInfo extends ChromeObject {
-  GenericTransferInfo({Direction direction, int endpoint, int length, ArrayBuffer data}) {
+  GenericTransferInfo({Direction direction, int endpoint, int length, ArrayBuffer data, int timeout}) {
     if (direction != null) this.direction = direction;
     if (endpoint != null) this.endpoint = endpoint;
     if (length != null) this.length = length;
     if (data != null) this.data = data;
+    if (timeout != null) this.timeout = timeout;
   }
   GenericTransferInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -560,6 +565,9 @@ class GenericTransferInfo extends ChromeObject {
 
   ArrayBuffer get data => _createArrayBuffer(jsProxy['data']);
   set data(ArrayBuffer value) => jsProxy['data'] = jsify(value);
+
+  int get timeout => jsProxy['timeout'];
+  set timeout(int value) => jsProxy['timeout'] = value;
 }
 
 class IsochronousTransferInfo extends ChromeObject {

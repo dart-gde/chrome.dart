@@ -89,11 +89,11 @@ class ShowPageAction extends ChromeObject {
  * be specified.  Both are dictionaries mapping a number of pixels to an image
  * representation. The image representation in `imageData` is
  * an[ImageData](https://developer.mozilla.org/en-US/docs/Web/API/ImageData)
- * object, for example from a `&lt;canvas>` element, while the image
- * representation in `path` is the path to an image file relative to he
- * extension's manifest.  If `scale` screen pixels fit into a device-independent
- * pixel, the `scale * 19` icon will be used.  If that scale is missing, the
- * other image will be resized to the needed size.
+ * object, for example from a `<canvas>` element, while the image representation
+ * in `path` is the path to an image file relative to he extension's manifest.
+ * If `scale` screen pixels fit into a device-independent pixel, the `scale *
+ * 19` icon will be used.  If that scale is missing, the other image will be
+ * resized to the needed size.
  */
 class SetIcon extends ChromeObject {
   SetIcon({var imageData}) {
