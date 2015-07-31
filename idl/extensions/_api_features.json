@@ -19,6 +19,10 @@
 // hashes back to ids.
 
 {
+  "alarms": {
+    "dependencies": ["permission:alarms"],
+    "contexts": ["blessed_extension"]
+  },
   "app.runtime": [{
     "channel": "stable",
     "contexts": ["blessed_extension"],
@@ -52,13 +56,6 @@
       "06BE211D5F014BAB34BC22D9DDA09C63A81D828E",  // Official xkb extension
       "F94EE6AB36D6C6588670B2B01EB65212D9C64E33"   // Open source xkb extension
     ]
-  }],
-  // This does not need to be a complex feature if we could set "noparent" here.
-  // But set "noparent" makes this feature available on stable channel. The
-  // issue is tracked in crbug.com/415750.
-  "app.window.canSetVisibleOnAllWorkspaces": [{
-    "contexts": ["blessed_extension"],
-    "channel": "dev"
   }],
   "app.currentWindowInternal": {
     "noparent": true,
@@ -109,13 +106,17 @@
     "dependencies": ["permission:declarativeWebRequest"],
     "contexts": ["blessed_extension"]
   },
-  "copresenceEndpoints": {
-    "channel" : "canary",
-    "dependencies": ["permission:copresence"],
+  "diagnostics": {
+    "dependencies": ["permission:diagnostics"],
+    "extension_types": ["platform_app"],
     "contexts": ["blessed_extension"]
   },
   "dns": {
     "dependencies": ["permission:dns"],
+    "contexts": ["blessed_extension"]
+  },
+  "documentScan": {
+    "dependencies": ["permission:documentScan"],
     "contexts": ["blessed_extension"]
   },
   // This is not a real API, only here for documentation purposes.
@@ -125,6 +126,11 @@
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
     "contexts": ["blessed_extension"]
+  },
+  "extensionViewInternal": {
+    "internal": true,
+    "contexts": ["blessed_extension"],
+    "dependencies": ["permission:extensionview"]
   },
   "events": {
     "internal": true,
@@ -162,10 +168,23 @@
     "dependencies": ["permission:hid"],
     "contexts": ["blessed_extension"]
   },
-  "management": {
-    "dependencies": ["permission:management"],
+  "idle": {
+    "dependencies": ["permission:idle"],
     "contexts": ["blessed_extension"]
   },
+  "management": [{
+    "dependencies": ["permission:management"],
+    "contexts": ["blessed_extension"],
+    "default_parent": true
+  }, {
+    "channel": "stable",
+    "contexts": ["webui"],
+    "matches": [
+      "chrome://extensions/*",
+      "chrome://extensions-frame/*",
+      "chrome://chrome/extensions/*"
+    ]
+  }],
   "management.getPermissionWarningsByManifest": {
     "dependencies": [],
     "channel": "stable",
@@ -181,8 +200,46 @@
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"]
   },
+  "mimeHandlerPrivate": {
+    "dependencies": ["manifest:mime_types_handler"],
+    "contexts": ["blessed_extension"]
+  },
+  "mojoPrivate": {
+    "contexts": ["blessed_extension"],
+    "channel": "stable",
+    "extension_types": ["platform_app", "extension"],
+    "whitelist": [
+      "63ED55E43214C211F82122ED56407FF1A807F2A3"   // http://crbug.com/448569
+    ]
+  },
+  "networking.config": {
+    "dependencies": ["permission:networking.config"],
+    "contexts": ["blessed_extension"]
+  },
+  "networkingPrivate": [{
+    "dependencies": ["permission:networkingPrivate"],
+    "contexts": ["blessed_extension"]
+  }, {
+    "channel": "stable",
+    "contexts": ["webui"],
+    "matches": [
+      "chrome://md-settings/*",
+      "chrome://network/*",
+      "chrome://settings/*",
+      "chrome://settings-frame/*"
+    ]
+  }],
   "power": {
     "dependencies": ["permission:power"],
+    "contexts": ["blessed_extension"]
+  },
+  "printerProvider": {
+    "dependencies": ["permission:printerProvider"],
+    "contexts": ["blessed_extension"]
+  },
+  "printerProviderInternal": {
+    "internal": true,
+    "dependencies": ["permission:printerProvider"],
     "contexts": ["blessed_extension"]
   },
   "runtime": {
@@ -330,21 +387,6 @@
     "dependencies": ["permission:usb"],
     "contexts": ["blessed_extension"]
   },
-  "usb.setConfiguration": {
-    "dependencies": ["permission:usb"],
-    "contexts": ["blessed_extension"],
-    "channel": "dev"
-  },
-  "usb.onDeviceAdded": {
-    "channel": "dev",
-    "dependencies": ["permission:usb"],
-    "contexts": ["blessed_extension"]
-  },
-  "usb.onDeviceRemoved": {
-    "channel": "dev",
-    "dependencies": ["permission:usb"],
-    "contexts": ["blessed_extension"]
-  },
   "vpnProvider": {
     "dependencies": ["permission:vpnProvider"],
     "contexts": ["blessed_extension"]
@@ -363,24 +405,6 @@
     "internal": true,
     "contexts": ["webui"],
     "matches": ["chrome://chrome-signin/*", "chrome://oobe/*"]
-  }],
-  "webViewExperimentalInternal": [{
-    "internal": true,
-    "channel": "dev",
-    "contexts": ["blessed_extension"],
-    "dependencies": ["permission:webview"]
-  },
-  {
-    "internal": true,
-    "channel": "stable",
-    "contexts": ["blessed_extension"],
-    "dependencies": ["permission:webview"],
-    "whitelist": [
-      "8C3741E3AF0B93B6E8E0DDD499BB0B74839EA578",
-      "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB",
-      "1A26E32DE447A17CBE5E9750CDBA78F58539B39C",
-      "59048028102D7B4C681DBC7BC6CD980C3DC66DA3"
-    ]
   }],
   "webViewInternal": [{
     "internal": true,

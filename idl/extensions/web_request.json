@@ -14,6 +14,51 @@
     },
     "types": [
       {
+        "id": "ResourceType",
+        "type": "string",
+        "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"]
+      },
+      {
+        "id": "OnBeforeRequestOptions",
+        "type": "string",
+        "enum": ["blocking", "requestBody"]
+      },
+      {
+        "id": "OnBeforeSendHeadersOptions",
+        "type": "string",
+        "enum": ["requestHeaders", "blocking"]
+      },
+      {
+        "id": "OnSendHeadersOptions",
+        "type": "string",
+        "enum": ["requestHeaders"]
+      },
+      {
+        "id": "OnHeadersReceivedOptions",
+        "type": "string",
+        "enum": ["blocking", "responseHeaders"]
+      },
+      {
+        "id": "OnAuthRequiredOptions",
+        "type": "string",
+        "enum": ["responseHeaders", "blocking", "asyncBlocking"]
+      },
+      {
+        "id": "OnResponseStartedOptions",
+        "type": "string",
+        "enum": ["responseHeaders"]
+      },
+      {
+        "id": "OnBeforeRedirectOptions",
+        "type": "string",
+        "enum": ["responseHeaders"]
+      },
+      {
+        "id": "OnCompletedOptions",
+        "type": "string",
+        "enum": ["responseHeaders"]
+      },
+      {
         "id": "RequestFilter",
         "type": "object",
         "description": "An object describing filters to apply to webRequest events.",
@@ -27,7 +72,7 @@
             "type": "array",
             "optional": true,
             "description": "A list of request types. Requests that cannot match any of the types will be filtered out.",
-            "items": { "type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"] }
+            "items": { "$ref": "ResourceType" }
           },
           "tabId": { "type": "integer", "optional": true },
           "windowId": { "type": "integer", "optional": true }
@@ -157,7 +202,7 @@
                 }
               },
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
-              "type": {"type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"], "description": "How the requested resource will be used."},
+              "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."}
             }
           }
@@ -174,8 +219,7 @@
             "name": "extraInfoSpec",
             "description": "Array of extra information that should be passed to the listener function.",
             "items": {
-              "type": "string",
-              "enum": ["blocking", "requestBody"]
+              "$ref": "OnBeforeRequestOptions"
             }
           }
         ],
@@ -201,7 +245,7 @@
               "frameId": {"type": "integer", "description": "The value 0 indicates that the request happens in the main frame; a positive value indicates the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (<code>type</code> is <code>main_frame</code> or <code>sub_frame</code>), <code>frameId</code> indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab."},
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
-              "type": {"type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"], "description": "How the requested resource will be used."},
+              "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "requestHeaders": {"$ref": "HttpHeaders", "optional": true, "description": "The HTTP request headers that are going to be sent out with this request."}
             }
@@ -219,8 +263,7 @@
             "name": "extraInfoSpec",
             "description": "Array of extra information that should be passed to the listener function.",
             "items": {
-              "type": "string",
-              "enum": ["requestHeaders", "blocking"]
+              "$ref": "OnBeforeSendHeadersOptions"
             }
           }
         ],
@@ -246,7 +289,7 @@
               "frameId": {"type": "integer", "description": "The value 0 indicates that the request happens in the main frame; a positive value indicates the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (<code>type</code> is <code>main_frame</code> or <code>sub_frame</code>), <code>frameId</code> indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab."},
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
-              "type": {"type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"], "description": "How the requested resource will be used."},
+              "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "requestHeaders": {"$ref": "HttpHeaders", "optional": true, "description": "The HTTP request headers that have been sent out with this request."}
             }
@@ -264,8 +307,7 @@
             "name": "extraInfoSpec",
             "description": "Array of extra information that should be passed to the listener function.",
             "items": {
-              "type": "string",
-              "enum": ["requestHeaders"]
+              "$ref": "OnSendHeadersOptions"
             }
           }
         ]
@@ -286,10 +328,11 @@
               "frameId": {"type": "integer", "description": "The value 0 indicates that the request happens in the main frame; a positive value indicates the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (<code>type</code> is <code>main_frame</code> or <code>sub_frame</code>), <code>frameId</code> indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab."},
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
-              "type": {"type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"], "description": "How the requested resource will be used."},
+              "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "statusLine": {"type": "string", "description": "HTTP status line of the response or the 'HTTP/0.9 200 OK' string for HTTP/0.9 responses (i.e., responses that lack a status line)."},
-              "responseHeaders": {"$ref": "HttpHeaders", "optional": true, "description": "The HTTP response headers that have been received with this response."}
+              "responseHeaders": {"$ref": "HttpHeaders", "optional": true, "description": "The HTTP response headers that have been received with this response."},
+              "statusCode": {"type": "integer", "description": "Standard HTTP status code returned by the server."}
              }
           }
         ],
@@ -305,8 +348,7 @@
             "name": "extraInfoSpec",
             "description": "Array of extra information that should be passed to the listener function.",
             "items": {
-              "type": "string",
-              "enum": ["blocking", "responseHeaders"]
+              "$ref": "OnHeadersReceivedOptions"
             }
           }
         ],
@@ -332,14 +374,15 @@
               "frameId": {"type": "integer", "description": "The value 0 indicates that the request happens in the main frame; a positive value indicates the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (<code>type</code> is <code>main_frame</code> or <code>sub_frame</code>), <code>frameId</code> indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab."},
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
-              "type": {"type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"], "description": "How the requested resource will be used."},
+              "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "scheme": {"type": "string", "description": "The authentication scheme, e.g. Basic or Digest."},
               "realm": {"type": "string", "description": "The authentication realm provided by the server, if there is one.", "optional": true},
               "challenger": {"type": "object", "description": "The server requesting authentication.", "properties": {"host": {"type": "string"}, "port": {"type": "integer"}}},
               "isProxy": {"type": "boolean", "description": "True for Proxy-Authenticate, false for WWW-Authenticate."},
               "responseHeaders": {"$ref": "HttpHeaders", "optional": true, "description": "The HTTP response headers that were received along with this response."},
-              "statusLine": {"type": "string", "description": "HTTP status line of the response or the 'HTTP/0.9 200 OK' string for HTTP/0.9 responses (i.e., responses that lack a status line) or an empty string if there are no headers."}
+              "statusLine": {"type": "string", "description": "HTTP status line of the response or the 'HTTP/0.9 200 OK' string for HTTP/0.9 responses (i.e., responses that lack a status line) or an empty string if there are no headers."},
+              "statusCode": {"type": "integer", "description": "Standard HTTP status code returned by the server."}
             }
           },
           {
@@ -363,8 +406,7 @@
             "name": "extraInfoSpec",
             "description": "Array of extra information that should be passed to the listener function.",
             "items": {
-              "type": "string",
-              "enum": ["responseHeaders", "blocking", "asyncBlocking"]
+              "$ref": "OnAuthRequiredOptions"
             }
           }
         ],
@@ -390,7 +432,7 @@
               "frameId": {"type": "integer", "description": "The value 0 indicates that the request happens in the main frame; a positive value indicates the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (<code>type</code> is <code>main_frame</code> or <code>sub_frame</code>), <code>frameId</code> indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab."},
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
-              "type": {"type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"], "description": "How the requested resource will be used."},
+              "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "ip": {"type": "string", "optional": true, "description": "The server IP address that the request was actually sent to. Note that it may be a literal IPv6 address."},
               "fromCache": {"type": "boolean", "description": "Indicates if this response was fetched from disk cache."},
@@ -412,8 +454,7 @@
             "name": "extraInfoSpec",
             "description": "Array of extra information that should be passed to the listener function.",
             "items": {
-              "type": "string",
-              "enum": ["responseHeaders"]
+              "$ref": "OnResponseStartedOptions"
             }
           }
         ]
@@ -434,7 +475,7 @@
               "frameId": {"type": "integer", "description": "The value 0 indicates that the request happens in the main frame; a positive value indicates the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (<code>type</code> is <code>main_frame</code> or <code>sub_frame</code>), <code>frameId</code> indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab."},
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
-              "type": {"type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"], "description": "How the requested resource will be used."},
+              "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "ip": {"type": "string", "optional": true, "description": "The server IP address that the request was actually sent to. Note that it may be a literal IPv6 address."},
               "fromCache": {"type": "boolean", "description": "Indicates if this response was fetched from disk cache."},
@@ -457,8 +498,7 @@
             "name": "extraInfoSpec",
             "description": "Array of extra information that should be passed to the listener function.",
             "items": {
-              "type": "string",
-              "enum": ["responseHeaders"]
+              "$ref": "OnBeforeRedirectOptions"
             }
           }
         ]
@@ -479,7 +519,7 @@
               "frameId": {"type": "integer", "description": "The value 0 indicates that the request happens in the main frame; a positive value indicates the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (<code>type</code> is <code>main_frame</code> or <code>sub_frame</code>), <code>frameId</code> indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab."},
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
-              "type": {"type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"], "description": "How the requested resource will be used."},
+              "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "ip": {"type": "string", "optional": true, "description": "The server IP address that the request was actually sent to. Note that it may be a literal IPv6 address."},
               "fromCache": {"type": "boolean", "description": "Indicates if this response was fetched from disk cache."},
@@ -501,8 +541,7 @@
             "name": "extraInfoSpec",
             "description": "Array of extra information that should be passed to the listener function.",
             "items": {
-              "type": "string",
-              "enum": ["responseHeaders"]
+              "$ref": "OnCompletedOptions"
             }
           }
         ]
@@ -522,7 +561,7 @@
               "frameId": {"type": "integer", "description": "The value 0 indicates that the request happens in the main frame; a positive value indicates the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (<code>type</code> is <code>main_frame</code> or <code>sub_frame</code>), <code>frameId</code> indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab."},
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
-              "type": {"type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"], "description": "How the requested resource will be used."},
+              "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "ip": {"type": "string", "optional": true, "description": "The server IP address that the request was actually sent to. Note that it may be a literal IPv6 address."},
               "fromCache": {"type": "boolean", "description": "Indicates if this response was fetched from disk cache."},

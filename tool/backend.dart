@@ -33,8 +33,10 @@ class DefaultBackend extends Backend {
   static final Map ALT_FACTORIES = {
     "DirectoryEntry": "CrDirectoryEntry",
     "DOMFileSystem": "CrFileSystem",
+    "FileSystem": "CrFileSystem",
     "Entry": "CrEntry",
-    "FileEntry": "ChromeFileEntry"
+    "FileEntry": "ChromeFileEntry",
+    "Blob": "CrBlob"
   };
 
   DartGenerator generator;

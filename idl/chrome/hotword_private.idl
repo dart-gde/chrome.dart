@@ -21,15 +21,18 @@ namespace hotwordPrivate {
     boolean enabled;
 
     // Whether the hotword extension is available to be enabled
+    // Optional field, only valid when getStatus() is called with
+    // |getOptionalFields| = true. Otherwise, set to false.
     boolean available;
+
+    // Whether always-on is available to be enabled
+    // Optional field, only valid when getStatus() is called with
+    // |getOptionalFields| = true. Otherwise, set to false.
+    boolean alwaysOnAvailable;
 
     // Whether the sound of "Ok, Google" plus a few seconds before is sent
     // back to Google.
     boolean audioLoggingEnabled;
-
-    // Whether experimental hotwording functionality is enabled. Mirrors the
-    // "enable-experimental-hotwording" flag.
-    boolean experimentalHotwordEnabled;
 
     // Whether always-on hotwording is enabled.
     boolean alwaysOnEnabled;
@@ -39,6 +42,9 @@ namespace hotwordPrivate {
 
     // Whether the user corresponding to this profile is the active user.
     boolean userIsActive;
+
+    // Whether hotword hardware is available if requested.
+    boolean hotwordHardwareAvailable;
   };
 
   dictionary LaunchState {
@@ -91,7 +97,11 @@ namespace hotwordPrivate {
 
     // Retrieves the current state of hotword search.
     // The result is put into a StatusDetails object.
-    static void getStatus(StatusDetailsCallback callback);
+    // |getOptionalFields|: If true, fills in fields tagged as optional in
+    // StatusDetails with valid values. These fields are not valid by default
+    // since their current implementations may cause blocking operations.
+    static void getStatus(optional boolean getOptionalFields,
+                          StatusDetailsCallback callback);
 
     // Retrieves a dictionary mapping names to localized resource strings.
     static void getLocalizedStrings(LocalizeStringsCallback callback);
@@ -139,6 +149,10 @@ namespace hotwordPrivate {
 
     // Gets the audio history opt-in state.
     static void getAudioHistoryEnabled(optional AudioHistoryCallback callback);
+
+    // Sends the result of whether a speaker model exists to the browser.
+    static void speakerModelExistsResult(boolean exists,
+                                         optional GenericDoneCallback callback);
   };
 
   interface Events {
@@ -161,5 +175,15 @@ namespace hotwordPrivate {
 
     // Fired when a hotword has triggered.
     static void onHotwordTriggered();
+
+    // Fired when the speaker model should be deleted.
+    static void onDeleteSpeakerModel();
+
+    // Fired when the browser wants to find out whether the speaker model
+    // exists.
+    static void onSpeakerModelExists();
+
+    // Fired when the microphone state changes.
+    static void onMicrophoneStateChanged(boolean enabled);
   };
 };

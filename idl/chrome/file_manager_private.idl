@@ -8,8 +8,8 @@
  implemented_in="chrome/browser/chromeos/extensions/file_manager/file_manager_private_api_functions.h"]
 namespace fileManagerPrivate {
 // Type of the mounted volume.
-enum VolumeType { drive, downloads, removable, archive, cloud_device, provided,
-                  mtp, testing };
+enum VolumeType { drive, downloads, removable, archive, provided, mtp,
+                  testing };
 
 // Device type. Available if this is removable volume.
 enum DeviceType { usb, sd, optical, mobile, unknown };
@@ -17,6 +17,9 @@ enum DeviceType { usb, sd, optical, mobile, unknown };
 // Additional data about mount, for example, that the filesystem is not
 // supported.
 enum MountCondition { unknown, unsupported };
+
+// Additional information of the context the volume was mounted.
+enum MountContext { user, auto };
 
 // Is the event raised for mounting or unmounting.
 enum MountCompletedEventType { mount, unmount };
@@ -46,7 +49,7 @@ enum MountCompletedStatus {
 };
 
 // File transfer progress state.
-enum TransferState { added, started, in_progress, completed, failed };
+enum TransferState { in_progress, completed, failed };
 
 // Defines file transfer direction.
 enum TransferType { upload, download };
@@ -143,12 +146,40 @@ enum DriveShareType {
   can_view
 };
 
-// ImageSet that represents multi-scale images.
-dictionary ImageSet {
-  // 1x scale URL.
-  DOMString scale1xUrl;
-  // 2x scale URL.
-  DOMString scale2xUrl;
+// Names of properies for getEntryProperties().
+enum EntryPropertyName {
+  size,
+  modificationTime,
+  thumbnailUrl,
+  croppedThumbnailUrl,
+  imageWidth,
+  imageHeight,
+  imageRotation,
+  pinned,
+  present,
+  hosted,
+  availableOffline,
+  availableWhenMetered,
+  dirty,
+  customIconUrl,
+  contentMimeType,
+  sharedWithMe,
+  shared,
+  externalFileUrl
+};
+
+// Entry property visibility for setEntryTag();
+enum EntryTagVisibility {
+  private,
+  public
+};
+
+// Source of the volume data.
+enum Source {
+  file,
+  device,
+  network,
+  system
 };
 
 // A file task represents an action that the file manager can perform over the
@@ -178,13 +209,16 @@ dictionary FileTask {
 // Additional entry properties.
 dictionary EntryProperties {
   // Size of this file.
-  double? fileSize;
+  double? size;
 
   // Timestamp of entry update time, in milliseconds past the epoch.
-  double? lastModifiedTime;
+  double? modificationTime;
 
   // URL to the Drive thumbnail image for this file.
   DOMString? thumbnailUrl;
+
+  // URL to the Drive cropped thumbnail image for this file.
+  DOMString? croppedThumbnailUrl;
 
   // Width, if the entry is an image.
   long? imageWidth;
@@ -196,22 +230,22 @@ dictionary EntryProperties {
   long? imageRotation;
 
   // True if the file is pinned in cache.
-  boolean? isPinned;
+  boolean? pinned;
 
   // True if the file is present in cache.
-  boolean? isPresent;
+  boolean? present;
 
   // True if the file is hosted on a server instead of local.
-  boolean? isHosted;
+  boolean? hosted;
 
   // True if the file is available offline.
-  boolean? isAvailableOffline;
+  boolean? availableOffline;
 
   // True if the file is available on metered connection.
-  boolean? isAvailableWhenMetered;
+  boolean? availableWhenMetered;
 
   // True if the file has local change (has not been fully synced to the cloud).
-  boolean? isDirty;
+  boolean? dirty;
 
   // URL to the custom icon for this file.
   DOMString? customIconUrl;
@@ -258,11 +292,14 @@ dictionary VolumeMetadata {
   // ID of the disk volume.
   DOMString volumeId;
 
-  // Id the provided file system (for proviided file systems).
+  // Id the provided file system (for provided file systems).
   DOMString? fileSystemId;
 
   // Extension providing this volume (for provided file systems).
   DOMString? extensionId;
+
+  // Source of the volume's data.
+  Source source;
 
   // Label of the volume (if available).
   DOMString? volumeLabel;
@@ -294,9 +331,15 @@ dictionary VolumeMetadata {
   // Flag that specifies whether the volume contains media.
   boolean hasMedia;
 
+  // Flag that specifies whether the volume is configurable.
+  boolean configurable;
+
   // Additional data about mount, for example, that the filesystem is not
   // supported.
   MountCondition? mountCondition;
+
+  // Context in which the volume has been mounted.
+  MountContext? mountContext;
 };
 
 // Payload data for mount event.
@@ -327,10 +370,10 @@ dictionary FileTransferStatus {
   TransferType transferType;
 
   // Approximated completed portion of the transfer operation.
-  double? processed;
+  double processed;
 
   // Approximated total size of transfer operation.
-  double? total;
+  double total;
 
   // Total number of jobs.
   long num_total_jobs;
@@ -452,7 +495,7 @@ dictionary SearchResult {
 
   // The base name of a Drive file that matched the search query. The matched
   // sub strings are highlighted with <b> element. Meta characters are escaped
-  // like &lt;.
+  // like <.
   DOMString highlightedBaseName;
 };
 
@@ -476,8 +519,29 @@ dictionary DeviceEvent {
   DOMString devicePath;
 };
 
+// Describes an installed providing extension.
+dictionary ProvidingExtension {
+  // ID of the providing extension.
+  DOMString extensionId;
+
+  // Name of the providing extension.
+  DOMString name;
+
+  // Whether supports configuration dialog.
+  boolean configurable;
+
+  // Whether supports mounting multiple instances.
+  boolean multipleMounts;
+
+  // Source of file systems' data.
+  manifestTypes.FileSystemProviderSource source;
+};
+
 // Callback that does not take arguments.
 callback SimpleCallback = void();
+
+// |result| Boolean result returned by the invoked function.
+callback BooleanCallback = void(boolean result);
 
 // |result| Result of the task execution.
 callback ExecuteTaskCallback = void(TaskResult result);
@@ -496,10 +560,6 @@ callback AddFileWatchCallback = void(optional boolean success);
 
 // |success| True when file watch is successfully removed.
 callback RemoveFileWatchCallback = void(optional boolean success);
-
-// |fileSystem| A DOMFileSystem instance for local file system access. null if
-// the caller has no appropriate permissions.
-callback RequestFileSystemCallback = void(optional object fileSystem);
 
 // |entryProperties| A dictionary containing properties of the requested
 // entries.
@@ -536,6 +596,10 @@ callback SearchDriveCallback =
 
 callback SearchDriveMetadataCallback = void(SearchResult[] results);
 
+// |urls| The map of hash and array of FileEntry's URL. The array can be empty
+// if the corresponding file is not found.
+callback SearchFilesByHashesCallback = void(object urls);
+
 callback ZipSelectionCallback = void(optional boolean success);
 
 callback GetDriveConnectionStateCallback = void(DriveConnectionState result);
@@ -561,10 +625,13 @@ callback GetProfilesCallback = void(ProfileInfo[] profiles,
 
 // |entryUrl| URL of an entry in a normal file system.
 callback ResolveEntriesCallback =
-    void([instanceOf=FileEntry] object[] entries);
+    void([instanceOf=Entry] object[] entries);
 
 // |checksum| Result checksum.
 callback ComputeChecksumCallback = void(DOMString checksum);
+
+// |extensions| List of providing extensions.
+callback GetProvidingExtensionsCallback = void(ProvidingExtension[] extensions);
 
 interface Functions {
   // Logout the current user for navigating to the re-authentication screen for
@@ -620,20 +687,16 @@ interface Functions {
   static void removeFileWatch(DOMString fileUrl,
                               RemoveFileWatchCallback callback);
 
-  // Requests access to a file system volume.
-  // |volumeId| The ID of the file system volume to request. The volume ID is
-  //     delivered to JavaScript as part of VolumeMetadata. By specifying
-  //     "compatible", this function behaves in the compatible mode, where the
-  //     returned FileSystem object gives access to all file system volumes such
-  //     as Downloads folder and removal media like SD cards (i.e. all volumes
-  //     are provided inside the single FileSystem object). In the new
-  //     "per-volume FileSystem object model" crbug.com/322305, a separate
-  //     FileSystem object is created for each volume. "compatible" parameter
-  //     will be removed once Files.app is switched to the per-volume FileSystem
-  //     object model.
+  // Enables the extenal file scheme necessary to initiate drags to the browser
+  // window for files on the external backend.
+  static void enableExternalFileScheme();
+
+  // Requests granting R/W permissions for the passed entries. It's a best
+  // effort operation. Some files may not be granted access if the url is
+  // invalid or not backed by the external file system.
+  // |entryUrls| Urls for the entries to be accessed.
   // |callback|
-  static void requestFileSystem(DOMString volumeId,
-                                RequestFileSystemCallback callback);
+  static void grantAccess(DOMString[] entryUrls, SimpleCallback callback);
 
   // Selects multiple files.
   // |selectedPaths| Array of selected paths
@@ -657,9 +720,13 @@ interface Functions {
 
   // Requests additional properties for files.
   // |fileUrls| list of URLs of files
-  // |callback|
+  // |names| list of requested properties by their names.
+  // |callback| Completion callback. May return less than requested properties
+  //     if some are not available. In the same time, it can return properties
+  //     which were not requested (if it's cheap to compute them).
   static void getEntryProperties(
       DOMString[] fileUrls,
+      EntryPropertyName[] names,
       GetEntryPropertiesCallback callback);
 
   // Pins/unpins a Drive file in the cache.
@@ -671,13 +738,13 @@ interface Functions {
                            boolean pin,
                            optional SimpleCallback callback);
 
-  // Resolves file entries in the isolated file system and returns corresponding
+  // Resolves entries in the isolated file system and returns corresponding
   // entries in the external file system mounted to Chrome OS file manager
   // backend. If resolving entry fails, the entry will be just ignored and the
   // corresponding entry does not appear in the result.
   [nocompile]
   static void resolveIsolatedEntries(
-      [instanceOf=FileEntry] object[] entries,
+      [instanceOf=Entry] object[] entries,
       ResolveEntriesCallback callback);
 
   // Mount a resource or a file.
@@ -747,6 +814,12 @@ interface Functions {
   static void searchDriveMetadata(SearchMetadataParams searchParams,
                                   SearchDriveMetadataCallback callback);
 
+  // Search files in the volume having |volumeId| by using |hashList|.
+  // sub-directories) the given |targetDirectoryUrl|.
+  static void searchFilesByHashes(DOMString volumeId,
+                                  DOMString[] hashList,
+                                  SearchFilesByHashesCallback callback);
+
   // Create a zip file for the selected files.
   // |dirURL| URL of the directory containing the selected files.
   // |selectionUrls| URLs of the selected files. The files must be under the
@@ -815,10 +888,6 @@ interface Functions {
   // Obtains a list of profiles that are logged-in.
   static void getProfiles(GetProfilesCallback callback);
 
-  // Moves the window to other user's desktop.
-  static void visitDesktop(DOMString profileId,
-                           optional SimpleCallback callback);
-
   // Opens inspector window.
   // |type| InspectionType which specifies how to open inspector.
   static void openInspector(InspectionType type);
@@ -828,6 +897,31 @@ interface Functions {
   // |callback|
   static void computeChecksum(DOMString fileURL,
                               ComputeChecksumCallback callback);
+
+  // Is UMA enabled?
+  static void isUMAEnabled(BooleanCallback callback);
+
+  // Sets a tag on a file or a directory. Only Drive files are supported.
+  static void setEntryTag(DOMString entryURL,
+                          EntryTagVisibility visibility,
+                          DOMString key,
+                          DOMString value,
+                          SimpleCallback callback);
+
+  // Returns if Piex loader is enabled.
+  static void isPiexLoaderEnabled(BooleanCallback callback);
+
+  // Returns list of available providing extensions.
+  static void getProvidingExtensions(GetProvidingExtensionsCallback callback);
+
+  // Requests adding a new provided file system. If not possible, then an error
+  // via chrome.runtime.lastError is returned.
+  static void addProvidedFileSystem(DOMString extension_id,
+                                    SimpleCallback callback);
+
+  // Requests configuring an existing volume. If not possible, then returns
+  // an error via chrome.runtime.lastError.
+  static void configureVolume(DOMString volumeId, SimpleCallback callback);
 };
 
 interface Events {

@@ -86,13 +86,18 @@
       "81986D4F846CEDDDB962643FA501D1780DD441BB"   // http://crbug.com/407693
     ]
   }],
-  "content_capabilities": {
+  "content_capabilities": [{
     "channel": "stable",
     "extension_types": ["extension"],
     "whitelist": [
-      "950D13BB9B4794F4CA2A68D3597E5DFAA47C88AE"  // Drive
+      "950D13BB9B4794F4CA2A68D3597E5DFAA47C88AE",  // Drive
+      "0EEB39B7A9A52CAAE6A072F83320435749B184A4",  // http://crbug.com/481210
+      "D4AF239830E1E038C9B60DA365B1EC9CB3BC5658"   // http://crbug.com/481210
     ]
-  },
+  }, {
+    "channel": "canary",
+    "extension_types": ["extension"]
+  }],
   "content_security_policy": {
     "channel": "stable",
     // Platform apps have a restricted content security policy that cannot be
@@ -182,6 +187,26 @@
     "channel": "stable",
     "extension_types": "all"
   },
+  "mime_types": {
+    "channel": "stable",
+    "extension_types": [ "extension", "legacy_packaged_app", "platform_app" ],
+    "whitelist": [
+      "oickdpebdnfbgkcaoklfcdhjniefkcji",  // browser_tests
+      "gbkeegbaiigmenfmjfclcdgdpimamgkj",  // QuickOffice
+      "ionpfmkccalenbmnddpbmocokhaknphg",  // QuickOffice Dev
+      "bpmcpldpdmajfigpchkicefoigmkfalc",  // Quickoffice component extension
+      "ehibbfinohgbchlgdbfpikodjaojhccn",  // Editor
+      "mhjfbmdgcfjbbpaeojofohoefgiehjai"   // PDF
+    ]
+  },
+  "mime_types_handler": {
+    "channel": "stable",
+    "extension_types": [ "extension", "legacy_packaged_app", "platform_app" ],
+    "whitelist": [
+      "oickdpebdnfbgkcaoklfcdhjniefkcji",  // browser_tests
+      "mhjfbmdgcfjbbpaeojofohoefgiehjai"   // PDF
+    ]
+  },
   "nacl_modules": {
     "channel": "stable",
     "extension_types": [
@@ -242,6 +267,10 @@
   },
   "sockets": {
     "channel": "stable",
+    "extension_types": ["platform_app"]
+  },
+  "usb_printers": {
+    "channel": "dev",
     "extension_types": ["platform_app"]
   },
   "version": {
