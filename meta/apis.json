@@ -73,7 +73,7 @@
     "input.ime",
     "location",
     "management",
-    "network.config",
+    "networking.config",
     "notifications",
     "omnibox",
     "pageAction",
