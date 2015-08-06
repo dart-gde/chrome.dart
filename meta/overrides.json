@@ -40,8 +40,10 @@
 
     "bookmarks.OnMovedEvent": "BookmarksOnMovedEvent",
     "bookmarks.OnRemovedEvent": "BookmarksOnRemovedEvent",
+
     "tabs.OnMovedEvent": "TabsOnMovedEvent",
     "tabs.OnRemovedEvent": "TabsOnRemovedEvent",
+    "tabs.WindowType" : "TabsWindowType",
 
     "devtools.inspectedWindow.GetContentResult": "GetResourceContentResult",
     "devtools.network.GetContentResult": "GetRequestContentResult",
@@ -52,6 +54,10 @@
     "hid.GetDevicesOptions": "HidGetDevicesOptions",
     "hid.DeviceFilter": "HidDeviceFilter",
     "usb.DeviceFilter": "UsbDeviceFilter",
+
+    "history.TransitionType": "HistoryTransitionType",
+
+    "types.LevelOfControl": "TypesLevelOfControl",
 
     "events.Event": "ChromeEvent",
     "runtime.Event": "ChromeEvent",
