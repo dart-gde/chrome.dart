@@ -22,10 +22,19 @@ class ChromeExtensionTypes extends ChromeApi {
 }
 
 /**
+ * The format of an image.
+ * enum of `jpeg`, `png`
+ */
+class ImageFormat extends ChromeObject {
+  ImageFormat();
+  ImageFormat.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
  * Details about the format and quality of an image.
  */
 class ImageDetails extends ChromeObject {
-  ImageDetails({String format, int quality}) {
+  ImageDetails({ImageFormat format, int quality}) {
     if (format != null) this.format = format;
     if (quality != null) this.quality = quality;
   }
@@ -33,10 +42,9 @@ class ImageDetails extends ChromeObject {
 
   /**
    * The format of the resulting image.  Default is `"jpeg"`.
-   * enum of `jpeg`, `png`
    */
-  String get format => jsProxy['format'];
-  set format(String value) => jsProxy['format'] = value;
+  ImageFormat get format => _createImageFormat(jsProxy['format']);
+  set format(ImageFormat value) => jsProxy['format'] = jsify(value);
 
   /**
    * When format is `"jpeg"`, controls the quality of the resulting image.  This
@@ -49,11 +57,20 @@ class ImageDetails extends ChromeObject {
 }
 
 /**
+ * The soonest that the JavaScript or CSS will be injected into the tab.
+ * enum of `document_start`, `document_end`, `document_idle`
+ */
+class RunAt extends ChromeObject {
+  RunAt();
+  RunAt.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
  * Details of the script or CSS to inject. Either the code or the file property
  * must be set, but both may not be set at the same time.
  */
 class InjectDetails extends ChromeObject {
-  InjectDetails({String code, String file, bool allFrames, bool matchAboutBlank, String runAt}) {
+  InjectDetails({String code, String file, bool allFrames, bool matchAboutBlank, RunAt runAt}) {
     if (code != null) this.code = code;
     if (file != null) this.file = file;
     if (allFrames != null) this.allFrames = allFrames;
@@ -97,8 +114,10 @@ class InjectDetails extends ChromeObject {
   /**
    * The soonest that the JavaScript or CSS will be injected into the tab.
    * Defaults to "document_idle".
-   * enum of `document_start`, `document_end`, `document_idle`
    */
-  String get runAt => jsProxy['runAt'];
-  set runAt(String value) => jsProxy['runAt'] = value;
+  RunAt get runAt => _createRunAt(jsProxy['runAt']);
+  set runAt(RunAt value) => jsProxy['runAt'] = jsify(value);
 }
+
+ImageFormat _createImageFormat(JsObject jsProxy) => jsProxy == null ? null : new ImageFormat.fromProxy(jsProxy);
+RunAt _createRunAt(JsObject jsProxy) => jsProxy == null ? null : new RunAt.fromProxy(jsProxy);
