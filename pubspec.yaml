@@ -16,5 +16,5 @@ dev_dependencies:
   logging: any
   parsers: '>=0.14.0 <0.15.0'
   path: any
-  unittest: any
+  test: any
   unscripted: '>=0.4.0 <0.5.0'

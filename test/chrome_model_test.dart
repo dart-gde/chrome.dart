@@ -1,7 +1,7 @@
 
 library chrome_model_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 import '../tool/chrome_model.dart';
 

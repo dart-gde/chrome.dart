@@ -1,6 +1,6 @@
 library chrome_idl_convert_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 import '../tool/chrome_idl_parser.dart';
 import '../tool/chrome_idl_convert.dart';

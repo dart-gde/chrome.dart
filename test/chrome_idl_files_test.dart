@@ -4,7 +4,7 @@ library test_chrome_idl_files;
 
 import 'dart:io';
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 import '../tool/chrome_idl_parser.dart';
 import '../tool/chrome_idl_convert.dart';

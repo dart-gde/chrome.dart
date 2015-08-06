@@ -1,6 +1,6 @@
 library test_storage;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
 
 void main() {
