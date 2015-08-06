@@ -72,7 +72,7 @@ namespace networking.config {
     //             either have the <code>SSID</code> or <code>HexSSID</code>
     //             set. Other fields will be ignored.
     // |callback|: Called back when this operation is finished.
-    void setNetworkFilter(NetworkInfo[] networks,
+    static void setNetworkFilter(NetworkInfo[] networks,
                           SetNetworkFilterCallback callback);
 
     // Called by the extension to notify the network config API that it finished
@@ -83,7 +83,7 @@ namespace networking.config {
     //         $(ref:onCaptivePortalDetected).
     // |result|: The result of the authentication attempt.
     // |callback|: Called back when this operation is finished.
-    void finishAuthentication(DOMString GUID, AuthenticationResult result,
+    static void finishAuthentication(DOMString GUID, AuthenticationResult result,
                               optional FinishAuthenticationCallback callback);
   };
 

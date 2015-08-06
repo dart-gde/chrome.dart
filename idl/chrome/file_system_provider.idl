@@ -4,7 +4,7 @@
 
 // Use the <code>chrome.fileSystemProvider</code> API to create file systems,
 // that can be accessible from the file manager on Chrome OS.
-[implemented_in="chrome/browser/chromeos/extensions/file_system_provider/file_system_provider_api.h"]
+// [implemented_in="chrome/browser/chromeos/extensions/file_system_provider/file_system_provider_api.h"]
 namespace fileSystemProvider {
   // Error codes used by providing extensions in response to requests as well
   // as in case of errors when calling methods of the API. For success,
@@ -428,27 +428,27 @@ namespace fileSystemProvider {
   callback GetCallback = void(FileSystemInfo fileSystem);
 
   // Callback to be called by the providing extension in case of a success.
-  [nocompile] callback ProviderSuccessCallback = void();
+  callback ProviderSuccessCallback = void();
 
   // Callback to be called by the providing extension in case of an error.
-  [nocompile] callback ProviderErrorCallback = void(ProviderError error);
+  callback ProviderErrorCallback = void(ProviderError error);
 
   // Success callback for the $(ref:onGetMetadataRequested) event.
-  [nocompile] callback MetadataCallback = void(
+  callback MetadataCallback = void(
       EntryMetadata metadata);
 
   // Success callback for the $(ref:onReadDirectoryRequested) event. If more
   // entries will be returned, then <code>hasMore</code> must be true, and it
   // has to be called again with additional entries. If no more entries are
   // available, then <code>hasMore</code> must be set to false.
-  [nocompile] callback EntriesCallback = void(
+  callback EntriesCallback = void(
       EntryMetadata[] entries, boolean hasMore);
 
   // Success callback for the $(ref:onReadFileRequested) event. If more
   // data will be returned, then <code>hasMore</code> must be true, and it
   // has to be called again with additional entries. If no more data is
   // available, then <code>hasMore</code> must be set to false.
-  [nocompile] callback FileDataCallback = void(
+  callback FileDataCallback = void(
       ArrayBuffer data, boolean hasMore);
 
   // A generic result callback to indicate success or failure.
