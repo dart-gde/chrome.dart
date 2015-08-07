@@ -2,7 +2,7 @@ library test_i18n;
 
 import 'dart:async';
 
-import 'package:test/test.dart';
+import 'package:unittest/unittest.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
 
 void main() {

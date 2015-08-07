@@ -1,6 +1,6 @@
 library test_sync_file_system;
 
-import 'package:test/test.dart';
+import 'package:unittest/unittest.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
 
 void main() {

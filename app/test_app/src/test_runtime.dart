@@ -2,7 +2,7 @@ library test_runtime;
 
 import 'dart:html' as html;
 
-import 'package:test/test.dart';
+import 'package:unittest/unittest.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
 // TODO: figure out if windows.dart should be exported.
 import 'package:chrome/gen/windows.dart' as w;

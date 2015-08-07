@@ -1,7 +1,7 @@
 
 library src_gen_test;
 
-import 'package:test/test.dart';
+import 'package:unittest/unittest.dart';
 
 import '../tool/src/src_gen.dart';
 

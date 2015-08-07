@@ -1,7 +1,7 @@
 
 library transformer_test;
 
-import 'package:test/test.dart';
+import 'package:unittest/unittest.dart';
 
 import 'package:chrome/transformer.dart';
 

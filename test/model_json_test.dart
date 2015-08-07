@@ -4,7 +4,7 @@ library model_json_test;
 import 'dart:io';
 import 'dart:convert';
 
-import 'package:test/test.dart';
+import 'package:unittest/unittest.dart';
 
 import '../tool/json_model.dart' as json_model;
 import '../tool/json_parser.dart' as json_parser;

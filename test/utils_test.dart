@@ -1,7 +1,7 @@
 
 library utils_test;
 
-import 'package:test/test.dart';
+import 'package:unittest/unittest.dart';
 
 import '../tool/src/utils.dart';
 
