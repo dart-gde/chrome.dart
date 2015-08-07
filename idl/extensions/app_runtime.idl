@@ -78,12 +78,12 @@ namespace app.runtime {
     // when making an embedding decision.
     any? data;
 
-    // Allows <code>embedderId</code> to embed this app in an &lt;appview&gt;
+    // Allows <code>embedderId</code> to embed this app in an <appview>
     // element. The <code>url</code> specifies the content to embed.
     [nocompile] static void allow(DOMString url);
 
     // Prevents <code> embedderId</code> from embedding this app in an
-    // &lt;appview&gt; element.
+    // <appview> element.
     [nocompile] static void deny();
   };
 

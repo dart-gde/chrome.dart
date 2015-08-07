@@ -1,4 +1,7 @@
 # Changelog - chrome.dart
+## 0.8.0-dev1 2015-08-06
+- updated the APIs to M44
+
 ## 0.7.0-dev1 2015-04-25
 - updated the APIs to M41
 - removed scriptBadge api that was dropped in M41

@@ -3,7 +3,7 @@
 /**
  * The `chrome.debugger` API serves as an alternate transport for Chrome's
  * [remote debugging
- * protocol](http://code.google.com/chrome/devtools/docs/remote-debugging). Use
+ * protocol](https://developer.chrome.com/devtools/docs/debugger-protocol). Use
  * `chrome.debugger` to attach to one or more tabs to instrument network
  * interaction, debug JavaScript, mutate the DOM and CSS, etc. Use the Debuggee
  * `tabId` to target tabs with sendCommand and route events by `tabId` from
@@ -162,9 +162,8 @@ class OnDetachEvent {
 
   /**
    * Connection termination reason.
-   * enum of `target_closed`, `canceled_by_user`, `replaced_with_devtools`
    */
-  final String reason;
+  final DetachReason reason;
 
   OnDetachEvent(this.source, this.reason);
 }
@@ -202,10 +201,28 @@ class Debuggee extends ChromeObject {
 }
 
 /**
+ * Target type.
+ * enum of `page`, `background_page`, `worker`, `other`
+ */
+class TargetInfoType extends ChromeObject {
+  TargetInfoType();
+  TargetInfoType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * Connection termination reason.
+ * enum of `target_closed`, `canceled_by_user`, `replaced_with_devtools`
+ */
+class DetachReason extends ChromeObject {
+  DetachReason();
+  DetachReason.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
  * Debug target information
  */
 class TargetInfo extends ChromeObject {
-  TargetInfo({String type, String id, int tabId, String extensionId, bool attached, String title, String url, String faviconUrl}) {
+  TargetInfo({TargetInfoType type, String id, int tabId, String extensionId, bool attached, String title, String url, String faviconUrl}) {
     if (type != null) this.type = type;
     if (id != null) this.id = id;
     if (tabId != null) this.tabId = tabId;
@@ -219,10 +236,9 @@ class TargetInfo extends ChromeObject {
 
   /**
    * Target type.
-   * enum of `page`, `background_page`, `worker`, `other`
    */
-  String get type => jsProxy['type'];
-  set type(String value) => jsProxy['type'] = value;
+  TargetInfoType get type => _createTargetInfoType(jsProxy['type']);
+  set type(TargetInfoType value) => jsProxy['type'] = jsify(value);
 
   /**
    * Target id.
@@ -269,7 +285,9 @@ class TargetInfo extends ChromeObject {
 
 OnEventEvent _createOnEventEvent(JsObject source, String method, JsObject params) =>
     new OnEventEvent(_createDebuggee(source), method, mapify(params));
-OnDetachEvent _createOnDetachEvent(JsObject source, String reason) =>
-    new OnDetachEvent(_createDebuggee(source), reason);
+OnDetachEvent _createOnDetachEvent(JsObject source, JsObject reason) =>
+    new OnDetachEvent(_createDebuggee(source), _createDetachReason(reason));
 TargetInfo _createTargetInfo(JsObject jsProxy) => jsProxy == null ? null : new TargetInfo.fromProxy(jsProxy);
+TargetInfoType _createTargetInfoType(JsObject jsProxy) => jsProxy == null ? null : new TargetInfoType.fromProxy(jsProxy);
 Debuggee _createDebuggee(JsObject jsProxy) => jsProxy == null ? null : new Debuggee.fromProxy(jsProxy);
+DetachReason _createDetachReason(JsObject jsProxy) => jsProxy == null ? null : new DetachReason.fromProxy(jsProxy);

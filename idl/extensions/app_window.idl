@@ -272,7 +272,6 @@ namespace app.window {
     boolean? focused;
 
     // If true, the window will be visible on all workspaces.
-    // This is only available on dev channel.
     boolean? visibleOnAllWorkspaces;
   };
 
@@ -332,10 +331,10 @@ namespace app.window {
     static void restore();
 
     // Move the window to the position (|left|, |top|).
-    static void moveTo(long left, long top);
+    [deprecated="Use outerBounds."] static void moveTo(long left, long top);
 
     // Resize the window to |width|x|height| pixels in size.
-    static void resizeTo(long width, long height);
+    [deprecated="Use outerBounds."] static void resizeTo(long width, long height);
 
     // Draw attention to the window.
     static void drawAttention();
@@ -364,14 +363,6 @@ namespace app.window {
     // TODO(stevenjb): Investigate implementing this on Windows and OSX.
     [nodoc] static void setIcon(DOMString iconUrl);
 
-    // Set a badge icon for the window.
-    // TODO(benwells): Document this properly before going to stable.
-    [nodoc] static void setBadgeIcon(DOMString iconUrl);
-
-    // Clear the current for the window.
-    // TODO(benwells): Document this properly before going to stable.
-    [nodoc] static void clearBadge();
-
     // Is the window always on top?
     static boolean isAlwaysOnTop();
 
@@ -391,7 +382,6 @@ namespace app.window {
 
     // For platforms that support multiple workspaces, is this window visible on
     // all of them?
-    // This is only available on dev channel.
     static void setVisibleOnAllWorkspaces(boolean alwaysVisible);
 
     // Set whether the window should get all keyboard events including system

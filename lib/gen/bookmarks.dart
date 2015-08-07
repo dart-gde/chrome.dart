@@ -311,11 +311,23 @@ class OnChildrenReorderedEvent {
 }
 
 /**
+ * Indicates the reason why this node is unmodifiable. The [managed] value
+ * indicates that this node was configured by the system administrator or by the
+ * custodian of a supervised user. Omitted if the node can be modified by the
+ * user and the extension (default).
+ * enum of `managed`
+ */
+class BookmarkTreeNodeUnmodifiable extends ChromeObject {
+  BookmarkTreeNodeUnmodifiable();
+  BookmarkTreeNodeUnmodifiable.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
  * A node (either a bookmark or a folder) in the bookmark tree.  Child nodes are
  * ordered within their parent folder.
  */
 class BookmarkTreeNode extends ChromeObject {
-  BookmarkTreeNode({String id, String parentId, int index, String url, String title, var dateAdded, var dateGroupModified, String unmodifiable, List<BookmarkTreeNode> children}) {
+  BookmarkTreeNode({String id, String parentId, int index, String url, String title, var dateAdded, var dateGroupModified, BookmarkTreeNodeUnmodifiable unmodifiable, List<BookmarkTreeNode> children}) {
     if (id != null) this.id = id;
     if (parentId != null) this.parentId = parentId;
     if (index != null) this.index = index;
@@ -375,13 +387,12 @@ class BookmarkTreeNode extends ChromeObject {
 
   /**
    * Indicates the reason why this node is unmodifiable. The [managed] value
-   * indicates that this node was configured by the system administrator.
-   * Omitted if the node can be modified by the user and the extension
-   * (default).
-   * enum of `managed`
+   * indicates that this node was configured by the system administrator or by
+   * the custodian of a supervised user. Omitted if the node can be modified by
+   * the user and the extension (default).
    */
-  String get unmodifiable => jsProxy['unmodifiable'];
-  set unmodifiable(String value) => jsProxy['unmodifiable'] = value;
+  BookmarkTreeNodeUnmodifiable get unmodifiable => _createBookmarkTreeNodeUnmodifiable(jsProxy['unmodifiable']);
+  set unmodifiable(BookmarkTreeNodeUnmodifiable value) => jsProxy['unmodifiable'] = jsify(value);
 
   /**
    * An ordered list of children of this node.
@@ -457,3 +468,4 @@ BookmarksOnMovedEvent _createOnMovedEvent(String id, JsObject moveInfo) =>
 OnChildrenReorderedEvent _createOnChildrenReorderedEvent(String id, JsObject reorderInfo) =>
     new OnChildrenReorderedEvent(id, mapify(reorderInfo));
 BookmarkTreeNode _createBookmarkTreeNode(JsObject jsProxy) => jsProxy == null ? null : new BookmarkTreeNode.fromProxy(jsProxy);
+BookmarkTreeNodeUnmodifiable _createBookmarkTreeNodeUnmodifiable(JsObject jsProxy) => jsProxy == null ? null : new BookmarkTreeNodeUnmodifiable.fromProxy(jsProxy);

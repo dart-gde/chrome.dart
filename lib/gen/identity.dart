@@ -107,8 +107,8 @@ class ChromeIdentity extends ChromeApi {
    * This method enables auth flows with non-Google identity providers by
    * launching a web view and navigating it to the first URL in the provider's
    * auth flow. When the provider redirects to a URL matching the pattern
-   * `https://&lt;app-id&gt;.chromiumapp.org/`, the window will close, and the
-   * final redirect URL will be passed to the [callback] function.
+   * `https://<app-id>.chromiumapp.org/`, the window will close, and the final
+   * redirect URL will be passed to the [callback] function.
    * 
    * For a good user experience it is important interactive auth flows are
    * initiated by UI in your app explaining what the authorization is for.
@@ -130,8 +130,7 @@ class ChromeIdentity extends ChromeApi {
   /**
    * Generates a redirect URL to be used in [launchWebAuthFlow].
    * 
-   * The generated URLs match the pattern
-   * `https://&lt;app-id&gt;.chromiumapp.org/`.
+   * The generated URLs match the pattern `https://<app-id>.chromiumapp.org/`.
    * 
    * [path]: The path appended to the end of the generated URL.
    */

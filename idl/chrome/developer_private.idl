@@ -7,6 +7,7 @@
 // apps and extensions.
 namespace developerPrivate {
 
+  // DEPRECATED: Prefer ExtensionType.
   enum ItemType {
     hosted_app,
     packaged_app,
@@ -15,6 +16,7 @@ namespace developerPrivate {
     theme
   };
 
+  // DEPRECATED: Prefer ExtensionView.
   dictionary ItemInspectView {
     // path to the inspect page.
     DOMString path;
@@ -27,10 +29,172 @@ namespace developerPrivate {
     boolean generatedBackgroundPage;
   };
 
+  // DEPRECATED: Use OpenDevTools.
+  dictionary InspectOptions {
+    DOMString extension_id;
+    (DOMString or long) render_process_id;
+    (DOMString or long) render_view_id;
+    boolean incognito;
+  };
+
   dictionary InstallWarning {
     DOMString message;
   };
 
+  enum ExtensionType {
+    HOSTED_APP,
+    PLATFORM_APP,
+    LEGACY_PACKAGED_APP,
+    EXTENSION,
+    THEME,
+    SHARED_MODULE
+  };
+
+  enum Location {
+    FROM_STORE,
+    UNPACKED,
+    THIRD_PARTY,
+    // "Unknown" includes crx's installed from chrome://extensions.
+    UNKNOWN
+  };
+
+  enum ViewType {
+    APP_WINDOW,
+    BACKGROUND_CONTENTS,
+    EXTENSION_BACKGROUND_PAGE,
+    EXTENSION_DIALOG,
+    EXTENSION_POPUP,
+    LAUNCHER_PAGE,
+    PANEL,
+    TAB_CONTENTS,
+    VIRTUAL_KEYBOARD
+  };
+
+  enum ErrorType {
+    MANIFEST,
+    RUNTIME
+  };
+
+  enum ErrorLevel {
+    LOG,
+    WARN,
+    ERROR
+  };
+
+  enum ExtensionState {
+    ENABLED,
+    DISABLED,
+    TERMINATED
+  };
+
+  dictionary AccessModifier {
+    boolean isEnabled;
+    boolean isActive;
+  };
+
+  dictionary StackFrame {
+    long lineNumber;
+    long columnNumber;
+    DOMString url;
+    DOMString functionName;
+  };
+
+  dictionary ManifestError {
+    ErrorType type;
+    DOMString extensionId;
+    boolean fromIncognito;
+    DOMString source;
+    DOMString message;
+    long id;
+    DOMString manifestKey;
+    DOMString? manifestSpecific;
+  };
+
+  dictionary RuntimeError {
+    ErrorType type;
+    DOMString extensionId;
+    boolean fromIncognito;
+    DOMString source;
+    DOMString message;
+    long id;
+    ErrorLevel severity;
+    DOMString contextUrl;
+    long occurrences;
+    long renderViewId;
+    long renderProcessId;
+    boolean canInspect;
+    StackFrame[] stackTrace;
+  };
+
+  dictionary DisableReasons {
+    boolean suspiciousInstall;
+    boolean corruptInstall;
+    boolean updateRequired;
+  };
+
+  dictionary OptionsPage {
+    boolean openInTab;
+    DOMString url;
+  };
+
+  dictionary HomePage {
+    DOMString url;
+    boolean specified;
+  };
+
+  dictionary ExtensionView {
+    DOMString url;
+    long renderProcessId;
+    long renderViewId;
+    boolean incognito;
+    ViewType type;
+  };
+
+  dictionary ExtensionInfo {
+    boolean actionButtonHidden;
+    DOMString? blacklistText;
+    DOMString[] dependentExtensions;
+    DOMString description;
+    DisableReasons disableReasons;
+    AccessModifier errorCollection;
+    AccessModifier fileAccess;
+    HomePage homePage;
+    DOMString iconUrl;
+    DOMString id;
+    AccessModifier incognitoAccess;
+    boolean installedByCustodian;
+    DOMString[] installWarnings;
+    DOMString? launchUrl;
+    Location location;
+    DOMString? locationText;
+    ManifestError[] manifestErrors;
+    boolean mustRemainInstalled;
+    DOMString name;
+    boolean offlineEnabled;
+    OptionsPage? optionsPage;
+    DOMString? path;
+    DOMString? policyText;
+    DOMString? prettifiedPath;
+    AccessModifier runOnAllUrls;
+    RuntimeError[] runtimeErrors;
+    DOMString[] runtimeWarnings;
+    ExtensionState state;
+    ExtensionType type;
+    DOMString updateUrl;
+    boolean userMayModify;
+    DOMString version;
+    ExtensionView[] views;
+  };
+
+  dictionary ProfileInfo {
+    boolean appInfoDialogEnabled;
+    boolean canLoadUnpacked;
+    boolean inDeveloperMode;
+    boolean isIncognitoAvailable;
+    boolean isSupervised;
+  };
+
+  // DEPRECATED: Prefer ExtensionInfo.
   dictionary ItemInfo {
     DOMString id;
     DOMString name;
@@ -38,7 +202,6 @@ namespace developerPrivate {
     DOMString description;
     boolean may_disable;
     boolean enabled;
-    DOMString? disabled_reason;
     boolean isApp;
     ItemType type;
     boolean allow_activity;
@@ -68,11 +231,34 @@ namespace developerPrivate {
     ItemInspectView[] views;
   };
 
-  dictionary InspectOptions {
-    DOMString extension_id;
-    DOMString render_process_id;
-    DOMString render_view_id;
-    boolean incognito;
+  dictionary GetExtensionsInfoOptions {
+    boolean? includeDisabled;
+    boolean? includeTerminated;
+  };
+
+  dictionary ExtensionConfigurationUpdate {
+    DOMString extensionId;
+    boolean? fileAccess;
+    boolean? incognitoAccess;
+    boolean? errorCollection;
+    boolean? runOnAllUrls;
+    boolean? showActionButton;
+  };
+
+  dictionary ProfileConfigurationUpdate {
+    boolean? inDeveloperMode;
+  };
+
+  dictionary ReloadOptions {
+    // If false, an alert dialog will show in the event of a reload error.
+    // Defaults to false.
+    boolean? failQuietly;
+  };
+
+  dictionary LoadUnpackedOptions {
+    // If false, an alert dialog will show in the event of a reload error.
+    // Defaults to false.
+    boolean? failQuietly;
   };
 
   enum PackStatus {
@@ -100,7 +286,9 @@ namespace developerPrivate {
     VIEW_REGISTERED,
     // window / view closed.
     VIEW_UNREGISTERED,
-    ERROR_ADDED
+    ERROR_ADDED,
+    ERRORS_REMOVED,
+    PREFS_CHANGED
   };
 
   dictionary PackDirectoryResponse {
@@ -124,116 +312,225 @@ namespace developerPrivate {
   dictionary EventData {
     EventType event_type;
     DOMString item_id;
+    ExtensionInfo? extensionInfo;
+  };
+
+  dictionary RequestFileSourceProperties {
+    // The ID of the extension owning the file.
+    DOMString extensionId;
+
+    // The path of the file, relative to the extension; e.g., manifest.json,
+    // script.js, or main.html.
+    DOMString pathSuffix;
+
+    // The error message which was thrown as a result of the error in the file.
+    DOMString message;
+
+    // The key in the manifest which caused the error (e.g., "permissions").
+    // (Required for "manifest.json" files)
+    DOMString? manifestKey;
+
+    // The specific portion of the manifest key which caused the error (e.g.,
+    // "foo" in the "permissions" key). (Optional for "manifest.json" file).
+    DOMString? manifestSpecific;
+
+    // The line number which caused the error (optional for non-manifest files).
+    long? lineNumber;
+  };
+
+  dictionary RequestFileSourceResponse {
+    // The region of the code which threw the error, and should be highlighted.
+    DOMString highlight;
+
+    // The region before the "highlight" portion.
+    // If the region which threw the error was not found, the full contents of
+    // the file will be in the "beforeHighlight" section.
+    DOMString beforeHighlight;
+
+    // The region after the "highlight" portion.
+    DOMString afterHighlight;
+
+    // A title for the file in the form '<extension name>: <file name>'.
+    DOMString title;
+
+    // The error message.
+    DOMString message;
+  };
+
+  dictionary OpenDevToolsProperties {
+    // The ID of the extension. This is only needed if opening the background
+    // page (where renderViewId and renderProcessId are -1).
+    DOMString? extensionId;
+
+    // The ID of the render view in which the error occurred.
+    long renderViewId;
+
+    // The ID of the process in which the error occurred.
+    long renderProcessId;
+
+    boolean? incognito;
+
+    // The URL in which the error occurred.
+    DOMString? url;
+
+    // The line to focus the devtools at.
+    long? lineNumber;
+
+    // The column to focus the devtools at.
+    long? columnNumber;
+  };
+
+  dictionary DeleteExtensionErrorsProperties {
+    DOMString extensionId;
+    long[]? errorIds;
+    ErrorType? type;
   };
 
   callback VoidCallback = void ();
   callback BooleanCallback = void (boolean result);
+  callback ExtensionInfosCallback = void (ExtensionInfo[] result);
+  callback ExtensionInfoCallback = void (ExtensionInfo result);
   callback ItemsInfoCallback = void (ItemInfo[] result);
+  callback ProfileInfoCallback = void (ProfileInfo info);
   callback GetProjectsInfoCallback = void (ProjectInfo[] result);
   callback PathCallback = void (DOMString path);
   callback PackCallback = void (PackDirectoryResponse response);
   callback VoidCallback = void();
-  callback AnyCallback = void (any result);
+  callback RequestFileSourceCallback =
+      void (RequestFileSourceResponse response);
 
   interface Functions {
     // Runs auto update for extensions and apps immediately.
     // |callback| : Called with the boolean result, true if autoUpdate is
     // successful.
-    static void autoUpdate(BooleanCallback callback);
+    static void autoUpdate(optional BooleanCallback callback);
 
     // Returns information of all the extensions and apps installed.
-    // |include_disabled| : include disabled items.
-    // |include_terminated| : include terminated items.
-    // |callback| : Called with items info.
-    static void getItemsInfo(boolean include_disabled,
-                             boolean include_terminated,
-                             ItemsInfoCallback callback);
+    // |options| : Options to restrict the items returned.
+    // |callback| : Called with extensions info.
+    static void getExtensionsInfo(optional GetExtensionsInfoOptions options,
+                                  optional ExtensionInfosCallback callback);
 
-    // Opens a permissions dialog for given |itemId|.
-    static void showPermissionsDialog(DOMString itemId,
+    // Returns information of a particular extension.
+    // |id| : The id of the extension.
+    // |callback| : Called with the result.
+    static void getExtensionInfo(DOMString id,
+                                 optional ExtensionInfoCallback callback);
+
+    // Returns information of all the extensions and apps installed.
+    // |includeDisabled| : include disabled items.
+    // |includeTerminated| : include terminated items.
+    // |callback| : Called with items info.
+    [deprecated="Use getExtensionsInfo"] static void getItemsInfo(
+        boolean includeDisabled,
+        boolean includeTerminated,
+        ItemsInfoCallback callback);
+
+    // Returns the current profile's configuration.
+    static void getProfileConfiguration(ProfileInfoCallback callback);
+
+    // Updates the active profile.
+    // |update| : The parameters for updating the profile's configuration.  Any
+    //     properties omitted from |update| will not be changed.
+    static void updateProfileConfiguration(ProfileConfigurationUpdate update,
+                                           optional VoidCallback callback);
+
+    // Opens a permissions dialog.
+    // |extensionId| : The id of the extension to show permissions for.
+    static void showPermissionsDialog(DOMString extensionId,
                                       optional VoidCallback callback);
 
-    // Opens an inspect window for given |options|
-    static void inspect(InspectOptions options,
-                        optional VoidCallback callback);
-
-    // Enable / Disable file access for a given |item_id|
-    static void allowFileAccess(DOMString item_id,
-                                boolean allow,
-                                optional VoidCallback callback);
-
-    // Reloads a given item with |itemId|.
-    static void reload(DOMString itemId, optional VoidCallback callback);
-
-    // Enable / Disable a given item with id |itemId|.
-    static void enable(DOMString itemId,
-                       boolean enable,
+    // Reloads a given extension.
+    // |extensionId| : The id of the extension to reload.
+    // |options| : Additional configuration parameters.
+    static void reload(DOMString extensionId,
+                       optional ReloadOptions options,
                        optional VoidCallback callback);
 
-    // Allow / Disallow item with |item_id| in incognito mode.
-    static void allowIncognito(DOMString item_id,
-                               boolean allow,
-                               VoidCallback callback);
+    // Modifies an extension's current configuration.
+    // |update| : The parameters for updating the extension's configuration.
+    //     Any properties omitted from |update| will not be changed.
+    static void updateExtensionConfiguration(
+        ExtensionConfigurationUpdate update,
+        optional VoidCallback callback);
 
-    // Load a user selected unpacked item
-    static void loadUnpacked(optional VoidCallback callback);
+    // Loads a user-selected unpacked item.
+    // |options| : Additional configuration parameters.
+    static void loadUnpacked(optional LoadUnpackedOptions options,
+                             optional VoidCallback callback);
 
-    // Loads an extension / app from a given |directory|
-    static void loadDirectory([instanceOf=DirectoryEntry] object directory,
-                        PathCallback callback);
+    // Loads an extension / app.
+    // |directory| : The directory to load the extension from.
+    static void loadDirectory(
+        [instanceOf=DirectoryEntry] object directory,
+        PathCallback callback);
 
     // Open Dialog to browse to an entry.
-    // |select_type| : Select a file or a folder.
-    // |file_type| : Required file type. For Example pem type is for private
+    // |selectType| : Select a file or a folder.
+    // |fileType| : Required file type. For example, pem type is for private
     // key and load type is for an unpacked item.
     // |callback| : called with selected item's path.
-    static void choosePath(SelectType select_type,
-                           FileType file_type,
+    static void choosePath(SelectType selectType,
+                           FileType fileType,
                            PathCallback callback);
 
-    // Pack an item with given |path| and |private_key_path|
+    // Pack an extension.
+    // |rootPath| : The path of the extension.
+    // |privateKeyPath| : The path of the private key, if one is given.
+    // |flags| : Special flags to apply to the loading process, if any.
     // |callback| : called with the success result string.
     static void packDirectory(DOMString path,
-                              DOMString private_key_path,
-                              long flags,
-                              PackCallback callback);
+                              optional DOMString privateKeyPath,
+                              optional long flags,
+                              optional PackCallback callback);
 
     // Returns true if the profile is managed.
     static void isProfileManaged(BooleanCallback callback);
 
     // Reads and returns the contents of a file related to an extension which
-    // caused an error. The expected argument is a dictionary with the
-    // following entries:
-    // - pathSuffix: The path of the file, relative to the extension; e.g.,
-    //       manifest.json, script.js, or main.html.
-    // - extensionId: The ID of the extension owning the file.
-    // - errorMessage: The error message which was thrown as a result of the
-    //       error in the file.
-    // - manifestKey (required for "manifest.json" file): The key
-    //       in the manifest which caused the error (e.g., "permissions").
-    // - manifestSpecific (optional for "manifest.json" file): The specific
-    //       portion of the manifest key which caused the error (e.g., "foo" in
-    //       the "permissions" key).
-    // - lineNumber (optional for non-manifest files): The line number which
-    //       caused the error.
-    // The callback is called with a dictionary with three keys:
-    // - highlight: The region of the code which threw the error, and should
-    //       be highlighted.
-    // - beforeHighlight: The region before the "highlight" portion.
-    // - afterHighlight: The region after the "highlight" portion.
-    // - highlight: The region of the code which threw the error.
-    // If the region which threw the error was not found, the full contents of
-    // the file will be in the "beforeHighlight" section.
-    static void requestFileSource(any dict, AnyCallback callback);
+    // caused an error.
+    static void requestFileSource(RequestFileSourceProperties properties,
+                                  RequestFileSourceCallback callback);
 
-    // Open the developer tools to focus on a particular error. The expected
-    // argument is a dictionary with the following entries:
-    // - renderViewId: The ID of the render view in which the error occurred.
-    // - renderProcessId: The ID of the process in which the error occurred.
-    // - url (optional): The URL in which the error occurred.
-    // - lineNumber (optional): The line to focus the devtools at.
-    // - columnNumber (optional): The column to focus the devtools at.
-    static void openDevTools(any dict);
+    // Open the developer tools to focus on a particular error.
+    static void openDevTools(OpenDevToolsProperties properties,
+                             optional VoidCallback callback);
+
+    // Delete reported extension erors.
+    // |properties| : The properties specifying the errors to remove.
+    static void deleteExtensionErrors(
+        DeleteExtensionErrorsProperties properties,
+        optional VoidCallback callback);
+
+    // Repairs the extension specified.
+    // |extensionId| : The id of the extension to repair.
+    static void repairExtension(DOMString extensionId,
+                                optional VoidCallback callback);
+
+    // Shows the options page for the extension specified.
+    // |extensionId| : The id of the extension to show the options page for.
+    static void showOptions(DOMString extensionId,
+                            optional VoidCallback callback);
+
+    // Shows the path of the extension specified.
+    // |extensionId| : The id of the extension to show the path for.
+    static void showPath(DOMString extensionId, optional VoidCallback callback);
+
+    [nocompile, deprecated="Use management.setEnabled"]
+        static void enable(DOMString id,
+                           boolean enabled,
+                           optional VoidCallback callback);
+    [nocompile, deprecated="Use updateExtensionConfiguration"]
+        static void allowIncognito(DOMString extensionId,
+                                   boolean allow,
+                                   optional VoidCallback callback);
+    [nocompile, deprecated="Use updateExtensionConfiguration"]
+        static void allowFileAccess(DOMString extensionId,
+                                    boolean allow,
+                                    optional VoidCallback callback);
+    [nocompile, deprecated="Use openDevTools"]
+        static void inspect(InspectOptions options,
+                            optional VoidCallback callback);
   };
 
   interface Events {

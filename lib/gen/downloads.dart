@@ -197,9 +197,10 @@ class ChromeDownloads extends ChromeApi {
   }
 
   /**
-   * Prompt the user to accept a dangerous download. Does not automatically
-   * accept dangerous downloads. If the download is accepted, then an
-   * [onChanged] event will fire, otherwise nothing will happen. When all the
+   * Prompt the user to accept a dangerous download. Can only be called from a
+   * visible context (tab, window, or page/browser action popup). Does not
+   * automatically accept dangerous downloads. If the download is accepted, then
+   * an [onChanged] event will fire, otherwise nothing will happen. When all the
    * data is fetched into a temporary file and either the download is not
    * dangerous or the danger has been accepted, then the temporary file is
    * renamed to the target filename, the [state] changes to 'complete', and

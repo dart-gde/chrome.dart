@@ -24,4 +24,3 @@ namespace webcamPrivate {
     static void reset(DOMString webcamId, WebcamConfiguration config);
   };
 };
-

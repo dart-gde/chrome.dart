@@ -99,6 +99,8 @@ Map _importMap = const {
   'Entry': '../src/files.dart',
   'FileEntry': '../src/files.dart',
   'DOMFileSystem': '../src/files.dart',
+  'FileSystem': '../src/files.dart',
+  'Blob': '../src/files.dart',
   'Window': 'windows'
 };
 

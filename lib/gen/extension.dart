@@ -238,8 +238,17 @@ class LastErrorExtension extends ChromeObject {
   String get message => jsProxy['message'];
 }
 
+/**
+ * The type of extension view.
+ * enum of `tab`, `notification`, `popup`
+ */
+class ViewType extends ChromeObject {
+  ViewType();
+  ViewType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
 class ExtensionGetViewsParams extends ChromeObject {
-  ExtensionGetViewsParams({String type, int windowId}) {
+  ExtensionGetViewsParams({ViewType type, int windowId}) {
     if (type != null) this.type = type;
     if (windowId != null) this.windowId = windowId;
   }
@@ -247,12 +256,10 @@ class ExtensionGetViewsParams extends ChromeObject {
 
   /**
    * The type of view to get. If omitted, returns all views (including
-   * background pages and tabs). Valid values: 'tab', 'infobar', 'notification',
-   * 'popup'.
-   * enum of `tab`, `infobar`, `notification`, `popup`
+   * background pages and tabs). Valid values: 'tab', 'notification', 'popup'.
    */
-  String get type => jsProxy['type'];
-  set type(String value) => jsProxy['type'] = value;
+  ViewType get type => _createViewType(jsProxy['type']);
+  set type(ViewType value) => jsProxy['type'] = jsify(value);
 
   /**
    * The window to restrict the search to. If omitted, returns all views.
@@ -267,4 +274,5 @@ OnRequestExternalEvent _createOnRequestExternalEvent(JsObject request, JsObject 
     new OnRequestExternalEvent(request, _createMessageSender(sender), sendResponse);
 LastErrorExtension _createLastErrorExtension(JsObject jsProxy) => jsProxy == null ? null : new LastErrorExtension.fromProxy(jsProxy);
 Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
+ViewType _createViewType(JsObject jsProxy) => jsProxy == null ? null : new ViewType.fromProxy(jsProxy);
 MessageSender _createMessageSender(JsObject jsProxy) => jsProxy == null ? null : new MessageSender.fromProxy(jsProxy);

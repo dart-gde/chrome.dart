@@ -330,18 +330,17 @@ class ChromeFileEntry extends CrFileEntry {
   }
 }
 
-//abstract class CrBlob extends ChromeObject implements Blob {
-//  CrBlob.fromProxy(/*JsObject*/ jsProxy) : super.fromProxy(jsProxy);
-//
-//  int get size => jsProxy['size'];
-//  String get type => jsProxy['type'];
-//
-//  Blob slice([int start, int end, String contentType]) {
-//    // TODO:
-//
-//    throw new UnimplementedError('Blob.slice');
-//  }
-//}
+class CrBlob extends ChromeObject implements Blob {
+  CrBlob.fromProxy(/*JsObject*/ jsProxy) : super.fromProxy(jsProxy);
+
+  int get size => jsProxy['size'];
+  String get type => jsProxy['type'];
+
+  Blob slice([int start, int end, String contentType]) => new CrBlob.fromProxy(
+      jsProxy.callMethod('slice', [start, end, contentType]));
+
+  void close() => jsProxy.callMethod('close');
+}
 
 //class CrFile extends CrBlob implements File {
 //  CrFile.fromProxy(/*JsObject*/ jsProxy) : super.fromProxy(jsProxy);

@@ -43,7 +43,7 @@
             "items": {"type": "string"}
           },
           "matches": {
-            "description": "<p>The URL patterns for <em>web pages</em> that are allowed to connect. <em>This does not affect content scripts.</em> If left empty or unspecified, no web pages can connect.</p><p>Patterns cannot include wildcard domains nor subdomains of <a href=\"http://publicsuffix.org/list/\">(effective) top level domains</a>; <code>*://google.com/*</code> and <code>http://*.chromium.org/*</code> are valid, while <code>&lt;all_urls&gt;</code>, <code>http://*/*</code>, <code>*://*.com/*</code>, and even <code>http://*.appspot.com/*</code> are not.</p>",
+            "description": "<p>The URL patterns for <em>web pages</em> that are allowed to connect. <em>This does not affect content scripts.</em> If left empty or unspecified, no web pages can connect.</p><p>Patterns cannot include wildcard domains nor subdomains of <a href=\"http://publicsuffix.org/list/\">(effective) top level domains</a>; <code>*://google.com/*</code> and <code>http://*.chromium.org/*</code> are valid, while <code><all_urls></code>, <code>http://*/*</code>, <code>*://*.com/*</code>, and even <code>http://*.appspot.com/*</code> are not.</p>",
             "optional": true,
             "type": "array",
             "items": {"type": "string"}
@@ -160,6 +160,51 @@
             "type": "boolean",
             "description": "If <code>true</code>, gives permission to an app to use the $(ref:bluetoothLowEnergy) API",
             "optional": true
+          },
+          "peripheral": {
+            "type": "boolean",
+            "description": "If <code>true</code>, gives permission to an app to use the advertisement functions in the $(ref:bluetoothLowEnergy) API",
+            "optional": true
+          }
+        }
+      },
+      {
+        "id": "UsbPrinters",
+        "type": "object",
+        "description": "The <code>usb_printers</code> manifest property lists the USB printers supported by an app implementing the $(ref:printerProvider) API.",
+        "properties": {
+          "filters": {
+            "description": "A list of $(ref:usb.DeviceFilter USB device filters) matching supported devices. A device only needs to match one of the provided filters. A <code>vendorId</code> is required and only one of <code>productId</code> or <code>interfaceClass</code> may be provided.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "vendorId": {
+                  "description": "USB vendor ID of matching devices",
+                  "type": "integer"
+                },
+                "productId": {
+                  "description": "USB product ID of matching devices",
+                  "type": "integer",
+                  "optional": true
+                },
+                "interfaceClass": {
+                  "description": "USB interface class implemented by any interface of a matching device.",
+                  "type": "integer",
+                  "optional": true
+                },
+                "interfaceSubclass": {
+                  "description": "USB interface sub-class implemented by the interface matching $(ref:interfaceClass).",
+                  "type": "integer",
+                  "optional": true
+                },
+                "interfaceProtocol": {
+                  "description": "USB interface protocol implemented by the interface matching $(ref:interfaceClass) and $(ref:interfaceSubclass).",
+                  "type": "integer",
+                  "optional": true
+                }
+              }
+            }
           }
         }
       }

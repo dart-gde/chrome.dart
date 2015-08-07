@@ -96,9 +96,8 @@ class ChromeWebNavigation extends ChromeApi {
   bool get available => _webNavigation != null;
 
   /**
-   * Retrieves information about the given frame. A frame refers to an
-   * &lt;iframe&gt; or a &lt;frame&gt; of a web page and is identified by a tab
-   * ID and a frame ID.
+   * Retrieves information about the given frame. A frame refers to an <iframe>
+   * or a <frame> of a web page and is identified by a tab ID and a frame ID.
    * 
    * [details] Information about the frame to retrieve information about.
    * 
@@ -133,6 +132,29 @@ class ChromeWebNavigation extends ChromeApi {
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.webNavigation' is not available");
   }
+}
+
+/**
+ * Cause of the navigation. The same transition types as defined in the history
+ * API are used. These are the same transition types as defined in the [history
+ * API](history#transition_types) except with `"start_page"` in place of
+ * `"auto_toplevel"` (for backwards compatibility).
+ * enum of `link`, `typed`, `auto_bookmark`, `auto_subframe`, `manual_subframe`,
+ * `generated`, `start_page`, `form_submit`, `reload`, `keyword`,
+ * `keyword_generated`
+ */
+class TransitionType extends ChromeObject {
+  TransitionType();
+  TransitionType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+/**
+ * enum of `client_redirect`, `server_redirect`, `forward_back`,
+ * `from_address_bar`
+ */
+class TransitionQualifier extends ChromeObject {
+  TransitionQualifier();
+  TransitionQualifier.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 class WebNavigationGetFrameParams extends ChromeObject {

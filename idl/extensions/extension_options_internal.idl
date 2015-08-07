@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// Internal API for the &lt;extensiontoptions&gt; tag
+// Internal API for the <extensiontoptions> tag
 namespace extensionOptionsInternal {
   dictionary SizeChangedOptions {
     long oldWidth;
@@ -12,14 +12,13 @@ namespace extensionOptionsInternal {
   };
 
   dictionary PreferredSizeChangedOptions {
-    long width;
-    long height;
+    double width;
+    double height;
   };
 
   interface Events {
     static void onClose();
     static void onLoad();
-    static void onSizeChanged(SizeChangedOptions options);
     static void onPreferredSizeChanged(PreferredSizeChangedOptions options);
   };
 };
