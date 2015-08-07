@@ -205,7 +205,8 @@ class IDLConverter {
                     'DOMString': 'String',
                     'boolean': 'bool',
                     'double': 'num',
-                    'long': 'int'
+                    'long': 'int',
+                    'any': 'dynamic'
   };
 
   String idlToDartType(IDLType type) {
