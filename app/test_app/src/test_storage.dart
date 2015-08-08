@@ -1,6 +1,6 @@
 library test_storage;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
 
 void main() {
@@ -37,7 +37,6 @@ void main() {
             return chrome.storage.local.get(null);
           })).then(expectAsync((Map<String, dynamic> result) {
             expect(result, isNotNull);
-            logMessage('local.get contains ${result.length} items');
             expect(result.length, greaterThanOrEqualTo(1));
         }));
     });

@@ -2,7 +2,7 @@ library test_socket;
 
 import 'dart:typed_data' as typed_data;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
 import 'package:chrome/gen/socket.dart';
 
@@ -55,8 +55,6 @@ void main() {
               socket.disconnect(createInfo.socketId);
               socket.destroy(createInfo.socketId);
               expect(readInfo.resultCode, greaterThan(0));
-              logMessage("readInfo.data.runtimeType = ${readInfo.data.runtimeType}");
-              logMessage("readInfo.data = ${readInfo.data}");
               expect(readInfo.data is chrome.ArrayBuffer, isTrue);
           }));
         }));
@@ -76,7 +74,6 @@ void main() {
             .then(expectAsync((SocketWriteInfo writeInfo) {
               socket.disconnect(createInfo.socketId);
               socket.destroy(createInfo.socketId);
-              logMessage("writeInfo.bytesWritten = ${writeInfo.bytesWritten}");
               expect(writeInfo.bytesWritten, equals(6));
           }));
         }));
@@ -114,11 +111,8 @@ void main() {
 
     test('getNetworkList', () {
       return socket.getNetworkList().then((List networklist) {
-          logMessage("networklist = $networklist");
           expect(networklist is List, isTrue);
           networklist.forEach((i) {
-            logMessage("i.name = ${i.name}");
-            logMessage("i.address = ${i.address}");
             expect(i is NetworkInterface, isTrue);
           });
        });

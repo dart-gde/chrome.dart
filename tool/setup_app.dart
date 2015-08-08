@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 import 'package:unscripted/unscripted.dart';
 import 'package:chrome/build/build.dart' as build;
 
-void main(List<String> arguments) => declare(buildApp).execute(arguments);
+main(List<String> arguments) => new Script(buildApp).execute(arguments);
 
 @Command(help: 'Copies and builds a chrome application or extension')
 @ArgExample('app/test_ext harness.dart',
