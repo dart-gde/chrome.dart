@@ -2,7 +2,7 @@ library test_tabs;
 
 import 'dart:async';
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:chrome/chrome_ext.dart' as chrome;
 
 void main() {
@@ -156,7 +156,6 @@ void main() {
             .then((_tab) => newTab = _tab)
             .then((_) => chrome.tabs.move([newTab.id], moveProperties))
             .then(expectAsync((List<chrome.Tab> movedTabs) {
-              logMessage("movedTabs = ${movedTabs}");
               expect(movedTabs, isNotNull);
 //              expect(movedTabs, hasLength(1));
 //              expect(movedTabs.first.id, newTab.id);
@@ -180,7 +179,6 @@ void main() {
             .then((_tab) => newTab2 = _tab)
             .then((_) => chrome.tabs.move([newTab1.id, newTab2.id], moveProperties))
             .then(expectAsync((List<chrome.Tab> movedTabs) {
-              logMessage("movedTabs = ${movedTabs}");
               expect(movedTabs, isNotNull);
 //              expect(movedTabs, hasLength(2));
 //              expect(movedTabs[0].id, anyOf(newTab1.id, newTab2.id));
@@ -251,7 +249,6 @@ void main() {
         var subscription;
         subscription = chrome.tabs.onUpdated.listen(expectAsync((chrome.OnUpdatedEvent evt) {
           expect(evt.tab.windowId, window.id);
-          logMessage("evt.changeInfo = ${evt.changeInfo}");
           expect(evt.changeInfo["status"], anyOf(isNull, "loading"));
           expect(evt.changeInfo["url"], contains('www.google.com'));
           subscription.cancel();
@@ -269,7 +266,6 @@ void main() {
             .then((chrome.Tab tab) {
               var subscription;
               subscription = chrome.tabs.onMoved.listen(expectAsync((chrome.TabsOnMovedEvent evt) {
-                logMessage("onMoved: evt.moveInfo = ${evt.moveInfo}");
                 expect(evt.tabId, tab.id);
                 expect(evt.moveInfo["windowId"], equals(window.id));
                 expect(evt.moveInfo["fromIndex"], equals(0));
@@ -314,7 +310,6 @@ void main() {
             .then((chrome.Tab tab) {
               var subscription;
               subscription = chrome.tabs.onDetached.listen(expectAsync((chrome.OnDetachedEvent evt) {
-                logMessage("evt.detachInfo = ${evt.detachInfo}");
                 expect(evt.tabId, tab.id);
                 expect(evt.detachInfo["oldWindowId"], window.id);
                 expect(evt.detachInfo["oldPosition"], 1);
@@ -336,7 +331,6 @@ void main() {
             .then((chrome.Tab tab) {
               var subscription;
               subscription = chrome.tabs.onAttached.listen(expectAsync((chrome.OnAttachedEvent evt) {
-                logMessage("evt.attachInfo = ${evt.attachInfo}");
                 expect(evt.tabId, tab.id);
                 expect(evt.attachInfo["windowId"], isNot(window.id));
                 expect(evt.attachInfo["newPosition"], 0);

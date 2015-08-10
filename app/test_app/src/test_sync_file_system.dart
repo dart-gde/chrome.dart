@@ -1,6 +1,6 @@
 library test_sync_file_system;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:chrome/chrome_app.dart' as chrome;
 
 void main() {
@@ -24,12 +24,10 @@ void main() {
         expect(fs.root.toUrl(), isNotNull);
         f(null);
       }, onError: (error) {
-        logMessage("onError error = ${error.toString()}");
         // this is ok - the user may not be signed in
         expect(error, isNotNull);
         f(null);
       }).catchError((error) {
-        logMessage("catchError error = ${error.toString()}");
         // this is ok - the user may not be signed in
         expect(error, isNotNull);
         expect(error.toString(), stringContainsInOrder(['authentication failed']));

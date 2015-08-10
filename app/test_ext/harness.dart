@@ -2,8 +2,8 @@ library harness_extension;
 
 import 'dart:html' as html;
 
-import 'package:unittest/html_enhanced_config.dart';
-import 'package:unittest/unittest.dart';
+// import 'package:test/html_enhanced_config.dart';
+// import 'package:test/test.dart';
 import 'package:logging/logging.dart';
 
 import 'package:chrome/chrome_ext.dart' as chrome;
@@ -17,8 +17,7 @@ void main() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((LogRecord r) => r.toString());
 
-  groupSep = '.';
-  useHtmlEnhancedConfiguration();
+  //useHtmlEnhancedConfiguration();
 
   html.window.onKeyUp.listen((html.KeyboardEvent event) {
     if (event.keyCode == html.KeyCode.R) {

@@ -1,6 +1,6 @@
 library test_context_menus;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:chrome/chrome_ext.dart' as chrome;
 
 void main() {
@@ -22,7 +22,6 @@ void main() {
           new chrome.ContextMenusCreateParams(title: 'create -- defaults');
 
       int newId = chrome.contextMenus.create(createProperties);
-      logMessage("newId => $newId");
       expect(newId, greaterThan(0));
     });
 
@@ -32,7 +31,6 @@ void main() {
 
       // TODO(DrMarcII): figure out a mechanism for selecting menu
       int newId = chrome.contextMenus.create(createProperties, (_) { });
-      logMessage("newId => $newId");
       expect(newId, greaterThan(0));
     });
 
@@ -51,9 +49,7 @@ void main() {
           );
 
       int newId = chrome.contextMenus.create(createProperties);
-      logMessage("newId => $newId");
       expect(newId, equals("testId"));
-
     });
 
     test('update -- title', () {
