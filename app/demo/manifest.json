@@ -18,12 +18,13 @@
     { "fileSystem": ["write", "retainEntries", "directory"] },
     "idle",
     "identity",
-    "bluetooth",
     "storage",
     "syncFileSystem",
     "system.cpu",
     "system.memory",
-    { "socket" : ["tcp-connect", "tcp-listen"] },
+    "system.storage",
+    "socket.tcp-connect",
+    "socket.tcp-listen",
     "tts"
   ],
 

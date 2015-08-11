@@ -12,20 +12,13 @@ h1, p {
 }
 
 #container_id {
-  height: 500px;
-  position: relative;
   border: 1px solid #ccc;
   background-color: #fff;
   padding-left: 0.5em;
   padding-right: 0.5em;
 }
 
-#summary {
-  float: left;
-}
-
 #notes {
-  float: right;
   width: 120px;
   text-align: right;
 }
