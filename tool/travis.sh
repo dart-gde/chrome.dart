@@ -5,7 +5,6 @@ set -e
 # Ensure that the code is warning free.
 dartanalyzer --fatal-warnings tool/gen_apis.dart
 dartanalyzer --fatal-warnings test/all.dart
-dartanalyzer --fatal-warnings tool/setup_app.dart
 
 # TODO(adam): https://github.com/dart-gde/chrome.dart/issues/196
 # Generate the APIs; ensure the gen tool is happy.
@@ -19,11 +18,11 @@ dartanalyzer --fatal-warnings lib/chrome_ext.dart
 dart test/all.dart
 
 # Ensure app folder builds and is warning free.
-dart tool/setup_app.dart app/demo demo.dart  
+pub build app/demo  
 dartanalyzer --fatal-warnings app/demo/demo.dart
 
-dart tool/setup_app.dart app/test_app harness.dart
+pub build app/test_app
 dartanalyzer --fatal-warnings app/test_app/harness.dart
 
-dart tool/setup_app.dart app/test_ext harness.dart
+pub build app/test_ext
 dartanalyzer --fatal-warnings app/test_ext/harness.dart
