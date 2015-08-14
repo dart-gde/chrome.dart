@@ -1,6 +1,8 @@
 .buildlog
 .project
 .settings/
+.pub/
+.packages
 .idea
 *.dart.js
 *.dart.js.deps

@@ -1,6 +1,6 @@
 library test_browser_action;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:chrome/chrome_ext.dart' as chrome;
 
 void main() {

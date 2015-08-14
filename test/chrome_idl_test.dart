@@ -1,6 +1,6 @@
 library chrome_idl_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 import '../tool/chrome_idl_parser.dart';
 import '../tool/chrome_idl_model.dart';
@@ -278,11 +278,11 @@ void chromeIDLParserEnumDeclarationTests() {
 enum Values {
 
 // Comments for value1
-value1, 
+value1,
 
 // Comments for value_2
 // Added second line for comment
-value_2, 
+value_2,
 
 // Comments for Values
 VALUE};""");
@@ -318,11 +318,11 @@ VALUE};""");
 enum Values {
 
 // Comments for value1
-value1, 
+value1,
 
 // Comments for value_2
 // Added second line for comment
-value_2, 
+value_2,
 
 // Comments for Values
 VALUE};""");
@@ -623,7 +623,7 @@ void chromeIDLParserCallbackDeclarationTests() {
   test('single line', () {
 
     IDLCallbackDeclaration callbackDeclaration =
-        chromeIDLParser.callbackDeclaration.parse(""" 
+        chromeIDLParser.callbackDeclaration.parse("""
 callback GetAuthTokenCallback = void (optional DOMString token);
 """);
 
@@ -640,7 +640,7 @@ callback GetAuthTokenCallback = void (optional DOMString token);
   test('single line with comments', () {
 
     IDLCallbackDeclaration callbackDeclaration =
-        chromeIDLParser.callbackDeclaration.parse(""" 
+        chromeIDLParser.callbackDeclaration.parse("""
 // Some comment.
 callback EntryCallback = void ([instanceOf=Entry] object entry);
 """);
@@ -665,7 +665,7 @@ callback EntryCallback = void ([instanceOf=Entry] object entry);
   test('multiline', () {
 
     List<IDLCallbackDeclaration> callbackDeclarations =
-        chromeIDLParser.callbackDeclaration.many.parse(""" 
+        chromeIDLParser.callbackDeclaration.many.parse("""
 callback GetAuthTokenCallback = void (optional DOMString token);
 callback EntryCallback = void ([instanceOf=Entry] object entry);
 """);
@@ -1025,7 +1025,7 @@ void chromeIDLParserTypeBodyTests() {
 
   test('field type returned method with mixed parameters', () {
     List types = chromeIDLParser.typeBody
-        .parse(""" 
+        .parse("""
 // Some comments
 static Bounds getBounds();
 
@@ -1929,7 +1929,7 @@ void miscParsingTests() {
     String testData = """dictionary AttachedFile {
     DOMString name;
     [instanceOf=Blob] object? data;
-  }; 
+  };
 """;
 
     var result = chromeIDLParser.typeDeclaration
@@ -1940,7 +1940,7 @@ void miscParsingTests() {
 
   test('attribute with name=1', () {
     String testData = """[maxListeners=1] static void onDeterminingFilename(
-DownloadItem downloadItem, SuggestFilenameCallback suggest); 
+DownloadItem downloadItem, SuggestFilenameCallback suggest);
 """;
 
     var result = chromeIDLParser.methods
@@ -1971,5 +1971,3 @@ DownloadItem downloadItem, SuggestFilenameCallback suggest);
     expect(callbackDeclaration, isNotNull);
   });
 }
-
-

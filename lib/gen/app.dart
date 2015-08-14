@@ -49,10 +49,6 @@ class ChromeAppRuntime extends ChromeApi {
   }
 
   bool get available => _app_runtime != null;
-
-  void _throwNotAvailable() {
-    throw new UnsupportedError("'chrome.app.runtime' is not available");
-  }
 }
 
 /**
@@ -138,7 +134,7 @@ class LaunchData extends ChromeObject {
  * request.
  */
 class EmbedRequest extends ChromeObject {
-  EmbedRequest({String embedderId, any data}) {
+  EmbedRequest({String embedderId, dynamic data}) {
     if (embedderId != null) this.embedderId = embedderId;
     if (data != null) this.data = data;
   }
@@ -147,8 +143,8 @@ class EmbedRequest extends ChromeObject {
   String get embedderId => jsProxy['embedderId'];
   set embedderId(String value) => jsProxy['embedderId'] = value;
 
-  any get data => _createany(jsProxy['data']);
-  set data(any value) => jsProxy['data'] = jsify(value);
+  dynamic get data => jsProxy['data'];
+  set data(dynamic value) => jsProxy['data'] = jsify(value);
 
   /**
    * Allows `embedderId` to embed this app in an &lt;appview&gt; element. The
@@ -172,7 +168,6 @@ LaunchData _createLaunchData(JsObject jsProxy) => jsProxy == null ? null : new L
 FileEntry _createFileEntry(JsObject jsProxy) => jsProxy == null ? null : new ChromeFileEntry.fromProxy(jsProxy);
 LaunchItem _createLaunchItem(JsObject jsProxy) => jsProxy == null ? null : new LaunchItem.fromProxy(jsProxy);
 LaunchSource _createLaunchSource(String value) => LaunchSource.VALUES.singleWhere((ChromeEnum e) => e.value == value);
-any _createany(JsObject jsProxy) => jsProxy == null ? null : new any.fromProxy(jsProxy);
 
 /**
  * Use the `chrome.app.window` API to create windows. Windows have an optional

@@ -18,10 +18,6 @@ class ChromeTypes extends ChromeApi {
   ChromeTypes._();
 
   bool get available => _types != null;
-
-  void _throwNotAvailable() {
-    throw new UnsupportedError("'chrome.types' is not available");
-  }
 }
 
 /**

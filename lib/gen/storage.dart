@@ -45,10 +45,6 @@ class ChromeStorage extends ChromeApi {
    * results in an error.
    */
   StorageArea get managed => _createStorageArea(_storage['managed']);
-
-  void _throwNotAvailable() {
-    throw new UnsupportedError("'chrome.storage' is not available");
-  }
 }
 
 /**

@@ -19,10 +19,6 @@ class ChromeExtensionTypes extends ChromeApi {
   ChromeExtensionTypes._();
 
   bool get available => _extensionTypes != null;
-
-  void _throwNotAvailable() {
-    throw new UnsupportedError("'chrome.extensionTypes' is not available");
-  }
 }
 
 /**
