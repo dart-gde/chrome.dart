@@ -58,6 +58,92 @@ void main() {
     });
   });
 
+  group('json enums', () {
+    test('simple enum', () {
+      String data = '''[{
+        "id": "simpleEnum",
+        "type": "string",
+        "description": "A simple enum with two values",
+        "enum": ["firstVal", "secondVal"]
+      }]''';
+      var jsonEnum = json_model.JsonEnum.parse(JSON.decode(data)).single;
+
+      expect(jsonEnum.name, 'simpleEnum');
+      expect(jsonEnum.values.length, 2);
+      expect(jsonEnum.values, contains('firstVal'));
+      expect(jsonEnum.values, contains('secondVal'));
+    });
+
+    test('multiple simple enums', () {
+      String data = '''[
+      {
+        "id": "simpleEnum",
+        "type": "string",
+        "description": "A simple enum with two values",
+        "enum": ["firstVal", "secondVal"]
+      },
+      {
+        "id": "simplerEnum",
+        "type": "string",
+        "description": "A very simple enum with one value",
+        "enum": ["onlyVal"]
+      }]''';
+      var jsonEnums = json_model.JsonEnum.parse(JSON.decode(data));
+
+      expect(jsonEnums.length, 2);
+      expect(jsonEnums[0].name, 'simpleEnum');
+      expect(jsonEnums[1].values.single, 'onlyVal');
+    });
+
+    test('mixed with declared types', () {
+      String data = '''[
+      {
+        "id": "simpleEnum",
+        "type": "string",
+        "description": "A simple enum with two values",
+        "enum": ["firstVal", "secondVal"]
+      },
+      {
+        "id": "notAnEnum",
+        "type": "object",
+        "description": "A type that shouldn't be treated as an enum"
+      },
+      {
+        "id": "simplerEnum",
+        "type": "string",
+        "description": "A very simple enum with one value",
+        "enum": ["onlyVal"]
+      }]''';
+      var jsonEnums = json_model.JsonEnum.parse(JSON.decode(data));
+
+      expect(jsonEnums.length, 2);
+      expect(jsonEnums[0].name, 'simpleEnum');
+      expect(jsonEnums[1].name, 'simplerEnum');
+    });
+
+    test('enums with descriptions included', () {
+      String data = '''[{
+        "id": "describedEnum",
+        "type": "string",
+        "description": "An enum with two values with descriptions",
+        "enum": [
+          {
+            "name": "firstVal",
+            "description": "The first value of the enum"
+          },
+          {
+            "name": "secondVal",
+            "description": "Some other bogus value"
+          }
+        ]
+      }]''';
+      var jsonEnum = json_model.JsonEnum.parse(JSON.decode(data)).single;
+
+      expect(jsonEnum.name, 'describedEnum');
+      expect(jsonEnum.values.length, 2);
+    });
+  });
+
   group("individual parsing tests", () {
     test("parameters that have 'choices'", () {
       // TODO: move to file.

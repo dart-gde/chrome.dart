@@ -12,6 +12,12 @@ abstract class JsonObject {
   String get description => json['description'];
 
   bool _bool(String key) => json[key] == true || json[key] == 'true';
+
+  static bool _isEnumType(Map<String, dynamic> json) =>
+      json != null && json.containsKey('enum');
+
+  static bool _isDeclaredType(Map<String, dynamic> json) =>
+      json != null && !json.containsKey('enum');
 }
 
 class JsonNamespace extends JsonObject {
@@ -19,17 +25,35 @@ class JsonNamespace extends JsonObject {
   final List<JsonFunction> functions;
   final List<JsonEvent> events;
   final List<JsonDeclaredType> types;
+  final List<JsonEnum> enums;
 
   JsonNamespace(json) :
     properties = JsonProperty.parse(json['properties']),
     functions = JsonFunction.parse(json['functions']),
     events = JsonEvent.parse(json['events']),
     types = JsonDeclaredType.parse(json['types']),
+    enums = JsonEnum.parse(json['types']),
     super(json);
 
   String get namespace => json['namespace'];
 
   String toString() => "${runtimeType.toString()} ${namespace}";
+}
+
+class JsonEnum extends JsonObject {
+  JsonEnum(json) : super(json);
+
+  List<dynamic> get values => json['enum'];
+
+  String get id => json['id'];
+
+  String get name => id;
+
+  static List<JsonEnum> parse(List<Map<String, dynamic>> jsons) {
+    if (jsons == null) return [];
+    return jsons.where(JsonObject._isEnumType)
+        .map((json) => new JsonEnum(json)).toList();
+  }
 }
 
 class JsonProperty extends JsonObject {
@@ -153,7 +177,9 @@ class JsonDeclaredType extends JsonType {
   final List<JsonFunction> functions;
 
   static List<JsonDeclaredType> parse(List jsons) {
-    return (jsons == null ? [] : jsons.map((j) => new JsonDeclaredType(j)).toList());
+    if (jsons == null) return [];
+    return jsons.where(JsonObject._isDeclaredType)
+        .map((j) => new JsonDeclaredType(j)).toList();
   }
 
   JsonDeclaredType(Map<String, dynamic> json) :
@@ -184,18 +210,31 @@ class JsonConverter {
 
   JsonConverter._(this.library);
 
-  ChromeLibrary _convert(JsonNamespace namespace) {
-    library.documentation = convertHtmlToDartdoc(namespace.description);
+  ChromeLibrary _convert(JsonNamespace namespace) => library
+      ..documentation = convertHtmlToDartdoc(namespace.description)
+      ..methods.addAll(namespace.functions.map(_convertMethod))
+      ..properties
+          .addAll(namespace.properties.map((p) => _convertProperty(p, true)))
+      // We call `toList` on the intermediate iterable because a side effect
+      // of lazily traversing the list is to modify the `library.types` list.
+      ..types.addAll(namespace.types.map(_convertDeclaredType).toList())
+      ..types.addAll(addtionalDeclaredTypes.map(_convertDeclaredType))
+      ..enumTypes.addAll(namespace.enums.map(_convertEnum))
+      ..events.addAll(namespace.events.map(_convertEvent));
 
-    library.methods.addAll(namespace.functions.map(_convertMethod));
-    library.properties.addAll(namespace.properties.map((p) => _convertProperty(p, true)));
-    // We call `toList` on the intermediate iterable because a side effect of
-    // lazily traversing the list is to modify the `library.types` list.
-    library.types.addAll(namespace.types.map(_convertDeclaredType).toList());
-    library.types.addAll(addtionalDeclaredTypes.map(_convertDeclaredType));
-    library.events.addAll(namespace.events.map(_convertEvent));
+  ChromeEnumType _convertEnum(JsonEnum jsonEnum) => new ChromeEnumType()
+      ..values = jsonEnum.values.map(_convertEnumEntry)
+      ..name = jsonEnum.name
+      ..documentation = convertHtmlToDartdoc(jsonEnum.description);
 
-    return library;
+  ChromeEnumEntry _convertEnumEntry(value) {
+    if (value is String) {
+      return new ChromeEnumEntry(value);
+    } else if (value is Map<String, String>) {
+      return new ChromeEnumEntry(value['name'], value['description']);
+    } else {
+      return null;
+    }
   }
 
   ChromeProperty _convertProperty(JsonProperty p, [bool onlyReturnType = false]) {
