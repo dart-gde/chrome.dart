@@ -350,7 +350,8 @@ class DefaultBackend extends Backend {
     type.values.forEach((ChromeEnumEntry entry) {
       generator.writeDocs(entry.documentation);
 
-      var constName = fromCamelCase(entry.name).toUpperCase();
+      var constName =
+          fromCamelCase(entry.name).toUpperCase().replaceAll('-', '_');
       constNames.add(constName);
 
       generator.writeln("static const ${type.name} ${constName} "
