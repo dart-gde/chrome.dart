@@ -127,7 +127,7 @@
             "name": "url",
             "type": "string",
             "optional": true,
-            "description": "If you have more than one <code>&lt;link&gt;</code> tag on your page with the <code>chrome-webstore-item</code> relation, you can choose which item you'd like to install by passing in its URL here. If it is omitted, then the first (or only) link will be used. An exception will be thrown if the passed in URL does not exist on the page."
+            "description": "If you have more than one <code><link></code> tag on your page with the <code>chrome-webstore-item</code> relation, you can choose which item you'd like to install by passing in its URL here. If it is omitted, then the first (or only) link will be used. An exception will be thrown if the passed in URL does not exist on the page."
           },
           {
             "name": "successCallback",

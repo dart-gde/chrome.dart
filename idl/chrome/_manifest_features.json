@@ -24,6 +24,10 @@
     "channel": "stable",
     "extension_types": ["hosted_app"]
   },
+  "app.linked_icons": {
+    "channel": "dev",
+    "extension_types": ["hosted_app"]
+  },
   "app.isolation": {
     "channel": "stable",
     // Platform apps always have isolated storage, thus they cannot specify it
@@ -107,7 +111,11 @@
       "extension_types": ["legacy_packaged_app", "platform_app"],
       "whitelist": [
         "nmmhkkegccagdldgiimedpiccmgmieda",
-        "oedeeodfidgoollimchfdnbmhcpnklnd"  // ZIP unpacker.
+        "oedeeodfidgoollimchfdnbmhcpnklnd",  // ZIP unpacker.
+        "07BD6A765FFC289FF755D7CAB2893A40EC337FEC",  // http://crbug.com/453955
+        "896B85CC7E913E11C34892C1425A093C0701D386",  // http://crbug.com/453955
+        "11A01C82EF355E674E4F9728A801F5C3CB40D83F",  // http://crbug.com/453955
+        "F410C88469990EE7947450311D24B8AF2ADB2595"   // http://crbug.com/453955
       ]
     }
   ],
@@ -121,29 +129,18 @@
       "channel": "stable",
       "extension_types": ["legacy_packaged_app", "platform_app"],
       "whitelist": [
-        "nmmhkkegccagdldgiimedpiccmgmieda"
+        "nmmhkkegccagdldgiimedpiccmgmieda",
+        "07BD6A765FFC289FF755D7CAB2893A40EC337FEC",  // http://crbug.com/453955
+        "896B85CC7E913E11C34892C1425A093C0701D386",  // http://crbug.com/453955
+        "11A01C82EF355E674E4F9728A801F5C3CB40D83F",  // http://crbug.com/453955
+        "F410C88469990EE7947450311D24B8AF2ADB2595"   // http://crbug.com/453955
       ]
     }
   ],
-  "export": [
-    {
-      "channel": "stable",
-      "extension_types": ["shared_module"],
-      "whitelist": [
-        "6EAED1924DB611B6EEF2A664BD077BE7EAD33B8F",
-        "4EB74897CB187C7633357C2FE832E0AD6A44883A",
-        // Next four: http://crbug.com/357213
-        "mafeflapfdfljijmlienjedomfjfmhpd",
-        "ajchadodoajkaojdidnbblnfcdipbple",
-        "47F838F58D2A3B585DE50F29E3585D94999921D1",
-        "8EBAFB8DEB647EA2FC887A5E01EBD9BDC0FDC536"
-      ]
-    },
-    {
-      "channel": "dev",
-      "extension_types": ["shared_module"]
-    }
-  ],
+  "export": {
+    "channel": "stable",
+    "extension_types": ["shared_module"]
+  },
   "file_browser_handlers": [
     {
       "channel": "stable",
@@ -155,6 +152,10 @@
       "location": "component"
     }
   ],
+  "file_system_provider_capabilities": {
+    "channel": "stable",
+    "extension_types": ["extension", "platform_app"]
+  },
   "homepage_url": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"]
@@ -166,30 +167,6 @@
   "input_components": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"]
-  },
-  "mime_types": {
-    "channel": "stable",
-    "extension_types": [ "extension", "legacy_packaged_app", "platform_app" ],
-    "whitelist": [
-      "oickdpebdnfbgkcaoklfcdhjniefkcji",  // browser_tests
-      "gbkeegbaiigmenfmjfclcdgdpimamgkj",  // QuickOffice
-      "ionpfmkccalenbmnddpbmocokhaknphg",  // QuickOffice Dev
-      "bpmcpldpdmajfigpchkicefoigmkfalc",  // Quickoffice component extension
-      "ehibbfinohgbchlgdbfpikodjaojhccn",  // Editor
-      "mhjfbmdgcfjbbpaeojofohoefgiehjai"   // PDF
-    ]
-  },
-  "mime_types_handler": {
-    "channel": "stable",
-    "extension_types": [ "extension", "legacy_packaged_app", "platform_app" ],
-    "whitelist": [
-      "oickdpebdnfbgkcaoklfcdhjniefkcji",  // browser_tests
-      "gbkeegbaiigmenfmjfclcdgdpimamgkj",  // QuickOffice
-      "ionpfmkccalenbmnddpbmocokhaknphg",  // QuickOffice Dev
-      "bpmcpldpdmajfigpchkicefoigmkfalc",  // Quickoffice component extension
-      "ehibbfinohgbchlgdbfpikodjaojhccn",  // Editor
-      "mhjfbmdgcfjbbpaeojofohoefgiehjai"   // PDF
-    ]
   },
   "minimum_chrome_version": {
     "channel": "stable",

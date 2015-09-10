@@ -12,6 +12,20 @@
         "description": "The maximum number of top level extension items that can be added to an extension action context menu. Any items beyond this limit will be ignored."
       }
     },
+    "types": [
+      {
+        "id": "ContextType",
+        "type": "string",
+        "enum": ["all", "page", "frame", "selection", "link", "editable", "image", "video", "audio", "launcher", "browser_action", "page_action"],
+        "description": "The different contexts a menu can appear in. Specifying 'all' is equivalent to the combination of all other contexts except for 'launcher'. The 'launcher' context is only supported by apps and is used to add menu items to the context menu that appears when clicking on the app icon in the launcher/taskbar/dock/etc. Different platforms might put limitations on what is actually supported in a launcher context menu."
+      },
+      {
+        "id": "ItemType",
+        "type": "string",
+        "enum": ["normal", "checkbox", "radio", "separator"],
+        "description": "The type of menu item."
+      }
+    ],
     "functions": [
       {
         "name": "create",
@@ -30,8 +44,7 @@
             "name": "createProperties",
             "properties": {
               "type": {
-                "type": "string",
-                "enum": ["normal", "checkbox", "radio", "separator"],
+                "$ref": "ItemType",
                 "optional": true,
                 "description": "The type of menu item. Defaults to 'normal' if not specified."
               },
@@ -43,7 +56,7 @@
               "title": {
                 "type": "string",
                 "optional": true,
-                "description": "The text to be displayed in the item; this is <em>required</em> unless <em>type</em> is 'separator'. When the context is 'selection', you can use <code>%s</code> within the string to show the selected text. For example, if this parameter's value is \"Translate '%s' to Pig Latin\" and the user selects the word \"cool\", the context menu item for the selection is \"Translate 'cool' to Pig Latin\"."
+                "description": "The text to be displayed in the item; this is <em>required</em> unless <code>type</code> is 'separator'. When the context is 'selection', you can use <code>%s</code> within the string to show the selected text. For example, if this parameter's value is \"Translate '%s' to Pig Latin\" and the user selects the word \"cool\", the context menu item for the selection is \"Translate 'cool' to Pig Latin\"."
               },
               "checked": {
                 "type": "boolean",
@@ -53,12 +66,11 @@
               "contexts": {
                 "type": "array",
                 "items": {
-                  "type": "string",
-                  "enum": ["all", "page", "frame", "selection", "link", "editable", "image", "video", "audio", "launcher", "browser_action", "page_action"]
+                  "$ref": "ContextType"
                 },
                 "minItems": 1,
                 "optional": true,
-                "description": "List of contexts this menu item will appear in. Defaults to ['page'] if not specified. Specifying ['all'] is equivalent to the combination of all other contexts except for 'launcher'. The 'launcher' context is only supported by apps and is used to add menu items to the context menu that appears when clicking on the app icon in the launcher/taskbar/dock/etc. Different platforms might put limitations on what is actually supported in a launcher context menu."
+                "description": "List of contexts this menu item will appear in. Defaults to ['page'] if not specified."
               },
               "onclick": {
                 "type": "function",
@@ -73,8 +85,7 @@
                   {
                     "name": "tab",
                     "$ref": "tabs.Tab",
-                    "description": "The details of the tab where the click took place.",
-                    "extension_types": ["extension", "legacy_packaged_app"]
+                    "description": "The details of the tab where the click took place. Note: this parameter only present for extensions."
                   }
                 ]
               },
@@ -133,8 +144,7 @@
             "description": "The properties to update. Accepts the same values as the create function.",
             "properties": {
               "type": {
-                "type": "string",
-                "enum": ["normal", "checkbox", "radio", "separator"],
+                "$ref": "ItemType",
                 "optional": true
               },
               "title": {
@@ -148,15 +158,25 @@
               "contexts": {
                 "type": "array",
                 "items": {
-                  "type": "string",
-                  "enum": ["all", "page", "frame", "selection", "link", "editable", "image", "video", "audio", "launcher", "browser_action", "page_action"]
+                  "$ref": "ContextType"
                 },
                 "minItems": 1,
                 "optional": true
               },
               "onclick": {
                 "type": "function",
-                "optional": true
+                "optional": true,
+                "parameters": [
+                  {
+                    "name": "info",
+                    "$ref": "contextMenusInternal.OnClickData"
+                  },
+                  {
+                    "name": "tab",
+                    "$ref": "tabs.Tab",
+                    "description": "The details of the tab where the click took place. Note: this parameter only present for extensions."
+                  }
+                ]
               },
               "parentId": {
                 "choices": [
