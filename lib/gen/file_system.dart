@@ -20,6 +20,9 @@ final ChromeFileSystem fileSystem = new ChromeFileSystem._();
 class ChromeFileSystem extends ChromeApi {
   JsObject get _fileSystem => chrome['fileSystem'];
 
+  Stream<VolumeListChangedEvent> get onVolumeListChanged => _onVolumeListChanged.stream;
+  ChromeStreamController<VolumeListChangedEvent> _onVolumeListChanged;
+
   Stream<EntryChangedEvent> get onEntryChanged => _onEntryChanged.stream;
   ChromeStreamController<EntryChangedEvent> _onEntryChanged;
 
@@ -28,6 +31,7 @@ class ChromeFileSystem extends ChromeApi {
 
   ChromeFileSystem._() {
     var getApi = () => _fileSystem;
+    _onVolumeListChanged = new ChromeStreamController<VolumeListChangedEvent>.oneArg(getApi, 'onVolumeListChanged', _createVolumeListChangedEvent);
     _onEntryChanged = new ChromeStreamController<EntryChangedEvent>.oneArg(getApi, 'onEntryChanged', _createEntryChangedEvent);
     _onEntryRemoved = new ChromeStreamController<EntryRemovedEvent>.oneArg(getApi, 'onEntryRemoved', _createEntryRemovedEvent);
   }
@@ -123,6 +127,39 @@ class ChromeFileSystem extends ChromeApi {
     if (_fileSystem == null) _throwNotAvailable();
 
     return _fileSystem.callMethod('retainEntry', [jsify(entry)]);
+  }
+
+  /**
+   * Requests access to a file system for a volume represented by `
+   * options.volumeId`. If `options.writable` is set to true, then the file
+   * system will be writable. Otherwise, it will be read-only. The `writable`
+   * option requires the ` "fileSystem": {"write"}` permission in the manifest.
+   * Available to kiosk apps running in kiosk session only. For manual-launch
+   * kiosk mode, a confirmation dialog will be shown on top of the active app
+   * window. In case of an error, `fileSystem` will be undefined, and
+   * `chrome.runtime.lastError` will be set.
+   */
+  Future<FileSystem> requestFileSystem(RequestFileSystemOptions options) {
+    if (_fileSystem == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<FileSystem>.oneArg(_createFileSystem);
+    _fileSystem.callMethod('requestFileSystem', [jsify(options), completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Returns a list of volumes available for `requestFileSystem()`. The
+   * `"fileSystem": {"requestFileSystem"}` manifest permission is required.
+   * Available to kiosk apps running in the kiosk session only. In case of an
+   * error, `volumes` will be undefined, and ` chrome.runtime.lastError` will be
+   * set.
+   */
+  Future<List<Volume>> getVolumeList() {
+    if (_fileSystem == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<List<Volume>>.oneArg((e) => listify(e, _createVolume));
+    _fileSystem.callMethod('getVolumeList', [completer.callback]);
+    return completer.future;
   }
 
   /**
@@ -238,6 +275,38 @@ class ChooseEntryOptions extends ChromeObject {
   set acceptsMultiple(bool value) => jsProxy['acceptsMultiple'] = value;
 }
 
+class RequestFileSystemOptions extends ChromeObject {
+  RequestFileSystemOptions({String volumeId, bool writable}) {
+    if (volumeId != null) this.volumeId = volumeId;
+    if (writable != null) this.writable = writable;
+  }
+  RequestFileSystemOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get volumeId => jsProxy['volumeId'];
+  set volumeId(String value) => jsProxy['volumeId'] = value;
+
+  bool get writable => jsProxy['writable'];
+  set writable(bool value) => jsProxy['writable'] = value;
+}
+
+/**
+ * Represents a mounted volume, which can be accessed via `chrome.
+ * fileSystem.requestFileSystem`.
+ */
+class Volume extends ChromeObject {
+  Volume({String volumeId, bool writable}) {
+    if (volumeId != null) this.volumeId = volumeId;
+    if (writable != null) this.writable = writable;
+  }
+  Volume.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get volumeId => jsProxy['volumeId'];
+  set volumeId(String value) => jsProxy['volumeId'] = value;
+
+  bool get writable => jsProxy['writable'];
+  set writable(bool value) => jsProxy['writable'] = value;
+}
+
 /**
  * Change to an entry within a tracked directory.
  */
@@ -253,6 +322,19 @@ class ChildChange extends ChromeObject {
 
   ChildChangeType get type => _createChildChangeType(jsProxy['type']);
   set type(ChildChangeType value) => jsProxy['type'] = jsify(value);
+}
+
+/**
+ * Event notifying about an inserted or a removed volume from the system.
+ */
+class VolumeListChangedEvent extends ChromeObject {
+  VolumeListChangedEvent({List<Volume> volumes}) {
+    if (volumes != null) this.volumes = volumes;
+  }
+  VolumeListChangedEvent.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  List<Volume> get volumes => listify(jsProxy['volumes'], _createVolume);
+  set volumes(List<Volume> value) => jsProxy['volumes'] = jsify(value);
 }
 
 /**
@@ -300,9 +382,12 @@ class ChooseEntryResult {
   ChooseEntryResult._(this.entry, this.fileEntries);
 }
 
+VolumeListChangedEvent _createVolumeListChangedEvent(JsObject jsProxy) => jsProxy == null ? null : new VolumeListChangedEvent.fromProxy(jsProxy);
 EntryChangedEvent _createEntryChangedEvent(JsObject jsProxy) => jsProxy == null ? null : new EntryChangedEvent.fromProxy(jsProxy);
 EntryRemovedEvent _createEntryRemovedEvent(JsObject jsProxy) => jsProxy == null ? null : new EntryRemovedEvent.fromProxy(jsProxy);
 Entry _createEntry(JsObject jsProxy) => jsProxy == null ? null : new CrEntry.fromProxy(jsProxy);
+FileSystem _createFileSystem(JsObject jsProxy) => jsProxy == null ? null : new CrFileSystem.fromProxy(jsProxy);
+Volume _createVolume(JsObject jsProxy) => jsProxy == null ? null : new Volume.fromProxy(jsProxy);
 ChooseEntryType _createChooseEntryType(String value) => ChooseEntryType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 AcceptOption _createAcceptOption(JsObject jsProxy) => jsProxy == null ? null : new AcceptOption.fromProxy(jsProxy);
 ChildChangeType _createChildChangeType(String value) => ChildChangeType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

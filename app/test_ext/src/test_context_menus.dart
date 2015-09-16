@@ -36,7 +36,7 @@ void main() {
 
     test('create -- with many options specified', () {
       chrome.ContextMenusCreateParams createProperties =
-          new chrome.ContextMenusCreateParams(type: "checkbox",
+          new chrome.ContextMenusCreateParams(type: chrome.ItemType.CHECKBOX,
               id: 'testId',
               title: 'create -- with many options specified',
               checked: true,
@@ -79,7 +79,7 @@ void main() {
               title: 'update -- with many options specified');
 
       chrome.ContextMenusUpdateParams updateProperties =
-          new chrome.ContextMenusUpdateParams(type: "checkbox",
+          new chrome.ContextMenusUpdateParams(type: chrome.ItemType.CHECKBOX,
               checked: true,
               contexts: ["frame", "selection"],
               parentId: id,

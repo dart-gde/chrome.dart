@@ -154,8 +154,57 @@ class ChromeWindows extends ChromeApi {
   }
 }
 
+/**
+ * The type of browser window this is. Under some circumstances a Window may not
+ * be assigned type property, for example when querying closed windows from the
+ * [sessions] API.
+ */
+class WindowType extends ChromeEnum {
+  static const WindowType NORMAL = const WindowType._('normal');
+  static const WindowType POPUP = const WindowType._('popup');
+  static const WindowType PANEL = const WindowType._('panel');
+  static const WindowType APP = const WindowType._('app');
+
+  static const List<WindowType> VALUES = const[NORMAL, POPUP, PANEL, APP];
+
+  const WindowType._(String str): super(str);
+}
+
+/**
+ * The state of this browser window. Under some circumstances a Window may not
+ * be assigned state property, for example when querying closed windows from the
+ * [sessions] API.
+ */
+class WindowState extends ChromeEnum {
+  static const WindowState NORMAL = const WindowState._('normal');
+  static const WindowState MINIMIZED = const WindowState._('minimized');
+  static const WindowState MAXIMIZED = const WindowState._('maximized');
+  static const WindowState FULLSCREEN = const WindowState._('fullscreen');
+  static const WindowState DOCKED = const WindowState._('docked');
+
+  static const List<WindowState> VALUES = const[NORMAL, MINIMIZED, MAXIMIZED, FULLSCREEN, DOCKED];
+
+  const WindowState._(String str): super(str);
+}
+
+/**
+ * Specifies what type of browser window to create. The 'panel' and
+ * 'detached_panel' types create a popup unless the '--enable-panels' flag is
+ * set.
+ */
+class CreateType extends ChromeEnum {
+  static const CreateType NORMAL = const CreateType._('normal');
+  static const CreateType POPUP = const CreateType._('popup');
+  static const CreateType PANEL = const CreateType._('panel');
+  static const CreateType DETACHED_PANEL = const CreateType._('detached_panel');
+
+  static const List<CreateType> VALUES = const[NORMAL, POPUP, PANEL, DETACHED_PANEL];
+
+  const CreateType._(String str): super(str);
+}
+
 class Window extends ChromeObject {
-  Window({int id, bool focused, int top, int left, int width, int height, List<Tab> tabs, bool incognito, String type, String state, bool alwaysOnTop, String sessionId}) {
+  Window({int id, bool focused, int top, int left, int width, int height, List<Tab> tabs, bool incognito, WindowType type, WindowState state, bool alwaysOnTop, String sessionId}) {
     if (id != null) this.id = id;
     if (focused != null) this.focused = focused;
     if (top != null) this.top = top;
@@ -231,22 +280,16 @@ class Window extends ChromeObject {
   set incognito(bool value) => jsProxy['incognito'] = value;
 
   /**
-   * The type of browser window this is. Under some circumstances a Window may
-   * not be assigned type property, for example when querying closed windows
-   * from the [sessions] API.
-   * enum of `normal`, `popup`, `panel`, `app`
+   * The type of browser window this is.
    */
-  String get type => jsProxy['type'];
-  set type(String value) => jsProxy['type'] = value;
+  WindowType get type => _createWindowType(jsProxy['type']);
+  set type(WindowType value) => jsProxy['type'] = jsify(value);
 
   /**
-   * The state of this browser window. Under some circumstances a Window may not
-   * be assigned state property, for example when querying closed windows from
-   * the [sessions] API.
-   * enum of `normal`, `minimized`, `maximized`, `fullscreen`
+   * The state of this browser window.
    */
-  String get state => jsProxy['state'];
-  set state(String value) => jsProxy['state'] = value;
+  WindowState get state => _createWindowState(jsProxy['state']);
+  set state(WindowState value) => jsProxy['state'] = jsify(value);
 
   /**
    * Whether the window is set to be always on top.
@@ -327,7 +370,7 @@ class WindowsGetAllParams extends ChromeObject {
 }
 
 class WindowsCreateParams extends ChromeObject {
-  WindowsCreateParams({var url, int tabId, int left, int top, int width, int height, bool focused, bool incognito, String type}) {
+  WindowsCreateParams({var url, int tabId, int left, int top, int width, int height, bool focused, bool incognito, CreateType type, WindowState state}) {
     if (url != null) this.url = url;
     if (tabId != null) this.tabId = tabId;
     if (left != null) this.left = left;
@@ -337,6 +380,7 @@ class WindowsCreateParams extends ChromeObject {
     if (focused != null) this.focused = focused;
     if (incognito != null) this.incognito = incognito;
     if (type != null) this.type = type;
+    if (state != null) this.state = state;
   }
   WindowsCreateParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -401,14 +445,21 @@ class WindowsCreateParams extends ChromeObject {
    * Specifies what type of browser window to create. The 'panel' and
    * 'detached_panel' types create a popup unless the '--enable-panels' flag is
    * set.
-   * enum of `normal`, `popup`, `panel`, `detached_panel`
    */
-  String get type => jsProxy['type'];
-  set type(String value) => jsProxy['type'] = value;
+  CreateType get type => _createCreateType(jsProxy['type']);
+  set type(CreateType value) => jsProxy['type'] = jsify(value);
+
+  /**
+   * The initial state of the window. The 'minimized', 'maximized' and
+   * 'fullscreen' states cannot be combined with 'left', 'top', 'width' or
+   * 'height'.
+   */
+  WindowState get state => _createWindowState(jsProxy['state']);
+  set state(WindowState value) => jsProxy['state'] = jsify(value);
 }
 
 class WindowsUpdateParams extends ChromeObject {
-  WindowsUpdateParams({int left, int top, int width, int height, bool focused, bool drawAttention, String state}) {
+  WindowsUpdateParams({int left, int top, int width, int height, bool focused, bool drawAttention, WindowState state}) {
     if (left != null) this.left = left;
     if (top != null) this.top = top;
     if (width != null) this.width = width;
@@ -467,11 +518,13 @@ class WindowsUpdateParams extends ChromeObject {
   /**
    * The new state of the window. The 'minimized', 'maximized' and 'fullscreen'
    * states cannot be combined with 'left', 'top', 'width' or 'height'.
-   * enum of `normal`, `minimized`, `maximized`, `fullscreen`
    */
-  String get state => jsProxy['state'];
-  set state(String value) => jsProxy['state'] = value;
+  WindowState get state => _createWindowState(jsProxy['state']);
+  set state(WindowState value) => jsProxy['state'] = jsify(value);
 }
 
 Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
 Tab _createTab(JsObject jsProxy) => jsProxy == null ? null : new Tab.fromProxy(jsProxy);
+WindowType _createWindowType(String value) => WindowType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+WindowState _createWindowState(String value) => WindowState.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+CreateType _createCreateType(String value) => CreateType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

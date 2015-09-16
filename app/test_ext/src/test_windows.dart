@@ -11,7 +11,7 @@ void main() {
 
     setUp(() {
       chrome.WindowsCreateParams windowCreateParams =
-          new chrome.WindowsCreateParams(focused: true, type: "normal");
+          new chrome.WindowsCreateParams(focused: true, type: chrome.CreateType.NORMAL);
       return chrome.windows.create(windowCreateParams)
         .then((_window) => window = _window);
     });
@@ -151,7 +151,7 @@ void main() {
               height: 300,
               focused: true,
               incognito: true,
-              type: "normal");
+              type: chrome.CreateType.NORMAL);
 
       chrome.windows.create(createData)
             .then((chrome.Window window) {
@@ -174,7 +174,7 @@ void main() {
       // Requires enable panels flag to be set.
       test('create panel', () {
         chrome.WindowsCreateParams createData =
-            new chrome.WindowsCreateParams(type: "panel");
+            new chrome.WindowsCreateParams(type: chrome.CreateType.PANEL);
         chrome.windows.create(createData)
             .then((chrome.Window window) {
               expect(window.tabs, hasLength(1));
@@ -187,7 +187,7 @@ void main() {
 
       test('update maximized', () {
         chrome.WindowsUpdateParams updateInfo =
-            new chrome.WindowsUpdateParams(state: "maximized");
+            new chrome.WindowsUpdateParams(state: chrome.WindowState.MAXIMIZED);
 
         // TODO(DrMarcII): Figure out better mechanism to validate this
         chrome.windows.update(window.id, updateInfo)
