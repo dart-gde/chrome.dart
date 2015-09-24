@@ -45,8 +45,8 @@ IDLNamespaceDeclaration idlNamespaceDeclarationMapping(Option copyrightMaybe,
  * Mapping of callback declaration.
  */
 IDLCallbackDeclaration idlCallbackDeclarationMapping(
-  List<String> documentation, _, String name, __,
-  List<IDLParameter> parameters, ___) =>
+  List<String> documentation, _, __, String name, ___,
+  List<IDLParameter> parameters, ____) =>
     new IDLCallbackDeclaration(name, parameters, documentation: documentation);
 
 IDLFunctionDeclaration idlFunctionDeclarationMapping(List<String> documentation,

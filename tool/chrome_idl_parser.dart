@@ -60,7 +60,7 @@ class ChromeIDLParser extends LanguageParsers {
   Parser get _methods =>
       (docString
       + attributeDeclaration.maybe
-      + reserved["static"]
+      + reserved["static"].maybe
       + fieldType
       + identifier
       + parens(fieldMethodParameters.sepBy(comma))
@@ -195,6 +195,7 @@ class ChromeIDLParser extends LanguageParsers {
    */
   Parser get callbackDeclaration =>
       docString
+      + attributeDeclaration.maybe
       + reserved["callback"]
       + identifier
       + symbol("=")
