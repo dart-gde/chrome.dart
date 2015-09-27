@@ -194,6 +194,13 @@ void chromeIDLParserAttributeDeclarationTests() {
     attribute = attributes[1];
     expect(attribute.attributeType, equals(IDLAttributeTypeEnum.NODOC));
   });
+
+  test('attribute with [implemented_in]', () {
+    IDLAttributeDeclaration attributeDeclaration =
+        chromeIDLParser.attributeDeclaration.parse('[implemented_in="a/b.c"]');
+
+    expect(attributeDeclaration, isNotNull);
+  });
 }
 
 void chromeIDLParserEnumBodyTests() {
@@ -635,6 +642,15 @@ callback GetAuthTokenCallback = void (optional DOMString token);
     expect(callbackDeclaration.parameters[0].isOptional, isTrue);
     expect(callbackDeclaration.parameters[0].isCallback, isFalse);
     expect(callbackDeclaration.parameters[0].attribute, isNull);
+  });
+
+  test('single line with attributes', () {
+    IDLCallbackDeclaration callbackDeclaration =
+    chromeIDLParser.callbackDeclaration.parse("""
+[inline_doc] callback GetAuthTokenCallback = void (optional DOMString token);
+""");
+
+    expect(callbackDeclaration.name, equals("GetAuthTokenCallback"));
   });
 
   test('single line with comments', () {
@@ -1262,6 +1278,21 @@ void chromeIDLParserFunctionDeclarationTests() {
     // Gets resources required to render the API.
     //
     static void getResources(GetResourcesCallback callback);
+  };
+""");
+
+    expect(functionDeclaration, isNotNull);
+    expect(functionDeclaration.name, equals("Functions"));
+    expect(functionDeclaration.methods.length, equals(1));
+    expect(functionDeclaration.methods[0].name, equals("getResources"));
+  });
+
+  test('test Functions declaration single function not marked status', () {
+    IDLFunctionDeclaration functionDeclaration = chromeIDLParser.functionDeclaration
+        .parse("""interface Functions {
+    // Gets resources required to render the API.
+    //
+    void getResources(GetResourcesCallback callback);
   };
 """);
 

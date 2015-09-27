@@ -1,15 +1,10 @@
 library chrome_idl_model;
 
-// namespace
+/// This class provides a model for IDL-specified namespaces.
 class IDLNamespaceDeclaration {
-  /**
-   * [name] of the declared namespace.
-   */
+  /// The [name] of the declared namespace.
   final String name;
 
-  /**
-   *
-   */
   final IDLAttributeDeclaration attribute;
   final IDLFunctionDeclaration functionDeclaration;
   final List<IDLTypeDeclaration> typeDeclarations;
@@ -18,9 +13,7 @@ class IDLNamespaceDeclaration {
   final List<IDLEnumDeclaration> enumDeclarations;
   final String copyrightSignature;
 
-  /**
-   * Namespace documentation
-   */
+  /// Namespace documentation.
   final List<String> documentation;
 
   IDLNamespaceDeclaration(this.name, {this.functionDeclaration,
@@ -32,7 +25,7 @@ class IDLNamespaceDeclaration {
       "IDLNamespaceDeclaration($name, $attribute, $documentation)";
 }
 
-// interface Functions
+/// This class provides a model for IDL-specified functions.
 class IDLFunctionDeclaration {
   final String name = "Functions";
   final IDLAttributeDeclaration attribute;
@@ -43,7 +36,7 @@ class IDLFunctionDeclaration {
       "IDLFunctionDeclaration($name, $attribute, $methods, $documentation)";
 }
 
-// dictionary definition
+/// This class provides a model for IDL-specified type definitions.
 class IDLTypeDeclaration {
   final String name;
   final IDLAttributeDeclaration attribute;
@@ -58,7 +51,7 @@ class IDLTypeDeclaration {
     "IDLTypeDeclaration($name, $members, $methods, $attribute, $documentation)";
 }
 
-// interface Events
+/// This class provides a model for IDL-specified events.
 class IDLEventDeclaration {
   final String name = "Events";
   final IDLAttributeDeclaration attribute;
@@ -69,9 +62,7 @@ class IDLEventDeclaration {
       "IDLEventDeclaration($name, $attribute, $methods, $documentation)";
 }
 
-/**
- * callback definition
- */
+/// This class provides a model for IDL-specified callbacks.
 class IDLCallbackDeclaration {
   final String name;
   final List<IDLParameter> parameters;
@@ -83,9 +74,7 @@ class IDLCallbackDeclaration {
       "IDLCallbackDeclaration($name, $parameters, $documentation)";
 }
 
-/**
- * enum definition
- */
+/// This class provides a model for IDL-specified enums.
 class IDLEnumDeclaration {
   final String name;
   final IDLAttributeDeclaration attribute;
@@ -99,12 +88,14 @@ class IDLEnumDeclaration {
       "IDLEnumDeclaration($name, $enums, $attribute, $documentation)";
 }
 
+/// This class provides a model for IDL-specified attributes.
 class IDLAttributeDeclaration {
   final List<IDLAttribute> attributes;
   IDLAttributeDeclaration(this.attributes);
   String toString() => "IDLAttributeDeclaration($attributes)";
 }
 
+/// This class provides a model for IDL-specified methods.
 class IDLMethod {
   final String name;
   final List<IDLParameter> parameters;
@@ -119,9 +110,7 @@ class IDLMethod {
       "IDLMethod($name, $returnType, $parameters, $attribute, $documentation})";
 }
 
-/**
- * Field
- */
+/// This class provides a model for IDL-specified fields.
 class IDLField {
   final String name;
   final IDLType type;
@@ -136,9 +125,7 @@ class IDLField {
       "IDLField($name, $type, $attribute, $isOptional, $documentation)";
 }
 
-/**
- * Parameter
- */
+/// This class provides a model for IDL-specified parameters.
 class IDLParameter {
   final String name;
   final IDLType type;
@@ -159,108 +146,86 @@ class IDLParameter {
       "IDLParameter($name, $type, $attribute, $isOptional, $isCallback)";
 }
 
-/**
- * Enumeration of the different types of attributes used in the chrome apps
- * idls.
- */
+/// This class provides an enumeration of the different types of attributes
+/// used in the chrome apps idls.
 class IDLAttributeTypeEnum {
 
   final String type;
 
   const IDLAttributeTypeEnum._(this.type);
 
-  static const List<IDLAttributeTypeEnum> values = const [DEPRECATED,
+  static const values = const [DEPRECATED,
     INSTANCE_OF, SUPPORTS_FILTER, NOINLINE_DOC, INLINE_DOC, NODOC, NOCOMPILE,
-    LEGAL_VALUES, PERMISSIONS, MAX_LISTENERS];
+    LEGAL_VALUES, PERMISSIONS, MAX_LISTENERS, IMPLEMENTED_IN];
 
-  /**
-   * Example:
-   *
-   *     [deprecated="Use innerBounds or outerBounds."]
-   */
+  /// Example:
+  ///
+  ///    [deprecated="Use innerBounds or outerBounds."]
   static const DEPRECATED = const IDLAttributeTypeEnum._("deprecated");
 
-  /**
-   * Example:
-   *
-   *  [instanceOf=Window]
-   */
+  /// Example:
+  ///
+  ///  [instanceOf=Window]
   static const INSTANCE_OF = const IDLAttributeTypeEnum._("instanceOf");
 
-  /**
-   * Example:
-   *
-   *   [supportsFilters=true]
-   */
+  /// Example:
+  ///
+  ///  [implemented_in="path/to/implementation.h"]
+  static const IMPLEMENTED_IN = const IDLAttributeTypeEnum._("implemented_in");
+
+  /// Example:
+  ///
+  /// [supportsFilters=true]
   static const SUPPORTS_FILTER =
       const IDLAttributeTypeEnum._("supportsFilters");
 
-  /**
-   * Example:
-   *
-   *   [inline_doc]
-   */
+  /// Example:
+  ///
+  /// [inline_doc]
   static const INLINE_DOC = const IDLAttributeTypeEnum._("inline_doc");
 
-  /**
-   * Example:
-   *
-   *   [noinline_doc]
-   */
+  /// Example:
+  ///
+  /// [noinline_doc]
   static const NOINLINE_DOC = const IDLAttributeTypeEnum._("noinline_doc");
 
 
-  /**
-   * Example:
-   *
-   *   [nodoc]
-   */
+  /// Example:
+  ///
+  /// [nodoc]
   static const NODOC = const IDLAttributeTypeEnum._("nodoc");
 
-  /**
-   * Example:
-   *
-   *   [nocompile]
-   *
-   * also sometimes paired with [nocompile, nodoc]
-   */
+  /// Example:
+  ///
+  /// [nocompile]
+  ///
+  /// also sometimes paired with [nocompile, nodoc]
   static const NOCOMPILE = const IDLAttributeTypeEnum._("nocompile");
 
-  /**
-   * Example:
-   *
-   *   [legalValues=(16,32)]
-   */
+  /// Example:
+  ///
+  /// [legalValues=(16,32)]
   static const LEGAL_VALUES = const IDLAttributeTypeEnum._("legalValues");
 
-  /**
-   * Example:
-   *
-   *   [permissions=downloads]
-   */
+  /// Example:
+  ///
+  /// [permissions=downloads]
   static const PERMISSIONS = const IDLAttributeTypeEnum._("permissions");
 
-  /**
-   * Example:
-   *
-   *   [maxListeners=1]
-   */
+  /// Example:
+  ///
+  /// [maxListeners=1]
   static const MAX_LISTENERS = const IDLAttributeTypeEnum._("maxListeners");
 }
 
 class IDLAttribute {
-  /**
-   * The type of attribute.
-   */
+  ///The type of attribute.
   final IDLAttributeTypeEnum attributeType;
-  /**
-   * The possible value used on assignment to the attribute.
-   */
+
+  ///The possible value used on assignment to the attribute.
   final String attributeValue;
 
-  /**
-   * The possible [List] of values used on assignment to the attribute.
-   */
+  ///he possible [List] of values used on assignment to the attribute.
   final List attributeValues;
 
   IDLAttribute(this.attributeType, {this.attributeValue, this.attributeValues});
