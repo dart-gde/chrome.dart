@@ -1,9 +1,9 @@
 library test_chrome_idl_files;
 
-// TODO: also test test/idl/chrome/*.idl files
-
 import 'dart:io';
+import 'dart:mirrors';
 
+import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
 import '../tool/chrome_idl_parser.dart';
@@ -11,15 +11,21 @@ import '../tool/chrome_idl_convert.dart';
 import '../tool/chrome_idl_model.dart';
 
 void main() {
+  final String testDirectory = path.dirname(
+      currentMirrorSystem().findLibrary(#test_chrome_idl_files).uri.path);
+
   group('ChromeIDLParser', () {
     bool idlFileExtTest(FileSystemEntity file) => file.path.endsWith('.idl');
 
-    Iterable<FileSystemEntity> chromeIdlFileEntities = new Directory('idl')
-    .listSync(recursive: false, followLinks: false).where(idlFileExtTest);
+    Iterable<FileSystemEntity> chromeIdlFileEntities =
+        new Directory(path.join(testDirectory, '..', 'idl'))
+            .listSync(recursive: false, followLinks: false)
+            .where(idlFileExtTest);
 
     Iterable<FileSystemEntity> chromeIdlTestFileEntities =
-        new Directory('test/idl/chrome')
-    .listSync(recursive: false, followLinks: false).where(idlFileExtTest);
+        new Directory(path.join(testDirectory, 'idl', 'chrome'))
+            .listSync(recursive: false, followLinks: false)
+            .where(idlFileExtTest);
 
     List<FileSystemEntity> testFileEntities = new List<FileSystemEntity>()
       ..addAll(chromeIdlFileEntities)
