@@ -1,30 +1,37 @@
-
 library model_json_test;
 
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:mirrors';
 
+import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
 import '../tool/json_model.dart' as json_model;
 import '../tool/json_parser.dart' as json_parser;
 
 void main() {
+  final String testDirectory = path
+      .dirname(currentMirrorSystem().findLibrary(#model_json_test).uri.path);
+
   group('json_model', () {
     // Define a test for each .json file in idl/
     File testFile = new File('idl/extensions/runtime.json');
 
     // The unittest script likes to be run with the cwd set to the project root.
     if (testFile.existsSync()) {
-      Iterable<File> jsonFiles = new Directory('idl')
-          .listSync(recursive: true, followLinks: false)
-          .where((f) => f.path.endsWith('.json'));
+      Iterable<File> jsonFiles =
+          new Directory(path.join(testDirectory, '..', 'idl'))
+              .listSync(recursive: true, followLinks: false)
+              .where((f) => f.path.endsWith('.json'));
 
       for (File file in jsonFiles) {
         // skip _api_features.json, _manifest_features.json, _permission_features.json
-        if (!file.path.contains('/_') && !file.path.contains('test_presubmit')) {
+        if (!file.path.contains('/_') &&
+            !file.path.contains('test_presubmit')) {
           test(file.path, () {
-            json_model.JsonNamespace namespace = json_parser.parse(file.readAsStringSync());
+            json_model.JsonNamespace namespace =
+                json_parser.parse(file.readAsStringSync());
             expect(namespace.namespace, isNotNull);
           });
         }
