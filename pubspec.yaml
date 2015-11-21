@@ -14,6 +14,7 @@ dev_dependencies:
   args: any
   browser: any
   logging: any
+  mockito: any
   parsers: '>=0.14.0 <0.15.0'
   path: any
   test: ^0.12.0
