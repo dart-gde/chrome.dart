@@ -48,6 +48,23 @@ class ChromeHid extends ChromeApi {
   }
 
   /**
+   * Presents a device picker to the user and returns [HidDeviceInfo] objects
+   * for the devices selected. If the user cancels the picker devices will be
+   * empty. A user gesture is required for the dialog to display. Without a user
+   * gesture, the callback will run as though the user cancelled. If multiple
+   * filters are provided devices matching any filter will be displayed.
+   * [options]: Configuration of the device picker dialog box.
+   * [callback]: Invoked with a list of chosen [Device]s.
+   */
+  Future<List<HidDeviceInfo>> getUserSelectedDevices([HidDevicePromptOptions options]) {
+    if (_hid == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<List<HidDeviceInfo>>.oneArg((e) => listify(e, _createHidDeviceInfo));
+    _hid.callMethod('getUserSelectedDevices', [jsify(options), completer.callback]);
+    return completer.future;
+  }
+
+  /**
    * Open a connection to an HID device for communication.
    * [deviceId]: The [HidDeviceInfo.deviceId] of the device to open.
    */
@@ -164,10 +181,12 @@ class HidCollectionInfo extends ChromeObject {
 }
 
 class HidDeviceInfo extends ChromeObject {
-  HidDeviceInfo({int deviceId, int vendorId, int productId, List<HidCollectionInfo> collections, int maxInputReportSize, int maxOutputReportSize, int maxFeatureReportSize, ArrayBuffer reportDescriptor}) {
+  HidDeviceInfo({int deviceId, int vendorId, int productId, String productName, String serialNumber, List<HidCollectionInfo> collections, int maxInputReportSize, int maxOutputReportSize, int maxFeatureReportSize, ArrayBuffer reportDescriptor}) {
     if (deviceId != null) this.deviceId = deviceId;
     if (vendorId != null) this.vendorId = vendorId;
     if (productId != null) this.productId = productId;
+    if (productName != null) this.productName = productName;
+    if (serialNumber != null) this.serialNumber = serialNumber;
     if (collections != null) this.collections = collections;
     if (maxInputReportSize != null) this.maxInputReportSize = maxInputReportSize;
     if (maxOutputReportSize != null) this.maxOutputReportSize = maxOutputReportSize;
@@ -184,6 +203,12 @@ class HidDeviceInfo extends ChromeObject {
 
   int get productId => jsProxy['productId'];
   set productId(int value) => jsProxy['productId'] = value;
+
+  String get productName => jsProxy['productName'];
+  set productName(String value) => jsProxy['productName'] = value;
+
+  String get serialNumber => jsProxy['serialNumber'];
+  set serialNumber(String value) => jsProxy['serialNumber'] = value;
 
   List<HidCollectionInfo> get collections => listify(jsProxy['collections'], _createHidCollectionInfo);
   set collections(List<HidCollectionInfo> value) => jsProxy['collections'] = jsify(value);
@@ -246,6 +271,20 @@ class HidGetDevicesOptions extends ChromeObject {
 
   int get productId => jsProxy['productId'];
   set productId(int value) => jsProxy['productId'] = value;
+
+  List<HidDeviceFilter> get filters => listify(jsProxy['filters'], _createDeviceFilter);
+  set filters(List<HidDeviceFilter> value) => jsProxy['filters'] = jsify(value);
+}
+
+class HidDevicePromptOptions extends ChromeObject {
+  HidDevicePromptOptions({bool multiple, List<HidDeviceFilter> filters}) {
+    if (multiple != null) this.multiple = multiple;
+    if (filters != null) this.filters = filters;
+  }
+  HidDevicePromptOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  bool get multiple => jsProxy['multiple'];
+  set multiple(bool value) => jsProxy['multiple'] = value;
 
   List<HidDeviceFilter> get filters => listify(jsProxy['filters'], _createDeviceFilter);
   set filters(List<HidDeviceFilter> value) => jsProxy['filters'] = jsify(value);

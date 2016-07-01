@@ -18,7 +18,8 @@ void main() {
       expect(chrome.i18n.getMessage('not_found'), equals(''));
     });
     test('getAcceptLanguages', () {
-      Future future = chrome.i18n.getAcceptLanguages().then((List<String> languages) {
+      Future future = chrome.i18n.getAcceptLanguages()
+          .then((List<chrome.LanguageCode> languages) {
         expect(languages, isList);
         expect(languages.length, greaterThan(0));
       });

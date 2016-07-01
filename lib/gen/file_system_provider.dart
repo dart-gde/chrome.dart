@@ -3,7 +3,6 @@
 /**
  * Use the `chrome.fileSystemProvider` API to create file systems, that can be
  * accessible from the file manager on Chrome OS.
- * [implemented_in="chrome/browser/chromeos/extensions/file_system_provider/file_system_provider_api.h"]
  */
 library chrome.fileSystemProvider;
 
@@ -22,6 +21,9 @@ class ChromeFileSystemProvider extends ChromeApi {
 
   Stream<OnGetMetadataRequestedEvent> get onGetMetadataRequested => _onGetMetadataRequested.stream;
   ChromeStreamController<OnGetMetadataRequestedEvent> _onGetMetadataRequested;
+
+  Stream<OnGetActionsRequestedEvent> get onGetActionsRequested => _onGetActionsRequested.stream;
+  ChromeStreamController<OnGetActionsRequestedEvent> _onGetActionsRequested;
 
   Stream<OnReadDirectoryRequestedEvent> get onReadDirectoryRequested => _onReadDirectoryRequested.stream;
   ChromeStreamController<OnReadDirectoryRequestedEvent> _onReadDirectoryRequested;
@@ -71,10 +73,14 @@ class ChromeFileSystemProvider extends ChromeApi {
   Stream<OnRemoveWatcherRequestedEvent> get onRemoveWatcherRequested => _onRemoveWatcherRequested.stream;
   ChromeStreamController<OnRemoveWatcherRequestedEvent> _onRemoveWatcherRequested;
 
+  Stream<OnExecuteActionRequestedEvent> get onExecuteActionRequested => _onExecuteActionRequested.stream;
+  ChromeStreamController<OnExecuteActionRequestedEvent> _onExecuteActionRequested;
+
   ChromeFileSystemProvider._() {
     var getApi = () => _fileSystemProvider;
     _onUnmountRequested = new ChromeStreamController<OnUnmountRequestedEvent>.threeArgs(getApi, 'onUnmountRequested', _createOnUnmountRequestedEvent);
     _onGetMetadataRequested = new ChromeStreamController<OnGetMetadataRequestedEvent>.threeArgs(getApi, 'onGetMetadataRequested', _createOnGetMetadataRequestedEvent);
+    _onGetActionsRequested = new ChromeStreamController<OnGetActionsRequestedEvent>.threeArgs(getApi, 'onGetActionsRequested', _createOnGetActionsRequestedEvent);
     _onReadDirectoryRequested = new ChromeStreamController<OnReadDirectoryRequestedEvent>.threeArgs(getApi, 'onReadDirectoryRequested', _createOnReadDirectoryRequestedEvent);
     _onOpenFileRequested = new ChromeStreamController<OnOpenFileRequestedEvent>.threeArgs(getApi, 'onOpenFileRequested', _createOnOpenFileRequestedEvent);
     _onCloseFileRequested = new ChromeStreamController<OnCloseFileRequestedEvent>.threeArgs(getApi, 'onCloseFileRequested', _createOnCloseFileRequestedEvent);
@@ -91,6 +97,7 @@ class ChromeFileSystemProvider extends ChromeApi {
     _onMountRequested = new ChromeStreamController<OnMountRequestedEvent>.twoArgs(getApi, 'onMountRequested', _createOnMountRequestedEvent);
     _onAddWatcherRequested = new ChromeStreamController<OnAddWatcherRequestedEvent>.threeArgs(getApi, 'onAddWatcherRequested', _createOnAddWatcherRequestedEvent);
     _onRemoveWatcherRequested = new ChromeStreamController<OnRemoveWatcherRequestedEvent>.threeArgs(getApi, 'onRemoveWatcherRequested', _createOnRemoveWatcherRequestedEvent);
+    _onExecuteActionRequested = new ChromeStreamController<OnExecuteActionRequestedEvent>.threeArgs(getApi, 'onExecuteActionRequested', _createOnExecuteActionRequestedEvent);
   }
 
   bool get available => _fileSystemProvider != null;
@@ -166,8 +173,10 @@ class ChromeFileSystemProvider extends ChromeApi {
    * `recursive` mode. If the file system is mounted with `supportsNofityTag`,
    * then `tag` must be provided, and all changes since the last notification
    * always reported, even if the system was shutdown. The last tag can be
-   * obtained with [getAll]. Note, that `tag` is required in order to enable the
-   * internal cache.
+   * obtained with [getAll].
+   * 
+   * To use, the `file_system_provider.notify` manifest option must be set to
+   * true.
    * 
    * Value of `tag` can be any string which is unique per call, so it's possible
    * to identify the last registered notification. Eg. if the providing
@@ -183,8 +192,8 @@ class ChromeFileSystemProvider extends ChromeApi {
    * the fact. Also, if a directory is renamed, then all descendant entries are
    * in fact removed, as there is no entry under their original paths anymore.
    * 
-   * In case of an error, [chrome.runtime.lastError] will be set will a
-   * corresponding error code.
+   * In case of an error, [runtime.lastError] will be set will a corresponding
+   * error code.
    */
   Future notify(NotifyOptions options) {
     if (_fileSystemProvider == null) _throwNotAvailable();
@@ -217,6 +226,16 @@ class OnGetMetadataRequestedEvent {
   final ProviderErrorCallback errorCallback;
 
   OnGetMetadataRequestedEvent(this.options, this.successCallback, this.errorCallback);
+}
+
+class OnGetActionsRequestedEvent {
+  final GetActionsRequestedOptions options;
+
+  final ActionsCallback successCallback;
+
+  final ProviderErrorCallback errorCallback;
+
+  OnGetActionsRequestedEvent(this.options, this.successCallback, this.errorCallback);
 }
 
 class OnReadDirectoryRequestedEvent {
@@ -377,10 +396,20 @@ class OnRemoveWatcherRequestedEvent {
   OnRemoveWatcherRequestedEvent(this.options, this.successCallback, this.errorCallback);
 }
 
+class OnExecuteActionRequestedEvent {
+  final ExecuteActionRequestedOptions options;
+
+  final ProviderSuccessCallback successCallback;
+
+  final ProviderErrorCallback errorCallback;
+
+  OnExecuteActionRequestedEvent(this.options, this.successCallback, this.errorCallback);
+}
+
 /**
  * Error codes used by providing extensions in response to requests as well as
- * in case of errors when calling methods of the API. For success, `OK` must be
- * used.
+ * in case of errors when calling methods of the API. For success, `"OK"` must
+ * be used.
  */
 class ProviderError extends ChromeEnum {
   static const ProviderError OK = const ProviderError._('OK');
@@ -431,10 +460,27 @@ class ChangeType extends ChromeEnum {
 }
 
 /**
+ * List of common actions. `"SHARE"` is for sharing files with others.
+ * `"SAVE_FOR_OFFLINE"` for pinning (saving for offline access).
+ * `"OFFLINE_NOT_NECESSARY"` for notifying that the file doesn't need to be
+ * stored for offline access anymore. Used by [onGetActionsRequested] and
+ * [onExecuteActionRequested].
+ */
+class CommonActionId extends ChromeEnum {
+  static const CommonActionId SAVE_FOR_OFFLINE = const CommonActionId._('SAVE_FOR_OFFLINE');
+  static const CommonActionId OFFLINE_NOT_NECESSARY = const CommonActionId._('OFFLINE_NOT_NECESSARY');
+  static const CommonActionId SHARE = const CommonActionId._('SHARE');
+
+  static const List<CommonActionId> VALUES = const[SAVE_FOR_OFFLINE, OFFLINE_NOT_NECESSARY, SHARE];
+
+  const CommonActionId._(String str): super(str);
+}
+
+/**
  * Represents metadata of a file or a directory.
  */
 class EntryMetadata extends ChromeObject {
-  EntryMetadata({bool isDirectory, String name, num size, Date modificationTime, String mimeType, String thumbnail}) {
+  EntryMetadata({bool isDirectory, String name, num size, var modificationTime, String mimeType, String thumbnail}) {
     if (isDirectory != null) this.isDirectory = isDirectory;
     if (name != null) this.name = name;
     if (size != null) this.size = size;
@@ -453,8 +499,8 @@ class EntryMetadata extends ChromeObject {
   num get size => jsProxy['size'];
   set size(num value) => jsProxy['size'] = jsify(value);
 
-  Date get modificationTime => _createDate(jsProxy['modificationTime']);
-  set modificationTime(Date value) => jsProxy['modificationTime'] = jsify(value);
+  dynamic get modificationTime => jsProxy['modificationTime'];
+  set modificationTime(var value) => jsProxy['modificationTime'] = jsify(value);
 
   String get mimeType => jsProxy['mimeType'];
   set mimeType(String value) => jsProxy['mimeType'] = value;
@@ -605,10 +651,15 @@ class UnmountRequestedOptions extends ChromeObject {
  * Options for the [onGetMetadataRequested] event.
  */
 class GetMetadataRequestedOptions extends ChromeObject {
-  GetMetadataRequestedOptions({String fileSystemId, int requestId, String entryPath, bool thumbnail}) {
+  GetMetadataRequestedOptions({String fileSystemId, int requestId, String entryPath, bool isDirectory, bool name, bool size, bool modificationTime, bool mimeType, bool thumbnail}) {
     if (fileSystemId != null) this.fileSystemId = fileSystemId;
     if (requestId != null) this.requestId = requestId;
     if (entryPath != null) this.entryPath = entryPath;
+    if (isDirectory != null) this.isDirectory = isDirectory;
+    if (name != null) this.name = name;
+    if (size != null) this.size = size;
+    if (modificationTime != null) this.modificationTime = modificationTime;
+    if (mimeType != null) this.mimeType = mimeType;
     if (thumbnail != null) this.thumbnail = thumbnail;
   }
   GetMetadataRequestedOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -622,18 +673,60 @@ class GetMetadataRequestedOptions extends ChromeObject {
   String get entryPath => jsProxy['entryPath'];
   set entryPath(String value) => jsProxy['entryPath'] = value;
 
+  bool get isDirectory => jsProxy['isDirectory'];
+  set isDirectory(bool value) => jsProxy['isDirectory'] = value;
+
+  bool get name => jsProxy['name'];
+  set name(bool value) => jsProxy['name'] = value;
+
+  bool get size => jsProxy['size'];
+  set size(bool value) => jsProxy['size'] = value;
+
+  bool get modificationTime => jsProxy['modificationTime'];
+  set modificationTime(bool value) => jsProxy['modificationTime'] = value;
+
+  bool get mimeType => jsProxy['mimeType'];
+  set mimeType(bool value) => jsProxy['mimeType'] = value;
+
   bool get thumbnail => jsProxy['thumbnail'];
   set thumbnail(bool value) => jsProxy['thumbnail'] = value;
+}
+
+/**
+ * Options for the [onGetActionsRequested] event.
+ */
+class GetActionsRequestedOptions extends ChromeObject {
+  GetActionsRequestedOptions({String fileSystemId, int requestId, List<String> entryPaths}) {
+    if (fileSystemId != null) this.fileSystemId = fileSystemId;
+    if (requestId != null) this.requestId = requestId;
+    if (entryPaths != null) this.entryPaths = entryPaths;
+  }
+  GetActionsRequestedOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get fileSystemId => jsProxy['fileSystemId'];
+  set fileSystemId(String value) => jsProxy['fileSystemId'] = value;
+
+  int get requestId => jsProxy['requestId'];
+  set requestId(int value) => jsProxy['requestId'] = value;
+
+  List<String> get entryPaths => listify(jsProxy['entryPaths']);
+  set entryPaths(List<String> value) => jsProxy['entryPaths'] = jsify(value);
 }
 
 /**
  * Options for the [onReadDirectoryRequested] event.
  */
 class ReadDirectoryRequestedOptions extends ChromeObject {
-  ReadDirectoryRequestedOptions({String fileSystemId, int requestId, String directoryPath}) {
+  ReadDirectoryRequestedOptions({String fileSystemId, int requestId, String directoryPath, bool isDirectory, bool name, bool size, bool modificationTime, bool mimeType, bool thumbnail}) {
     if (fileSystemId != null) this.fileSystemId = fileSystemId;
     if (requestId != null) this.requestId = requestId;
     if (directoryPath != null) this.directoryPath = directoryPath;
+    if (isDirectory != null) this.isDirectory = isDirectory;
+    if (name != null) this.name = name;
+    if (size != null) this.size = size;
+    if (modificationTime != null) this.modificationTime = modificationTime;
+    if (mimeType != null) this.mimeType = mimeType;
+    if (thumbnail != null) this.thumbnail = thumbnail;
   }
   ReadDirectoryRequestedOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -645,6 +738,24 @@ class ReadDirectoryRequestedOptions extends ChromeObject {
 
   String get directoryPath => jsProxy['directoryPath'];
   set directoryPath(String value) => jsProxy['directoryPath'] = value;
+
+  bool get isDirectory => jsProxy['isDirectory'];
+  set isDirectory(bool value) => jsProxy['isDirectory'] = value;
+
+  bool get name => jsProxy['name'];
+  set name(bool value) => jsProxy['name'] = value;
+
+  bool get size => jsProxy['size'];
+  set size(bool value) => jsProxy['size'] = value;
+
+  bool get modificationTime => jsProxy['modificationTime'];
+  set modificationTime(bool value) => jsProxy['modificationTime'] = value;
+
+  bool get mimeType => jsProxy['mimeType'];
+  set mimeType(bool value) => jsProxy['mimeType'] = value;
+
+  bool get thumbnail => jsProxy['thumbnail'];
+  set thumbnail(bool value) => jsProxy['thumbnail'] = value;
 }
 
 /**
@@ -969,6 +1080,48 @@ class RemoveWatcherRequestedOptions extends ChromeObject {
 }
 
 /**
+ * Information about an action for an entry.
+ */
+class Action extends ChromeObject {
+  Action({String id, String title}) {
+    if (id != null) this.id = id;
+    if (title != null) this.title = title;
+  }
+  Action.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get id => jsProxy['id'];
+  set id(String value) => jsProxy['id'] = value;
+
+  String get title => jsProxy['title'];
+  set title(String value) => jsProxy['title'] = value;
+}
+
+/**
+ * Options for the [onExecuteActionRequested] event.
+ */
+class ExecuteActionRequestedOptions extends ChromeObject {
+  ExecuteActionRequestedOptions({String fileSystemId, int requestId, List<String> entryPaths, String actionId}) {
+    if (fileSystemId != null) this.fileSystemId = fileSystemId;
+    if (requestId != null) this.requestId = requestId;
+    if (entryPaths != null) this.entryPaths = entryPaths;
+    if (actionId != null) this.actionId = actionId;
+  }
+  ExecuteActionRequestedOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get fileSystemId => jsProxy['fileSystemId'];
+  set fileSystemId(String value) => jsProxy['fileSystemId'] = value;
+
+  int get requestId => jsProxy['requestId'];
+  set requestId(int value) => jsProxy['requestId'] = value;
+
+  List<String> get entryPaths => listify(jsProxy['entryPaths']);
+  set entryPaths(List<String> value) => jsProxy['entryPaths'] = jsify(value);
+
+  String get actionId => jsProxy['actionId'];
+  set actionId(String value) => jsProxy['actionId'] = value;
+}
+
+/**
  * Information about a change happened to an entry within the observed directory
  * (including the entry itself).
  */
@@ -1040,6 +1193,8 @@ OnUnmountRequestedEvent _createOnUnmountRequestedEvent(JsObject options, JsObjec
     new OnUnmountRequestedEvent(_createUnmountRequestedOptions(options), _createProviderSuccessCallback(successCallback), _createProviderErrorCallback(errorCallback));
 OnGetMetadataRequestedEvent _createOnGetMetadataRequestedEvent(JsObject options, JsObject successCallback, JsObject errorCallback) =>
     new OnGetMetadataRequestedEvent(_createGetMetadataRequestedOptions(options), _createMetadataCallback(successCallback), _createProviderErrorCallback(errorCallback));
+OnGetActionsRequestedEvent _createOnGetActionsRequestedEvent(JsObject options, JsObject successCallback, JsObject errorCallback) =>
+    new OnGetActionsRequestedEvent(_createGetActionsRequestedOptions(options), _createActionsCallback(successCallback), _createProviderErrorCallback(errorCallback));
 OnReadDirectoryRequestedEvent _createOnReadDirectoryRequestedEvent(JsObject options, JsObject successCallback, JsObject errorCallback) =>
     new OnReadDirectoryRequestedEvent(_createReadDirectoryRequestedOptions(options), _createEntriesCallback(successCallback), _createProviderErrorCallback(errorCallback));
 OnOpenFileRequestedEvent _createOnOpenFileRequestedEvent(JsObject options, JsObject successCallback, JsObject errorCallback) =>
@@ -1072,8 +1227,9 @@ OnAddWatcherRequestedEvent _createOnAddWatcherRequestedEvent(JsObject options, J
     new OnAddWatcherRequestedEvent(_createAddWatcherRequestedOptions(options), _createProviderSuccessCallback(successCallback), _createProviderErrorCallback(errorCallback));
 OnRemoveWatcherRequestedEvent _createOnRemoveWatcherRequestedEvent(JsObject options, JsObject successCallback, JsObject errorCallback) =>
     new OnRemoveWatcherRequestedEvent(_createRemoveWatcherRequestedOptions(options), _createProviderSuccessCallback(successCallback), _createProviderErrorCallback(errorCallback));
+OnExecuteActionRequestedEvent _createOnExecuteActionRequestedEvent(JsObject options, JsObject successCallback, JsObject errorCallback) =>
+    new OnExecuteActionRequestedEvent(_createExecuteActionRequestedOptions(options), _createProviderSuccessCallback(successCallback), _createProviderErrorCallback(errorCallback));
 FileSystemInfo _createFileSystemInfo(JsObject jsProxy) => jsProxy == null ? null : new FileSystemInfo.fromProxy(jsProxy);
-Date _createDate(JsObject jsProxy) => jsProxy == null ? null : new Date.fromProxy(jsProxy);
 OpenFileMode _createOpenFileMode(String value) => OpenFileMode.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 OpenedFile _createOpenedFile(JsObject jsProxy) => jsProxy == null ? null : new OpenedFile.fromProxy(jsProxy);
 Watcher _createWatcher(JsObject jsProxy) => jsProxy == null ? null : new Watcher.fromProxy(jsProxy);
@@ -1085,6 +1241,8 @@ ProviderSuccessCallback _createProviderSuccessCallback(JsObject jsProxy) => jsPr
 ProviderErrorCallback _createProviderErrorCallback(JsObject jsProxy) => jsProxy == null ? null : new ProviderErrorCallback.fromProxy(jsProxy);
 GetMetadataRequestedOptions _createGetMetadataRequestedOptions(JsObject jsProxy) => jsProxy == null ? null : new GetMetadataRequestedOptions.fromProxy(jsProxy);
 MetadataCallback _createMetadataCallback(JsObject jsProxy) => jsProxy == null ? null : new MetadataCallback.fromProxy(jsProxy);
+GetActionsRequestedOptions _createGetActionsRequestedOptions(JsObject jsProxy) => jsProxy == null ? null : new GetActionsRequestedOptions.fromProxy(jsProxy);
+ActionsCallback _createActionsCallback(JsObject jsProxy) => jsProxy == null ? null : new ActionsCallback.fromProxy(jsProxy);
 ReadDirectoryRequestedOptions _createReadDirectoryRequestedOptions(JsObject jsProxy) => jsProxy == null ? null : new ReadDirectoryRequestedOptions.fromProxy(jsProxy);
 EntriesCallback _createEntriesCallback(JsObject jsProxy) => jsProxy == null ? null : new EntriesCallback.fromProxy(jsProxy);
 OpenFileRequestedOptions _createOpenFileRequestedOptions(JsObject jsProxy) => jsProxy == null ? null : new OpenFileRequestedOptions.fromProxy(jsProxy);
@@ -1102,3 +1260,4 @@ AbortRequestedOptions _createAbortRequestedOptions(JsObject jsProxy) => jsProxy 
 ConfigureRequestedOptions _createConfigureRequestedOptions(JsObject jsProxy) => jsProxy == null ? null : new ConfigureRequestedOptions.fromProxy(jsProxy);
 AddWatcherRequestedOptions _createAddWatcherRequestedOptions(JsObject jsProxy) => jsProxy == null ? null : new AddWatcherRequestedOptions.fromProxy(jsProxy);
 RemoveWatcherRequestedOptions _createRemoveWatcherRequestedOptions(JsObject jsProxy) => jsProxy == null ? null : new RemoveWatcherRequestedOptions.fromProxy(jsProxy);
+ExecuteActionRequestedOptions _createExecuteActionRequestedOptions(JsObject jsProxy) => jsProxy == null ? null : new ExecuteActionRequestedOptions.fromProxy(jsProxy);

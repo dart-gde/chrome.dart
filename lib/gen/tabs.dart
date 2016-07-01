@@ -129,6 +129,11 @@ class ChromeTabs extends ChromeApi {
   bool get available => _tabs != null;
 
   /**
+   * An ID which represents the absence of a browser tab.
+   */
+  int get TAB_ID_NONE => _tabs['TAB_ID_NONE'];
+
+  /**
    * Retrieves details about the specified tab.
    */
   Future<Tab> get(int tabId) {
@@ -617,8 +622,148 @@ class OnReplacedEvent {
   OnReplacedEvent(this.addedTabId, this.removedTabId);
 }
 
+/**
+ * An event that caused a muted state change.
+ */
+class MutedInfoReason extends ChromeEnum {
+  /**
+   * A user input action has set/overridden the muted state.
+   */
+  static const MutedInfoReason USER = const MutedInfoReason._('user');
+  /**
+   * Tab capture started, forcing a muted state change.
+   */
+  static const MutedInfoReason CAPTURE = const MutedInfoReason._('capture');
+  /**
+   * An extension, identified by the extensionId field, set the muted state.
+   */
+  static const MutedInfoReason EXTENSION = const MutedInfoReason._('extension');
+
+  static const List<MutedInfoReason> VALUES = const[USER, CAPTURE, EXTENSION];
+
+  const MutedInfoReason._(String str): super(str);
+}
+
+/**
+ * Defines how zoom changes are handled, i.e. which entity is responsible for
+ * the actual scaling of the page; defaults to `automatic`.
+ */
+class ZoomSettingsMode extends ChromeEnum {
+  /**
+   * Zoom changes are handled automatically by the browser.
+   */
+  static const ZoomSettingsMode AUTOMATIC = const ZoomSettingsMode._('automatic');
+  /**
+   * Overrides the automatic handling of zoom changes. The
+   * <code>onZoomChange</code> event will still be dispatched, and it is the
+   * responsibility of the extension to listen for this event and manually scale
+   * the page. This mode does not support <code>per-origin</code> zooming, and
+   * will thus ignore the <code>scope</code> zoom setting and assume
+   * <code>per-tab</code>.
+   */
+  static const ZoomSettingsMode MANUAL = const ZoomSettingsMode._('manual');
+  /**
+   * Disables all zooming in the tab. The tab will revert to the default zoom
+   * level, and all attempted zoom changes will be ignored.
+   */
+  static const ZoomSettingsMode DISABLED = const ZoomSettingsMode._('disabled');
+
+  static const List<ZoomSettingsMode> VALUES = const[AUTOMATIC, MANUAL, DISABLED];
+
+  const ZoomSettingsMode._(String str): super(str);
+}
+
+/**
+ * Defines whether zoom changes will persist for the page's origin, or only take
+ * effect in this tab; defaults to `per-origin` when in `automatic` mode, and
+ * `per-tab` otherwise.
+ */
+class ZoomSettingsScope extends ChromeEnum {
+  /**
+   * Zoom changes will persist in the zoomed page's origin, i.e. all other tabs
+   * navigated to that same origin will be zoomed as well. Moreover,
+   * <code>per-origin</code> zoom changes are saved with the origin, meaning
+   * that when navigating to other pages in the same origin, they will all be
+   * zoomed to the same zoom factor. The <code>per-origin</code> scope is only
+   * available in the <code>automatic</code> mode.
+   */
+  static const ZoomSettingsScope PER_ORIGIN = const ZoomSettingsScope._('per-origin');
+  /**
+   * Zoom changes only take effect in this tab, and zoom changes in other tabs
+   * will not affect the zooming of this tab. Also, <code>per-tab</code> zoom
+   * changes are reset on navigation; navigating a tab will always load pages
+   * with their <code>per-origin</code> zoom factors.
+   */
+  static const ZoomSettingsScope PER_TAB = const ZoomSettingsScope._('per-tab');
+
+  static const List<ZoomSettingsScope> VALUES = const[PER_ORIGIN, PER_TAB];
+
+  const ZoomSettingsScope._(String str): super(str);
+}
+
+/**
+ * Whether the tabs have completed loading.
+ */
+class TabStatus extends ChromeEnum {
+  static const TabStatus LOADING = const TabStatus._('loading');
+  static const TabStatus COMPLETE = const TabStatus._('complete');
+
+  static const List<TabStatus> VALUES = const[LOADING, COMPLETE];
+
+  const TabStatus._(String str): super(str);
+}
+
+/**
+ * The type of window.
+ */
+class TabsWindowType extends ChromeEnum {
+  static const TabsWindowType NORMAL = const TabsWindowType._('normal');
+  static const TabsWindowType POPUP = const TabsWindowType._('popup');
+  static const TabsWindowType PANEL = const TabsWindowType._('panel');
+  static const TabsWindowType APP = const TabsWindowType._('app');
+  static const TabsWindowType DEVTOOLS = const TabsWindowType._('devtools');
+
+  static const List<TabsWindowType> VALUES = const[NORMAL, POPUP, PANEL, APP, DEVTOOLS];
+
+  const TabsWindowType._(String str): super(str);
+}
+
+/**
+ * Tab muted state and the reason for the last state change.
+ */
+class MutedInfo extends ChromeObject {
+  MutedInfo({bool muted, MutedInfoReason reason, String extensionId}) {
+    if (muted != null) this.muted = muted;
+    if (reason != null) this.reason = reason;
+    if (extensionId != null) this.extensionId = extensionId;
+  }
+  MutedInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  /**
+   * Whether the tab is prevented from playing sound (but hasn't necessarily
+   * recently produced sound). Equivalent to whether the muted audio indicator
+   * is showing.
+   */
+  bool get muted => jsProxy['muted'];
+  set muted(bool value) => jsProxy['muted'] = value;
+
+  /**
+   * The reason the tab was muted or unmuted. Not set if the tab's mute state
+   * has never been changed.
+   */
+  MutedInfoReason get reason => _createMutedInfoReason(jsProxy['reason']);
+  set reason(MutedInfoReason value) => jsProxy['reason'] = jsify(value);
+
+  /**
+   * The ID of the extension that changed the muted state. Not set if an
+   * extension was not the reason the muted state last changed.
+   */
+  String get extensionId => jsProxy['extensionId'];
+  set extensionId(String value) => jsProxy['extensionId'] = value;
+}
+
 class Tab extends ChromeObject {
-  Tab({int id, int index, int windowId, int openerTabId, bool selected, bool highlighted, bool active, bool pinned, String url, String title, String favIconUrl, String status, bool incognito, int width, int height, String sessionId}) {
+  Tab({int id, int index, int windowId, int openerTabId, bool selected, bool highlighted, bool active, bool pinned, bool audible, MutedInfo mutedInfo, String url, String title, String favIconUrl, String status, bool incognito, int width, int height, String sessionId}) {
     if (id != null) this.id = id;
     if (index != null) this.index = index;
     if (windowId != null) this.windowId = windowId;
@@ -627,6 +772,8 @@ class Tab extends ChromeObject {
     if (highlighted != null) this.highlighted = highlighted;
     if (active != null) this.active = active;
     if (pinned != null) this.pinned = pinned;
+    if (audible != null) this.audible = audible;
+    if (mutedInfo != null) this.mutedInfo = mutedInfo;
     if (url != null) this.url = url;
     if (title != null) this.title = title;
     if (favIconUrl != null) this.favIconUrl = favIconUrl;
@@ -642,7 +789,8 @@ class Tab extends ChromeObject {
    * The ID of the tab. Tab IDs are unique within a browser session. Under some
    * circumstances a Tab may not be assigned an ID, for example when querying
    * foreign tabs using the [sessions] API, in which case a session ID may be
-   * present.
+   * present. Tab ID can also be set to chrome.tabs.TAB_ID_NONE for apps and
+   * devtools windows.
    */
   int get id => jsProxy['id'];
   set id(int value) => jsProxy['id'] = value;
@@ -690,6 +838,20 @@ class Tab extends ChromeObject {
    */
   bool get pinned => jsProxy['pinned'];
   set pinned(bool value) => jsProxy['pinned'] = value;
+
+  /**
+   * Whether the tab has produced sound over the past couple of seconds (but it
+   * might not be heard if also muted). Equivalent to whether the speaker audio
+   * indicator is showing.
+   */
+  bool get audible => jsProxy['audible'];
+  set audible(bool value) => jsProxy['audible'] = value;
+
+  /**
+   * Current tab muted state and the reason for the last state change.
+   */
+  MutedInfo get mutedInfo => _createMutedInfo(jsProxy['mutedInfo']);
+  set mutedInfo(MutedInfo value) => jsProxy['mutedInfo'] = jsify(value);
 
   /**
    * The URL the tab is displaying. This property is only present if the
@@ -746,44 +908,6 @@ class Tab extends ChromeObject {
 }
 
 /**
- * Defines how zoom changes are handled, i.e. which entity is responsible for
- * the actual scaling of the page; defaults to `automatic`.
- * enum of `{name: automatic, description: Zoom changes are handled
- * automatically by the browser.}`, `{name: manual, description: Overrides the
- * automatic handling of zoom changes. The <code>onZoomChange</code> event will
- * still be dispatched, and it is the responsibility of the extension to listen
- * for this event and manually scale the page. This mode does not support
- * <code>per-origin</code> zooming, and will thus ignore the <code>scope</code>
- * zoom setting and assume <code>per-tab</code>.}`, `{name: disabled,
- * description: Disables all zooming in the tab. The tab will revert to the
- * default zoom level, and all attempted zoom changes will be ignored.}`
- */
-class ZoomSettingsMode extends ChromeObject {
-  ZoomSettingsMode();
-  ZoomSettingsMode.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * Defines whether zoom changes will persist for the page's origin, or only take
- * effect in this tab; defaults to `per-origin` when in `automatic` mode, and
- * `per-tab` otherwise.
- * enum of `{name: per-origin, description: Zoom changes will persist in the
- * zoomed page's origin, i.e. all other tabs navigated to that same origin will
- * be zoomed as well. Moreover, <code>per-origin</code> zoom changes are saved
- * with the origin, meaning that when navigating to other pages in the same
- * origin, they will all be zoomed to the same zoom factor. The
- * <code>per-origin</code> scope is only available in the <code>automatic</code>
- * mode.}`, `{name: per-tab, description: Zoom changes only take effect in this
- * tab, and zoom changes in other tabs will not affect the zooming of this tab.
- * Also, <code>per-tab</code> zoom changes are reset on navigation; navigating a
- * tab will always load pages with their <code>per-origin</code> zoom factors.}`
- */
-class ZoomSettingsScope extends ChromeObject {
-  ZoomSettingsScope();
-  ZoomSettingsScope.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
  * Defines how zoom changes in a tab are handled and at what scope.
  */
 class ZoomSettings extends ChromeObject {
@@ -815,24 +939,6 @@ class ZoomSettings extends ChromeObject {
    */
   dynamic get defaultZoomFactor => jsProxy['defaultZoomFactor'];
   set defaultZoomFactor(var value) => jsProxy['defaultZoomFactor'] = jsify(value);
-}
-
-/**
- * Whether the tabs have completed loading.
- * enum of `loading`, `complete`
- */
-class TabStatus extends ChromeObject {
-  TabStatus();
-  TabStatus.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * The type of window.
- * enum of `normal`, `popup`, `panel`, `app`
- */
-class TabsWindowType extends ChromeObject {
-  TabsWindowType();
-  TabsWindowType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 class TabsConnectParams extends ChromeObject {
@@ -935,9 +1041,11 @@ class TabsCreateParams extends ChromeObject {
 }
 
 class TabsQueryParams extends ChromeObject {
-  TabsQueryParams({bool active, bool pinned, bool highlighted, bool currentWindow, bool lastFocusedWindow, TabStatus status, String title, var url, int windowId, TabsWindowType windowType, int index}) {
+  TabsQueryParams({bool active, bool pinned, bool audible, bool muted, bool highlighted, bool currentWindow, bool lastFocusedWindow, TabStatus status, String title, var url, int windowId, TabsWindowType windowType, int index}) {
     if (active != null) this.active = active;
     if (pinned != null) this.pinned = pinned;
+    if (audible != null) this.audible = audible;
+    if (muted != null) this.muted = muted;
     if (highlighted != null) this.highlighted = highlighted;
     if (currentWindow != null) this.currentWindow = currentWindow;
     if (lastFocusedWindow != null) this.lastFocusedWindow = lastFocusedWindow;
@@ -961,6 +1069,18 @@ class TabsQueryParams extends ChromeObject {
    */
   bool get pinned => jsProxy['pinned'];
   set pinned(bool value) => jsProxy['pinned'] = value;
+
+  /**
+   * Whether the tabs are audible.
+   */
+  bool get audible => jsProxy['audible'];
+  set audible(bool value) => jsProxy['audible'] = value;
+
+  /**
+   * Whether the tabs are muted.
+   */
+  bool get muted => jsProxy['muted'];
+  set muted(bool value) => jsProxy['muted'] = value;
 
   /**
    * Whether the tabs are highlighted.
@@ -987,14 +1107,16 @@ class TabsQueryParams extends ChromeObject {
   set status(TabStatus value) => jsProxy['status'] = jsify(value);
 
   /**
-   * Match page titles against a pattern.
+   * Match page titles against a pattern. Note that this property is ignored if
+   * the extension doesn't have the `"tabs"` permission.
    */
   String get title => jsProxy['title'];
   set title(String value) => jsProxy['title'] = value;
 
   /**
    * Match tabs against one or more [URL patterns](match_patterns). Note that
-   * fragment identifiers are not matched.
+   * fragment identifiers are not matched. Note that this property is ignored if
+   * the extension doesn't have the `"tabs"` permission.
    */
   dynamic get url => jsProxy['url'];
   set url(var value) => jsProxy['url'] = jsify(value);
@@ -1040,12 +1162,13 @@ class TabsHighlightParams extends ChromeObject {
 }
 
 class TabsUpdateParams extends ChromeObject {
-  TabsUpdateParams({String url, bool active, bool highlighted, bool selected, bool pinned, int openerTabId}) {
+  TabsUpdateParams({String url, bool active, bool highlighted, bool selected, bool pinned, bool muted, int openerTabId}) {
     if (url != null) this.url = url;
     if (active != null) this.active = active;
     if (highlighted != null) this.highlighted = highlighted;
     if (selected != null) this.selected = selected;
     if (pinned != null) this.pinned = pinned;
+    if (muted != null) this.muted = muted;
     if (openerTabId != null) this.openerTabId = openerTabId;
   }
   TabsUpdateParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -1080,6 +1203,12 @@ class TabsUpdateParams extends ChromeObject {
    */
   bool get pinned => jsProxy['pinned'];
   set pinned(bool value) => jsProxy['pinned'] = value;
+
+  /**
+   * Whether the tab should be muted.
+   */
+  bool get muted => jsProxy['muted'];
+  set muted(bool value) => jsProxy['muted'] = value;
 
   /**
    * The ID of the tab that opened this tab. If specified, the opener tab must
@@ -1143,7 +1272,9 @@ OnReplacedEvent _createOnReplacedEvent(int addedTabId, int removedTabId) =>
 Port _createPort(JsObject jsProxy) => jsProxy == null ? null : new Port.fromProxy(jsProxy);
 Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
 ZoomSettings _createZoomSettings(JsObject jsProxy) => jsProxy == null ? null : new ZoomSettings.fromProxy(jsProxy);
-ZoomSettingsMode _createZoomSettingsMode(JsObject jsProxy) => jsProxy == null ? null : new ZoomSettingsMode.fromProxy(jsProxy);
-ZoomSettingsScope _createZoomSettingsScope(JsObject jsProxy) => jsProxy == null ? null : new ZoomSettingsScope.fromProxy(jsProxy);
-TabStatus _createTabStatus(JsObject jsProxy) => jsProxy == null ? null : new TabStatus.fromProxy(jsProxy);
-TabsWindowType _createWindowType(JsObject jsProxy) => jsProxy == null ? null : new TabsWindowType.fromProxy(jsProxy);
+MutedInfoReason _createMutedInfoReason(String value) => MutedInfoReason.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+MutedInfo _createMutedInfo(JsObject jsProxy) => jsProxy == null ? null : new MutedInfo.fromProxy(jsProxy);
+ZoomSettingsMode _createZoomSettingsMode(String value) => ZoomSettingsMode.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+ZoomSettingsScope _createZoomSettingsScope(String value) => ZoomSettingsScope.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+TabStatus _createTabStatus(String value) => TabStatus.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+TabsWindowType _createWindowType(String value) => TabsWindowType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

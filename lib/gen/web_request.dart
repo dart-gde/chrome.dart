@@ -138,6 +138,92 @@ class OnAuthRequiredEvent {
   OnAuthRequiredEvent(this.details, this.callback);
 }
 
+class ResourceType extends ChromeEnum {
+  static const ResourceType MAIN_FRAME = const ResourceType._('main_frame');
+  static const ResourceType SUB_FRAME = const ResourceType._('sub_frame');
+  static const ResourceType STYLESHEET = const ResourceType._('stylesheet');
+  static const ResourceType SCRIPT = const ResourceType._('script');
+  static const ResourceType IMAGE = const ResourceType._('image');
+  static const ResourceType FONT = const ResourceType._('font');
+  static const ResourceType OBJECT = const ResourceType._('object');
+  static const ResourceType XMLHTTPREQUEST = const ResourceType._('xmlhttprequest');
+  static const ResourceType PING = const ResourceType._('ping');
+  static const ResourceType OTHER = const ResourceType._('other');
+
+  static const List<ResourceType> VALUES = const[MAIN_FRAME, SUB_FRAME, STYLESHEET, SCRIPT, IMAGE, FONT, OBJECT, XMLHTTPREQUEST, PING, OTHER];
+
+  const ResourceType._(String str): super(str);
+}
+
+class OnBeforeRequestOptions extends ChromeEnum {
+  static const OnBeforeRequestOptions BLOCKING = const OnBeforeRequestOptions._('blocking');
+  static const OnBeforeRequestOptions REQUEST_BODY = const OnBeforeRequestOptions._('requestBody');
+
+  static const List<OnBeforeRequestOptions> VALUES = const[BLOCKING, REQUEST_BODY];
+
+  const OnBeforeRequestOptions._(String str): super(str);
+}
+
+class OnBeforeSendHeadersOptions extends ChromeEnum {
+  static const OnBeforeSendHeadersOptions REQUEST_HEADERS = const OnBeforeSendHeadersOptions._('requestHeaders');
+  static const OnBeforeSendHeadersOptions BLOCKING = const OnBeforeSendHeadersOptions._('blocking');
+
+  static const List<OnBeforeSendHeadersOptions> VALUES = const[REQUEST_HEADERS, BLOCKING];
+
+  const OnBeforeSendHeadersOptions._(String str): super(str);
+}
+
+class OnSendHeadersOptions extends ChromeEnum {
+  static const OnSendHeadersOptions REQUEST_HEADERS = const OnSendHeadersOptions._('requestHeaders');
+
+  static const List<OnSendHeadersOptions> VALUES = const[REQUEST_HEADERS];
+
+  const OnSendHeadersOptions._(String str): super(str);
+}
+
+class OnHeadersReceivedOptions extends ChromeEnum {
+  static const OnHeadersReceivedOptions BLOCKING = const OnHeadersReceivedOptions._('blocking');
+  static const OnHeadersReceivedOptions RESPONSE_HEADERS = const OnHeadersReceivedOptions._('responseHeaders');
+
+  static const List<OnHeadersReceivedOptions> VALUES = const[BLOCKING, RESPONSE_HEADERS];
+
+  const OnHeadersReceivedOptions._(String str): super(str);
+}
+
+class OnAuthRequiredOptions extends ChromeEnum {
+  static const OnAuthRequiredOptions RESPONSE_HEADERS = const OnAuthRequiredOptions._('responseHeaders');
+  static const OnAuthRequiredOptions BLOCKING = const OnAuthRequiredOptions._('blocking');
+  static const OnAuthRequiredOptions ASYNC_BLOCKING = const OnAuthRequiredOptions._('asyncBlocking');
+
+  static const List<OnAuthRequiredOptions> VALUES = const[RESPONSE_HEADERS, BLOCKING, ASYNC_BLOCKING];
+
+  const OnAuthRequiredOptions._(String str): super(str);
+}
+
+class OnResponseStartedOptions extends ChromeEnum {
+  static const OnResponseStartedOptions RESPONSE_HEADERS = const OnResponseStartedOptions._('responseHeaders');
+
+  static const List<OnResponseStartedOptions> VALUES = const[RESPONSE_HEADERS];
+
+  const OnResponseStartedOptions._(String str): super(str);
+}
+
+class OnBeforeRedirectOptions extends ChromeEnum {
+  static const OnBeforeRedirectOptions RESPONSE_HEADERS = const OnBeforeRedirectOptions._('responseHeaders');
+
+  static const List<OnBeforeRedirectOptions> VALUES = const[RESPONSE_HEADERS];
+
+  const OnBeforeRedirectOptions._(String str): super(str);
+}
+
+class OnCompletedOptions extends ChromeEnum {
+  static const OnCompletedOptions RESPONSE_HEADERS = const OnCompletedOptions._('responseHeaders');
+
+  static const List<OnCompletedOptions> VALUES = const[RESPONSE_HEADERS];
+
+  const OnCompletedOptions._(String str): super(str);
+}
+
 class AuthCredentialsWebRequest extends ChromeObject {
   AuthCredentialsWebRequest({String username, String password}) {
     if (username != null) this.username = username;
@@ -150,79 +236,6 @@ class AuthCredentialsWebRequest extends ChromeObject {
 
   String get password => jsProxy['password'];
   set password(String value) => jsProxy['password'] = value;
-}
-
-/**
- * enum of `main_frame`, `sub_frame`, `stylesheet`, `script`, `image`, `object`,
- * `xmlhttprequest`, `other`
- */
-class ResourceType extends ChromeObject {
-  ResourceType();
-  ResourceType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `blocking`, `requestBody`
- */
-class OnBeforeRequestOptions extends ChromeObject {
-  OnBeforeRequestOptions();
-  OnBeforeRequestOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `requestHeaders`, `blocking`
- */
-class OnBeforeSendHeadersOptions extends ChromeObject {
-  OnBeforeSendHeadersOptions();
-  OnBeforeSendHeadersOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `requestHeaders`
- */
-class OnSendHeadersOptions extends ChromeObject {
-  OnSendHeadersOptions();
-  OnSendHeadersOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `blocking`, `responseHeaders`
- */
-class OnHeadersReceivedOptions extends ChromeObject {
-  OnHeadersReceivedOptions();
-  OnHeadersReceivedOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `responseHeaders`, `blocking`, `asyncBlocking`
- */
-class OnAuthRequiredOptions extends ChromeObject {
-  OnAuthRequiredOptions();
-  OnAuthRequiredOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `responseHeaders`
- */
-class OnResponseStartedOptions extends ChromeObject {
-  OnResponseStartedOptions();
-  OnResponseStartedOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `responseHeaders`
- */
-class OnBeforeRedirectOptions extends ChromeObject {
-  OnBeforeRedirectOptions();
-  OnBeforeRedirectOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `responseHeaders`
- */
-class OnCompletedOptions extends ChromeObject {
-  OnCompletedOptions();
-  OnCompletedOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 /**
@@ -398,7 +411,7 @@ class ChallengerWebRequest extends ChromeObject {
 
 OnAuthRequiredEvent _createOnAuthRequiredEvent(JsObject details, JsObject callback) =>
     new OnAuthRequiredEvent(mapify(details), callback);
-ResourceType _createResourceType(JsObject jsProxy) => jsProxy == null ? null : new ResourceType.fromProxy(jsProxy);
+ResourceType _createResourceType(String value) => ResourceType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 HttpHeaders _createHttpHeaders(JsObject jsProxy) => jsProxy == null ? null : new HttpHeaders.fromProxy(jsProxy);
 AuthCredentialsWebRequest _createAuthCredentialsWebRequest(JsObject jsProxy) => jsProxy == null ? null : new AuthCredentialsWebRequest.fromProxy(jsProxy);
 UploadData _createUploadData(JsObject jsProxy) => jsProxy == null ? null : new UploadData.fromProxy(jsProxy);

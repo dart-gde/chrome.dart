@@ -228,6 +228,19 @@ class OnRequestExternalEvent {
   OnRequestExternalEvent(this.request, this.sender, this.sendResponse);
 }
 
+/**
+ * The type of extension view.
+ */
+class ViewType extends ChromeEnum {
+  static const ViewType TAB = const ViewType._('tab');
+  static const ViewType NOTIFICATION = const ViewType._('notification');
+  static const ViewType POPUP = const ViewType._('popup');
+
+  static const List<ViewType> VALUES = const[TAB, NOTIFICATION, POPUP];
+
+  const ViewType._(String str): super(str);
+}
+
 class LastErrorExtension extends ChromeObject {
   LastErrorExtension();
   LastErrorExtension.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -236,15 +249,6 @@ class LastErrorExtension extends ChromeObject {
    * Description of the error that has taken place.
    */
   String get message => jsProxy['message'];
-}
-
-/**
- * The type of extension view.
- * enum of `tab`, `notification`, `popup`
- */
-class ViewType extends ChromeObject {
-  ViewType();
-  ViewType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 class ExtensionGetViewsParams extends ChromeObject {
@@ -274,5 +278,5 @@ OnRequestExternalEvent _createOnRequestExternalEvent(JsObject request, JsObject 
     new OnRequestExternalEvent(request, _createMessageSender(sender), sendResponse);
 LastErrorExtension _createLastErrorExtension(JsObject jsProxy) => jsProxy == null ? null : new LastErrorExtension.fromProxy(jsProxy);
 Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
-ViewType _createViewType(JsObject jsProxy) => jsProxy == null ? null : new ViewType.fromProxy(jsProxy);
+ViewType _createViewType(String value) => ViewType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 MessageSender _createMessageSender(JsObject jsProxy) => jsProxy == null ? null : new MessageSender.fromProxy(jsProxy);

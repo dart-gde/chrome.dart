@@ -23,7 +23,6 @@ namespace platformKeys {
 
   enum ClientCertificateType {
     rsaSign,
-    dssSign,
     ecdsaSign
   };
 
@@ -31,7 +30,9 @@ namespace platformKeys {
   // See http://tools.ietf.org/html/rfc4346#section-7.4.4 .
   dictionary ClientCertificateRequest {
     // This field is a list of the types of certificates requested, sorted in
-    // order of the server's preference.
+    // order of the server's preference. Only certificates of a type contained
+    // in this list will be retrieved. If <code>certificateTypes</code> is the
+    // empty list, however, certificates of any type will be returned.
     ClientCertificateType[] certificateTypes;
 
     // List of distinguished names of certificate authorities allowed by the
@@ -58,6 +59,33 @@ namespace platformKeys {
     boolean interactive;
   };
 
+  dictionary VerificationDetails {
+    // Each chain entry must be the DER encoding of a X.509 certificate, the
+    // first entry must be the server certificate and each entry must certify
+    // the entry preceding it.
+    ArrayBuffer[] serverCertificateChain;
+
+    // The hostname of the server to verify the certificate for, e.g. the server
+    // that presented the <code>serverCertificateChain</code>.
+    DOMString hostname;
+  };
+
+  dictionary VerificationResult {
+    // The result of the trust verification: true if trust for the given
+    // verification details could be established and false if trust is rejected
+    // for any reason.
+    boolean trusted;
+
+    // If the trust verification failed, this array contains the errors reported
+    // by the underlying network layer. Otherwise, this array is empty.
+    //
+    // <strong>Note:</strong> This list is meant for debugging only and may not
+    // contain all relevant errors. The errors returned may change in future
+    // revisions of this API, and are not guaranteed to be forwards or backwards
+    // compatible.
+    DOMString[] debug_errors;
+  };
+
   // |matches|: The list of certificates that match the request, that the
   // extension has permission for and, if <code>interactive</code> is true, that
   // were selected by the user.
@@ -71,6 +99,8 @@ namespace platformKeys {
   //   access to it.
   callback GetKeyPairCallback = void (object publicKey, 
                                       optional object privateKey);
+
+  callback VerificationCallback = void (VerificationResult result);
 
   interface Functions {
     // This function filters from a list of client certificates the ones that
@@ -90,13 +120,16 @@ namespace platformKeys {
     // |certificate|: The certificate of a $(ref:Match) returned by
     // $(ref:selectClientCertificates).
     // |parameters|: Determines signature/hash algorithm parameters additionally
-    //   to the parameters fixed by the key itself. The same parameters are
-    //   accepted as by WebCrypto's <code>importKey</code> function, e.g.
-    //   <code>RsaHashedImportParams</code> for a RSASSA-PKCS1-v1_5 key.
-    //   For RSASSA-PKCS1-v1_5 keys, additionally the parameters
-    //   <code>{ 'hash': { 'name': 'none' } }</code> are supported. The sign
-    //   function will then apply PKCS#1 v1.5 padding and but not hash the
-    //   given data.
+    // to the parameters fixed by the key itself. The same parameters are
+    // accepted as by WebCrypto's <a
+    // href="http://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-importKey">importKey</a>
+    // function, e.g. <code>RsaHashedImportParams</code> for a RSASSA-PKCS1-v1_5
+    // key. For RSASSA-PKCS1-v1_5 keys, additionally the parameters <code>{
+    // "hash": { "name": "none" } }</code> are supported. The sign function will
+    // then apply PKCS#1 v1.5 padding and but not hash the given data.
+    // <p>Currently, this function only supports the "RSASSA-PKCS1-v1_5"
+    // algorithm with one of the hashing algorithms "none", "SHA-1", "SHA-256",
+    // "SHA-384", and "SHA-512".</p>
     [nocompile] static void getKeyPair(ArrayBuffer certificate,
                                        object parameters,
                                        GetKeyPairCallback callback);
@@ -107,5 +140,17 @@ namespace platformKeys {
     // that allows crypto operations on keys of client certificates that are
     // available to this extension.
     [nocompile] static object subtleCrypto();
+
+    // Checks whether <code>details.serverCertificateChain</code> can be trusted
+    // for <code>details.hostname</code> according to the trust settings of the
+    // platform.
+    // Note: The actual behavior of the trust verification is not fully
+    // specified and might change in the future.
+    // The API implementation verifies certificate expiration, validates the
+    // certification path and checks trust by a known CA.
+    // The implementation is supposed to respect the EKU serverAuth and to
+    // support subject alternative names.
+    static void verifyTLSServerCertificate(VerificationDetails details,
+                                           VerificationCallback callback);
   };
 };

@@ -7,9 +7,9 @@ import 'chrome_idl_model.dart';
 /**
  * Map the namespace declaration parse to a [IDLNamespaceDeclaration]
  */
-IDLNamespaceDeclaration idlNamespaceDeclarationMapping(Option copyrightMaybe,
-  List<String> documentation, Option attributeMaybe, _, List<String> name, List body,
-  __) {
+IDLNamespaceDeclaration idlNamespaceDeclarationMapping(Option copyrightMaybe, _,
+  List<String> documentation, Option attributeMaybe, __, List<String> name, List body,
+  ___) {
 
   String nameDotNotation = name.join(".");
 

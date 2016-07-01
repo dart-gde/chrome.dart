@@ -60,6 +60,8 @@ class GenApiFile {
       throw new Exception('format not understood: ${inFile.path}');
     }
 
+    _logger.info("generating API for file ${inFile.path}");
+
     if (inFile.path.endsWith(".json")) {
       json_model.JsonNamespace namespace = json_parser.parse(
           inFile.readAsStringSync());

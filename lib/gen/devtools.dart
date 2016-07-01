@@ -228,7 +228,7 @@ class DevtoolsInspectedWindowReloadParams extends ChromeObject {
   DevtoolsInspectedWindowReloadParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   /**
-   * When true, the loader will ignore the cache for all inspected page
+   * When true, the loader will bypass the cache for all inspected page
    * resources loaded before the `load` event is fired. The effect is similar to
    * pressing Ctrl+Shift+R in the inspected window or within the Developer Tools
    * window.

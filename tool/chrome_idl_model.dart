@@ -156,7 +156,8 @@ class IDLAttributeTypeEnum {
 
   static const values = const [DEPRECATED,
     INSTANCE_OF, SUPPORTS_FILTER, NOINLINE_DOC, INLINE_DOC, NODOC, NOCOMPILE,
-    LEGAL_VALUES, PERMISSIONS, MAX_LISTENERS, IMPLEMENTED_IN];
+    LEGAL_VALUES, PERMISSIONS, MAX_LISTENERS, IMPLEMENTED_IN, NODEFINE,
+    PLATFORMS];
 
   /// Example:
   ///
@@ -167,6 +168,11 @@ class IDLAttributeTypeEnum {
   ///
   ///  [instanceOf=Window]
   static const INSTANCE_OF = const IDLAttributeTypeEnum._("instanceOf");
+
+  /// Example:
+  ///
+  ///  [nodefine]
+  static const NODEFINE = const IDLAttributeTypeEnum._("nodefine");
 
   /// Example:
   ///
@@ -216,6 +222,11 @@ class IDLAttributeTypeEnum {
   ///
   /// [maxListeners=1]
   static const MAX_LISTENERS = const IDLAttributeTypeEnum._("maxListeners");
+
+  /// Example:
+  ///
+  /// [platforms = ("chromeos")]
+  static const PLATFORMS = const IDLAttributeTypeEnum._("platforms");
 }
 
 class IDLAttribute {

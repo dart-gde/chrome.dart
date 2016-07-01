@@ -42,6 +42,20 @@ class ChromePrivacy extends ChromeApi {
   WebsitesPrivacy get websites => _createWebsitesPrivacy(_privacy['websites']);
 }
 
+/**
+ * The IP handling policy of WebRTC.
+ */
+class IPHandlingPolicy extends ChromeEnum {
+  static const IPHandlingPolicy DEFAULT = const IPHandlingPolicy._('default');
+  static const IPHandlingPolicy DEFAULT_PUBLIC_AND_PRIVATE_INTERFACES = const IPHandlingPolicy._('default_public_and_private_interfaces');
+  static const IPHandlingPolicy DEFAULT_PUBLIC_INTERFACE_ONLY = const IPHandlingPolicy._('default_public_interface_only');
+  static const IPHandlingPolicy DISABLE_NON_PROXIED_UDP = const IPHandlingPolicy._('disable_non_proxied_udp');
+
+  static const List<IPHandlingPolicy> VALUES = const[DEFAULT, DEFAULT_PUBLIC_AND_PRIVATE_INTERFACES, DEFAULT_PUBLIC_INTERFACE_ONLY, DISABLE_NON_PROXIED_UDP];
+
+  const IPHandlingPolicy._(String str): super(str);
+}
+
 class NetworkPrivacy extends ChromeObject {
   NetworkPrivacy();
   NetworkPrivacy.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -61,6 +75,25 @@ class NetworkPrivacy extends ChromeObject {
    * regular HTTP. This preference's value is a boolean, defaulting to `true`.
    */
   ChromeSetting get webRTCMultipleRoutesEnabled => _createChromeSetting(jsProxy['webRTCMultipleRoutesEnabled']);
+
+  /**
+   * If enabled, Chrome is allowed to use non-proxied UDP to connect to peers or
+   * TURN servers when using WebRTC. Since most proxy servers don't handle UDP,
+   * using UDP possibly exposes user's IP address. Turning this off effectively
+   * forces WebRTC to only use TCP for now, until UDP proxy support is available
+   * in Chrome and such proxies are widely deployed. As a result, it also might
+   * hurt media performance and increase the load for proxy servers. This
+   * preference's value is a boolean, defaulting to `true`.
+   */
+  ChromeSetting get webRTCNonProxiedUdpEnabled => _createChromeSetting(jsProxy['webRTCNonProxiedUdpEnabled']);
+
+  /**
+   * Allow users to specify the media performance/privacy tradeoffs which
+   * impacts how WebRTC traffic will be routed and how much local address
+   * information is exposed. This preference's value is of type
+   * IPHandlingPolicy, defaulting to `default`.
+   */
+  ChromeSetting get webRTCIPHandlingPolicy => _createChromeSetting(jsProxy['webRTCIPHandlingPolicy']);
 }
 
 class ServicesPrivacy extends ChromeObject {

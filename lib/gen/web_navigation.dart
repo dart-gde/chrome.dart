@@ -139,22 +139,34 @@ class ChromeWebNavigation extends ChromeApi {
  * API are used. These are the same transition types as defined in the [history
  * API](history#transition_types) except with `"start_page"` in place of
  * `"auto_toplevel"` (for backwards compatibility).
- * enum of `link`, `typed`, `auto_bookmark`, `auto_subframe`, `manual_subframe`,
- * `generated`, `start_page`, `form_submit`, `reload`, `keyword`,
- * `keyword_generated`
  */
-class TransitionType extends ChromeObject {
-  TransitionType();
-  TransitionType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class TransitionType extends ChromeEnum {
+  static const TransitionType LINK = const TransitionType._('link');
+  static const TransitionType TYPED = const TransitionType._('typed');
+  static const TransitionType AUTO_BOOKMARK = const TransitionType._('auto_bookmark');
+  static const TransitionType AUTO_SUBFRAME = const TransitionType._('auto_subframe');
+  static const TransitionType MANUAL_SUBFRAME = const TransitionType._('manual_subframe');
+  static const TransitionType GENERATED = const TransitionType._('generated');
+  static const TransitionType START_PAGE = const TransitionType._('start_page');
+  static const TransitionType FORM_SUBMIT = const TransitionType._('form_submit');
+  static const TransitionType RELOAD = const TransitionType._('reload');
+  static const TransitionType KEYWORD = const TransitionType._('keyword');
+  static const TransitionType KEYWORD_GENERATED = const TransitionType._('keyword_generated');
+
+  static const List<TransitionType> VALUES = const[LINK, TYPED, AUTO_BOOKMARK, AUTO_SUBFRAME, MANUAL_SUBFRAME, GENERATED, START_PAGE, FORM_SUBMIT, RELOAD, KEYWORD, KEYWORD_GENERATED];
+
+  const TransitionType._(String str): super(str);
 }
 
-/**
- * enum of `client_redirect`, `server_redirect`, `forward_back`,
- * `from_address_bar`
- */
-class TransitionQualifier extends ChromeObject {
-  TransitionQualifier();
-  TransitionQualifier.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class TransitionQualifier extends ChromeEnum {
+  static const TransitionQualifier CLIENT_REDIRECT = const TransitionQualifier._('client_redirect');
+  static const TransitionQualifier SERVER_REDIRECT = const TransitionQualifier._('server_redirect');
+  static const TransitionQualifier FORWARD_BACK = const TransitionQualifier._('forward_back');
+  static const TransitionQualifier FROM_ADDRESS_BAR = const TransitionQualifier._('from_address_bar');
+
+  static const List<TransitionQualifier> VALUES = const[CLIENT_REDIRECT, SERVER_REDIRECT, FORWARD_BACK, FROM_ADDRESS_BAR];
+
+  const TransitionQualifier._(String str): super(str);
 }
 
 class WebNavigationGetFrameParams extends ChromeObject {
@@ -172,7 +184,7 @@ class WebNavigationGetFrameParams extends ChromeObject {
   set tabId(int value) => jsProxy['tabId'] = value;
 
   /**
-   * The ID of the process runs the renderer for this tab.
+   * The ID of the process that runs the renderer for this tab.
    */
   int get processId => jsProxy['processId'];
   set processId(int value) => jsProxy['processId'] = value;

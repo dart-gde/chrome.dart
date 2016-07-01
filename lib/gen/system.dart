@@ -172,6 +172,17 @@ class ChromeSystemDisplay extends ChromeApi {
     return completer.future;
   }
 
+  /**
+   * Enables/disables the unified desktop feature. Note that this simply enables
+   * the feature, but will not change the actual desktop mode. (That is, if the
+   * desktop is in mirror mode, it will stay in mirror mode)
+   */
+  void enableUnifiedDesktop(bool enabled) {
+    if (_system_display == null) _throwNotAvailable();
+
+    _system_display.callMethod('enableUnifiedDesktop', [enabled]);
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.system.display' is not available");
   }

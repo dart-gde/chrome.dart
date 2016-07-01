@@ -171,6 +171,10 @@ namespace serial {
 
   callback FlushCallback = void (boolean result);
 
+  callback SetBreakCallback = void (boolean result);
+
+  callback ClearBreakCallback = void (boolean result);
+
   // The set of control signals which may be sent to a connected serial device
   // using <code>setControlSignals</code>. Note that support for these signals
   // is device-dependent.
@@ -223,6 +227,23 @@ namespace serial {
 
     // The device was most likely disconnected from the host.
     device_lost,
+
+    // The device detected a break condition.
+    break,
+
+    // The device detected a framing error.
+    frame_error,
+
+    // A character-buffer overrun has occurred. The next character is lost.
+    overrun,
+
+    // An input buffer overflow has occurred. There is either no room in the
+    // input buffer, or a character was received after the end-of-file (EOF)
+    // character.
+    buffer_overflow,
+
+    // The device detected a parity error.
+    parity_error,
 
     // A system error occurred and the connection may be unrecoverable.
     system_error
@@ -307,6 +328,16 @@ namespace serial {
     static void setControlSignals(long connectionId,
                                   HostControlSignals signals,
                                   SetControlSignalsCallback callback);
+
+    // Suspends character transmission on a given connection and places the
+    // transmission line in a break state until the clearBreak is called.
+    // |connectionId| : The id of the connection.
+    static void setBreak(long connectionId, SetBreakCallback callback);
+
+    // Restore character transmission on a given connection and place the
+    // transmission line in a nonbreak state.
+    // |connectionId| : The id of the connection.
+    static void clearBreak(long connectionId, ClearBreakCallback callback);
   };
 
   interface Events {

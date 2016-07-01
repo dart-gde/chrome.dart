@@ -290,6 +290,7 @@ class InterruptReason extends ChromeEnum {
   static const InterruptReason FILE_BLOCKED = const InterruptReason._('FILE_BLOCKED');
   static const InterruptReason FILE_SECURITY_CHECK_FAILED = const InterruptReason._('FILE_SECURITY_CHECK_FAILED');
   static const InterruptReason FILE_TOO_SHORT = const InterruptReason._('FILE_TOO_SHORT');
+  static const InterruptReason FILE_HASH_MISMATCH = const InterruptReason._('FILE_HASH_MISMATCH');
   static const InterruptReason NETWORK_FAILED = const InterruptReason._('NETWORK_FAILED');
   static const InterruptReason NETWORK_TIMEOUT = const InterruptReason._('NETWORK_TIMEOUT');
   static const InterruptReason NETWORK_DISCONNECTED = const InterruptReason._('NETWORK_DISCONNECTED');
@@ -297,15 +298,16 @@ class InterruptReason extends ChromeEnum {
   static const InterruptReason NETWORK_INVALID_REQUEST = const InterruptReason._('NETWORK_INVALID_REQUEST');
   static const InterruptReason SERVER_FAILED = const InterruptReason._('SERVER_FAILED');
   static const InterruptReason SERVER_NO_RANGE = const InterruptReason._('SERVER_NO_RANGE');
-  static const InterruptReason SERVER_PRECONDITION = const InterruptReason._('SERVER_PRECONDITION');
   static const InterruptReason SERVER_BAD_CONTENT = const InterruptReason._('SERVER_BAD_CONTENT');
   static const InterruptReason SERVER_UNAUTHORIZED = const InterruptReason._('SERVER_UNAUTHORIZED');
   static const InterruptReason SERVER_CERT_PROBLEM = const InterruptReason._('SERVER_CERT_PROBLEM');
+  static const InterruptReason SERVER_FORBIDDEN = const InterruptReason._('SERVER_FORBIDDEN');
+  static const InterruptReason SERVER_UNREACHABLE = const InterruptReason._('SERVER_UNREACHABLE');
   static const InterruptReason USER_CANCELED = const InterruptReason._('USER_CANCELED');
   static const InterruptReason USER_SHUTDOWN = const InterruptReason._('USER_SHUTDOWN');
   static const InterruptReason CRASH = const InterruptReason._('CRASH');
 
-  static const List<InterruptReason> VALUES = const[FILE_FAILED, FILE_ACCESS_DENIED, FILE_NO_SPACE, FILE_NAME_TOO_LONG, FILE_TOO_LARGE, FILE_VIRUS_INFECTED, FILE_TRANSIENT_ERROR, FILE_BLOCKED, FILE_SECURITY_CHECK_FAILED, FILE_TOO_SHORT, NETWORK_FAILED, NETWORK_TIMEOUT, NETWORK_DISCONNECTED, NETWORK_SERVER_DOWN, NETWORK_INVALID_REQUEST, SERVER_FAILED, SERVER_NO_RANGE, SERVER_PRECONDITION, SERVER_BAD_CONTENT, SERVER_UNAUTHORIZED, SERVER_CERT_PROBLEM, USER_CANCELED, USER_SHUTDOWN, CRASH];
+  static const List<InterruptReason> VALUES = const[FILE_FAILED, FILE_ACCESS_DENIED, FILE_NO_SPACE, FILE_NAME_TOO_LONG, FILE_TOO_LARGE, FILE_VIRUS_INFECTED, FILE_TRANSIENT_ERROR, FILE_BLOCKED, FILE_SECURITY_CHECK_FAILED, FILE_TOO_SHORT, FILE_HASH_MISMATCH, NETWORK_FAILED, NETWORK_TIMEOUT, NETWORK_DISCONNECTED, NETWORK_SERVER_DOWN, NETWORK_INVALID_REQUEST, SERVER_FAILED, SERVER_NO_RANGE, SERVER_BAD_CONTENT, SERVER_UNAUTHORIZED, SERVER_CERT_PROBLEM, SERVER_FORBIDDEN, SERVER_UNREACHABLE, USER_CANCELED, USER_SHUTDOWN, CRASH];
 
   const InterruptReason._(String str): super(str);
 }

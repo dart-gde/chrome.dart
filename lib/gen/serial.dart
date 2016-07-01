@@ -199,6 +199,32 @@ class ChromeSerial extends ChromeApi {
     return completer.future;
   }
 
+  /**
+   * Suspends character transmission on a given connection and places the
+   * transmission line in a break state until the clearBreak is called.
+   * [connectionId]: The id of the connection.
+   */
+  Future<bool> setBreak(int connectionId) {
+    if (_serial == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<bool>.oneArg();
+    _serial.callMethod('setBreak', [connectionId, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Restore character transmission on a given connection and place the
+   * transmission line in a nonbreak state.
+   * [connectionId]: The id of the connection.
+   */
+  Future<bool> clearBreak(int connectionId) {
+    if (_serial == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<bool>.oneArg();
+    _serial.callMethod('clearBreak', [connectionId, completer.callback]);
+    return completer.future;
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.serial' is not available");
   }
@@ -247,9 +273,14 @@ class ReceiveError extends ChromeEnum {
   static const ReceiveError DISCONNECTED = const ReceiveError._('disconnected');
   static const ReceiveError TIMEOUT = const ReceiveError._('timeout');
   static const ReceiveError DEVICE_LOST = const ReceiveError._('device_lost');
+  static const ReceiveError BREAK = const ReceiveError._('break');
+  static const ReceiveError FRAME_ERROR = const ReceiveError._('frame_error');
+  static const ReceiveError OVERRUN = const ReceiveError._('overrun');
+  static const ReceiveError BUFFER_OVERFLOW = const ReceiveError._('buffer_overflow');
+  static const ReceiveError PARITY_ERROR = const ReceiveError._('parity_error');
   static const ReceiveError SYSTEM_ERROR = const ReceiveError._('system_error');
 
-  static const List<ReceiveError> VALUES = const[DISCONNECTED, TIMEOUT, DEVICE_LOST, SYSTEM_ERROR];
+  static const List<ReceiveError> VALUES = const[DISCONNECTED, TIMEOUT, DEVICE_LOST, BREAK, FRAME_ERROR, OVERRUN, BUFFER_OVERFLOW, PARITY_ERROR, SYSTEM_ERROR];
 
   const ReceiveError._(String str): super(str);
 }

@@ -52,7 +52,7 @@ class ChromeVpnProvider extends ChromeApi {
    * The callback is used by `createConfig` to signal completion. The callback
    * is called with `chrome.runtime.lastError` set to an error code if there is
    * an error.
-   * [id]: A unique ID for the created configuration, empty string on failure.
+   * [id]: A unique ID for the created configuration, or `undefined` on failure.
    */
   Future<String> createConfig(String name) {
     if (_vpnProvider == null) _throwNotAvailable();
@@ -164,8 +164,13 @@ class PlatformMessage extends ChromeEnum {
   static const PlatformMessage CONNECTED = const PlatformMessage._('connected');
   static const PlatformMessage DISCONNECTED = const PlatformMessage._('disconnected');
   static const PlatformMessage ERROR = const PlatformMessage._('error');
+  static const PlatformMessage LINK_DOWN = const PlatformMessage._('linkDown');
+  static const PlatformMessage LINK_UP = const PlatformMessage._('linkUp');
+  static const PlatformMessage LINK_CHANGED = const PlatformMessage._('linkChanged');
+  static const PlatformMessage SUSPEND = const PlatformMessage._('suspend');
+  static const PlatformMessage RESUME = const PlatformMessage._('resume');
 
-  static const List<PlatformMessage> VALUES = const[CONNECTED, DISCONNECTED, ERROR];
+  static const List<PlatformMessage> VALUES = const[CONNECTED, DISCONNECTED, ERROR, LINK_DOWN, LINK_UP, LINK_CHANGED, SUSPEND, RESUME];
 
   const PlatformMessage._(String str): super(str);
 }
@@ -200,7 +205,7 @@ class UIEvent extends ChromeEnum {
  * A parameters class for the VPN interface.
  */
 class Parameters extends ChromeObject {
-  Parameters({String address, String broadcastAddress, String mtu, List<String> exclusionList, List<String> inclusionList, List<String> domainSearch, List<String> dnsServers}) {
+  Parameters({String address, String broadcastAddress, String mtu, List<String> exclusionList, List<String> inclusionList, List<String> domainSearch, List<String> dnsServers, String reconnect}) {
     if (address != null) this.address = address;
     if (broadcastAddress != null) this.broadcastAddress = broadcastAddress;
     if (mtu != null) this.mtu = mtu;
@@ -208,6 +213,7 @@ class Parameters extends ChromeObject {
     if (inclusionList != null) this.inclusionList = inclusionList;
     if (domainSearch != null) this.domainSearch = domainSearch;
     if (dnsServers != null) this.dnsServers = dnsServers;
+    if (reconnect != null) this.reconnect = reconnect;
   }
   Parameters.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -231,6 +237,9 @@ class Parameters extends ChromeObject {
 
   List<String> get dnsServers => listify(jsProxy['dnsServers']);
   set dnsServers(List<String> value) => jsProxy['dnsServers'] = jsify(value);
+
+  String get reconnect => jsProxy['reconnect'];
+  set reconnect(String value) => jsProxy['reconnect'] = value;
 }
 
 OnPlatformMessageEvent _createOnPlatformMessageEvent(String id, String message, String error) =>

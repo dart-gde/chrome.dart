@@ -52,7 +52,7 @@ abstract class ChromeEnum {
   String toString() => value;
 }
 
-// This is chared in common by app.window and system.display.
+// This is shared in common by app.window and system.display.
 class Bounds extends ChromeObject {
   static Bounds create(JsObject jsProxy) => jsProxy == null ? null : new Bounds.fromProxy(jsProxy);
 
@@ -184,6 +184,26 @@ class CapabilitiesCallback {
 
 class PrintCallback {
   PrintCallback.fromProxy(JsObject jsProxy);
+}
+
+class PrinterInfoCallback {
+  PrinterInfoCallback.fromProxy(JsObject jsProxy);
+}
+
+class CertificatesCallback {
+  CertificatesCallback.fromProxy(JsObject jsProxy);
+}
+
+class ActionsCallback {
+  ActionsCallback.fromProxy(JsObject jsProxy);
+}
+
+class SignCallback {
+  SignCallback.fromProxy(JsObject jsProxy);
+}
+
+class SubtleCrypto {
+  SubtleCrypto.fromProxy(JsObject jsProxy);
 }
 
 // TODO:

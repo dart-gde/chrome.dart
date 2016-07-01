@@ -31,12 +31,16 @@ class ChromeTypes extends ChromeApi {
  * profile that can only be set during an incognito session and is deleted when
  * the incognito session ends (overrides regular and incognito_persistent
  * preferences).</li></ul>
- * enum of `regular`, `regular_only`, `incognito_persistent`,
- * `incognito_session_only`
  */
-class ChromeSettingScope extends ChromeObject {
-  ChromeSettingScope();
-  ChromeSettingScope.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class ChromeSettingScope extends ChromeEnum {
+  static const ChromeSettingScope REGULAR = const ChromeSettingScope._('regular');
+  static const ChromeSettingScope REGULAR_ONLY = const ChromeSettingScope._('regular_only');
+  static const ChromeSettingScope INCOGNITO_PERSISTENT = const ChromeSettingScope._('incognito_persistent');
+  static const ChromeSettingScope INCOGNITO_SESSION_ONLY = const ChromeSettingScope._('incognito_session_only');
+
+  static const List<ChromeSettingScope> VALUES = const[REGULAR, REGULAR_ONLY, INCOGNITO_PERSISTENT, INCOGNITO_SESSION_ONLY];
+
+  const ChromeSettingScope._(String str): super(str);
 }
 
 /**
@@ -45,12 +49,16 @@ class ChromeSettingScope extends ChromeObject {
  * with higher precedence</li><li>[controllable_by_this_extension]: can be
  * controlled by this extension</li><li>[controlled_by_this_extension]:
  * controlled by this extension</li></ul>
- * enum of `not_controllable`, `controlled_by_other_extensions`,
- * `controllable_by_this_extension`, `controlled_by_this_extension`
  */
-class TypesLevelOfControl extends ChromeObject {
-  TypesLevelOfControl();
-  TypesLevelOfControl.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class TypesLevelOfControl extends ChromeEnum {
+  static const TypesLevelOfControl NOT_CONTROLLABLE = const TypesLevelOfControl._('not_controllable');
+  static const TypesLevelOfControl CONTROLLED_BY_OTHER_EXTENSIONS = const TypesLevelOfControl._('controlled_by_other_extensions');
+  static const TypesLevelOfControl CONTROLLABLE_BY_THIS_EXTENSION = const TypesLevelOfControl._('controllable_by_this_extension');
+  static const TypesLevelOfControl CONTROLLED_BY_THIS_EXTENSION = const TypesLevelOfControl._('controlled_by_this_extension');
+
+  static const List<TypesLevelOfControl> VALUES = const[NOT_CONTROLLABLE, CONTROLLED_BY_OTHER_EXTENSIONS, CONTROLLABLE_BY_THIS_EXTENSION, CONTROLLED_BY_THIS_EXTENSION];
+
+  const TypesLevelOfControl._(String str): super(str);
 }
 
 /**
@@ -147,4 +155,4 @@ class TypesClearParams extends ChromeObject {
   set scope(ChromeSettingScope value) => jsProxy['scope'] = jsify(value);
 }
 
-ChromeSettingScope _createChromeSettingScope(JsObject jsProxy) => jsProxy == null ? null : new ChromeSettingScope.fromProxy(jsProxy);
+ChromeSettingScope _createChromeSettingScope(String value) => ChromeSettingScope.VALUES.singleWhere((ChromeEnum e) => e.value == value);

@@ -162,7 +162,7 @@ void handleI18NMessage() {
 }
 
 void handleI18NLanguages() {
-  chrome.i18n.getAcceptLanguages().then((List<String> list) {
+  chrome.i18n.getAcceptLanguages().then((List<chrome.LanguageCode> list) {
     summary(list.join(', '));
   });
 }

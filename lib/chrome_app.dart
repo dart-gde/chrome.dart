@@ -24,6 +24,7 @@ export 'gen/hid.dart';
 export 'gen/i18n.dart';
 export 'gen/identity.dart';
 export 'gen/idle.dart';
+export 'gen/instance_id.dart';
 export 'gen/location.dart';
 export 'gen/media_galleries.dart';
 export 'gen/notifications.dart';

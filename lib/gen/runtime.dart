@@ -210,15 +210,22 @@ class ChromeRuntime extends ChromeApi {
    * Sets the URL to be visited upon uninstallation. This may be used to clean
    * up server-side data, do analytics, and implement surveys. Maximum 255
    * characters.
+   * 
+   * [url] URL to be opened after the extension is uninstalled. This URL must
+   * have an http: or https: scheme. Set an empty string to not open a new tab
+   * upon uninstallation.
    */
-  void setUninstallURL(String url) {
+  Future setUninstallURL(String url) {
     if (_runtime == null) _throwNotAvailable();
 
-    _runtime.callMethod('setUninstallURL', [url]);
+    var completer = new ChromeCompleter.noArgs();
+    _runtime.callMethod('setUninstallURL', [url, completer.callback]);
+    return completer.future;
   }
 
   /**
-   * Reloads the app or extension.
+   * Reloads the app or extension. This method is not supported in kiosk mode.
+   * For kiosk mode, use chrome.runtime.restart() method.
    */
   void reload() {
     if (_runtime == null) _throwNotAvailable();
@@ -424,6 +431,93 @@ class OnMessageExternalEvent {
   OnMessageExternalEvent(this.message, this.sender, this.sendResponse);
 }
 
+/**
+ * The operating system chrome is running on.
+ */
+class PlatformOs extends ChromeEnum {
+  static const PlatformOs MAC = const PlatformOs._('mac');
+  static const PlatformOs WIN = const PlatformOs._('win');
+  static const PlatformOs ANDROID = const PlatformOs._('android');
+  static const PlatformOs CROS = const PlatformOs._('cros');
+  static const PlatformOs LINUX = const PlatformOs._('linux');
+  static const PlatformOs OPENBSD = const PlatformOs._('openbsd');
+
+  static const List<PlatformOs> VALUES = const[MAC, WIN, ANDROID, CROS, LINUX, OPENBSD];
+
+  const PlatformOs._(String str): super(str);
+}
+
+/**
+ * The machine's processor architecture.
+ */
+class PlatformArch extends ChromeEnum {
+  static const PlatformArch ARM = const PlatformArch._('arm');
+  static const PlatformArch X86_32 = const PlatformArch._('x86-32');
+  static const PlatformArch X86_64 = const PlatformArch._('x86-64');
+
+  static const List<PlatformArch> VALUES = const[ARM, X86_32, X86_64];
+
+  const PlatformArch._(String str): super(str);
+}
+
+/**
+ * The native client architecture. This may be different from arch on some
+ * platforms.
+ */
+class PlatformNaclArch extends ChromeEnum {
+  static const PlatformNaclArch ARM = const PlatformNaclArch._('arm');
+  static const PlatformNaclArch X86_32 = const PlatformNaclArch._('x86-32');
+  static const PlatformNaclArch X86_64 = const PlatformNaclArch._('x86-64');
+
+  static const List<PlatformNaclArch> VALUES = const[ARM, X86_32, X86_64];
+
+  const PlatformNaclArch._(String str): super(str);
+}
+
+/**
+ * Result of the update check.
+ */
+class RequestUpdateCheckStatus extends ChromeEnum {
+  static const RequestUpdateCheckStatus THROTTLED = const RequestUpdateCheckStatus._('throttled');
+  static const RequestUpdateCheckStatus NO_UPDATE = const RequestUpdateCheckStatus._('no_update');
+  static const RequestUpdateCheckStatus UPDATE_AVAILABLE = const RequestUpdateCheckStatus._('update_available');
+
+  static const List<RequestUpdateCheckStatus> VALUES = const[THROTTLED, NO_UPDATE, UPDATE_AVAILABLE];
+
+  const RequestUpdateCheckStatus._(String str): super(str);
+}
+
+/**
+ * The reason that this event is being dispatched.
+ */
+class OnInstalledReason extends ChromeEnum {
+  static const OnInstalledReason INSTALL = const OnInstalledReason._('install');
+  static const OnInstalledReason UPDATE = const OnInstalledReason._('update');
+  static const OnInstalledReason CHROME_UPDATE = const OnInstalledReason._('chrome_update');
+  static const OnInstalledReason SHARED_MODULE_UPDATE = const OnInstalledReason._('shared_module_update');
+
+  static const List<OnInstalledReason> VALUES = const[INSTALL, UPDATE, CHROME_UPDATE, SHARED_MODULE_UPDATE];
+
+  const OnInstalledReason._(String str): super(str);
+}
+
+/**
+ * The reason that the event is being dispatched. 'app_update' is used when the
+ * restart is needed because the application is updated to a newer version.
+ * 'os_update' is used when the restart is needed because the browser/OS is
+ * updated to a newer version. 'periodic' is used when the system runs for more
+ * than the permitted uptime set in the enterprise policy.
+ */
+class OnRestartRequiredReason extends ChromeEnum {
+  static const OnRestartRequiredReason APP_UPDATE = const OnRestartRequiredReason._('app_update');
+  static const OnRestartRequiredReason OS_UPDATE = const OnRestartRequiredReason._('os_update');
+  static const OnRestartRequiredReason PERIODIC = const OnRestartRequiredReason._('periodic');
+
+  static const List<OnRestartRequiredReason> VALUES = const[APP_UPDATE, OS_UPDATE, PERIODIC];
+
+  const OnRestartRequiredReason._(String str): super(str);
+}
+
 class LastErrorRuntime extends ChromeObject {
   LastErrorRuntime();
   LastErrorRuntime.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -528,34 +622,6 @@ class MessageSender extends ChromeObject {
 }
 
 /**
- * The operating system chrome is running on.
- * enum of `mac`, `win`, `android`, `cros`, `linux`, `openbsd`
- */
-class PlatformOs extends ChromeObject {
-  PlatformOs();
-  PlatformOs.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * The machine's processor architecture.
- * enum of `arm`, `x86-32`, `x86-64`
- */
-class PlatformArch extends ChromeObject {
-  PlatformArch();
-  PlatformArch.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * The native client architecture. This may be different from arch on some
- * platforms.
- * enum of `arm`, `x86-32`, `x86-64`
- */
-class PlatformNaclArch extends ChromeObject {
-  PlatformNaclArch();
-  PlatformNaclArch.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
  * An object containing information about the current platform.
  */
 class PlatformInfo extends ChromeObject {
@@ -584,37 +650,6 @@ class PlatformInfo extends ChromeObject {
    */
   PlatformNaclArch get nacl_arch => _createPlatformNaclArch(jsProxy['nacl_arch']);
   set nacl_arch(PlatformNaclArch value) => jsProxy['nacl_arch'] = jsify(value);
-}
-
-/**
- * Result of the update check.
- * enum of `throttled`, `no_update`, `update_available`
- */
-class RequestUpdateCheckStatus extends ChromeObject {
-  RequestUpdateCheckStatus();
-  RequestUpdateCheckStatus.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * The reason that this event is being dispatched.
- * enum of `install`, `update`, `chrome_update`, `shared_module_update`
- */
-class OnInstalledReason extends ChromeObject {
-  OnInstalledReason();
-  OnInstalledReason.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * The reason that the event is being dispatched. 'app_update' is used when the
- * restart is needed because the application is updated to a newer version.
- * 'os_update' is used when the restart is needed because the browser/OS is
- * updated to a newer version. 'periodic' is used when the system runs for more
- * than the permitted uptime set in the enterprise policy.
- * enum of `app_update`, `os_update`, `periodic`
- */
-class OnRestartRequiredReason extends ChromeObject {
-  OnRestartRequiredReason();
-  OnRestartRequiredReason.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 class RuntimeConnectParams extends ChromeObject {
@@ -672,14 +707,14 @@ OnMessageEvent _createOnMessageEvent(JsObject message, JsObject sender, JsObject
     new OnMessageEvent(message, _createMessageSender(sender), sendResponse);
 OnMessageExternalEvent _createOnMessageExternalEvent(JsObject message, JsObject sender, JsObject sendResponse) =>
     new OnMessageExternalEvent(message, _createMessageSender(sender), sendResponse);
-OnRestartRequiredReason _createOnRestartRequiredReason(JsObject jsProxy) => jsProxy == null ? null : new OnRestartRequiredReason.fromProxy(jsProxy);
+OnRestartRequiredReason _createOnRestartRequiredReason(String value) => OnRestartRequiredReason.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 LastErrorRuntime _createLastErrorRuntime(JsObject jsProxy) => jsProxy == null ? null : new LastErrorRuntime.fromProxy(jsProxy);
 Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
 PlatformInfo _createPlatformInfo(JsObject jsProxy) => jsProxy == null ? null : new PlatformInfo.fromProxy(jsProxy);
 DirectoryEntry _createDirectoryEntry(JsObject jsProxy) => jsProxy == null ? null : new CrDirectoryEntry.fromProxy(jsProxy);
 MessageSender _createMessageSender(JsObject jsProxy) => jsProxy == null ? null : new MessageSender.fromProxy(jsProxy);
 Tab _createTab(JsObject jsProxy) => jsProxy == null ? null : new Tab.fromProxy(jsProxy);
-PlatformOs _createPlatformOs(JsObject jsProxy) => jsProxy == null ? null : new PlatformOs.fromProxy(jsProxy);
-PlatformArch _createPlatformArch(JsObject jsProxy) => jsProxy == null ? null : new PlatformArch.fromProxy(jsProxy);
-PlatformNaclArch _createPlatformNaclArch(JsObject jsProxy) => jsProxy == null ? null : new PlatformNaclArch.fromProxy(jsProxy);
-RequestUpdateCheckStatus _createRequestUpdateCheckStatus(JsObject jsProxy) => jsProxy == null ? null : new RequestUpdateCheckStatus.fromProxy(jsProxy);
+PlatformOs _createPlatformOs(String value) => PlatformOs.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+PlatformArch _createPlatformArch(String value) => PlatformArch.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+PlatformNaclArch _createPlatformNaclArch(String value) => PlatformNaclArch.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+RequestUpdateCheckStatus _createRequestUpdateCheckStatus(String value) => RequestUpdateCheckStatus.VALUES.singleWhere((ChromeEnum e) => e.value == value);

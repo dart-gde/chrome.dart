@@ -67,12 +67,14 @@ class ChromeIdle extends ChromeApi {
   }
 }
 
-/**
- * enum of `active`, `idle`, `locked`
- */
-class IdleState extends ChromeObject {
-  IdleState();
-  IdleState.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class IdleState extends ChromeEnum {
+  static const IdleState ACTIVE = const IdleState._('active');
+  static const IdleState IDLE = const IdleState._('idle');
+  static const IdleState LOCKED = const IdleState._('locked');
+
+  static const List<IdleState> VALUES = const[ACTIVE, IDLE, LOCKED];
+
+  const IdleState._(String str): super(str);
 }
 
-IdleState _createIdleState(JsObject jsProxy) => jsProxy == null ? null : new IdleState.fromProxy(jsProxy);
+IdleState _createIdleState(String value) => IdleState.VALUES.singleWhere((ChromeEnum e) => e.value == value);

@@ -6,7 +6,8 @@
   "suppressClass": [
     "pageAction.ImageDataType",
     "app.window.Bounds",
-    "system.display.Bounds"
+    "system.display.Bounds",
+    "input.ime.Bounds"
   ],
 
   "overrideClass": [
@@ -53,7 +54,11 @@
 
     "hid.GetDevicesOptions": "HidGetDevicesOptions",
     "hid.DeviceFilter": "HidDeviceFilter",
+    "hid.DevicePromptOptions": "HidDevicePromptOptions",
+
+    "usb.Device" : "UsbDevice",
     "usb.DeviceFilter": "UsbDeviceFilter",
+    "usb.DevicePromptOptions": "UsbDevicePromptOptions",
 
     "history.TransitionType": "HistoryTransitionType",
 
@@ -63,7 +68,10 @@
     "runtime.Event": "ChromeEvent",
 
     "browserAction.ImageDataType": "BrowserActionImageDataType",
-    "declarativeContent.ImageDataType": "DeclarativeContentImageDataType"
+    "declarativeContent.ImageDataType": "DeclarativeContentImageDataType",
+
+    "input.ime.WindowType": "InputWindowType",
+    "windows.WindowType": "WindowWindowType"
 
   }
 }

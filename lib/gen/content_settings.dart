@@ -59,9 +59,8 @@ class ChromeContentSettings extends ChromeApi {
    * Whether to run plugins. One of<br>[allow]: Run plugins
    * automatically,<br>[block]: Don't run plugins
    * automatically,<br>[detect_important_content]: Only run automatically those
-   * plugins that are detected as the website's main content. <br>Default is
-   * [allow].<br>The primary URL is the URL of the top-level frame. The
-   * secondary URL is not used.
+   * plugins that are detected as the website's main content.<br>The primary URL
+   * is the URL of the top-level frame. The secondary URL is not used.
    */
   ContentSetting get plugins => _createContentSetting(_contentSettings['plugins']);
 
@@ -103,6 +102,26 @@ class ChromeContentSettings extends ChromeApi {
   ContentSetting get mouselock => _createContentSetting(_contentSettings['mouselock']);
 
   /**
+   * Whether to allow sites to access the microphone. One of <br>[allow]: Allow
+   * sites to access the microphone,<br>[block]: Don't allow sites to access the
+   * microphone,<br>[ask]: Ask when a site wants to access the microphone.
+   * <br>Default is [ask].<br>The primary URL is the URL of the document which
+   * requested microphone access. The secondary URL is not used.<br>NOTE: The
+   * 'allow' setting is not valid if both patterns are '<all_urls>'.
+   */
+  ContentSetting get microphone => _createContentSetting(_contentSettings['microphone']);
+
+  /**
+   * Whether to allow sites to access the camera. One of <br>[allow]: Allow
+   * sites to access the camera,<br>[block]: Don't allow sites to access the
+   * camera,<br>[ask]: Ask when a site wants to access the camera. <br>Default
+   * is [ask].<br>The primary URL is the URL of the document which requested
+   * camera access. The secondary URL is not used.<br>NOTE: The 'allow' setting
+   * is not valid if both patterns are '<all_urls>'.
+   */
+  ContentSetting get camera => _createContentSetting(_contentSettings['camera']);
+
+  /**
    * Whether to allow sites to run plugins unsandboxed. One of <br>[allow]:
    * Allow sites to run plugins unsandboxed,<br>[block]: Don't allow sites to
    * run plugins unsandboxed,<br>[ask]: Ask when a site wants to run a plugin
@@ -120,6 +139,148 @@ class ChromeContentSettings extends ChromeApi {
    * URL is the URL of the top-level frame. The secondary URL is not used.
    */
   ContentSetting get automaticDownloads => _createContentSetting(_contentSettings['automaticDownloads']);
+}
+
+/**
+ * The scope of the ContentSetting. One of<br>[regular]: setting for regular
+ * profile (which is inherited by the incognito profile if not overridden
+ * elsewhere),<br>[incognito_session_only]: setting for incognito profile that
+ * can only be set during an incognito session and is deleted when the incognito
+ * session ends (overrides regular settings).
+ */
+class Scope extends ChromeEnum {
+  static const Scope REGULAR = const Scope._('regular');
+  static const Scope INCOGNITO_SESSION_ONLY = const Scope._('incognito_session_only');
+
+  static const List<Scope> VALUES = const[REGULAR, INCOGNITO_SESSION_ONLY];
+
+  const Scope._(String str): super(str);
+}
+
+class CookiesContentSetting extends ChromeEnum {
+  static const CookiesContentSetting ALLOW = const CookiesContentSetting._('allow');
+  static const CookiesContentSetting BLOCK = const CookiesContentSetting._('block');
+  static const CookiesContentSetting SESSION_ONLY = const CookiesContentSetting._('session_only');
+
+  static const List<CookiesContentSetting> VALUES = const[ALLOW, BLOCK, SESSION_ONLY];
+
+  const CookiesContentSetting._(String str): super(str);
+}
+
+class ImagesContentSetting extends ChromeEnum {
+  static const ImagesContentSetting ALLOW = const ImagesContentSetting._('allow');
+  static const ImagesContentSetting BLOCK = const ImagesContentSetting._('block');
+
+  static const List<ImagesContentSetting> VALUES = const[ALLOW, BLOCK];
+
+  const ImagesContentSetting._(String str): super(str);
+}
+
+class JavascriptContentSetting extends ChromeEnum {
+  static const JavascriptContentSetting ALLOW = const JavascriptContentSetting._('allow');
+  static const JavascriptContentSetting BLOCK = const JavascriptContentSetting._('block');
+
+  static const List<JavascriptContentSetting> VALUES = const[ALLOW, BLOCK];
+
+  const JavascriptContentSetting._(String str): super(str);
+}
+
+class LocationContentSetting extends ChromeEnum {
+  static const LocationContentSetting ALLOW = const LocationContentSetting._('allow');
+  static const LocationContentSetting BLOCK = const LocationContentSetting._('block');
+  static const LocationContentSetting ASK = const LocationContentSetting._('ask');
+
+  static const List<LocationContentSetting> VALUES = const[ALLOW, BLOCK, ASK];
+
+  const LocationContentSetting._(String str): super(str);
+}
+
+class PluginsContentSetting extends ChromeEnum {
+  static const PluginsContentSetting ALLOW = const PluginsContentSetting._('allow');
+  static const PluginsContentSetting BLOCK = const PluginsContentSetting._('block');
+  static const PluginsContentSetting DETECT_IMPORTANT_CONTENT = const PluginsContentSetting._('detect_important_content');
+
+  static const List<PluginsContentSetting> VALUES = const[ALLOW, BLOCK, DETECT_IMPORTANT_CONTENT];
+
+  const PluginsContentSetting._(String str): super(str);
+}
+
+class PopupsContentSetting extends ChromeEnum {
+  static const PopupsContentSetting ALLOW = const PopupsContentSetting._('allow');
+  static const PopupsContentSetting BLOCK = const PopupsContentSetting._('block');
+
+  static const List<PopupsContentSetting> VALUES = const[ALLOW, BLOCK];
+
+  const PopupsContentSetting._(String str): super(str);
+}
+
+class NotificationsContentSetting extends ChromeEnum {
+  static const NotificationsContentSetting ALLOW = const NotificationsContentSetting._('allow');
+  static const NotificationsContentSetting BLOCK = const NotificationsContentSetting._('block');
+  static const NotificationsContentSetting ASK = const NotificationsContentSetting._('ask');
+
+  static const List<NotificationsContentSetting> VALUES = const[ALLOW, BLOCK, ASK];
+
+  const NotificationsContentSetting._(String str): super(str);
+}
+
+class FullscreenContentSetting extends ChromeEnum {
+  static const FullscreenContentSetting ALLOW = const FullscreenContentSetting._('allow');
+  static const FullscreenContentSetting ASK = const FullscreenContentSetting._('ask');
+
+  static const List<FullscreenContentSetting> VALUES = const[ALLOW, ASK];
+
+  const FullscreenContentSetting._(String str): super(str);
+}
+
+class MouselockContentSetting extends ChromeEnum {
+  static const MouselockContentSetting ALLOW = const MouselockContentSetting._('allow');
+  static const MouselockContentSetting BLOCK = const MouselockContentSetting._('block');
+  static const MouselockContentSetting ASK = const MouselockContentSetting._('ask');
+
+  static const List<MouselockContentSetting> VALUES = const[ALLOW, BLOCK, ASK];
+
+  const MouselockContentSetting._(String str): super(str);
+}
+
+class MicrophoneContentSetting extends ChromeEnum {
+  static const MicrophoneContentSetting ALLOW = const MicrophoneContentSetting._('allow');
+  static const MicrophoneContentSetting BLOCK = const MicrophoneContentSetting._('block');
+  static const MicrophoneContentSetting ASK = const MicrophoneContentSetting._('ask');
+
+  static const List<MicrophoneContentSetting> VALUES = const[ALLOW, BLOCK, ASK];
+
+  const MicrophoneContentSetting._(String str): super(str);
+}
+
+class CameraContentSetting extends ChromeEnum {
+  static const CameraContentSetting ALLOW = const CameraContentSetting._('allow');
+  static const CameraContentSetting BLOCK = const CameraContentSetting._('block');
+  static const CameraContentSetting ASK = const CameraContentSetting._('ask');
+
+  static const List<CameraContentSetting> VALUES = const[ALLOW, BLOCK, ASK];
+
+  const CameraContentSetting._(String str): super(str);
+}
+
+class PpapiBrokerContentSetting extends ChromeEnum {
+  static const PpapiBrokerContentSetting ALLOW = const PpapiBrokerContentSetting._('allow');
+  static const PpapiBrokerContentSetting BLOCK = const PpapiBrokerContentSetting._('block');
+  static const PpapiBrokerContentSetting ASK = const PpapiBrokerContentSetting._('ask');
+
+  static const List<PpapiBrokerContentSetting> VALUES = const[ALLOW, BLOCK, ASK];
+
+  const PpapiBrokerContentSetting._(String str): super(str);
+}
+
+class MultipleAutomaticDownloadsContentSetting extends ChromeEnum {
+  static const MultipleAutomaticDownloadsContentSetting ALLOW = const MultipleAutomaticDownloadsContentSetting._('allow');
+  static const MultipleAutomaticDownloadsContentSetting BLOCK = const MultipleAutomaticDownloadsContentSetting._('block');
+  static const MultipleAutomaticDownloadsContentSetting ASK = const MultipleAutomaticDownloadsContentSetting._('ask');
+
+  static const List<MultipleAutomaticDownloadsContentSetting> VALUES = const[ALLOW, BLOCK, ASK];
+
+  const MultipleAutomaticDownloadsContentSetting._(String str): super(str);
 }
 
 /**
@@ -145,19 +306,6 @@ class ResourceIdentifier extends ChromeObject {
    */
   String get description => jsProxy['description'];
   set description(String value) => jsProxy['description'] = value;
-}
-
-/**
- * The scope of the ContentSetting. One of<br>[regular]: setting for regular
- * profile (which is inherited by the incognito profile if not overridden
- * elsewhere),<br>[incognito_session_only]: setting for incognito profile that
- * can only be set during an incognito session and is deleted when the incognito
- * session ends (overrides regular settings).
- * enum of `regular`, `incognito_session_only`
- */
-class Scope extends ChromeObject {
-  Scope();
-  Scope.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 class ContentSetting extends ChromeObject {
@@ -201,94 +349,6 @@ class ContentSetting extends ChromeObject {
     jsProxy.callMethod('getResourceIdentifiers', [completer.callback]);
     return completer.future;
   }
-}
-
-/**
- * enum of `allow`, `block`, `session_only`
- */
-class CookiesContentSetting extends ChromeObject {
-  CookiesContentSetting();
-  CookiesContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `allow`, `block`
- */
-class ImagesContentSetting extends ChromeObject {
-  ImagesContentSetting();
-  ImagesContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `allow`, `block`
- */
-class JavascriptContentSetting extends ChromeObject {
-  JavascriptContentSetting();
-  JavascriptContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `allow`, `block`, `ask`
- */
-class LocationContentSetting extends ChromeObject {
-  LocationContentSetting();
-  LocationContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `allow`, `block`, `detect_important_content`
- */
-class PluginsContentSetting extends ChromeObject {
-  PluginsContentSetting();
-  PluginsContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `allow`, `block`
- */
-class PopupsContentSetting extends ChromeObject {
-  PopupsContentSetting();
-  PopupsContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `allow`, `block`, `ask`
- */
-class NotificationsContentSetting extends ChromeObject {
-  NotificationsContentSetting();
-  NotificationsContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `allow`, `ask`
- */
-class FullscreenContentSetting extends ChromeObject {
-  FullscreenContentSetting();
-  FullscreenContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `allow`, `block`, `ask`
- */
-class MouselockContentSetting extends ChromeObject {
-  MouselockContentSetting();
-  MouselockContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `allow`, `block`, `ask`
- */
-class PpapiBrokerContentSetting extends ChromeObject {
-  PpapiBrokerContentSetting();
-  PpapiBrokerContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * enum of `allow`, `block`, `ask`
- */
-class MultipleAutomaticDownloadsContentSetting extends ChromeObject {
-  MultipleAutomaticDownloadsContentSetting();
-  MultipleAutomaticDownloadsContentSetting.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 class ContentSettingsClearParams extends ChromeObject {
@@ -390,4 +450,4 @@ class ContentSettingsSetParams extends ChromeObject {
 
 ContentSetting _createContentSetting(JsObject jsProxy) => jsProxy == null ? null : new ContentSetting.fromProxy(jsProxy);
 ResourceIdentifier _createResourceIdentifier(JsObject jsProxy) => jsProxy == null ? null : new ResourceIdentifier.fromProxy(jsProxy);
-Scope _createScope(JsObject jsProxy) => jsProxy == null ? null : new Scope.fromProxy(jsProxy);
+Scope _createScope(String value) => Scope.VALUES.singleWhere((ChromeEnum e) => e.value == value);

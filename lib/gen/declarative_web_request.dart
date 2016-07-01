@@ -253,7 +253,8 @@ class RedirectToEmptyDocument extends ChromeObject {
 
 /**
  * Redirects a request by applying a regular expression on the URL. The regular
- * expressions use the [RE2 syntax](http://code.google.com/p/re2/wiki/Syntax).
+ * expressions use the [RE2
+ * syntax](https://github.com/google/re2/blob/master/doc/syntax.txt).
  */
 class RedirectByRegEx extends ChromeObject {
   RedirectByRegEx({String from, String to}) {

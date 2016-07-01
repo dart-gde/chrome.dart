@@ -51,7 +51,7 @@ class GenApis {
 
     var apisInfo = JSON.decode(apisFile.readAsStringSync());
 
-    _generateApi('app', apisInfo['packaged_app'], includeAppSrc: true);
+    //_generateApi('app', apisInfo['packaged_app'], includeAppSrc: true);
     _generateApi('ext', apisInfo['extension'], alreadyWritten: apisInfo['packaged_app']);
 
     // Generate orphaned libraries.

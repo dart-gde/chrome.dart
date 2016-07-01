@@ -1,4 +1,4 @@
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
+// Copyright 2012 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -56,10 +56,6 @@
     "matches": ["<all_urls>"]
   },
   "app.getDetails": {
-    "contexts": ["blessed_extension", "unblessed_extension", "content_script"],
-    "matches": []
-  },
-  "app.getDetailsForFrame": {
     "contexts": ["blessed_extension", "unblessed_extension", "content_script"],
     "matches": []
   },
@@ -158,7 +154,13 @@
       "FA01E0B81978950F2BC5A50512FD769725F57510",  // Beta
       "B11A93E7E5B541F8010245EBDE2C74647D6C14B9",  // Canary
       "F155646B5D1CA545F7E1E4E20D573DFDD44C2540",  // Google Cast Beta
-      "16CA7A47AAE4BE49B1E75A6B960C3875E945B264"   // Google Cast Stable
+      "16CA7A47AAE4BE49B1E75A6B960C3875E945B264",  // Google Cast Stable
+      // The extensions below here only use openPopup on a user action,
+      // so are safe, and can be removed when the whitelist on that
+      // capability is lifted. See crbug.com/436489 for context.
+      "A4577D8C2AF4CF26F40CBCA83FFA4251D6F6C8F8",  // http://crbug.com/497301
+      "A8208CCC87F8261AFAEB6B85D5E8D47372DDEA6B",  // http://crbug.com/497301
+      "EFCF5358672FEE04789FD2EC3638A67ADEDB6C8C"   // http://crbug.com/514696
     ],
     "contexts": ["blessed_extension"]
   }],
@@ -169,6 +171,11 @@
   "cast.channel": {
     "dependencies": ["permission:cast"],
     "contexts": ["blessed_extension"]
+  },
+  "cast.devicesPrivate": {
+    "dependencies": ["permission:cast"],
+    "contexts": ["blessed_extension"],
+    "platforms": ["chromeos"]
   },
   "cast.streaming.rtpStream": {
     "dependencies": ["permission:cast.streaming"],
@@ -186,6 +193,15 @@
     "dependencies": ["permission:cast.streaming"],
     "contexts": ["blessed_extension"]
   },
+  "certificateProvider": {
+    "dependencies": ["permission:certificateProvider"],
+    "contexts": ["blessed_extension"]
+  },
+  "certificateProviderInternal": {
+    "internal": true,
+    "dependencies": ["permission:certificateProvider"],
+    "contexts": ["blessed_extension"]
+  },
   "chromeosInfoPrivate": {
     "dependencies": ["permission:chromeosInfoPrivate"],
     "contexts": ["blessed_extension"]
@@ -198,7 +214,11 @@
     "internal": true,
     "channel": "dev",
     "contexts": ["webui"],
-    "matches": ["chrome://chrome-signin/*", "chrome://oobe/*"]
+    "matches": [
+      "chrome://chrome-signin/*",
+      "chrome://media-router/*",
+      "chrome://oobe/*"
+    ]
   }],
   "cloudPrintPrivate": {
     "dependencies": ["permission:cloudPrintPrivate"],
@@ -241,6 +261,17 @@
     "dependencies": ["permission:cryptotokenPrivate"],
     "contexts": ["blessed_extension"]
   },
+  "dashboardPrivate": [{
+    "channel": "stable",
+    "contexts": ["blessed_web_page", "web_page"],
+    "matches": ["https://chrome.google.com/*"]
+  }, {
+    "channel": "stable",
+    "contexts": ["blessed_extension"],
+    "whitelist": [
+      "B44D08FD98F1523ED5837D78D0A606EA9D6206E5"  // Web Store
+    ]
+  }],
   "dataReductionProxy": {
     "dependencies": ["permission:dataReductionProxy"],
     "contexts": ["blessed_extension"]
@@ -265,7 +296,7 @@
       "F155646B5D1CA545F7E1E4E20D573DFDD44C2540",  // Google Cast Beta
       "16CA7A47AAE4BE49B1E75A6B960C3875E945B264",  // Google Cast Stable
       "C17CD9E6868D7B9C67926E0EC612EA25C768418F",  // http://crbug.com/457908
-      "EF2AB692559EA97C3BBDEA018A8C45F92457BD4E"   // http://crbug.com/457908
+      "226CF815E39A363090A1E547D53063472B8279FA"   // http://crbug.com/574889
     ],
     "contexts": ["blessed_extension"]
   }],
@@ -316,6 +347,10 @@
   },
   "echoPrivate": {
     "dependencies": ["permission:echoPrivate"],
+    "contexts": ["blessed_extension"]
+  },
+  "enterprise.deviceAttributes": {
+    "dependencies": ["permission:enterprise.deviceAttributes"],
     "contexts": ["blessed_extension"]
   },
   "enterprise.platformKeys": {
@@ -456,13 +491,14 @@
     "channel": "stable",
     "contexts": ["blessed_extension"],
     "whitelist": [
-      // http://crbug.com/309737
-      "nckgahadagoaajjgafhacjanaoiihapd",
-      "ljclpkphhpbpinifbeabbhlfddcpfdde",
-      "ppleadejekpmccmnpjdimmlfljlkdfej",
-      "eggnbpckecmjlblplehfpjjdhhidfdoj",
-      "jfjjdfefebklmdbmenmlehlopoocnoeh",
-      "knipolnnllmklapflnccelgolnpehhpl"
+      // http://crbug.com/309737.
+      // Keep this list in sync with extensions_misc::kHangoutsExtensionIds.
+      "nckgahadagoaajjgafhacjanaoiihapd",  // Hangouts Production.
+      "ljclpkphhpbpinifbeabbhlfddcpfdde",  // Hangouts Debug.
+      "ppleadejekpmccmnpjdimmlfljlkdfej",  // Hangouts Alpha.
+      "eggnbpckecmjlblplehfpjjdhhidfdoj",  // Hangouts Beta.
+      "jfjjdfefebklmdbmenmlehlopoocnoeh",  // Hangouts Packaged App Debug.
+      "knipolnnllmklapflnccelgolnpehhpl"   // Hangouts Packaged App Prod.
     ]
   },
   "history": {
@@ -511,16 +547,24 @@
     "dependencies": ["permission:gcm"],
     "contexts": ["blessed_extension"]
   },
+  "languageSettingsPrivate": [{
+    "dependencies": ["permission:languageSettingsPrivate"],
+    "contexts": ["blessed_extension"]
+  }, {
+    "channel": "stable",
+    "contexts": ["webui"],
+    "matches": [
+      "chrome://md-settings/*",
+      "chrome://settings/*",
+      "chrome://settings-frame/*"
+    ]
+  }],
   "launcherPage": {
     "dependencies": ["manifest:launcher_page"],
     "contexts": ["blessed_extension"]
   },
   "launcherSearchProvider": {
     "dependencies": ["permission:launcherSearchProvider"],
-    "contexts": ["blessed_extension"]
-  },
-  "location": {
-    "dependencies": ["permission:location"],
     "contexts": ["blessed_extension"]
   },
   "logPrivate": {
@@ -546,10 +590,18 @@
     "dependencies": ["permission:mediaPlayerPrivate"],
     "contexts": ["blessed_extension"]
   },
-  "metricsPrivate": {
+  "metricsPrivate": [{
     "dependencies": ["permission:metricsPrivate"],
     "contexts": ["blessed_extension"]
-  },
+  }, {
+    "channel": "trunk",
+    "contexts": ["webui"],
+    "matches": [
+      "chrome://md-settings/*",
+      "chrome://settings/*",
+      "chrome://settings-frame/*"
+    ]
+  }],
   "mdns": {
     "dependencies": ["permission:mdns"],
     "contexts": ["blessed_extension"]
@@ -618,10 +670,6 @@
     "dependencies": ["permission:preferencesPrivate"],
     "contexts": ["blessed_extension"]
   },
-  "principalsPrivate": {
-    "dependencies": ["permission:principalsPrivate"],
-    "contexts": ["blessed_extension"]
-  },
   "privacy": {
     "dependencies": ["permission:privacy"],
     "contexts": ["blessed_extension"]
@@ -639,26 +687,20 @@
     "extension_types": ["platform_app"],
     "contexts": ["blessed_extension"]
   },
-  "readingListPrivate": {
-    "dependencies": ["permission:readingListPrivate"],
+  "resourcesPrivate": [{
+    "dependencies": ["permission:resourcesPrivate"],
     "contexts": ["blessed_extension"]
-  },
+  }, {
+    "channel": "stable",
+    "contexts": ["webui"],
+    "matches": [
+      "chrome://print/*"
+    ]
+  }],
   "rtcPrivate": {
     "dependencies": ["permission:rtcPrivate"],
     "contexts": ["blessed_extension"]
   },
-  "searchEnginesPrivate": [{
-    "dependencies": ["permission:searchEnginesPrivate"],
-    "contexts": ["blessed_extension"]
-  }, {
-    "channel": "trunk",
-    "contexts": ["webui"],
-    "matches": [
-      "chrome://md-settings/*",
-      "chrome://settings/*",
-      "chrome://settings-frame/*"
-    ]
-  }],
   "sessions": {
     "dependencies": ["permission:sessions"],
     "contexts": ["blessed_extension"]
@@ -720,6 +762,18 @@
     "dependencies": ["permission:ttsEngine"],
     "contexts": ["blessed_extension"]
   },
+  "usersPrivate": [{
+    "dependencies": ["permission:usersPrivate"],
+    "contexts": ["blessed_extension"]
+  }, {
+    "channel": "trunk",
+    "contexts": ["webui"],
+    "matches": [
+      "chrome://md-settings/*",
+      "chrome://settings/*",
+      "chrome://settings-frame/*"
+    ]
+  }],
   "virtualKeyboardPrivate": {
     "dependencies": ["permission:virtualKeyboardPrivate"],
     "contexts": ["blessed_extension"]

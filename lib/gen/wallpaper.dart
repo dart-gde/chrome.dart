@@ -42,11 +42,15 @@ class ChromeWallpaper extends ChromeApi {
 
 /**
  * The supported wallpaper layouts.
- * enum of `STRETCH`, `CENTER`, `CENTER_CROPPED`
  */
-class WallpaperLayout extends ChromeObject {
-  WallpaperLayout();
-  WallpaperLayout.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class WallpaperLayout extends ChromeEnum {
+  static const WallpaperLayout STRETCH = const WallpaperLayout._('STRETCH');
+  static const WallpaperLayout CENTER = const WallpaperLayout._('CENTER');
+  static const WallpaperLayout CENTER_CROPPED = const WallpaperLayout._('CENTER_CROPPED');
+
+  static const List<WallpaperLayout> VALUES = const[STRETCH, CENTER, CENTER_CROPPED];
+
+  const WallpaperLayout._(String str): super(str);
 }
 
 class WallpaperSetWallpaperParams extends ChromeObject {
@@ -60,13 +64,13 @@ class WallpaperSetWallpaperParams extends ChromeObject {
   WallpaperSetWallpaperParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   /**
-   * The jpeg or png encoded wallpaper image.
+   * The jpeg or png encoded wallpaper image as an ArrayBuffer.
    */
   dynamic get data => jsProxy['data'];
   set data(var value) => jsProxy['data'] = jsify(value);
 
   /**
-   * The URL of the wallpaper to be set.
+   * The URL of the wallpaper to be set (can be relative).
    */
   String get url => jsProxy['url'];
   set url(String value) => jsProxy['url'] = value;
@@ -84,10 +88,11 @@ class WallpaperSetWallpaperParams extends ChromeObject {
   set filename(String value) => jsProxy['filename'] = value;
 
   /**
-   * True if a 128x60 thumbnail should be generated.
+   * True if a 128x60 thumbnail should be generated. Layout and ratio are not
+   * supported yet.
    */
   bool get thumbnail => jsProxy['thumbnail'];
   set thumbnail(bool value) => jsProxy['thumbnail'] = value;
 }
 
-WallpaperLayout _createWallpaperLayout(JsObject jsProxy) => jsProxy == null ? null : new WallpaperLayout.fromProxy(jsProxy);
+WallpaperLayout _createWallpaperLayout(String value) => WallpaperLayout.VALUES.singleWhere((ChromeEnum e) => e.value == value);

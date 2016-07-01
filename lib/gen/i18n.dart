@@ -25,12 +25,12 @@ class ChromeI18N extends ChromeApi {
    * used by the browser; to get the locale, use [i18n.getUILanguage].
    * 
    * Returns:
-   * Array of the accept languages of the browser, such as en-US,en,zh-CN
+   * Array of LanguageCode
    */
-  Future<List<String>> getAcceptLanguages() {
+  Future<List<LanguageCode>> getAcceptLanguages() {
     if (_i18n == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<List<String>>.oneArg(listify);
+    var completer = new ChromeCompleter<List<LanguageCode>>.oneArg((e) => listify(e, _createLanguageCode));
     _i18n.callMethod('getAcceptLanguages', [completer.callback]);
     return completer.future;
   }
@@ -69,7 +69,38 @@ class ChromeI18N extends ChromeApi {
     return _i18n.callMethod('getUILanguage');
   }
 
+  /**
+   * Detects the language of the provided text using CLD.
+   * 
+   * [text] User input string to be translated.
+   * 
+   * Returns:
+   * LanguageDetectionResult object that holds detected langugae reliability and
+   * array of DetectedLanguage
+   */
+  Future<Map> detectLanguage(String text) {
+    if (_i18n == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<Map>.oneArg(mapify);
+    _i18n.callMethod('detectLanguage', [text, completer.callback]);
+    return completer.future;
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.i18n' is not available");
   }
 }
+
+/**
+ * An ISO language code such as `en` or `fr`. For a complete list of languages
+ * supported by this method, see
+ * [kLanguageInfoTable](http://src.chromium.org/viewvc/chrome/trunk/src/third_party/cld/languages/internal/languages.cc).
+ * For an unknown language, `und` will be returned, which means that
+ * [percentage] of the text is unknown to CLD
+ */
+class LanguageCode extends ChromeObject {
+  LanguageCode();
+  LanguageCode.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
+LanguageCode _createLanguageCode(JsObject jsProxy) => jsProxy == null ? null : new LanguageCode.fromProxy(jsProxy);
