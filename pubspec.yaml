@@ -9,7 +9,7 @@ homepage: https://github.com/dart-gde/chrome.dart
 environment:
   sdk: '>=1.8.0 <2.0.0'
 dependencies:
-  barback: any
+  barback: ^0.15.2+4
 dev_dependencies:
   args: any
   browser: any
