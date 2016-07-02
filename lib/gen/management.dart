@@ -119,7 +119,10 @@ class ChromeManagement extends ChromeApi {
   }
 
   /**
-   * Enables or disables an app or extension.
+   * Enables or disables an app or extension. In most cases this function must
+   * be called in the context of a user gesture (e.g. an onclick handler for a
+   * button), and may present the user with a native confirmation UI as a way of
+   * preventing abuse.
    * 
    * [id] This should be the id from an item of [management.ExtensionInfo].
    * 
@@ -224,6 +227,67 @@ class ChromeManagement extends ChromeApi {
 }
 
 /**
+ * These are all possible app launch types.
+ */
+class LaunchType extends ChromeEnum {
+  static const LaunchType OPEN_AS_REGULAR_TAB = const LaunchType._('OPEN_AS_REGULAR_TAB');
+  static const LaunchType OPEN_AS_PINNED_TAB = const LaunchType._('OPEN_AS_PINNED_TAB');
+  static const LaunchType OPEN_AS_WINDOW = const LaunchType._('OPEN_AS_WINDOW');
+  static const LaunchType OPEN_FULL_SCREEN = const LaunchType._('OPEN_FULL_SCREEN');
+
+  static const List<LaunchType> VALUES = const[OPEN_AS_REGULAR_TAB, OPEN_AS_PINNED_TAB, OPEN_AS_WINDOW, OPEN_FULL_SCREEN];
+
+  const LaunchType._(String str): super(str);
+}
+
+/**
+ * A reason the item is disabled.
+ */
+class ExtensionDisabledReason extends ChromeEnum {
+  static const ExtensionDisabledReason UNKNOWN = const ExtensionDisabledReason._('unknown');
+  static const ExtensionDisabledReason PERMISSIONS_INCREASE = const ExtensionDisabledReason._('permissions_increase');
+
+  static const List<ExtensionDisabledReason> VALUES = const[UNKNOWN, PERMISSIONS_INCREASE];
+
+  const ExtensionDisabledReason._(String str): super(str);
+}
+
+/**
+ * The type of this extension, app, or theme.
+ */
+class ExtensionType extends ChromeEnum {
+  static const ExtensionType EXTENSION = const ExtensionType._('extension');
+  static const ExtensionType HOSTED_APP = const ExtensionType._('hosted_app');
+  static const ExtensionType PACKAGED_APP = const ExtensionType._('packaged_app');
+  static const ExtensionType LEGACY_PACKAGED_APP = const ExtensionType._('legacy_packaged_app');
+  static const ExtensionType THEME = const ExtensionType._('theme');
+
+  static const List<ExtensionType> VALUES = const[EXTENSION, HOSTED_APP, PACKAGED_APP, LEGACY_PACKAGED_APP, THEME];
+
+  const ExtensionType._(String str): super(str);
+}
+
+/**
+ * How the extension was installed. One of<br>[admin]: The extension was
+ * installed because of an administrative policy,<br>[development]: The
+ * extension was loaded unpacked in developer mode,<br>[normal]: The extension
+ * was installed normally via a .crx file,<br>[sideload]: The extension was
+ * installed by other software on the machine,<br>[other]: The extension was
+ * installed by other means.
+ */
+class ExtensionInstallType extends ChromeEnum {
+  static const ExtensionInstallType ADMIN = const ExtensionInstallType._('admin');
+  static const ExtensionInstallType DEVELOPMENT = const ExtensionInstallType._('development');
+  static const ExtensionInstallType NORMAL = const ExtensionInstallType._('normal');
+  static const ExtensionInstallType SIDELOAD = const ExtensionInstallType._('sideload');
+  static const ExtensionInstallType OTHER = const ExtensionInstallType._('other');
+
+  static const List<ExtensionInstallType> VALUES = const[ADMIN, DEVELOPMENT, NORMAL, SIDELOAD, OTHER];
+
+  const ExtensionInstallType._(String str): super(str);
+}
+
+/**
  * Information about an icon belonging to an extension, app, or theme.
  */
 class IconInfo extends ChromeObject {
@@ -250,58 +314,16 @@ class IconInfo extends ChromeObject {
 }
 
 /**
- * These are all possible app launch types.
- * enum of `OPEN_AS_REGULAR_TAB`, `OPEN_AS_PINNED_TAB`, `OPEN_AS_WINDOW`,
- * `OPEN_FULL_SCREEN`
- */
-class LaunchType extends ChromeObject {
-  LaunchType();
-  LaunchType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * A reason the item is disabled.
- * enum of `unknown`, `permissions_increase`
- */
-class ExtensionDisabledReason extends ChromeObject {
-  ExtensionDisabledReason();
-  ExtensionDisabledReason.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * The type of this extension, app, or theme.
- * enum of `extension`, `hosted_app`, `packaged_app`, `legacy_packaged_app`,
- * `theme`
- */
-class ExtensionType extends ChromeObject {
-  ExtensionType();
-  ExtensionType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * How the extension was installed. One of<br>[admin]: The extension was
- * installed because of an administrative policy,<br>[development]: The
- * extension was loaded unpacked in developer mode,<br>[normal]: The extension
- * was installed normally via a .crx file,<br>[sideload]: The extension was
- * installed by other software on the machine,<br>[other]: The extension was
- * installed by other means.
- * enum of `admin`, `development`, `normal`, `sideload`, `other`
- */
-class ExtensionInstallType extends ChromeObject {
-  ExtensionInstallType();
-  ExtensionInstallType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
  * Information about an installed extension, app, or theme.
  */
 class ExtensionInfo extends ChromeObject {
-  ExtensionInfo({String id, String name, String shortName, String description, String version, bool mayDisable, bool enabled, ExtensionDisabledReason disabledReason, bool isApp, ExtensionType type, String appLaunchUrl, String homepageUrl, String updateUrl, bool offlineEnabled, String optionsUrl, List<IconInfo> icons, List<String> permissions, List<String> hostPermissions, ExtensionInstallType installType, LaunchType launchType, List<LaunchType> availableLaunchTypes}) {
+  ExtensionInfo({String id, String name, String shortName, String description, String version, String versionName, bool mayDisable, bool enabled, ExtensionDisabledReason disabledReason, bool isApp, ExtensionType type, String appLaunchUrl, String homepageUrl, String updateUrl, bool offlineEnabled, String optionsUrl, List<IconInfo> icons, List<String> permissions, List<String> hostPermissions, ExtensionInstallType installType, LaunchType launchType, List<LaunchType> availableLaunchTypes}) {
     if (id != null) this.id = id;
     if (name != null) this.name = name;
     if (shortName != null) this.shortName = shortName;
     if (description != null) this.description = description;
     if (version != null) this.version = version;
+    if (versionName != null) this.versionName = versionName;
     if (mayDisable != null) this.mayDisable = mayDisable;
     if (enabled != null) this.enabled = enabled;
     if (disabledReason != null) this.disabledReason = disabledReason;
@@ -350,6 +372,13 @@ class ExtensionInfo extends ChromeObject {
    */
   String get version => jsProxy['version'];
   set version(String value) => jsProxy['version'] = value;
+
+  /**
+   * The [version name](manifest/version#version_name) of this extension, app,
+   * or theme if the manifest specified one.
+   */
+  String get versionName => jsProxy['versionName'];
+  set versionName(String value) => jsProxy['versionName'] = value;
 
   /**
    * Whether this extension can be disabled or uninstalled by the user.
@@ -482,8 +511,8 @@ class ManagementUninstallSelfParams extends ChromeObject {
 }
 
 ExtensionInfo _createExtensionInfo(JsObject jsProxy) => jsProxy == null ? null : new ExtensionInfo.fromProxy(jsProxy);
-ExtensionDisabledReason _createExtensionDisabledReason(JsObject jsProxy) => jsProxy == null ? null : new ExtensionDisabledReason.fromProxy(jsProxy);
-ExtensionType _createExtensionType(JsObject jsProxy) => jsProxy == null ? null : new ExtensionType.fromProxy(jsProxy);
+ExtensionDisabledReason _createExtensionDisabledReason(String value) => ExtensionDisabledReason.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+ExtensionType _createExtensionType(String value) => ExtensionType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 IconInfo _createIconInfo(JsObject jsProxy) => jsProxy == null ? null : new IconInfo.fromProxy(jsProxy);
-ExtensionInstallType _createExtensionInstallType(JsObject jsProxy) => jsProxy == null ? null : new ExtensionInstallType.fromProxy(jsProxy);
-LaunchType _createLaunchType(JsObject jsProxy) => jsProxy == null ? null : new LaunchType.fromProxy(jsProxy);
+ExtensionInstallType _createExtensionInstallType(String value) => ExtensionInstallType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+LaunchType _createLaunchType(String value) => LaunchType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

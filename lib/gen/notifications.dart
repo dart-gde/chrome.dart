@@ -214,7 +214,7 @@ class NotificationButton extends ChromeObject {
 }
 
 class NotificationOptions extends ChromeObject {
-  NotificationOptions({TemplateType type, String iconUrl, NotificationBitmap iconBitmap, String appIconMaskUrl, NotificationBitmap appIconMaskBitmap, String title, String message, String contextMessage, int priority, num eventTime, List<NotificationButton> buttons, String expandedMessage, String imageUrl, NotificationBitmap imageBitmap, List<NotificationItem> items, int progress, bool isClickable}) {
+  NotificationOptions({TemplateType type, String iconUrl, NotificationBitmap iconBitmap, String appIconMaskUrl, NotificationBitmap appIconMaskBitmap, String title, String message, String contextMessage, int priority, num eventTime, List<NotificationButton> buttons, String expandedMessage, String imageUrl, NotificationBitmap imageBitmap, List<NotificationItem> items, int progress, bool isClickable, bool requireInteraction}) {
     if (type != null) this.type = type;
     if (iconUrl != null) this.iconUrl = iconUrl;
     if (iconBitmap != null) this.iconBitmap = iconBitmap;
@@ -232,6 +232,7 @@ class NotificationOptions extends ChromeObject {
     if (items != null) this.items = items;
     if (progress != null) this.progress = progress;
     if (isClickable != null) this.isClickable = isClickable;
+    if (requireInteraction != null) this.requireInteraction = requireInteraction;
   }
   NotificationOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -285,6 +286,9 @@ class NotificationOptions extends ChromeObject {
 
   bool get isClickable => jsProxy['isClickable'];
   set isClickable(bool value) => jsProxy['isClickable'] = value;
+
+  bool get requireInteraction => jsProxy['requireInteraction'];
+  set requireInteraction(bool value) => jsProxy['requireInteraction'] = value;
 }
 
 OnClosedEvent _createOnClosedEvent(String notificationId, bool byUser) =>

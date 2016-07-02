@@ -5,7 +5,7 @@
 [
   {
     "namespace": "pageAction",
-    "description": "Use the <code>chrome.pageAction</code> API to put icons inside the address bar. Page actions represent actions that can be taken on the current page, but that aren't applicable to all pages.",
+    "description": "Use the <code>chrome.pageAction</code> API to put icons in the main Google Chrome toolbar, to the right of the address bar. Page actions represent actions that can be taken on the current page, but that aren't applicable to all pages. Page actions appear grayed out when inactive.",
     "types": [
       {
         "id": "ImageDataType",
@@ -27,7 +27,7 @@
       {
         "name": "hide",
         "type": "function",
-        "description": "Hides the page action.",
+        "description": "Hides the page action. Hidden page actions still appear in the Chrome toolbar, but are grayed out.",
         "parameters": [
           {"type": "integer", "name": "tabId", "minimum": 0, "description": "The id of the tab for which you want to modify the page action."}
         ]
@@ -89,28 +89,22 @@
                   { "$ref": "ImageDataType" },
                   {
                     "type": "object",
-                    "properties": {
-                      "19": {"$ref": "ImageDataType", "optional": true},
-                      "38": {"$ref": "ImageDataType", "optional": true}
-                     }
+                    "additionalProperties": { "type": "any" }
                   }
                 ],
                 "optional": true,
-                "description": "Either an ImageData object or a dictionary {size -> ImageData} representing icon to be set. If the icon is specified as a dictionary, the actual image to be used is chosen depending on screen's pixel density. If the number of image pixels that fit into one screen space unit equals <code>scale</code>, then image with size <code>scale</code> * 19 will be selected. Initially only scales 1 and 2 will be supported. At least one image must be specified. Note that 'details.imageData = foo' is equivalent to 'details.imageData = {'19': foo}'"
+                "description": "Either an ImageData object or a dictionary {size -> ImageData} representing icon to be set. If the icon is specified as a dictionary, the actual image to be used is chosen depending on screen's pixel density. If the number of image pixels that fit into one screen space unit equals <code>scale</code>, then image with size <code>scale</code> * n will be selected, where n is the size of the icon in the UI. At least one image must be specified. Note that 'details.imageData = foo' is equivalent to 'details.imageData = {'16': foo}'"
               },
               "path": {
                 "choices": [
                   { "type": "string" },
                   {
                     "type": "object",
-                    "properties": {
-                      "19": {"type": "string", "optional": true},
-                      "38": {"type": "string", "optional": true}
-                    }
+                    "additionalProperties": { "type": "any" }
                   }
                 ],
                 "optional": true,
-                "description": "Either a relative image path or a dictionary {size -> relative image path} pointing to icon to be set. If the icon is specified as a dictionary, the actual image to be used is chosen depending on screen's pixel density. If the number of image pixels that fit into one screen space unit equals <code>scale</code>, then image with size <code>scale</code> * 19 will be selected. Initially only scales 1 and 2 will be supported. At least one image must be specified. Note that 'details.path = foo' is equivalent to 'details.imageData = {'19': foo}'"
+                "description": "Either a relative image path or a dictionary {size -> relative image path} pointing to icon to be set. If the icon is specified as a dictionary, the actual image to be used is chosen depending on screen's pixel density. If the number of image pixels that fit into one screen space unit equals <code>scale</code>, then image with size <code>scale</code> * n will be selected, where n is the size of the icon in the UI. At least one image must be specified. Note that 'details.path = foo' is equivalent to 'details.path = {'16': foo}'"
               },
               "iconIndex": {
                 "type": "integer",

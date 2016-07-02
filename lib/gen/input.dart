@@ -3,6 +3,7 @@
 library chrome.input;
 
 import '../src/common.dart';
+import 'windows.dart';
 
 final ChromeInput input = new ChromeInput._();
 
@@ -60,7 +61,8 @@ class ChromeInputIme extends ChromeApi {
   ChromeStreamController<InputContext> _onInputContextUpdate;
 
   /**
-   * This event is sent if this extension owns the active IME.
+   * Fired when a key event is sent from the operating system. The event will be
+   * sent to the extension if this extension owns the active IME.
    */
   Stream<OnKeyEventEvent> get onKeyEvent => _onKeyEvent.stream;
   ChromeStreamController<OnKeyEventEvent> _onKeyEvent;
@@ -91,6 +93,14 @@ class ChromeInputIme extends ChromeApi {
   Stream<String> get onReset => _onReset.stream;
   ChromeStreamController<String> _onReset;
 
+  /**
+   * Triggered when the bounds of the IME composition text or cursor are
+   * changed. The IME composition text is the instance of text produced in the
+   * input method editor.
+   */
+  Stream<List<Bounds>> get onCompositionBoundsChanged => _onCompositionBoundsChanged.stream;
+  ChromeStreamController<List<Bounds>> _onCompositionBoundsChanged;
+
   ChromeInputIme._() {
     var getApi = () => _input_ime;
     _onActivate = new ChromeStreamController<OnActivateEvent>.twoArgs(getApi, 'onActivate', _createOnActivateEvent);
@@ -103,6 +113,7 @@ class ChromeInputIme extends ChromeApi {
     _onMenuItemActivated = new ChromeStreamController<OnMenuItemActivatedEvent>.twoArgs(getApi, 'onMenuItemActivated', _createOnMenuItemActivatedEvent);
     _onSurroundingTextChanged = new ChromeStreamController<OnSurroundingTextChangedEvent>.twoArgs(getApi, 'onSurroundingTextChanged', _createOnSurroundingTextChangedEvent);
     _onReset = new ChromeStreamController<String>.oneArg(getApi, 'onReset', selfConverter);
+    _onCompositionBoundsChanged = new ChromeStreamController<List<Bounds>>.oneArg(getApi, 'onCompositionBoundsChanged', (e) => listify(e, _createBounds));
   }
 
   bool get available => _input_ime != null;
@@ -249,6 +260,74 @@ class ChromeInputIme extends ChromeApi {
     _input_ime.callMethod('keyEventHandled', [requestId, response]);
   }
 
+  /**
+   * Creates IME window.
+   * 
+   * [options] The options of the newly created IME window.
+   * 
+   * Returns:
+   * The JavaScript 'window' object of the newly created IME window. It contains
+   * the additional 'id' property for the parameters of the other functions like
+   * showWindow/hideWindow.
+   */
+  Future<Window> createWindow(CreateWindowOptions options) {
+    if (_input_ime == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<Window>.oneArg(_createWindow);
+    _input_ime.callMethod('createWindow', [jsify(options), completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Shows the IME window. This makes the hidden window visible.
+   * 
+   * [windowId] The ID of the IME window.
+   */
+  Future showWindow(int windowId) {
+    if (_input_ime == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _input_ime.callMethod('showWindow', [windowId, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Hides the IME window. This doesn't close the window. Instead, it makes the
+   * window invisible. The extension can cache the window and show/hide it for
+   * better performance.
+   * 
+   * [windowId] The ID of the IME window.
+   */
+  Future hideWindow(int windowId) {
+    if (_input_ime == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _input_ime.callMethod('hideWindow', [windowId, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Activates the IME extension so that it can receive events.
+   */
+  Future activate() {
+    if (_input_ime == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _input_ime.callMethod('activate', [completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Deactivates the IME extension so that it cannot receive events.
+   */
+  Future deactivate() {
+    if (_input_ime == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _input_ime.callMethod('deactivate', [completer.callback]);
+    return completer.future;
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.input.ime' is not available");
   }
@@ -273,7 +352,8 @@ class OnActivateEvent {
 }
 
 /**
- * This event is sent if this extension owns the active IME.
+ * Fired when a key event is sent from the operating system. The event will be
+ * sent to the extension if this extension owns the active IME.
  */
 class OnKeyEventEvent {
   /**
@@ -345,6 +425,120 @@ class OnSurroundingTextChangedEvent {
   final Map surroundingInfo;
 
   OnSurroundingTextChangedEvent(this.engineID, this.surroundingInfo);
+}
+
+class KeyboardEventType extends ChromeEnum {
+  static const KeyboardEventType KEYUP = const KeyboardEventType._('keyup');
+  static const KeyboardEventType KEYDOWN = const KeyboardEventType._('keydown');
+
+  static const List<KeyboardEventType> VALUES = const[KEYUP, KEYDOWN];
+
+  const KeyboardEventType._(String str): super(str);
+}
+
+/**
+ * Type of value this text field edits, (Text, Number, URL, etc)
+ */
+class InputContextType extends ChromeEnum {
+  static const InputContextType TEXT = const InputContextType._('text');
+  static const InputContextType SEARCH = const InputContextType._('search');
+  static const InputContextType TEL = const InputContextType._('tel');
+  static const InputContextType URL = const InputContextType._('url');
+  static const InputContextType EMAIL = const InputContextType._('email');
+  static const InputContextType NUMBER = const InputContextType._('number');
+  static const InputContextType PASSWORD = const InputContextType._('password');
+
+  static const List<InputContextType> VALUES = const[TEXT, SEARCH, TEL, URL, EMAIL, NUMBER, PASSWORD];
+
+  const InputContextType._(String str): super(str);
+}
+
+/**
+ * The type of menu item. Radio buttons between separators are considered
+ * grouped.
+ */
+class MenuItemStyle extends ChromeEnum {
+  static const MenuItemStyle CHECK = const MenuItemStyle._('check');
+  static const MenuItemStyle RADIO = const MenuItemStyle._('radio');
+  static const MenuItemStyle SEPARATOR = const MenuItemStyle._('separator');
+
+  static const List<MenuItemStyle> VALUES = const[CHECK, RADIO, SEPARATOR];
+
+  const MenuItemStyle._(String str): super(str);
+}
+
+/**
+ * The type of the underline to modify this segment.
+ */
+class UnderlineStyle extends ChromeEnum {
+  static const UnderlineStyle UNDERLINE = const UnderlineStyle._('underline');
+  static const UnderlineStyle DOUBLE_UNDERLINE = const UnderlineStyle._('doubleUnderline');
+  static const UnderlineStyle NO_UNDERLINE = const UnderlineStyle._('noUnderline');
+
+  static const List<UnderlineStyle> VALUES = const[UNDERLINE, DOUBLE_UNDERLINE, NO_UNDERLINE];
+
+  const UnderlineStyle._(String str): super(str);
+}
+
+/**
+ * Where to display the candidate window. If set to 'cursor', the window follows
+ * the cursor. If set to 'composition', the window is locked to the beginning of
+ * the composition.
+ */
+class WindowPosition extends ChromeEnum {
+  static const WindowPosition CURSOR = const WindowPosition._('cursor');
+  static const WindowPosition COMPOSITION = const WindowPosition._('composition');
+
+  static const List<WindowPosition> VALUES = const[CURSOR, COMPOSITION];
+
+  const WindowPosition._(String str): super(str);
+}
+
+/**
+ * The screen type under which the IME is activated.
+ */
+class ScreenType extends ChromeEnum {
+  static const ScreenType NORMAL = const ScreenType._('normal');
+  static const ScreenType LOGIN = const ScreenType._('login');
+  static const ScreenType LOCK = const ScreenType._('lock');
+  static const ScreenType SECONDARY_LOGIN = const ScreenType._('secondary-login');
+
+  static const List<ScreenType> VALUES = const[NORMAL, LOGIN, LOCK, SECONDARY_LOGIN];
+
+  const ScreenType._(String str): super(str);
+}
+
+class CallbackStyle extends ChromeEnum {
+  static const CallbackStyle ASYNC = const CallbackStyle._('async');
+
+  static const List<CallbackStyle> VALUES = const[ASYNC];
+
+  const CallbackStyle._(String str): super(str);
+}
+
+/**
+ * Which mouse buttons was clicked.
+ */
+class MouseButton extends ChromeEnum {
+  static const MouseButton LEFT = const MouseButton._('left');
+  static const MouseButton MIDDLE = const MouseButton._('middle');
+  static const MouseButton RIGHT = const MouseButton._('right');
+
+  static const List<MouseButton> VALUES = const[LEFT, MIDDLE, RIGHT];
+
+  const MouseButton._(String str): super(str);
+}
+
+/**
+ * The IME window types.
+ */
+class InputWindowType extends ChromeEnum {
+  static const InputWindowType NORMAL = const InputWindowType._('normal');
+  static const InputWindowType FOLLOW_CURSOR = const InputWindowType._('followCursor');
+
+  static const List<InputWindowType> VALUES = const[NORMAL, FOLLOW_CURSOR];
+
+  const InputWindowType._(String str): super(str);
 }
 
 class PropertiesInputIme extends ChromeObject {
@@ -421,14 +615,6 @@ class UsageInputIme extends ChromeObject {
    */
   String get body => jsProxy['body'];
   set body(String value) => jsProxy['body'] = value;
-}
-
-/**
- * enum of `keyup`, `keydown`
- */
-class KeyboardEventType extends ChromeObject {
-  KeyboardEventType();
-  KeyboardEventType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 /**
@@ -514,15 +700,6 @@ class KeyboardEvent extends ChromeObject {
 }
 
 /**
- * Type of value this text field edits, (Text, Number, URL, etc)
- * enum of `text`, `search`, `tel`, `url`, `email`, `number`, `password`
- */
-class InputContextType extends ChromeObject {
-  InputContextType();
-  InputContextType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
  * Describes an input Context
  */
 class InputContext extends ChromeObject {
@@ -565,16 +742,6 @@ class InputContext extends ChromeObject {
    */
   bool get spellCheck => jsProxy['spellCheck'];
   set spellCheck(bool value) => jsProxy['spellCheck'] = value;
-}
-
-/**
- * The type of menu item. Radio buttons between separators are considered
- * grouped.
- * enum of `check`, `radio`, `separator`
- */
-class MenuItemStyle extends ChromeObject {
-  MenuItemStyle();
-  MenuItemStyle.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 /**
@@ -630,49 +797,24 @@ class MenuItem extends ChromeObject {
 }
 
 /**
- * The type of the underline to modify this segment.
- * enum of `underline`, `doubleUnderline`, `noUnderline`
+ * The options to create an IME window
  */
-class UnderlineStyle extends ChromeObject {
-  UnderlineStyle();
-  UnderlineStyle.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
+class CreateWindowOptions extends ChromeObject {
+  CreateWindowOptions({InputWindowType windowType, String url, Bounds bounds}) {
+    if (windowType != null) this.windowType = windowType;
+    if (url != null) this.url = url;
+    if (bounds != null) this.bounds = bounds;
+  }
+  CreateWindowOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
-/**
- * Where to display the candidate window. If set to 'cursor', the window follows
- * the cursor. If set to 'composition', the window is locked to the beginning of
- * the composition.
- * enum of `cursor`, `composition`
- */
-class WindowPosition extends ChromeObject {
-  WindowPosition();
-  WindowPosition.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
+  InputWindowType get windowType => _createWindowType(jsProxy['windowType']);
+  set windowType(InputWindowType value) => jsProxy['windowType'] = jsify(value);
 
-/**
- * The screen type under which the IME is activated.
- * enum of `normal`, `login`, `lock`, `secondary-login`
- */
-class ScreenType extends ChromeObject {
-  ScreenType();
-  ScreenType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
+  String get url => jsProxy['url'];
+  set url(String value) => jsProxy['url'] = value;
 
-/**
- * enum of `async`
- */
-class CallbackStyle extends ChromeObject {
-  CallbackStyle();
-  CallbackStyle.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * Which mouse buttons was clicked.
- * enum of `left`, `middle`, `right`
- */
-class MouseButton extends ChromeObject {
-  MouseButton();
-  MouseButton.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  Bounds get bounds => _createBounds(jsProxy['bounds']);
+  set bounds(Bounds value) => jsProxy['bounds'] = jsify(value);
 }
 
 class InputImeSetCompositionParams extends ChromeObject {
@@ -909,23 +1051,26 @@ class InputImeDeleteSurroundingTextParams extends ChromeObject {
   set length(int value) => jsProxy['length'] = value;
 }
 
-OnActivateEvent _createOnActivateEvent(String engineID, JsObject screen) =>
+OnActivateEvent _createOnActivateEvent(String engineID, String screen) =>
     new OnActivateEvent(engineID, _createScreenType(screen));
 InputContext _createInputContext(JsObject jsProxy) => jsProxy == null ? null : new InputContext.fromProxy(jsProxy);
 OnKeyEventEvent _createOnKeyEventEvent(String engineID, JsObject keyData) =>
     new OnKeyEventEvent(engineID, _createKeyboardEvent(keyData));
-OnCandidateClickedEvent _createOnCandidateClickedEvent(String engineID, int candidateID, JsObject button) =>
+OnCandidateClickedEvent _createOnCandidateClickedEvent(String engineID, int candidateID, String button) =>
     new OnCandidateClickedEvent(engineID, candidateID, _createMouseButton(button));
 OnMenuItemActivatedEvent _createOnMenuItemActivatedEvent(String engineID, String name) =>
     new OnMenuItemActivatedEvent(engineID, name);
 OnSurroundingTextChangedEvent _createOnSurroundingTextChangedEvent(String engineID, JsObject surroundingInfo) =>
     new OnSurroundingTextChangedEvent(engineID, mapify(surroundingInfo));
-WindowPosition _createWindowPosition(JsObject jsProxy) => jsProxy == null ? null : new WindowPosition.fromProxy(jsProxy);
-KeyboardEventType _createKeyboardEventType(JsObject jsProxy) => jsProxy == null ? null : new KeyboardEventType.fromProxy(jsProxy);
-InputContextType _createInputContextType(JsObject jsProxy) => jsProxy == null ? null : new InputContextType.fromProxy(jsProxy);
-MenuItemStyle _createMenuItemStyle(JsObject jsProxy) => jsProxy == null ? null : new MenuItemStyle.fromProxy(jsProxy);
+Bounds _createBounds(JsObject jsProxy) => jsProxy == null ? null : new Bounds.fromProxy(jsProxy);
+Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
+WindowPosition _createWindowPosition(String value) => WindowPosition.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+KeyboardEventType _createKeyboardEventType(String value) => KeyboardEventType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+InputContextType _createInputContextType(String value) => InputContextType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+MenuItemStyle _createMenuItemStyle(String value) => MenuItemStyle.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+InputWindowType _createWindowType(String value) => InputWindowType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 KeyboardEvent _createKeyboardEvent(JsObject jsProxy) => jsProxy == null ? null : new KeyboardEvent.fromProxy(jsProxy);
 PropertiesInputIme _createPropertiesInputIme(JsObject jsProxy) => jsProxy == null ? null : new PropertiesInputIme.fromProxy(jsProxy);
 MenuItem _createMenuItem(JsObject jsProxy) => jsProxy == null ? null : new MenuItem.fromProxy(jsProxy);
-ScreenType _createScreenType(JsObject jsProxy) => jsProxy == null ? null : new ScreenType.fromProxy(jsProxy);
-MouseButton _createMouseButton(JsObject jsProxy) => jsProxy == null ? null : new MouseButton.fromProxy(jsProxy);
+ScreenType _createScreenType(String value) => ScreenType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+MouseButton _createMouseButton(String value) => MouseButton.VALUES.singleWhere((ChromeEnum e) => e.value == value);

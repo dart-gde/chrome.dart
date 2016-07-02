@@ -23,10 +23,10 @@ class ChromeBrowser extends ChromeApi {
   /**
    * Opens a new tab in a browser window associated with the current application
    * and Chrome profile. If no browser window for the Chrome profile is opened,
-   * a new one is opened prior to creating the new tab. [options] - Configures
-   * how the tab should be opened. [callback] - Called when the tab was
-   * successfully created, or failed to be created. If failed,
-   * [runtime.lastError] will be set.
+   * a new one is opened prior to creating the new tab.
+   * [options]: Configures how the tab should be opened.
+   * [callback]: Called when the tab was successfully created, or failed to be
+   * created. If failed, [runtime.lastError] will be set.
    */
   Future openTab(OpenTabOptions options) {
     if (_browser == null) _throwNotAvailable();

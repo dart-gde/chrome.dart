@@ -159,15 +159,16 @@ class ChromeWindows extends ChromeApi {
  * be assigned type property, for example when querying closed windows from the
  * [sessions] API.
  */
-class WindowType extends ChromeEnum {
-  static const WindowType NORMAL = const WindowType._('normal');
-  static const WindowType POPUP = const WindowType._('popup');
-  static const WindowType PANEL = const WindowType._('panel');
-  static const WindowType APP = const WindowType._('app');
+class WindowWindowType extends ChromeEnum {
+  static const WindowWindowType NORMAL = const WindowWindowType._('normal');
+  static const WindowWindowType POPUP = const WindowWindowType._('popup');
+  static const WindowWindowType PANEL = const WindowWindowType._('panel');
+  static const WindowWindowType APP = const WindowWindowType._('app');
+  static const WindowWindowType DEVTOOLS = const WindowWindowType._('devtools');
 
-  static const List<WindowType> VALUES = const[NORMAL, POPUP, PANEL, APP];
+  static const List<WindowWindowType> VALUES = const[NORMAL, POPUP, PANEL, APP, DEVTOOLS];
 
-  const WindowType._(String str): super(str);
+  const WindowWindowType._(String str): super(str);
 }
 
 /**
@@ -204,7 +205,7 @@ class CreateType extends ChromeEnum {
 }
 
 class Window extends ChromeObject {
-  Window({int id, bool focused, int top, int left, int width, int height, List<Tab> tabs, bool incognito, WindowType type, WindowState state, bool alwaysOnTop, String sessionId}) {
+  Window({int id, bool focused, int top, int left, int width, int height, List<Tab> tabs, bool incognito, WindowWindowType type, WindowState state, bool alwaysOnTop, String sessionId}) {
     if (id != null) this.id = id;
     if (focused != null) this.focused = focused;
     if (top != null) this.top = top;
@@ -282,8 +283,8 @@ class Window extends ChromeObject {
   /**
    * The type of browser window this is.
    */
-  WindowType get type => _createWindowType(jsProxy['type']);
-  set type(WindowType value) => jsProxy['type'] = jsify(value);
+  WindowWindowType get type => _createWindowType(jsProxy['type']);
+  set type(WindowWindowType value) => jsProxy['type'] = jsify(value);
 
   /**
    * The state of this browser window.
@@ -306,8 +307,9 @@ class Window extends ChromeObject {
 }
 
 class WindowsGetParams extends ChromeObject {
-  WindowsGetParams({bool populate}) {
+  WindowsGetParams({bool populate, List<WindowWindowType> windowTypes}) {
     if (populate != null) this.populate = populate;
+    if (windowTypes != null) this.windowTypes = windowTypes;
   }
   WindowsGetParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -319,11 +321,21 @@ class WindowsGetParams extends ChromeObject {
    */
   bool get populate => jsProxy['populate'];
   set populate(bool value) => jsProxy['populate'] = value;
+
+  /**
+   * If set, the [windows.Window] returned will be filtered based on its type.
+   * If unset the default filter is set to `['app', 'normal', 'panel',
+   * 'popup']`, with `'app'` and `'panel'` window types limited to the
+   * extension's own windows.
+   */
+  List<WindowWindowType> get windowTypes => listify(jsProxy['windowTypes'], _createWindowType);
+  set windowTypes(List<WindowWindowType> value) => jsProxy['windowTypes'] = jsify(value);
 }
 
 class WindowsGetCurrentParams extends ChromeObject {
-  WindowsGetCurrentParams({bool populate}) {
+  WindowsGetCurrentParams({bool populate, List<WindowWindowType> windowTypes}) {
     if (populate != null) this.populate = populate;
+    if (windowTypes != null) this.windowTypes = windowTypes;
   }
   WindowsGetCurrentParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -335,11 +347,21 @@ class WindowsGetCurrentParams extends ChromeObject {
    */
   bool get populate => jsProxy['populate'];
   set populate(bool value) => jsProxy['populate'] = value;
+
+  /**
+   * If set, the [windows.Window] returned will be filtered based on its type.
+   * If unset the default filter is set to `['app', 'normal', 'panel',
+   * 'popup']`, with `'app'` and `'panel'` window types limited to the
+   * extension's own windows.
+   */
+  List<WindowWindowType> get windowTypes => listify(jsProxy['windowTypes'], _createWindowType);
+  set windowTypes(List<WindowWindowType> value) => jsProxy['windowTypes'] = jsify(value);
 }
 
 class WindowsGetLastFocusedParams extends ChromeObject {
-  WindowsGetLastFocusedParams({bool populate}) {
+  WindowsGetLastFocusedParams({bool populate, List<WindowWindowType> windowTypes}) {
     if (populate != null) this.populate = populate;
+    if (windowTypes != null) this.windowTypes = windowTypes;
   }
   WindowsGetLastFocusedParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -351,11 +373,21 @@ class WindowsGetLastFocusedParams extends ChromeObject {
    */
   bool get populate => jsProxy['populate'];
   set populate(bool value) => jsProxy['populate'] = value;
+
+  /**
+   * If set, the [windows.Window] returned will be filtered based on its type.
+   * If unset the default filter is set to `['app', 'normal', 'panel',
+   * 'popup']`, with `'app'` and `'panel'` window types limited to the
+   * extension's own windows.
+   */
+  List<WindowWindowType> get windowTypes => listify(jsProxy['windowTypes'], _createWindowType);
+  set windowTypes(List<WindowWindowType> value) => jsProxy['windowTypes'] = jsify(value);
 }
 
 class WindowsGetAllParams extends ChromeObject {
-  WindowsGetAllParams({bool populate}) {
+  WindowsGetAllParams({bool populate, List<WindowWindowType> windowTypes}) {
     if (populate != null) this.populate = populate;
+    if (windowTypes != null) this.windowTypes = windowTypes;
   }
   WindowsGetAllParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -367,6 +399,15 @@ class WindowsGetAllParams extends ChromeObject {
    */
   bool get populate => jsProxy['populate'];
   set populate(bool value) => jsProxy['populate'] = value;
+
+  /**
+   * If set, the [windows.Window] returned will be filtered based on its type.
+   * If unset the default filter is set to `['app', 'normal', 'panel',
+   * 'popup']`, with `'app'` and `'panel'` window types limited to the
+   * extension's own windows.
+   */
+  List<WindowWindowType> get windowTypes => listify(jsProxy['windowTypes'], _createWindowType);
+  set windowTypes(List<WindowWindowType> value) => jsProxy['windowTypes'] = jsify(value);
 }
 
 class WindowsCreateParams extends ChromeObject {
@@ -525,6 +566,6 @@ class WindowsUpdateParams extends ChromeObject {
 
 Window _createWindow(JsObject jsProxy) => jsProxy == null ? null : new Window.fromProxy(jsProxy);
 Tab _createTab(JsObject jsProxy) => jsProxy == null ? null : new Tab.fromProxy(jsProxy);
-WindowType _createWindowType(String value) => WindowType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+WindowWindowType _createWindowType(String value) => WindowWindowType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 WindowState _createWindowState(String value) => WindowState.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 CreateType _createCreateType(String value) => CreateType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

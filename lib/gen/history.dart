@@ -117,13 +117,23 @@ class ChromeHistory extends ChromeApi {
 
 /**
  * The [transition type](#transition_types) for this visit from its referrer.
- * enum of `link`, `typed`, `auto_bookmark`, `auto_subframe`, `manual_subframe`,
- * `generated`, `auto_toplevel`, `form_submit`, `reload`, `keyword`,
- * `keyword_generated`
  */
-class HistoryTransitionType extends ChromeObject {
-  HistoryTransitionType();
-  HistoryTransitionType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class HistoryTransitionType extends ChromeEnum {
+  static const HistoryTransitionType LINK = const HistoryTransitionType._('link');
+  static const HistoryTransitionType TYPED = const HistoryTransitionType._('typed');
+  static const HistoryTransitionType AUTO_BOOKMARK = const HistoryTransitionType._('auto_bookmark');
+  static const HistoryTransitionType AUTO_SUBFRAME = const HistoryTransitionType._('auto_subframe');
+  static const HistoryTransitionType MANUAL_SUBFRAME = const HistoryTransitionType._('manual_subframe');
+  static const HistoryTransitionType GENERATED = const HistoryTransitionType._('generated');
+  static const HistoryTransitionType AUTO_TOPLEVEL = const HistoryTransitionType._('auto_toplevel');
+  static const HistoryTransitionType FORM_SUBMIT = const HistoryTransitionType._('form_submit');
+  static const HistoryTransitionType RELOAD = const HistoryTransitionType._('reload');
+  static const HistoryTransitionType KEYWORD = const HistoryTransitionType._('keyword');
+  static const HistoryTransitionType KEYWORD_GENERATED = const HistoryTransitionType._('keyword_generated');
+
+  static const List<HistoryTransitionType> VALUES = const[LINK, TYPED, AUTO_BOOKMARK, AUTO_SUBFRAME, MANUAL_SUBFRAME, GENERATED, AUTO_TOPLEVEL, FORM_SUBMIT, RELOAD, KEYWORD, KEYWORD_GENERATED];
+
+  const HistoryTransitionType._(String str): super(str);
 }
 
 /**
@@ -241,7 +251,7 @@ class HistorySearchParams extends ChromeObject {
 
   /**
    * Limit results to those visited after this date, represented in milliseconds
-   * since the epoch.
+   * since the epoch. If not specified, this defaults to 24 hours in the past.
    */
   dynamic get startTime => jsProxy['startTime'];
   set startTime(var value) => jsProxy['startTime'] = jsify(value);
@@ -324,4 +334,4 @@ class HistoryDeleteRangeParams extends ChromeObject {
 
 HistoryItem _createHistoryItem(JsObject jsProxy) => jsProxy == null ? null : new HistoryItem.fromProxy(jsProxy);
 VisitItem _createVisitItem(JsObject jsProxy) => jsProxy == null ? null : new VisitItem.fromProxy(jsProxy);
-HistoryTransitionType _createTransitionType(JsObject jsProxy) => jsProxy == null ? null : new HistoryTransitionType.fromProxy(jsProxy);
+HistoryTransitionType _createTransitionType(String value) => HistoryTransitionType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

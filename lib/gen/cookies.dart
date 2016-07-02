@@ -129,10 +129,48 @@ class ChromeCookies extends ChromeApi {
 }
 
 /**
+ * A cookie's 'SameSite' state
+ * (https://tools.ietf.org/html/draft-west-first-party-cookies).
+ * 'no_restriction' corresponds to a cookie set without a 'SameSite' attribute,
+ * 'lax' to 'SameSite=Lax', and 'strict' to 'SameSite=Strict'.
+ */
+class SameSiteStatus extends ChromeEnum {
+  static const SameSiteStatus NO_RESTRICTION = const SameSiteStatus._('no_restriction');
+  static const SameSiteStatus LAX = const SameSiteStatus._('lax');
+  static const SameSiteStatus STRICT = const SameSiteStatus._('strict');
+
+  static const List<SameSiteStatus> VALUES = const[NO_RESTRICTION, LAX, STRICT];
+
+  const SameSiteStatus._(String str): super(str);
+}
+
+/**
+ * The underlying reason behind the cookie's change. If a cookie was inserted,
+ * or removed via an explicit call to "chrome.cookies.remove", "cause" will be
+ * "explicit". If a cookie was automatically removed due to expiry, "cause" will
+ * be "expired". If a cookie was removed due to being overwritten with an
+ * already-expired expiration date, "cause" will be set to "expired_overwrite".
+ * If a cookie was automatically removed due to garbage collection, "cause" will
+ * be "evicted".  If a cookie was automatically removed due to a "set" call that
+ * overwrote it, "cause" will be "overwrite". Plan your response accordingly.
+ */
+class OnChangedCause extends ChromeEnum {
+  static const OnChangedCause EVICTED = const OnChangedCause._('evicted');
+  static const OnChangedCause EXPIRED = const OnChangedCause._('expired');
+  static const OnChangedCause EXPLICIT = const OnChangedCause._('explicit');
+  static const OnChangedCause EXPIRED_OVERWRITE = const OnChangedCause._('expired_overwrite');
+  static const OnChangedCause OVERWRITE = const OnChangedCause._('overwrite');
+
+  static const List<OnChangedCause> VALUES = const[EVICTED, EXPIRED, EXPLICIT, EXPIRED_OVERWRITE, OVERWRITE];
+
+  const OnChangedCause._(String str): super(str);
+}
+
+/**
  * Represents information about an HTTP cookie.
  */
 class Cookie extends ChromeObject {
-  Cookie({String name, String value, String domain, bool hostOnly, String path, bool secure, bool httpOnly, bool session, var expirationDate, String storeId}) {
+  Cookie({String name, String value, String domain, bool hostOnly, String path, bool secure, bool httpOnly, SameSiteStatus sameSite, bool session, var expirationDate, String storeId}) {
     if (name != null) this.name = name;
     if (value != null) this.value = value;
     if (domain != null) this.domain = domain;
@@ -140,6 +178,7 @@ class Cookie extends ChromeObject {
     if (path != null) this.path = path;
     if (secure != null) this.secure = secure;
     if (httpOnly != null) this.httpOnly = httpOnly;
+    if (sameSite != null) this.sameSite = sameSite;
     if (session != null) this.session = session;
     if (expirationDate != null) this.expirationDate = expirationDate;
     if (storeId != null) this.storeId = storeId;
@@ -192,6 +231,13 @@ class Cookie extends ChromeObject {
   set httpOnly(bool value) => jsProxy['httpOnly'] = value;
 
   /**
+   * The cookie's same-site status (i.e. whether the cookie is sent with
+   * cross-site requests).
+   */
+  SameSiteStatus get sameSite => _createSameSiteStatus(jsProxy['sameSite']);
+  set sameSite(SameSiteStatus value) => jsProxy['sameSite'] = jsify(value);
+
+  /**
    * True if the cookie is a session cookie, as opposed to a persistent cookie
    * with an expiration date.
    */
@@ -235,22 +281,6 @@ class CookieStore extends ChromeObject {
    */
   List<int> get tabIds => listify(jsProxy['tabIds']);
   set tabIds(List<int> value) => jsProxy['tabIds'] = jsify(value);
-}
-
-/**
- * The underlying reason behind the cookie's change. If a cookie was inserted,
- * or removed via an explicit call to "chrome.cookies.remove", "cause" will be
- * "explicit". If a cookie was automatically removed due to expiry, "cause" will
- * be "expired". If a cookie was removed due to being overwritten with an
- * already-expired expiration date, "cause" will be set to "expired_overwrite".
- * If a cookie was automatically removed due to garbage collection, "cause" will
- * be "evicted".  If a cookie was automatically removed due to a "set" call that
- * overwrote it, "cause" will be "overwrite". Plan your response accordingly.
- * enum of `evicted`, `expired`, `explicit`, `expired_overwrite`, `overwrite`
- */
-class OnChangedCause extends ChromeObject {
-  OnChangedCause();
-  OnChangedCause.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 class CookiesGetParams extends ChromeObject {
@@ -343,7 +373,7 @@ class CookiesGetAllParams extends ChromeObject {
 }
 
 class CookiesSetParams extends ChromeObject {
-  CookiesSetParams({String url, String name, String value, String domain, String path, bool secure, bool httpOnly, var expirationDate, String storeId}) {
+  CookiesSetParams({String url, String name, String value, String domain, String path, bool secure, bool httpOnly, SameSiteStatus sameSite, var expirationDate, String storeId}) {
     if (url != null) this.url = url;
     if (name != null) this.name = name;
     if (value != null) this.value = value;
@@ -351,6 +381,7 @@ class CookiesSetParams extends ChromeObject {
     if (path != null) this.path = path;
     if (secure != null) this.secure = secure;
     if (httpOnly != null) this.httpOnly = httpOnly;
+    if (sameSite != null) this.sameSite = sameSite;
     if (expirationDate != null) this.expirationDate = expirationDate;
     if (storeId != null) this.storeId = storeId;
   }
@@ -403,6 +434,12 @@ class CookiesSetParams extends ChromeObject {
   set httpOnly(bool value) => jsProxy['httpOnly'] = value;
 
   /**
+   * The cookie's same-site status: defaults to 'no_restriction'.
+   */
+  SameSiteStatus get sameSite => _createSameSiteStatus(jsProxy['sameSite']);
+  set sameSite(SameSiteStatus value) => jsProxy['sameSite'] = jsify(value);
+
+  /**
    * The expiration date of the cookie as the number of seconds since the UNIX
    * epoch. If omitted, the cookie becomes a session cookie.
    */
@@ -449,3 +486,4 @@ class CookiesRemoveParams extends ChromeObject {
 
 Cookie _createCookie(JsObject jsProxy) => jsProxy == null ? null : new Cookie.fromProxy(jsProxy);
 CookieStore _createCookieStore(JsObject jsProxy) => jsProxy == null ? null : new CookieStore.fromProxy(jsProxy);
+SameSiteStatus _createSameSiteStatus(String value) => SameSiteStatus.VALUES.singleWhere((ChromeEnum e) => e.value == value);

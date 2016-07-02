@@ -5,7 +5,35 @@
 [
   {
     "namespace": "inputMethodPrivate",
+    "compiler_options": {
+      "implemented_in": "chrome/browser/chromeos/extensions/input_method_api.h"
+    },
     "description": "none",
+    "types": [
+      {
+        "id": "MenuItemStyle",
+        "type": "string",
+        "description": "The type of menu item. Radio buttons between separators are considered grouped.",
+        "enum": ["check", "radio", "separator"]
+      },
+      {
+        "id": "MenuItem",
+        "type": "object",
+        "description": "A menu item used by an input method to interact with the user from the language menu.",
+        "properties": {
+          "id": {"type": "string", "description": "String that will be passed to callbacks referencing this MenuItem."},
+          "label": {"type": "string", "optional": true, "description": "Text displayed in the menu for this item."},
+          "style": {
+            "$ref": "MenuItemStyle",
+            "optional": true,
+            "description": "The type of menu item."
+          },
+          "visible": {"type": "boolean", "optional": true, "description": "Indicates this item is visible."},
+          "checked": {"type": "boolean", "optional": true, "description": "Indicates this item should be drawn with a check."},
+          "enabled": {"type": "boolean", "optional": true, "description": "Indicates this item is enabled."}
+        }
+      }
+    ],
     "functions": [
       {
         "name": "getInputMethodConfig",
@@ -24,8 +52,7 @@
                 "description": "The input method config object.",
                 "properties": {
                   "isPhysicalKeyboardAutocorrectEnabled": {"type": "boolean"},
-                  "isNewMDInputViewEnabled": {"type": "boolean"},
-                  "isVoiceInputEnabled": {"type": "boolean"}
+                  "isImeMenuActivated": {"type": "boolean"}
                 }
               }
             ]
@@ -137,6 +164,73 @@
             "parameters": []
           }
         ]
+      }, {
+        "name": "getEncryptSyncEnabled",
+        "type": "function",
+        "description": "Gets whether the encrypt sync is enabled.",
+        "parameters": [
+          {
+            "name": "callback",
+            "type": "function",
+            "optional": true,
+            "description": "Callback which is called to provide the result.",
+            "parameters": [
+              {
+                "name": "enabled",
+                "type": "boolean",
+                "optional": false,
+                "description": "The result of whether enabled."
+              }
+            ]
+          }
+        ]
+      }, {
+        "name": "setXkbLayout",
+        "type": "function",
+        "description": "Sets the XKB layout for the given input method.",
+        "parameters": [
+          {
+            "name": "xkb_name",
+            "type": "string",
+            "description": "The XKB layout name."
+          },
+          {
+            "name": "callback",
+            "type": "function",
+            "optional": true,
+            "description": "Callback which is called when the layout is set.",
+            "parameters": []
+          }
+        ]
+      }, {
+        "name": "notifyImeMenuItemActivated",
+        "type": "function",
+        "description": "Fires the input.ime.onMenuItemActivated event.",
+        "parameters": [
+          {
+            "name": "engineID",
+            "type": "string",
+            "description": "ID of the engine to use."
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "description": "Name of the MenuItem which was activated"
+          }
+        ]
+      }, {
+        "name": "showInputView",
+        "type": "function",
+        "description": "Shows the input view window. If the input view window is already shown, this function will do nothing.",
+        "parameters": [
+          {
+            "type": "function",
+            "name": "callback",
+            "optional": true,
+            "description": "Called when the operation completes.",
+            "parameters": []
+          }
+        ]
       }
     ],
     "events": [
@@ -157,7 +251,17 @@
         "description": "Fired when the composition bounds or cursor bounds are changed.",
         "parameters": [
           {
-            "name": "bounds",
+            "name": "firstBounds",
+            "type": "object",
+            "description": "The bounds information for the first character in composition.",
+            "properties": {
+              "x": {"type": "integer"},
+              "y": {"type": "integer"},
+              "w": {"type": "integer"},
+              "h": {"type": "integer"}
+            }
+          }, {
+            "name": "boundsList",
             "type": "array",
             "description": "List of bounds information.",
             "items": {
@@ -195,6 +299,41 @@
             "items": {
               "type": "string"
             }
+          }
+        ]
+      }, {
+        "name": "onImeMenuActivationChanged",
+        "type": "function",
+        "description": "Fired when the IME menu is activated or deactivated.",
+        "parameters": [
+          {
+            "name": "activation",
+            "type": "boolean",
+            "description": "Whether the IME menu is currently active."
+          }
+        ]
+      }, {
+        "name": "onImeMenuListChanged",
+        "type": "function",
+        "description": "Fired when the input method or the list of active input method IDs is changed.",
+        "parameters": []
+      }, {
+        "name": "onImeMenuItemsChanged",
+        "type": "function",
+        "description": "Fired when the input.ime.setMenuItems or input.ime.updateMenuItems API is called.",
+        "parameters": [
+          {
+            "name": "engineID",
+            "type": "string",
+            "description": "ID of the engine to use"
+          },
+          {
+            "name": "items",
+            "type": "array",
+            "items": {
+              "$ref": "MenuItem"
+            },
+            "description": "MenuItems to add or update."
           }
         ]
       }

@@ -51,7 +51,7 @@ class ChromeDebugger extends ChromeApi {
    * [requiredVersion] Required debugging protocol version ("0.1"). One can only
    * attach to the debuggee with matching major version and greater or equal
    * minor version. List of the protocol versions can be obtained
-   * [here](http://code.google.com/chrome/devtools/docs/remote-debugging).
+   * [here](https://developer.chrome.com/devtools/docs/debugger-protocol).
    */
   Future attach(Debuggee target, String requiredVersion) {
     if (_debugger == null) _throwNotAvailable();
@@ -81,7 +81,7 @@ class ChromeDebugger extends ChromeApi {
    * 
    * [method] Method name. Should be one of the methods defined by the [remote
    * debugging
-   * protocol](http://code.google.com/chrome/devtools/docs/remote-debugging).
+   * protocol](https://developer.chrome.com/devtools/docs/debugger-protocol).
    * 
    * [commandParams] JSON object with request parameters. This object must
    * conform to the remote debugging params scheme for given method.
@@ -130,7 +130,7 @@ class OnEventEvent {
   /**
    * Method name. Should be one of the notifications defined by the [remote
    * debugging
-   * protocol](http://code.google.com/chrome/devtools/docs/remote-debugging).
+   * protocol](https://developer.chrome.com/devtools/docs/debugger-protocol).
    */
   final String method;
 
@@ -169,6 +169,33 @@ class OnDetachEvent {
 }
 
 /**
+ * Target type.
+ */
+class TargetInfoType extends ChromeEnum {
+  static const TargetInfoType PAGE = const TargetInfoType._('page');
+  static const TargetInfoType BACKGROUND_PAGE = const TargetInfoType._('background_page');
+  static const TargetInfoType WORKER = const TargetInfoType._('worker');
+  static const TargetInfoType OTHER = const TargetInfoType._('other');
+
+  static const List<TargetInfoType> VALUES = const[PAGE, BACKGROUND_PAGE, WORKER, OTHER];
+
+  const TargetInfoType._(String str): super(str);
+}
+
+/**
+ * Connection termination reason.
+ */
+class DetachReason extends ChromeEnum {
+  static const DetachReason TARGET_CLOSED = const DetachReason._('target_closed');
+  static const DetachReason CANCELED_BY_USER = const DetachReason._('canceled_by_user');
+  static const DetachReason REPLACED_WITH_DEVTOOLS = const DetachReason._('replaced_with_devtools');
+
+  static const List<DetachReason> VALUES = const[TARGET_CLOSED, CANCELED_BY_USER, REPLACED_WITH_DEVTOOLS];
+
+  const DetachReason._(String str): super(str);
+}
+
+/**
  * Debuggee identifier. Either tabId or extensionId must be specified
  */
 class Debuggee extends ChromeObject {
@@ -198,24 +225,6 @@ class Debuggee extends ChromeObject {
    */
   String get targetId => jsProxy['targetId'];
   set targetId(String value) => jsProxy['targetId'] = value;
-}
-
-/**
- * Target type.
- * enum of `page`, `background_page`, `worker`, `other`
- */
-class TargetInfoType extends ChromeObject {
-  TargetInfoType();
-  TargetInfoType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
- * Connection termination reason.
- * enum of `target_closed`, `canceled_by_user`, `replaced_with_devtools`
- */
-class DetachReason extends ChromeObject {
-  DetachReason();
-  DetachReason.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 }
 
 /**
@@ -285,9 +294,9 @@ class TargetInfo extends ChromeObject {
 
 OnEventEvent _createOnEventEvent(JsObject source, String method, JsObject params) =>
     new OnEventEvent(_createDebuggee(source), method, mapify(params));
-OnDetachEvent _createOnDetachEvent(JsObject source, JsObject reason) =>
+OnDetachEvent _createOnDetachEvent(JsObject source, String reason) =>
     new OnDetachEvent(_createDebuggee(source), _createDetachReason(reason));
 TargetInfo _createTargetInfo(JsObject jsProxy) => jsProxy == null ? null : new TargetInfo.fromProxy(jsProxy);
-TargetInfoType _createTargetInfoType(JsObject jsProxy) => jsProxy == null ? null : new TargetInfoType.fromProxy(jsProxy);
+TargetInfoType _createTargetInfoType(String value) => TargetInfoType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 Debuggee _createDebuggee(JsObject jsProxy) => jsProxy == null ? null : new Debuggee.fromProxy(jsProxy);
-DetachReason _createDetachReason(JsObject jsProxy) => jsProxy == null ? null : new DetachReason.fromProxy(jsProxy);
+DetachReason _createDetachReason(String value) => DetachReason.VALUES.singleWhere((ChromeEnum e) => e.value == value);

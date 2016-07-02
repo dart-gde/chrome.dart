@@ -23,11 +23,27 @@ class ChromeExtensionTypes extends ChromeApi {
 
 /**
  * The format of an image.
- * enum of `jpeg`, `png`
  */
-class ImageFormat extends ChromeObject {
-  ImageFormat();
-  ImageFormat.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class ImageFormat extends ChromeEnum {
+  static const ImageFormat JPEG = const ImageFormat._('jpeg');
+  static const ImageFormat PNG = const ImageFormat._('png');
+
+  static const List<ImageFormat> VALUES = const[JPEG, PNG];
+
+  const ImageFormat._(String str): super(str);
+}
+
+/**
+ * The soonest that the JavaScript or CSS will be injected into the tab.
+ */
+class RunAt extends ChromeEnum {
+  static const RunAt DOCUMENT_START = const RunAt._('document_start');
+  static const RunAt DOCUMENT_END = const RunAt._('document_end');
+  static const RunAt DOCUMENT_IDLE = const RunAt._('document_idle');
+
+  static const List<RunAt> VALUES = const[DOCUMENT_START, DOCUMENT_END, DOCUMENT_IDLE];
+
+  const RunAt._(String str): super(str);
 }
 
 /**
@@ -57,23 +73,15 @@ class ImageDetails extends ChromeObject {
 }
 
 /**
- * The soonest that the JavaScript or CSS will be injected into the tab.
- * enum of `document_start`, `document_end`, `document_idle`
- */
-class RunAt extends ChromeObject {
-  RunAt();
-  RunAt.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-}
-
-/**
  * Details of the script or CSS to inject. Either the code or the file property
  * must be set, but both may not be set at the same time.
  */
 class InjectDetails extends ChromeObject {
-  InjectDetails({String code, String file, bool allFrames, bool matchAboutBlank, RunAt runAt}) {
+  InjectDetails({String code, String file, bool allFrames, int frameId, bool matchAboutBlank, RunAt runAt}) {
     if (code != null) this.code = code;
     if (file != null) this.file = file;
     if (allFrames != null) this.allFrames = allFrames;
+    if (frameId != null) this.frameId = frameId;
     if (matchAboutBlank != null) this.matchAboutBlank = matchAboutBlank;
     if (runAt != null) this.runAt = runAt;
   }
@@ -97,10 +105,18 @@ class InjectDetails extends ChromeObject {
   /**
    * If allFrames is `true`, implies that the JavaScript or CSS should be
    * injected into all frames of current page. By default, it's `false` and is
-   * only injected into the top frame.
+   * only injected into the top frame. If `true` and `frameId` is set, then the
+   * code is inserted in the selected frame and all of its child frames.
    */
   bool get allFrames => jsProxy['allFrames'];
   set allFrames(bool value) => jsProxy['allFrames'] = value;
+
+  /**
+   * The [frame](webNavigation#frame_ids) where the script or CSS should be
+   * injected. Defaults to 0 (the top-level frame).
+   */
+  int get frameId => jsProxy['frameId'];
+  set frameId(int value) => jsProxy['frameId'] = value;
 
   /**
    * If matchAboutBlank is true, then the code is also injected in about:blank
@@ -119,5 +135,5 @@ class InjectDetails extends ChromeObject {
   set runAt(RunAt value) => jsProxy['runAt'] = jsify(value);
 }
 
-ImageFormat _createImageFormat(JsObject jsProxy) => jsProxy == null ? null : new ImageFormat.fromProxy(jsProxy);
-RunAt _createRunAt(JsObject jsProxy) => jsProxy == null ? null : new RunAt.fromProxy(jsProxy);
+ImageFormat _createImageFormat(String value) => ImageFormat.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+RunAt _createRunAt(String value) => RunAt.VALUES.singleWhere((ChromeEnum e) => e.value == value);

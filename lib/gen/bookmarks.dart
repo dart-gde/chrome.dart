@@ -315,11 +315,13 @@ class OnChildrenReorderedEvent {
  * indicates that this node was configured by the system administrator or by the
  * custodian of a supervised user. Omitted if the node can be modified by the
  * user and the extension (default).
- * enum of `managed`
  */
-class BookmarkTreeNodeUnmodifiable extends ChromeObject {
-  BookmarkTreeNodeUnmodifiable();
-  BookmarkTreeNodeUnmodifiable.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class BookmarkTreeNodeUnmodifiable extends ChromeEnum {
+  static const BookmarkTreeNodeUnmodifiable MANAGED = const BookmarkTreeNodeUnmodifiable._('managed');
+
+  static const List<BookmarkTreeNodeUnmodifiable> VALUES = const[MANAGED];
+
+  const BookmarkTreeNodeUnmodifiable._(String str): super(str);
 }
 
 /**
@@ -468,4 +470,4 @@ BookmarksOnMovedEvent _createOnMovedEvent(String id, JsObject moveInfo) =>
 OnChildrenReorderedEvent _createOnChildrenReorderedEvent(String id, JsObject reorderInfo) =>
     new OnChildrenReorderedEvent(id, mapify(reorderInfo));
 BookmarkTreeNode _createBookmarkTreeNode(JsObject jsProxy) => jsProxy == null ? null : new BookmarkTreeNode.fromProxy(jsProxy);
-BookmarkTreeNodeUnmodifiable _createBookmarkTreeNodeUnmodifiable(JsObject jsProxy) => jsProxy == null ? null : new BookmarkTreeNodeUnmodifiable.fromProxy(jsProxy);
+BookmarkTreeNodeUnmodifiable _createBookmarkTreeNodeUnmodifiable(String value) => BookmarkTreeNodeUnmodifiable.VALUES.singleWhere((ChromeEnum e) => e.value == value);

@@ -41,9 +41,10 @@ class DeclarativeContentImageDataType extends ChromeObject {
  * Matches the state of a web page by various criteria.
  */
 class PageStateMatcher extends ChromeObject {
-  PageStateMatcher({UrlFilter pageUrl, List<String> css}) {
+  PageStateMatcher({UrlFilter pageUrl, List<String> css, bool isBookmarked}) {
     if (pageUrl != null) this.pageUrl = pageUrl;
     if (css != null) this.css = css;
+    if (isBookmarked != null) this.isBookmarked = isBookmarked;
   }
   PageStateMatcher.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -64,6 +65,13 @@ class PageStateMatcher extends ChromeObject {
    */
   List<String> get css => listify(jsProxy['css']);
   set css(List<String> value) => jsProxy['css'] = jsify(value);
+
+  /**
+   * Matches if the bookmarked state of the page is equal to the specified
+   * value. Requres the [bookmarks permission](declare_permissions).
+   */
+  bool get isBookmarked => jsProxy['isBookmarked'];
+  set isBookmarked(bool value) => jsProxy['isBookmarked'] = value;
 }
 
 /**
@@ -80,7 +88,7 @@ class ShowPageAction extends ChromeObject {
 }
 
 /**
- * Declarative event action that sets the 19-<abbr title="device-independent
+ * Declarative event action that sets the n-<abbr title="device-independent
  * pixel">dip</abbr> square icon for the extension's $(ref:pageAction page
  * action) or $(ref:browserAction browser action) while the corresponding
  * conditions are met.  This action can be used without [host
@@ -91,9 +99,9 @@ class ShowPageAction extends ChromeObject {
  * an[ImageData](https://developer.mozilla.org/en-US/docs/Web/API/ImageData)
  * object, for example from a `<canvas>` element, while the image representation
  * in `path` is the path to an image file relative to he extension's manifest.
- * If `scale` screen pixels fit into a device-independent pixel, the `scale *
- * 19` icon will be used.  If that scale is missing, the other image will be
- * resized to the needed size.
+ * If `scale` screen pixels fit into a device-independent pixel, the `scale * n`
+ * icon will be used.  If that scale is missing, another image will be resized
+ * to the needed size.
  */
 class SetIcon extends ChromeObject {
   SetIcon({var imageData}) {
@@ -106,10 +114,9 @@ class SetIcon extends ChromeObject {
    * icon to be set. If the icon is specified as a dictionary, the actual image
    * to be used is chosen depending on screen's pixel density. If the number of
    * image pixels that fit into one screen space unit equals `scale`, then image
-   * with size `scale` * 19 will be selected. Initially only scales 1 and 2 will
-   * be supported. At least one image must be specified. Note that
-   * 'details.imageData = foo' is equivalent to 'details.imageData = {'19':
-   * foo}'
+   * with size `scale` * n will be selected, where n is the size of the icon in
+   * the UI. At least one image must be specified. Note that 'details.imageData
+   * = foo' is equivalent to 'details.imageData = {'16': foo}'
    */
   dynamic get imageData => jsProxy['imageData'];
   set imageData(var value) => jsProxy['imageData'] = jsify(value);

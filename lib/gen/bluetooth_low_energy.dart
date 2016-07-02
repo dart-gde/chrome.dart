@@ -285,11 +285,13 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
   /**
    * Create an advertisement and register it for advertising. To call this
    * function, the app must have the bluetooth:low_energy and
-   * bluetooth:peripheral permissions set to true. See
-   * https://developer.chrome.com/apps/manifest/bluetooth Note: On some hardware
-   * central and peripheral modes at the same time is supported but on hardware
-   * that doesn't support this, making this call will switch the device to
-   * peripheral mode. In the case of hardware which does not support both
+   * bluetooth:peripheral permissions set to true. Additionally this API is only
+   * available to auto launched apps in Kiosk Mode of by setting the
+   * 'enable-ble-advertising-in-apps' flag. See
+   * https://developer.chrome.com/apps/manifest/bluetooth Note: On some
+   * hardware, central and peripheral modes at the same time is supported but on
+   * hardware that doesn't support this, making this call will switch the device
+   * to peripheral mode. In the case of hardware which does not support both
    * central and peripheral mode, attempting to use the device in both modes
    * will lead to undefined behavior or prevent other central-role applications
    * from behaving correctly (including the discovery of Bluetooth Low Energy
@@ -307,7 +309,9 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
   }
 
   /**
-   * Unregisters an advertisement and stops its advertising.
+   * Unregisters an advertisement and stops its advertising. If the
+   * advertisement fails to unregister the only way to stop advertising might be
+   * to restart the device.
    * [advertisementId]: Id of the advertisement to unregister.
    * [callback]: Called once the advertisement is unregistered and is no longer
    * being advertised.
@@ -347,8 +351,10 @@ class CharacteristicProperty extends ChromeEnum {
 
 /**
  * Type of advertisement. If 'broadcast' is chosen, the sent advertisement type
- * will be ADV_NONCONN_IND. If set to 'peripheral', the advertisement type will
- * be ADV_IND or ADV_SCAN_IND.
+ * will be ADV_NONCONN_IND and the device will broadcast with a random MAC
+ * Address. If set to 'peripheral', the advertisement type will be ADV_IND or
+ * ADV_SCAN_IND and the device will broadcast with real Bluetooth Adapter's MAC
+ * Address.
  */
 class AdvertisementType extends ChromeEnum {
   static const AdvertisementType BROADCAST = const AdvertisementType._('broadcast');

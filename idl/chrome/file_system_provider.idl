@@ -4,11 +4,11 @@
 
 // Use the <code>chrome.fileSystemProvider</code> API to create file systems,
 // that can be accessible from the file manager on Chrome OS.
-// [implemented_in="chrome/browser/chromeos/extensions/file_system_provider/file_system_provider_api.h"]
+[implemented_in="chrome/browser/chromeos/extensions/file_system_provider/file_system_provider_api.h"]
 namespace fileSystemProvider {
   // Error codes used by providing extensions in response to requests as well
   // as in case of errors when calling methods of the API. For success,
-  // <code>OK</code> must be used.
+  // <code>"OK"</code> must be used.
   enum ProviderError {
     OK,
     FAILED,
@@ -41,22 +41,37 @@ namespace fileSystemProvider {
     DELETED
   };
 
+  // List of common actions. <code>"SHARE"</code> is for sharing files with
+  // others. <code>"SAVE_FOR_OFFLINE"</code> for pinning (saving for offline
+  // access). <code>"OFFLINE_NOT_NECESSARY"</code> for notifying that the file
+  // doesn't need to be stored for offline access anymore.
+  // Used by $(ref:onGetActionsRequested) and $(ref:onExecuteActionRequested).
+  enum CommonActionId {
+    SAVE_FOR_OFFLINE,
+    OFFLINE_NOT_NECESSARY,
+    SHARE
+  };
+
   // Represents metadata of a file or a directory.
   dictionary EntryMetadata {
-    // True if it is a directory.
-    boolean isDirectory;
+    // True if it is a directory. Must be provided if requested in
+    // <code>options</code>.
+    boolean? isDirectory;
 
     // Name of this entry (not full path name). Must not contain '/'. For root
-    // it must be empty.
-    DOMString name;
+    // it must be empty. Must be provided if requested in <code>options</code>.
+    DOMString? name;
 
-    // File size in bytes.
-    double size;
+    // File size in bytes. Must be provided if requested in
+    // <code>options</code>.
+    double? size;
 
-    // The last modified time of this entry.
-    [instanceOf=Date] object modificationTime;
+    // The last modified time of this entry. Must be provided if requested in
+    // <code>options</code>.
+    [instanceOf=Date] object? modificationTime;
 
-    // Mime type for the entry.
+    // Mime type for the entry. Always optional, but should be provided if
+    // requested in <code>options</code>.
     DOMString? mimeType;
 
     // Thumbnail image as a data URI in either PNG, JPEG or WEBP format, at most
@@ -111,10 +126,10 @@ namespace fileSystemProvider {
 
     // Whether the file system supports the <code>tag</code> field for observing
     // directories.
-    [nodoc] boolean? supportsNotifyTag;
+    boolean? supportsNotifyTag;
 
     // List of watchers.
-    [nodoc] Watcher[] watchers;
+    Watcher[] watchers;
   };
 
   // Options for the $(ref:mount) method.
@@ -135,8 +150,8 @@ namespace fileSystemProvider {
     long? openedFilesLimit;
 
     // Whether the file system supports the <code>tag</code> field for observed
-    // directories. Required in order to enable the internal cache.
-    [nodoc] boolean? supportsNotifyTag;
+    // directories.
+    boolean? supportsNotifyTag;
   };
 
   // Options for the $(ref:unmount) method.
@@ -165,8 +180,36 @@ namespace fileSystemProvider {
     // The path of the entry to fetch metadata about.
     DOMString entryPath;
 
+    // Set to <code>true</code> if <code>is_directory</code> value is requested.
+    boolean isDirectory;
+
+    // Set to <code>true</code> if <code>name</code> value is requested.
+    boolean name;
+
+    // Set to <code>true</code> if <code>size</code> value is requested.
+    boolean size;
+
+    // Set to <code>true</code> if <code>modificationTime</code> value is
+    // requested.
+    boolean modificationTime;
+
+    // Set to <code>true</code> if <code>mimeType</code> value is requested.
+    boolean mimeType;
+
     // Set to <code>true</code> if the thumbnail is requested.
     boolean thumbnail;
+  };
+
+  // Options for the $(ref:onGetActionsRequested) event.
+  dictionary GetActionsRequestedOptions {
+    // The identifier of the file system related to this operation.
+    DOMString fileSystemId;
+
+    // The unique identifier of this request.
+    long requestId;
+
+    // List of paths of entries for the list of actions.
+    DOMString[] entryPaths;
   };
 
   // Options for the $(ref:onReadDirectoryRequested) event.
@@ -179,6 +222,25 @@ namespace fileSystemProvider {
 
     // The path of the directory which contents are requested. 
     DOMString directoryPath;
+
+    // Set to <code>true</code> if <code>is_directory</code> value is requested.
+    boolean isDirectory;
+
+    // Set to <code>true</code> if <code>name</code> value is requested.
+    boolean name;
+
+    // Set to <code>true</code> if <code>size</code> value is requested.
+    boolean size;
+
+    // Set to <code>true</code> if <code>modificationTime</code> value is
+    // requested.
+    boolean modificationTime;
+
+    // Set to <code>true</code> if <code>mimeType</code> value is requested.
+    boolean mimeType;
+
+    // Set to <code>true</code> if the thumbnail is requested.
+    boolean thumbnail;
   };
 
   // Options for the $(ref:onOpenFileRequested) event.
@@ -375,6 +437,31 @@ namespace fileSystemProvider {
     boolean recursive;
   };
 
+  // Information about an action for an entry.
+  dictionary Action {
+    // The identifier of the action. Any string or $(ref:CommonActionId) for
+    // common actions.
+    DOMString id;
+
+    // The title of the action. It may be ignored for common actions.
+    DOMString? title;
+  };
+
+  // Options for the $(ref:onExecuteActionRequested) event.
+  dictionary ExecuteActionRequestedOptions {
+    // The identifier of the file system related to this operation.
+    DOMString fileSystemId;
+
+    // The unique identifier of this request.
+    long requestId;
+
+    // The set of paths of the entries to be used for the action.
+    DOMString[] entryPaths;
+
+    // The identifier of the action to be executed.
+    DOMString actionId;
+  };
+
   // Information about a change happened to an entry within the observed
   // directory (including the entry itself).
   dictionary Change {
@@ -428,27 +515,29 @@ namespace fileSystemProvider {
   callback GetCallback = void(FileSystemInfo fileSystem);
 
   // Callback to be called by the providing extension in case of a success.
-  callback ProviderSuccessCallback = void();
+  [nocompile] callback ProviderSuccessCallback = void();
 
   // Callback to be called by the providing extension in case of an error.
-  callback ProviderErrorCallback = void(ProviderError error);
+  [nocompile] callback ProviderErrorCallback = void(ProviderError error);
 
   // Success callback for the $(ref:onGetMetadataRequested) event.
-  callback MetadataCallback = void(
-      EntryMetadata metadata);
+  [nocompile] callback MetadataCallback = void(EntryMetadata metadata);
+
+  // Success callback for the $(ref:onGetActionsRequested) event.
+  [nocompile] callback ActionsCallback = void(Action[] actions);
 
   // Success callback for the $(ref:onReadDirectoryRequested) event. If more
   // entries will be returned, then <code>hasMore</code> must be true, and it
   // has to be called again with additional entries. If no more entries are
   // available, then <code>hasMore</code> must be set to false.
-  callback EntriesCallback = void(
+  [nocompile] callback EntriesCallback = void(
       EntryMetadata[] entries, boolean hasMore);
 
   // Success callback for the $(ref:onReadFileRequested) event. If more
   // data will be returned, then <code>hasMore</code> must be true, and it
   // has to be called again with additional entries. If no more data is
   // available, then <code>hasMore</code> must be set to false.
-  callback FileDataCallback = void(
+  [nocompile] callback FileDataCallback = void(
       ArrayBuffer data, boolean hasMore);
 
   // A generic result callback to indicate success or failure.
@@ -492,8 +581,10 @@ namespace fileSystemProvider {
     // system is mounted with <code>supportsNofityTag</code>, then
     // <code>tag</code> must be provided, and all changes since the last
     // notification always reported, even if the system was shutdown. The last
-    // tag can be obtained with $(ref:getAll). Note, that <code>tag</code> is
-    // required in order to enable the internal cache.
+    // tag can be obtained with $(ref:getAll).
+    //
+    // To use, the <code>file_system_provider.notify</code> manifest option
+    // must be set to true.
     //
     // Value of <code>tag</code> can be any string which is unique per call,
     // so it's possible to identify the last registered notification. Eg. if
@@ -512,10 +603,10 @@ namespace fileSystemProvider {
     // entries are in fact removed, as there is no entry under their original
     // paths anymore.
     //
-    // In case of an error, $(ref:chrome.runtime.lastError) will be set
+    // In case of an error, $(ref:runtime.lastError) will be set
     // will a corresponding error code.
-    [nodoc] static void notify(NotifyOptions options,
-                               optional ResultCallback callback);
+    static void notify(NotifyOptions options,
+                       optional ResultCallback callback);
   };
 
   interface Events {
@@ -536,6 +627,17 @@ namespace fileSystemProvider {
     [maxListeners=1] static void onGetMetadataRequested(
         GetMetadataRequestedOptions options,
         MetadataCallback successCallback,
+        ProviderErrorCallback errorCallback);
+
+    // Raised when a list of actions for a set of files or directories at
+    // <code>entryPaths</code> is requested. All of the returned actions must
+    // be applicable to each entry. If there are no such actions, an empty array
+    // should be returned. The actions must be returned with the
+    // <code>successCallback</code> call. In case of an error,
+    // <code>errorCallback</code> must be called.
+    [maxListeners=1] static void onGetActionsRequested(
+        GetActionsRequestedOptions options,
+        ActionsCallback successCallback,
         ProviderErrorCallback errorCallback);
 
     // Raised when contents of a directory at <code>directoryPath</code> are
@@ -657,15 +759,23 @@ namespace fileSystemProvider {
 
     // Raised when setting a new directory watcher is requested. If an error
     // occurs, then <code>errorCallback</code> must be called.
-    [maxListeners=1, nodoc] static void onAddWatcherRequested(
+    [maxListeners=1] static void onAddWatcherRequested(
       AddWatcherRequestedOptions options,
       ProviderSuccessCallback successCallback,
       ProviderErrorCallback errorCallback);
 
     // Raised when the watcher should be removed. If an error occurs, then
     // <code>errorCallback</code> must be called.
-    [maxListeners=1, nodoc] static void onRemoveWatcherRequested(
+    [maxListeners=1] static void onRemoveWatcherRequested(
       RemoveWatcherRequestedOptions options,
+      ProviderSuccessCallback successCallback,
+      ProviderErrorCallback errorCallback);
+
+    // Raised when executing an action for a set of files or directories is\
+    // requested. After the action is completed, <code>successCallback</code>
+    // must be called. On error, <code>errorCallback</code> must be called.
+    [maxListeners=1] static void onExecuteActionRequested(
+      ExecuteActionRequestedOptions options,
       ProviderSuccessCallback successCallback,
       ProviderErrorCallback errorCallback);
   };

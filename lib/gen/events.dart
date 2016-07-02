@@ -158,8 +158,8 @@ class ChromeEvent extends ChromeObject {
 }
 
 /**
- * Filters URLs for various criteria. See [event filtering](#filtered). All
- * criteria are case sensitive.
+ * Filters URLs for various criteria. See [event filtering](events#filtered).
+ * All criteria are case sensitive.
  */
 class UrlFilter extends ChromeObject {
   UrlFilter({String hostContains, String hostEquals, String hostPrefix, String hostSuffix, String pathContains, String pathEquals, String pathPrefix, String pathSuffix, String queryContains, String queryEquals, String queryPrefix, String querySuffix, String urlContains, String urlEquals, String urlMatches, String originAndPathMatches, String urlPrefix, String urlSuffix, List<String> schemes, List<dynamic> ports}) {
@@ -285,7 +285,7 @@ class UrlFilter extends ChromeObject {
    * Matches if the URL (without fragment identifier) matches a specified
    * regular expression. Port numbers are stripped from the URL if they match
    * the default port number. The regular expressions use the [RE2
-   * syntax](http://code.google.com/p/re2/wiki/Syntax).
+   * syntax](https://github.com/google/re2/blob/master/doc/syntax.txt).
    */
   String get urlMatches => jsProxy['urlMatches'];
   set urlMatches(String value) => jsProxy['urlMatches'] = value;
@@ -294,7 +294,7 @@ class UrlFilter extends ChromeObject {
    * Matches if the URL without query segment and fragment identifier matches a
    * specified regular expression. Port numbers are stripped from the URL if
    * they match the default port number. The regular expressions use the [RE2
-   * syntax](http://code.google.com/p/re2/wiki/Syntax).
+   * syntax](https://github.com/google/re2/blob/master/doc/syntax.txt).
    */
   String get originAndPathMatches => jsProxy['originAndPathMatches'];
   set originAndPathMatches(String value) => jsProxy['originAndPathMatches'] = value;

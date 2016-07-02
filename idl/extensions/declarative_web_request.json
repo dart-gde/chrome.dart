@@ -79,7 +79,7 @@
             "type": "array",
             "optional": true,
             "description": "Matches if the request type of a request is contained in the list. Requests that cannot match any of the types will be filtered out.",
-            "items": { "type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "object", "xmlhttprequest", "other"] }
+            "items": { "type": "string", "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "font", "object", "xmlhttprequest", "ping", "other"] }
           },
           "contentType": {
             "type": "array",
@@ -184,7 +184,7 @@
       },
       {
         "id": "declarativeWebRequest.RedirectByRegEx",
-        "description": "Redirects a request by applying a regular expression on the URL. The regular expressions use the <a href=\"http://code.google.com/p/re2/wiki/Syntax\">RE2 syntax</a>.",
+        "description": "Redirects a request by applying a regular expression on the URL. The regular expressions use the <a href=\"https://github.com/google/re2/blob/master/doc/syntax.txt\">RE2 syntax</a>.",
         "type": "object",
         "properties": {
           "instanceType": {

@@ -111,11 +111,15 @@ class OnInputEnteredEvent {
 
 /**
  * The style type.
- * enum of `url`, `match`, `dim`
  */
-class DescriptionStyleType extends ChromeObject {
-  DescriptionStyleType();
-  DescriptionStyleType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class DescriptionStyleType extends ChromeEnum {
+  static const DescriptionStyleType URL = const DescriptionStyleType._('url');
+  static const DescriptionStyleType MATCH = const DescriptionStyleType._('match');
+  static const DescriptionStyleType DIM = const DescriptionStyleType._('dim');
+
+  static const List<DescriptionStyleType> VALUES = const[URL, MATCH, DIM];
+
+  const DescriptionStyleType._(String str): super(str);
 }
 
 /**
@@ -123,11 +127,15 @@ class DescriptionStyleType extends ChromeObject {
  * to display results. For example, if the omnibox command is to navigate to a
  * certain URL, a disposition of 'newForegroundTab' means the navigation should
  * take place in a new selected tab.
- * enum of `currentTab`, `newForegroundTab`, `newBackgroundTab`
  */
-class OnInputEnteredDisposition extends ChromeObject {
-  OnInputEnteredDisposition();
-  OnInputEnteredDisposition.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class OnInputEnteredDisposition extends ChromeEnum {
+  static const OnInputEnteredDisposition CURRENT_TAB = const OnInputEnteredDisposition._('currentTab');
+  static const OnInputEnteredDisposition NEW_FOREGROUND_TAB = const OnInputEnteredDisposition._('newForegroundTab');
+  static const OnInputEnteredDisposition NEW_BACKGROUND_TAB = const OnInputEnteredDisposition._('newBackgroundTab');
+
+  static const List<OnInputEnteredDisposition> VALUES = const[CURRENT_TAB, NEW_FOREGROUND_TAB, NEW_BACKGROUND_TAB];
+
+  const OnInputEnteredDisposition._(String str): super(str);
 }
 
 /**
@@ -181,6 +189,6 @@ class DefaultSuggestResult extends ChromeObject {
 
 OnInputChangedEvent _createOnInputChangedEvent(String text, JsObject suggest) =>
     new OnInputChangedEvent(text, suggest);
-OnInputEnteredEvent _createOnInputEnteredEvent(String text, JsObject disposition) =>
+OnInputEnteredEvent _createOnInputEnteredEvent(String text, String disposition) =>
     new OnInputEnteredEvent(text, _createOnInputEnteredDisposition(disposition));
-OnInputEnteredDisposition _createOnInputEnteredDisposition(JsObject jsProxy) => jsProxy == null ? null : new OnInputEnteredDisposition.fromProxy(jsProxy);
+OnInputEnteredDisposition _createOnInputEnteredDisposition(String value) => OnInputEnteredDisposition.VALUES.singleWhere((ChromeEnum e) => e.value == value);

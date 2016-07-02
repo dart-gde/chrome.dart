@@ -60,9 +60,14 @@ class ChromeDesktopCapture extends ChromeApi {
 /**
  * Enum used to define set of desktop media sources used in
  * chooseDesktopMedia().
- * enum of `screen`, `window`, `tab`
  */
-class DesktopCaptureSourceType extends ChromeObject {
-  DesktopCaptureSourceType();
-  DesktopCaptureSourceType.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+class DesktopCaptureSourceType extends ChromeEnum {
+  static const DesktopCaptureSourceType SCREEN = const DesktopCaptureSourceType._('screen');
+  static const DesktopCaptureSourceType WINDOW = const DesktopCaptureSourceType._('window');
+  static const DesktopCaptureSourceType TAB = const DesktopCaptureSourceType._('tab');
+  static const DesktopCaptureSourceType AUDIO = const DesktopCaptureSourceType._('audio');
+
+  static const List<DesktopCaptureSourceType> VALUES = const[SCREEN, WINDOW, TAB, AUDIO];
+
+  const DesktopCaptureSourceType._(String str): super(str);
 }

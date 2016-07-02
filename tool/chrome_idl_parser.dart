@@ -23,6 +23,7 @@ class ChromeIDLParser extends LanguageParsers {
    */
   Parser get namespaceDeclaration =>
       copyrightSignature.maybe
+      + whiteSpace.maybe
       + docString
       + attributeDeclaration.maybe
       + reserved["namespace"]
@@ -289,6 +290,9 @@ class ChromeIDLParser extends LanguageParsers {
       ^ idlAttributeAssignedValueMapping)
       // Attribute where [name="string"]
       | (identifier + symbol('=') + stringLiteral
+      ^ idlAttributeAssignedStringLiteral)
+      // Attribute where [name=("string")]
+      | (identifier + symbol('=') + parens(stringLiteral)
       ^ idlAttributeAssignedStringLiteral)
       // Attribute where [maxListeners=1]
       | (identifier + symbol('=') + natural

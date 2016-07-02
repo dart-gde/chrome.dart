@@ -190,10 +190,11 @@ class AdapterState extends ChromeObject {
 }
 
 /**
- * Information about the state of a known Bluetooth device.
+ * Information about the state of a known Bluetooth device. Note: this
+ * dictionary is also used in bluetooth_private.idl
  */
 class BluetoothDevice extends ChromeObject {
-  BluetoothDevice({String address, String name, int deviceClass, VendorIdSource vendorIdSource, int vendorId, int productId, int deviceId, DeviceType type, bool paired, bool connected, List<String> uuids, int inquiryRssi, int inquiryTxPower}) {
+  BluetoothDevice({String address, String name, int deviceClass, VendorIdSource vendorIdSource, int vendorId, int productId, int deviceId, DeviceType type, bool paired, bool connected, bool connecting, bool connectable, List<String> uuids, int inquiryRssi, int inquiryTxPower}) {
     if (address != null) this.address = address;
     if (name != null) this.name = name;
     if (deviceClass != null) this.deviceClass = deviceClass;
@@ -204,6 +205,8 @@ class BluetoothDevice extends ChromeObject {
     if (type != null) this.type = type;
     if (paired != null) this.paired = paired;
     if (connected != null) this.connected = connected;
+    if (connecting != null) this.connecting = connecting;
+    if (connectable != null) this.connectable = connectable;
     if (uuids != null) this.uuids = uuids;
     if (inquiryRssi != null) this.inquiryRssi = inquiryRssi;
     if (inquiryTxPower != null) this.inquiryTxPower = inquiryTxPower;
@@ -239,6 +242,12 @@ class BluetoothDevice extends ChromeObject {
 
   bool get connected => jsProxy['connected'];
   set connected(bool value) => jsProxy['connected'] = value;
+
+  bool get connecting => jsProxy['connecting'];
+  set connecting(bool value) => jsProxy['connecting'] = value;
+
+  bool get connectable => jsProxy['connectable'];
+  set connectable(bool value) => jsProxy['connectable'] = value;
 
   List<String> get uuids => listify(jsProxy['uuids']);
   set uuids(List<String> value) => jsProxy['uuids'] = jsify(value);

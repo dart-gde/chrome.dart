@@ -21,16 +21,16 @@ final ChromeUsb usb = new ChromeUsb._();
 class ChromeUsb extends ChromeApi {
   JsObject get _usb => chrome['usb'];
 
-  Stream<Device> get onDeviceAdded => _onDeviceAdded.stream;
-  ChromeStreamController<Device> _onDeviceAdded;
+  Stream<UsbDevice> get onDeviceAdded => _onDeviceAdded.stream;
+  ChromeStreamController<UsbDevice> _onDeviceAdded;
 
-  Stream<Device> get onDeviceRemoved => _onDeviceRemoved.stream;
-  ChromeStreamController<Device> _onDeviceRemoved;
+  Stream<UsbDevice> get onDeviceRemoved => _onDeviceRemoved.stream;
+  ChromeStreamController<UsbDevice> _onDeviceRemoved;
 
   ChromeUsb._() {
     var getApi = () => _usb;
-    _onDeviceAdded = new ChromeStreamController<Device>.oneArg(getApi, 'onDeviceAdded', _createDevice);
-    _onDeviceRemoved = new ChromeStreamController<Device>.oneArg(getApi, 'onDeviceRemoved', _createDevice);
+    _onDeviceAdded = new ChromeStreamController<UsbDevice>.oneArg(getApi, 'onDeviceAdded', _createDevice);
+    _onDeviceRemoved = new ChromeStreamController<UsbDevice>.oneArg(getApi, 'onDeviceRemoved', _createDevice);
   }
 
   bool get available => _usb != null;
@@ -39,27 +39,39 @@ class ChromeUsb extends ChromeApi {
    * Enumerates connected USB devices.
    * [options]: The properties to search for on target devices.
    */
-  Future<List<Device>> getDevices(EnumerateDevicesOptions options) {
+  Future<List<UsbDevice>> getDevices(EnumerateDevicesOptions options) {
     if (_usb == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<List<Device>>.oneArg((e) => listify(e, _createDevice));
+    var completer = new ChromeCompleter<List<UsbDevice>>.oneArg((e) => listify(e, _createDevice));
     _usb.callMethod('getDevices', [jsify(options), completer.callback]);
     return completer.future;
   }
 
   /**
-   * Presents a device picker to the user and returns the [Device]s selected. If
+   * Presents a device picker to the user and returns the [UsbDevice]s selected. If
    * the user cancels the picker devices will be empty. A user gesture is
    * required for the dialog to display. Without a user gesture, the callback
    * will run as though the user cancelled.
    * [options]: Configuration of the device picker dialog box.
-   * [callback]: Invoked with a list of chosen [Device]s.
+   * [callback]: Invoked with a list of chosen [UsbDevice]s.
    */
-  Future<List<Device>> getUserSelectedDevices(DevicePromptOptions options) {
+  Future<List<UsbDevice>> getUserSelectedDevices(UsbDevicePromptOptions options) {
     if (_usb == null) _throwNotAvailable();
 
-    var completer = new ChromeCompleter<List<Device>>.oneArg((e) => listify(e, _createDevice));
+    var completer = new ChromeCompleter<List<UsbDevice>>.oneArg((e) => listify(e, _createDevice));
     _usb.callMethod('getUserSelectedDevices', [jsify(options), completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Returns the full set of device configuration descriptors.
+   * [device]: The [UsbDevice] to fetch descriptors from.
+   */
+  Future<List<ConfigDescriptor>> getConfigurations(UsbDevice device) {
+    if (_usb == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<List<ConfigDescriptor>>.oneArg((e) => listify(e, _createConfigDescriptor));
+    _usb.callMethod('getConfigurations', [jsify(device), completer.callback]);
     return completer.future;
   }
 
@@ -67,10 +79,10 @@ class ChromeUsb extends ChromeApi {
    * Requests access from the permission broker to a device claimed by Chrome OS
    * if the given interface on the device is not claimed.
    * 
-   * [device]: The [Device] to request access to.
+   * [device]: The [UsbDevice] to request access to.
    * [interfaceId]: The particular interface requested.
    */
-  Future<bool> requestAccess(Device device, int interfaceId) {
+  Future<bool> requestAccess(UsbDevice device, int interfaceId) {
     if (_usb == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<bool>.oneArg();
@@ -80,9 +92,9 @@ class ChromeUsb extends ChromeApi {
 
   /**
    * Opens a USB device returned by [getDevices].
-   * [device]: The [Device] to open.
+   * [device]: The [UsbDevice] to open.
    */
-  Future<ConnectionHandle> openDevice(Device device) {
+  Future<ConnectionHandle> openDevice(UsbDevice device) {
     if (_usb == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<ConnectionHandle>.oneArg(_createConnectionHandle);
@@ -356,13 +368,17 @@ class UsageType extends ChromeEnum {
   const UsageType._(String str): super(str);
 }
 
-class Device extends ChromeObject {
-  Device({int device, int vendorId, int productId}) {
+class UsbDevice extends ChromeObject {
+  UsbDevice({int device, int vendorId, int productId, int version, String productName, String manufacturerName, String serialNumber}) {
     if (device != null) this.device = device;
     if (vendorId != null) this.vendorId = vendorId;
     if (productId != null) this.productId = productId;
+    if (version != null) this.version = version;
+    if (productName != null) this.productName = productName;
+    if (manufacturerName != null) this.manufacturerName = manufacturerName;
+    if (serialNumber != null) this.serialNumber = serialNumber;
   }
-  Device.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  UsbDevice.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   int get device => jsProxy['device'];
   set device(int value) => jsProxy['device'] = value;
@@ -372,6 +388,18 @@ class Device extends ChromeObject {
 
   int get productId => jsProxy['productId'];
   set productId(int value) => jsProxy['productId'] = value;
+
+  int get version => jsProxy['version'];
+  set version(int value) => jsProxy['version'] = value;
+
+  String get productName => jsProxy['productName'];
+  set productName(String value) => jsProxy['productName'] = value;
+
+  String get manufacturerName => jsProxy['manufacturerName'];
+  set manufacturerName(String value) => jsProxy['manufacturerName'] = value;
+
+  String get serialNumber => jsProxy['serialNumber'];
+  set serialNumber(String value) => jsProxy['serialNumber'] = value;
 }
 
 class ConnectionHandle extends ChromeObject {
@@ -469,7 +497,8 @@ class InterfaceDescriptor extends ChromeObject {
 }
 
 class ConfigDescriptor extends ChromeObject {
-  ConfigDescriptor({int configurationValue, String description, bool selfPowered, bool remoteWakeup, int maxPower, List<InterfaceDescriptor> interfaces, ArrayBuffer extra_data}) {
+  ConfigDescriptor({bool active, int configurationValue, String description, bool selfPowered, bool remoteWakeup, int maxPower, List<InterfaceDescriptor> interfaces, ArrayBuffer extra_data}) {
+    if (active != null) this.active = active;
     if (configurationValue != null) this.configurationValue = configurationValue;
     if (description != null) this.description = description;
     if (selfPowered != null) this.selfPowered = selfPowered;
@@ -479,6 +508,9 @@ class ConfigDescriptor extends ChromeObject {
     if (extra_data != null) this.extra_data = extra_data;
   }
   ConfigDescriptor.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  bool get active => jsProxy['active'];
+  set active(bool value) => jsProxy['active'] = value;
 
   int get configurationValue => jsProxy['configurationValue'];
   set configurationValue(int value) => jsProxy['configurationValue'] = value;
@@ -664,12 +696,12 @@ class EnumerateDevicesAndRequestAccessOptions extends ChromeObject {
   set interfaceId(int value) => jsProxy['interfaceId'] = value;
 }
 
-class DevicePromptOptions extends ChromeObject {
-  DevicePromptOptions({bool multiple, List<UsbDeviceFilter> filters}) {
+class UsbDevicePromptOptions extends ChromeObject {
+  UsbDevicePromptOptions({bool multiple, List<UsbDeviceFilter> filters}) {
     if (multiple != null) this.multiple = multiple;
     if (filters != null) this.filters = filters;
   }
-  DevicePromptOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+  UsbDevicePromptOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   bool get multiple => jsProxy['multiple'];
   set multiple(bool value) => jsProxy['multiple'] = value;
@@ -678,9 +710,9 @@ class DevicePromptOptions extends ChromeObject {
   set filters(List<UsbDeviceFilter> value) => jsProxy['filters'] = jsify(value);
 }
 
-Device _createDevice(JsObject jsProxy) => jsProxy == null ? null : new Device.fromProxy(jsProxy);
-ConnectionHandle _createConnectionHandle(JsObject jsProxy) => jsProxy == null ? null : new ConnectionHandle.fromProxy(jsProxy);
+UsbDevice _createDevice(JsObject jsProxy) => jsProxy == null ? null : new UsbDevice.fromProxy(jsProxy);
 ConfigDescriptor _createConfigDescriptor(JsObject jsProxy) => jsProxy == null ? null : new ConfigDescriptor.fromProxy(jsProxy);
+ConnectionHandle _createConnectionHandle(JsObject jsProxy) => jsProxy == null ? null : new ConnectionHandle.fromProxy(jsProxy);
 InterfaceDescriptor _createInterfaceDescriptor(JsObject jsProxy) => jsProxy == null ? null : new InterfaceDescriptor.fromProxy(jsProxy);
 TransferResultInfo _createTransferResultInfo(JsObject jsProxy) => jsProxy == null ? null : new TransferResultInfo.fromProxy(jsProxy);
 TransferType _createTransferType(String value) => TransferType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

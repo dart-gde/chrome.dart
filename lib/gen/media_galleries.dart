@@ -331,21 +331,12 @@ class StreamInfo extends ChromeObject {
 }
 
 class MediaMetadata extends ChromeObject {
-  MediaMetadata({String mimeType, int height, int width, num xResolution, num yResolution, num duration, int rotation, String cameraMake, String cameraModel, num exposureTimeSeconds, bool flashFired, num fNumber, num focalLengthMm, num isoEquivalent, String album, String artist, String comment, String copyright, int disc, String genre, String language, String title, int track, List<StreamInfo> rawTags, List<dynamic> attachedImages}) {
+  MediaMetadata({String mimeType, int height, int width, num duration, int rotation, String album, String artist, String comment, String copyright, int disc, String genre, String language, String title, int track, List<StreamInfo> rawTags, List<dynamic> attachedImages}) {
     if (mimeType != null) this.mimeType = mimeType;
     if (height != null) this.height = height;
     if (width != null) this.width = width;
-    if (xResolution != null) this.xResolution = xResolution;
-    if (yResolution != null) this.yResolution = yResolution;
     if (duration != null) this.duration = duration;
     if (rotation != null) this.rotation = rotation;
-    if (cameraMake != null) this.cameraMake = cameraMake;
-    if (cameraModel != null) this.cameraModel = cameraModel;
-    if (exposureTimeSeconds != null) this.exposureTimeSeconds = exposureTimeSeconds;
-    if (flashFired != null) this.flashFired = flashFired;
-    if (fNumber != null) this.fNumber = fNumber;
-    if (focalLengthMm != null) this.focalLengthMm = focalLengthMm;
-    if (isoEquivalent != null) this.isoEquivalent = isoEquivalent;
     if (album != null) this.album = album;
     if (artist != null) this.artist = artist;
     if (comment != null) this.comment = comment;
@@ -369,38 +360,11 @@ class MediaMetadata extends ChromeObject {
   int get width => jsProxy['width'];
   set width(int value) => jsProxy['width'] = value;
 
-  num get xResolution => jsProxy['xResolution'];
-  set xResolution(num value) => jsProxy['xResolution'] = jsify(value);
-
-  num get yResolution => jsProxy['yResolution'];
-  set yResolution(num value) => jsProxy['yResolution'] = jsify(value);
-
   num get duration => jsProxy['duration'];
   set duration(num value) => jsProxy['duration'] = jsify(value);
 
   int get rotation => jsProxy['rotation'];
   set rotation(int value) => jsProxy['rotation'] = value;
-
-  String get cameraMake => jsProxy['cameraMake'];
-  set cameraMake(String value) => jsProxy['cameraMake'] = value;
-
-  String get cameraModel => jsProxy['cameraModel'];
-  set cameraModel(String value) => jsProxy['cameraModel'] = value;
-
-  num get exposureTimeSeconds => jsProxy['exposureTimeSeconds'];
-  set exposureTimeSeconds(num value) => jsProxy['exposureTimeSeconds'] = jsify(value);
-
-  bool get flashFired => jsProxy['flashFired'];
-  set flashFired(bool value) => jsProxy['flashFired'] = value;
-
-  num get fNumber => jsProxy['fNumber'];
-  set fNumber(num value) => jsProxy['fNumber'] = jsify(value);
-
-  num get focalLengthMm => jsProxy['focalLengthMm'];
-  set focalLengthMm(num value) => jsProxy['focalLengthMm'] = jsify(value);
-
-  num get isoEquivalent => jsProxy['isoEquivalent'];
-  set isoEquivalent(num value) => jsProxy['isoEquivalent'] = jsify(value);
 
   String get album => jsProxy['album'];
   set album(String value) => jsProxy['album'] = value;

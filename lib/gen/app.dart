@@ -5,6 +5,7 @@ library chrome.app;
 import '../src/common.dart';
 import '../src/files.dart';
 import 'windows.dart';
+import 'input.dart';
 
 part 'app_patch.dart';
 
@@ -80,14 +81,14 @@ class LaunchSource extends ChromeEnum {
 }
 
 class LaunchItem extends ChromeObject {
-  LaunchItem({FileEntry entry, String type}) {
+  LaunchItem({Entry entry, String type}) {
     if (entry != null) this.entry = entry;
     if (type != null) this.type = type;
   }
   LaunchItem.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
-  FileEntry get entry => _createFileEntry(jsProxy['entry']);
-  set entry(FileEntry value) => jsProxy['entry'] = jsify(value);
+  Entry get entry => _createEntry(jsProxy['entry']);
+  set entry(Entry value) => jsProxy['entry'] = jsify(value);
 
   String get type => jsProxy['type'];
   set type(String value) => jsProxy['type'] = value;
@@ -98,12 +99,13 @@ class LaunchItem extends ChromeObject {
  * referrerUrl`) can be present for any given launch.
  */
 class LaunchData extends ChromeObject {
-  LaunchData({String id, List<LaunchItem> items, String url, String referrerUrl, bool isKioskSession, LaunchSource source}) {
+  LaunchData({String id, List<LaunchItem> items, String url, String referrerUrl, bool isKioskSession, bool isPublicSession, LaunchSource source}) {
     if (id != null) this.id = id;
     if (items != null) this.items = items;
     if (url != null) this.url = url;
     if (referrerUrl != null) this.referrerUrl = referrerUrl;
     if (isKioskSession != null) this.isKioskSession = isKioskSession;
+    if (isPublicSession != null) this.isPublicSession = isPublicSession;
     if (source != null) this.source = source;
   }
   LaunchData.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
@@ -122,6 +124,9 @@ class LaunchData extends ChromeObject {
 
   bool get isKioskSession => jsProxy['isKioskSession'];
   set isKioskSession(bool value) => jsProxy['isKioskSession'] = value;
+
+  bool get isPublicSession => jsProxy['isPublicSession'];
+  set isPublicSession(bool value) => jsProxy['isPublicSession'] = value;
 
   LaunchSource get source => _createLaunchSource(jsProxy['source']);
   set source(LaunchSource value) => jsProxy['source'] = jsify(value);
@@ -164,7 +169,7 @@ class EmbedRequest extends ChromeObject {
 
 EmbedRequest _createEmbedRequest(JsObject jsProxy) => jsProxy == null ? null : new EmbedRequest.fromProxy(jsProxy);
 LaunchData _createLaunchData(JsObject jsProxy) => jsProxy == null ? null : new LaunchData.fromProxy(jsProxy);
-FileEntry _createFileEntry(JsObject jsProxy) => jsProxy == null ? null : new ChromeFileEntry.fromProxy(jsProxy);
+Entry _createEntry(JsObject jsProxy) => jsProxy == null ? null : new CrEntry.fromProxy(jsProxy);
 LaunchItem _createLaunchItem(JsObject jsProxy) => jsProxy == null ? null : new LaunchItem.fromProxy(jsProxy);
 LaunchSource _createLaunchSource(String value) => LaunchSource.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 
@@ -296,7 +301,8 @@ class _ChromeAppWindow extends ChromeApi {
   }
 
   /**
-   * Does the current platform support windows being visible on all workspaces?
+   * Whether the current platform supports windows being visible on all
+   * workspaces.
    */
   bool canSetVisibleOnAllWorkspaces() {
     if (_app_window == null) _throwNotAvailable();
@@ -324,8 +330,7 @@ class State extends ChromeEnum {
 }
 
 /**
- * 'shell' is the default window type. 'panel' is managed by the OS (Currently
- * experimental, Ash only).
+ * Specifies the type of window to create.
  */
 class WindowType extends ChromeEnum {
   static const WindowType SHELL = const WindowType._('shell');
@@ -742,21 +747,11 @@ class _AppWindow extends ChromeObject {
   }
 
   /**
-   * For platforms that support multiple workspaces, is this window visible on
-   * all of them?
+   * Set whether the window is visible on all workspaces. (Only for platforms
+   * that support this).
    */
   void setVisibleOnAllWorkspaces(bool alwaysVisible) {
     jsProxy.callMethod('setVisibleOnAllWorkspaces', [alwaysVisible]);
-  }
-
-  /**
-   * Set whether the window should get all keyboard events including system keys
-   * that are usually not sent. This is best-effort subject to platform specific
-   * constraints. Requires the `"app.window.allKeys"` permission. This is
-   * currently available only in dev channel on Windows.
-   */
-  void setInterceptAllKeys(bool wantAllKeys) {
-    jsProxy.callMethod('setInterceptAllKeys', [wantAllKeys]);
   }
 }
 
