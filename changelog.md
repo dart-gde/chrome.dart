@@ -1,4 +1,10 @@
 # Changelog - chrome.dart
+## 0.9.1 2016-07-01
+- updated to M51, adding the following APIs
+  - certificateProvider
+  - enterprise.deviceAttributes
+  - enterprise.platformKeys
+
 ## 0.8.0-dev1 2015-09-15
 - updated to M44, adding the following APIs
   - documentScan

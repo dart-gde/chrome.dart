@@ -1,9 +1,8 @@
 name: chrome
-version: 0.9.0
+version: 0.9.1
 authors:
-- Devon Carew <devoncarew@gmail.com>
-- Adam Singer <financeCoding@gmail.com>
-- Kevin Moore <kevin@thinkpixellab.com>
+- Adam Bender <adambender@gmail.com>
+- Ben Holtz <bholtz@cs.stanford.edu> 
 description: A library for accessing the Chrome APIs in a packaged app or extension.
 homepage: https://github.com/dart-gde/chrome.dart
 environment:
