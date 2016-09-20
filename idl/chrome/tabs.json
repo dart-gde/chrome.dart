@@ -249,7 +249,8 @@
           },
           {
             "type": "any",
-            "name": "message"
+            "name": "message",
+            "description": "The message to send. This message should be a JSON-ifiable object."
           },
           {
             "type": "object",
@@ -758,7 +759,7 @@
           {
             "$ref": "extensionTypes.InjectDetails",
             "name": "details",
-            "description": "Details of the script to run."
+            "description": "Details of the script to run. Either the code or the file property must be set, but both may not be set at the same time."
           },
           {
             "type": "function",
@@ -786,7 +787,7 @@
           {
             "$ref": "extensionTypes.InjectDetails",
             "name": "details",
-            "description": "Details of the CSS text to insert."
+            "description": "Details of the CSS text to insert. Either the code or the file property must be set, but both may not be set at the same time."
           },
           {
             "type": "function",
