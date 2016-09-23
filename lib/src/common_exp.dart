@@ -206,6 +206,14 @@ class SubtleCrypto {
   SubtleCrypto.fromProxy(JsObject jsProxy);
 }
 
+class RequestPinCallback {
+  RequestPinCallback.fromProxy(JsObject jsProxy);
+}
+
+class StopPinRequestCallback {
+  StopPinRequestCallback.fromProxy(JsObject jsProxy);
+}
+
 // TODO:
 class LocalMediaStream extends ChromeObject {
   static LocalMediaStream create(JsObject jsProxy) => new LocalMediaStream.fromProxy(jsProxy);

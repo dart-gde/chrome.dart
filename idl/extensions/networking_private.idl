@@ -276,7 +276,7 @@ namespace networkingPrivate {
   dictionary ManagedIPConfigProperties {
     ManagedDOMString? Gateway;
     ManagedDOMString? IPAddress;
-    ManagedDOMString[]? NameServers;
+    ManagedDOMStringList? NameServers;
     ManagedLong? RoutingPrefix;
     ManagedDOMString? Type;
     ManagedDOMString? WebProxyAutoDiscoveryUrl;
@@ -315,7 +315,7 @@ namespace networkingPrivate {
     ManagedDOMString? ClientCertType;
     ManagedEAPProperties? EAP;
     ManagedDOMString? Group;
-    ManagedLong IKEVersion;
+    ManagedLong? IKEVersion;
     ManagedDOMString? PSK;
     ManagedBoolean? SaveCredentials;
     ManagedDOMStringList? ServerCARefs;
@@ -446,11 +446,11 @@ namespace networkingPrivate {
     ManagedDOMString? Proto;
     ManagedDOMString? PushPeerInfo;
     ManagedDOMString? RemoteCertEKU;
-    ManagedDOMString[]? RemoteCertKU;
+    ManagedDOMStringList? RemoteCertKU;
     ManagedDOMString? RemoteCertTLS;
     ManagedLong? RenegSec;
     ManagedBoolean? SaveCredentials;
-    ManagedDOMString[]? ServerCARefs;
+    ManagedDOMStringList? ServerCARefs;
     ManagedDOMString? ServerCertRef;
     ManagedLong? ServerPollTimeout;
     ManagedLong? Shaper;
@@ -511,6 +511,7 @@ namespace networkingPrivate {
     CellularProviderProperties? ServingOperator;
     SIMLockStatus? SIMLockStatus;
     boolean? SIMPresent;
+    long? SignalStrength;
     boolean? SupportNetworkScan;
     DOMString[]? SupportedCarriers;
   };
@@ -544,6 +545,7 @@ namespace networkingPrivate {
     CellularProviderProperties? ServingOperator;
     SIMLockStatus? SIMLockStatus;
     boolean? SIMPresent;
+    long? SignalStrength;
     boolean? SupportNetworkScan;
     DOMString[]? SupportedCarriers;
   };
@@ -804,6 +806,15 @@ namespace networkingPrivate {
     long? limit;
   };
 
+  dictionary GlobalPolicy {
+    // If true, only policy networks may auto connect. Defaults to false.
+    boolean? AllowOnlyPolicyNetworksToAutoconnect;
+
+    // If true, only policy networks may be connected to and no new networks may
+    // be added or configured. Defaults to false.
+    boolean? AllowOnlyPolicyNetworksToConnect;
+  };
+
   callback VoidCallback = void();
   callback BooleanCallback = void(boolean result);
   callback StringCallback = void(DOMString result);
@@ -816,6 +827,7 @@ namespace networkingPrivate {
   callback GetDeviceStatesCallback = void(DeviceStateProperties[] result);
   callback GetEnabledNetworkTypesCallback = void(NetworkType[] result);
   callback CaptivePortalStatusCallback = void(CaptivePortalStatus result);
+  callback GetGlobalPolicyCallback = void(GlobalPolicy result);
 
   // These functions all report failures via chrome.runtime.lastError.
   interface Functions {
@@ -1009,6 +1021,7 @@ namespace networkingPrivate {
     //   operation succeeds (|puk| is valid), the PIN will be set to |pin|.
     //   (If |pin| is empty or invalid the operation will fail).
     // |networkGuid|: The GUID of the cellular network to unlock.
+    //     If empty, the default cellular device will be used.
     // |pin|: The current SIM PIN, or the new PIN if PUK is provided.
     // |puk|: The operator provided PUK for unblocking a blocked SIM.
     // |callback|: Called when the operation has completed.
@@ -1025,11 +1038,16 @@ namespace networkingPrivate {
     // unlocked with unlockCellularSim() before this can be called (otherwise it
     // will fail and chrome.runtime.lastError will be set to Error.SimLocked).
     // |networkGuid|: The GUID of the cellular network to set the SIM state of.
+    //     If empty, the default cellular device will be used.
     // |simState|: The SIM state to set.
     // |callback|: Called when the operation has completed.
     static void setCellularSimState(DOMString networkGuid,
                                     CellularSimState simState,
                                     optional VoidCallback callback);
+
+    // Gets the global policy properties. These properties are not expected to
+    // change during a session.
+    static void getGlobalPolicy(GetGlobalPolicyCallback callback);
   };
 
   interface Events {

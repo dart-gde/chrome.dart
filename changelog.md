@@ -1,4 +1,11 @@
 # Changelog - chrome.dart
+
+## 0.9.3 2017-03-27
+- updated to M57, with no new APIs
+
+## 0.9.2 2016-09-22
+- updated to M53, with no new APIs
+
 ## 0.9.1 2016-07-01
 - updated to M51, adding the following APIs
   - certificateProvider

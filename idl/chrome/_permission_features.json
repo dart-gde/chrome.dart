@@ -4,17 +4,8 @@
 
 // This features file defines permissions for extension APIs implemented
 // under src/chrome.
-// See extensions/common/features/* to understand this file, in particular
-// feature.h, simple_feature.h, and base_feature_provider.h.
-
-// To add a new whitelisted ID, SHA-1 it and force it to uppercase. In Bash:
-//
-// $ echo -n "aaaabbbbccccddddeeeeffffgggghhhh" | \
-// sha1sum | tr '[:lower:]' '[:upper:]'
-// 9A0417016F345C934A1A88F55CA17C05014EEEBA  -
-//
-// Google employees: please update http://go/chrome-api-whitelist to map
-// hashes back to ids.
+// See chrome/common/extensions/api/_features.md to understand this file, as
+// well as feature.h, simple_feature.h, and base_feature_provider.h.
 
 // If you add a new platform_app permission please update the "stubs_app" test:
 // chrome/test/data/extensions/api_test/stubs_app/manifest.json
@@ -43,30 +34,11 @@
     "extension_types": ["extension", "platform_app"],
     "whitelist": [
       "EE17C698905F7F2E6DDC87C9C30F11E164C829F4",  // For unit testing ALP
-      "90113DA9516526D24DAF156C629CC41C049E8882",  // http://crbug.com/520205
-      "736F218710D373A285B3A9C70BF90C567B22321A",  // http://crbug.com/520205
-      "A9EFD71948A480C87D3B7C758FD938215F445F00",  // Obsolete
+      "C50DC2AC31D826BC977032AF12DE4694CC8467DC",  // For unit testing ALP
       "AE27D69DBE571F4B1694F05C89B710C646792231",  // Published ADT.
       "5107DE9024C329EEA9C9A72D94C16723790C6422"   // Apps Developer Tool Dev.
     ]
   },
-  "audioModem": [
-    {
-      "channel": "dev",
-      "extension_types": ["extension", "platform_app"]
-    },
-    {
-      "channel": "stable",
-      "extension_types": ["extension", "platform_app"],
-      "whitelist": [
-        "05EBA3051DFCA6AF17070AEE5FE8C66322FF4738",  // http://crbug.com/431978
-        "11B478CEC461C766A2DC1E5BEEB7970AE06DC9C2",  // http://crbug.com/458218
-        "0EFB879311E9EFBB7C45251F89EC655711B1F6ED",  // http://crbug.com/458218
-        "9193D3A51E2FE33B496CDA53EA330423166E7F02",  // http://crbug.com/458218
-        "F9119B8B18C7C82B51E7BC6FF816B694F2EC3E89"   // http://crbug.com/458218
-      ]
-    }
-  ],
   "autofillPrivate": {
     "channel": "trunk",
     "extension_types": ["extension", "platform_app"],
@@ -74,8 +46,10 @@
   },
   "autotestPrivate": {
     "channel": "stable",
-    "extension_types": ["extension", "legacy_packaged_app"],
-    "location": "component"
+    "extension_types": ["extension"],
+    "whitelist": [
+      "0D209B5E4401BB8E7873B5AB5B1346A1CB067015"  // Autotest: crbug.com/654525
+    ]
   },
   "background": {
     "channel": "stable",
@@ -151,15 +125,25 @@
       "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB",  // http://crbug.com/234235
       "307E96539209F95A1A8740C713E6998A73657D96",  // http://crbug.com/329690
       "A291B26E088FA6BA53FFD72F0916F06EBA7C585A",  // http://crbug.com/341258
+      // TODO (ntang) Remove the following hash by 12/31/2017.
       "D7986543275120831B39EF28D1327552FC343960",  // http://crbug.com/329088
       "4F25792AF1AA7483936DE29C07806F203C7170A0",  // http://crbug.com/407693
       "BD8781D757D830FC2E85470A1B6E8A718B7EE0D9",  // http://crbug.com/407693
       "4AC2B6C63C6480D150DFDA13E4A5956EB1D0DDBB",  // http://crbug.com/407693
       "81986D4F846CEDDDB962643FA501D1780DD441BB",  // http://crbug.com/407693
+      // TODO (ntang) Remove the following 2 hashes by 12/31/2017.
       "B620CF4203315F9F2E046EDED22C7571A935958D",  // http://crbug.com/510270
       "B206D8716769728278D2D300349C6CB7D7DE2EF9",  // http://crbug.com/510270
       "A3E3DE9E9F16B41D4A2FAD106BD6CA76B94A0C94",  // http://crbug.com/590259
-      "C2ABD68C33A5B485971C9638B80D6A2E9CBA78C4"   // http://crbug.com/590259
+      "C2ABD68C33A5B485971C9638B80D6A2E9CBA78C4",  // http://crbug.com/590259
+      "8EBDF73405D0B84CEABB8C7513C9B9FA9F1DC2CE",  // http://crbug.com/644446
+      "72445193EB86716465275D4E2E84DACF47558FCF",  // http://crbug.com/644446
+      "51E46A03961884A4BA74CE7CA30A75CC6F360D74",  // http://crbug.com/644446
+      "6844C0E4DF3034BD3ED04E7BD957C7DE0EA83443",  // Browser Test id.
+      "2B6C6A4A5940017146F3E58B7F90116206E84685",  // http://crbug.com/642141
+      "B6C2EFAB3EC3BF6EF03701408B6B09A67B2D0069",  // http://crbug.com/642141
+      "96FF2FFA5C9173C76D47184B3E86D267B37781DE",  // http://crbug.com/642141
+      "0136FCB13DB29FD5CD442F56E59E53B61F1DF96F"   // http://crbug.com/642141
     ]
   },
   "clipboardRead": {
@@ -204,42 +188,6 @@
   "cookies": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"]
-  },
-  "copresence": [
-    {
-      "channel": "dev",
-      "extension_types": ["extension", "platform_app"]
-    },
-    {
-      "channel": "stable",
-      "extension_types": ["extension", "platform_app"],
-      "whitelist": [
-        "AFA728615D3A82D4017BDECEE86978543194D198",  // http://crbug.com/387999
-        "0C0426C12F94156F330FFAF346A976BA8878DE78",  // http://crbug.com/387999
-        "1C93BD3CF875F4A73C0B2A163BB8FBDA8B8B3D80",  // http://crbug.com/389230
-        "A3BC37E2148AC4E99BE4B16AF9D42DD1E592BBBE",  // http://crbug.com/389230
-        "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB",  // http://crbug.com/389230
-        "307E96539209F95A1A8740C713E6998A73657D96",  // http://crbug.com/389230
-        "4F25792AF1AA7483936DE29C07806F203C7170A0",  // http://crbug.com/407693
-        "BD8781D757D830FC2E85470A1B6E8A718B7EE0D9",  // http://crbug.com/407693
-        "4AC2B6C63C6480D150DFDA13E4A5956EB1D0DDBB",  // http://crbug.com/407693
-        "81986D4F846CEDDDB962643FA501D1780DD441BB",  // http://crbug.com/407693
-        "FF78670081967CE21DB86A04AD94A0498F01E20A",  // http://crbug.com/409192
-        "05EBA3051DFCA6AF17070AEE5FE8C66322FF4738",  // http://crbug.com/431978
-        "11B478CEC461C766A2DC1E5BEEB7970AE06DC9C2",  // http://crbug.com/458218
-        "0EFB879311E9EFBB7C45251F89EC655711B1F6ED",  // http://crbug.com/458218
-        "9193D3A51E2FE33B496CDA53EA330423166E7F02",  // http://crbug.com/458218
-        "F9119B8B18C7C82B51E7BC6FF816B694F2EC3E89"   // http://crbug.com/458218
-      ]
-    }
-  ],
-  "copresencePrivate": {
-    "channel": "stable",
-    "extension_types": ["extension"],
-    "location": "component",
-    "whitelist": [
-      "AFA728615D3A82D4017BDECEE86978543194D198"  // Whispernet Proxy
-    ]
   },
   "cryptotokenPrivate": {
     "channel": "stable",
@@ -408,7 +356,8 @@
   },
   "fileSystem": [{
     "channel": "stable",
-    "extension_types": ["platform_app"]
+    "extension_types": ["platform_app"],
+    "default_parent": true
   },{
     "channel": "stable",
     "extension_types": ["extension"],
@@ -418,17 +367,21 @@
       "12E618C3C6E97495AAECF2AC12DEB082353241C6",  // QO component extension
       "D5736E4B5CF695CB93A2FB57E4FDC6E5AFAB6FE2",  // http://crbug.com/312900
       "D57DE394F36DC1C3220E7604C575D29C51A6C495",  // http://crbug.com/319444
-      "3F65507A3B39259B38C8173C6FFA3D12DF64CCE9"   // http://crbug.com/371562
+      "3F65507A3B39259B38C8173C6FFA3D12DF64CCE9",  // http://crbug.com/371562
+      "2B6C6A4A5940017146F3E58B7F90116206E84685",  // http://crbug.com/642141
+      "B6C2EFAB3EC3BF6EF03701408B6B09A67B2D0069",  // http://crbug.com/642141
+      "96FF2FFA5C9173C76D47184B3E86D267B37781DE",  // http://crbug.com/642141
+      "0136FCB13DB29FD5CD442F56E59E53B61F1DF96F"   // http://crbug.com/642141
     ]
   }],
-  "fileSystem.directory": [{
+  "fileSystem.directory": {
     "channel": "stable",
     "extension_types": ["platform_app"]
-  }],
-  "fileSystem.retainEntries": [{
+  },
+  "fileSystem.retainEntries": {
     "channel": "stable",
     "extension_types": ["platform_app"]
-  }],
+  },
   "fileSystem.write": [{
     "channel": "stable",
     "extension_types": ["platform_app"]
@@ -449,11 +402,19 @@
     "extension_types": ["platform_app"],
     "platforms": ["chromeos"]
   }],
-  "fileSystemProvider": {
+  "fileSystemProvider": [{
     "channel": "stable",
     "extension_types": ["extension", "platform_app"],
     "platforms": ["chromeos"]
-  },
+  }, {
+    "channel": "stable",
+    "extension_types": ["legacy_packaged_app"],
+    "platforms": ["chromeos"],
+    "whitelist": [
+      "0EA6B717932AD64C469C1CCB6911457733295907",  // http://crbug.com/673004
+      "58B0C2968C335964D5433E89CA4D86628A0E3D4B"   // http://crbug.com/673004
+    ]
+  }],
   "firstRunPrivate": {
     "channel": "stable",
     "extension_types": ["platform_app"],
@@ -515,19 +476,11 @@
     "channel": "trunk",
     "extension_types": ["extension"]
   },
-  "input": [{
+  "input": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"],
-    // TODO(kalman): Um what does this inply?
-    "inplies_full_url_access": true,
-    "platforms": ["chromeos"]
-  }, {
-    "channel": "dev",
-    "extension_types": ["extension", "legacy_packaged_app"],
-    // TODO(kalman): Um what does this inply?
-    "inplies_full_url_access": true,
-    "platforms": ["win", "linux"]
-  }],
+    "platforms": ["chromeos", "win", "linux"]
+  },
   "inputMethodPrivate": [{
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
@@ -550,7 +503,7 @@
   "launcherSearchProvider": {
     "channel": "stable",
     "extension_types": ["extension", "platform_app"],
-    "platform": ["chromeos"],
+    "platforms": ["chromeos"],
     "whitelist": [
       "A948368FC53BE437A55FEB414106E207925482F5"  // File Manager
     ]
@@ -649,57 +602,6 @@
       "A45DABDB47A31CC812E5490AB748C7D05E2D32E9",  // http://crbug.com/448569
       "BFEE2E3B80BE21A645E63E9346DFC383E7CB3BDA",  // http://crbug.com/448569
       "63ED55E43214C211F82122ED56407FF1A807F2A3"   // http://crbug.com/448569
-    ]
-  },
-  "metricsPrivate": {
-    "channel": "stable",
-    "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
-    "whitelist": [
-      // The file manager and Google Now are component extensions, and they can
-      // currently use whitelisted interfaces without being on the corresponding
-      // whitelist.
-      // Adding it to this whitelist documents their dependency, however, and
-      // also doesn't hurt anything.
-      "A948368FC53BE437A55FEB414106E207925482F5",  // File manager
-      "2FC374607C2DF285634B67C64A2E356C607091C3",  // Quickoffice
-      "3727DD3E564B6055387425027AD74C58784ACC15",  // Quickoffice internal
-      "12E618C3C6E97495AAECF2AC12DEB082353241C6",  // QO component extension
-      "3727DD3E564B6055387425027AD74C58784ACC15",  // Editor
-      "C41AD9DCD670210295614257EF8C9945AD68D86E",  // Google Now
-      "6EEEA7775E79C735E4BA1F24DBB191BDACB1262C",  // RU-NTP
-      "7AE714FFD394E073F0294CFA134C9F91DB5FBAA4",  // CCD Development
-      "C7DA3A55C2355F994D3FDDAD120B426A0DF63843",  // CCD Testing
-      "75E3CFFFC530582C583E4690EF97C70B9C8423B7",  // CCD Release
-      "D5736E4B5CF695CB93A2FB57E4FDC6E5AFAB6FE2",  // http://crbug.com/312900.
-      "D57DE394F36DC1C3220E7604C575D29C51A6C495",  // http://crbug.com/319444.
-      "3F65507A3B39259B38C8173C6FFA3D12DF64CCE9",  // http://crbug.com/371562.
-      "06BE211D5F014BAB34BC22D9DDA09C63A81D828E",  // Official XKB virtual kbd
-      "CFBF7EE448FA48960FFDA7CEB30F7A21B26AA981",  // Official m17n virtual kbd
-      "B9EF10DDFEA11EF77873CC5009809E5037FC4C7A",  // Google input tools
-      "7D7A4B147FE39908A5AF13F85E38989C54BBE41C",  // http://crbug.com/374955
-      "0EEDFC0EED87871237213F34EBC7B4982A195C95",  // http://crbug.com/374955
-      "D2DAA9362153E8A5E3CF593E6DF4666421ABAD21",  // http://crbug.com/374965
-      "D7986543275120831B39EF28D1327552FC343960",  // http://crbug.com/378067
-      "A291B26E088FA6BA53FFD72F0916F06EBA7C585A",  // http://crbug.com/378067
-      "62CCAAD339E6451BBF97C4BBDF758E934A05AD0B",  // Hotword triggering
-      "07BD6A765FFC289FF755D7CAB2893A40EC337FEC",  // http://crbug.com/456214
-      "896B85CC7E913E11C34892C1425A093C0701D386",  // http://crbug.com/456214
-      "11A01C82EF355E674E4F9728A801F5C3CB40D83F",  // http://crbug.com/456214
-      "F410C88469990EE7947450311D24B8AF2ADB2595",  // http://crbug.com/456214
-      "9E527CDA9D7C50844E8A5DB964A54A640AE48F98",  // Chrome Remote Desktop(CRD)
-      "DF52618D0B040D8A054D8348D2E84DDEEE5974E7",  // CRD QA
-      "269D721F163E587BC53C6F83553BF9CE2BB143CD",  // CRD QA Backup
-      "6B55A5329E3F1F30F6032BDB20B2EB4378DBF767",  // CRD QA v2
-      "C449A798C495E6CF7D6AF10162113D564E67AD12",  // CRD Dogfood
-      "01E9FFA9A8F3C18271FE91BEE46207F3B81755CC",  // Pre-release CRD
-      "97B23E01B2AA064E8332EE43A7A85C628AADC3F2",  // Sample app_remoting app.
-      "226CF815E39A363090A1E547D53063472B8279FA",  // http://crbug.com/574889
-      "C17CD9E6868D7B9C67926E0EC612EA25C768418F",  // http://crbug.com/504940
-      "A45DABDB47A31CC812E5490AB748C7D05E2D32E9",  // http://crbug.com/504940
-      "BFEE2E3B80BE21A645E63E9346DFC383E7CB3BDA",  // http://crbug.com/504940
-      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // http://crbug.com/504940
-      "B620CF4203315F9F2E046EDED22C7571A935958D",  // http://crbug.com/510270
-      "B206D8716769728278D2D300349C6CB7D7DE2EF9"   // http://crbug.com/510270
     ]
   },
   "mdns": [{
@@ -841,13 +743,19 @@
   }],
   "imageWriterPrivate": {
     "channel": "stable",
-    "extension_types": ["platform_app"],
+    "extension_types": ["extension", "platform_app"],
     "whitelist": [
+      // TODO (ntang) Remove the following 2 hashes by 12/31/2017.
       "A291B26E088FA6BA53FFD72F0916F06EBA7C585A", // http://crbug.com/329088
       "D7986543275120831B39EF28D1327552FC343960", // http://crbug.com/329088
       "BCC85C0D7F85897F2699974421EA402144C35C0C", // API Test
+      // TODO (ntang) Remove the following 2 hashes by 12/31/2017.
       "B620CF4203315F9F2E046EDED22C7571A935958D", // http://crbug.com/510270
-      "B206D8716769728278D2D300349C6CB7D7DE2EF9"  // http://crbug.com/510270
+      "B206D8716769728278D2D300349C6CB7D7DE2EF9", // http://crbug.com/510270
+      "2B6C6A4A5940017146F3E58B7F90116206E84685",  // http://crbug.com/642141
+      "B6C2EFAB3EC3BF6EF03701408B6B09A67B2D0069",  // http://crbug.com/642141
+      "96FF2FFA5C9173C76D47184B3E86D267B37781DE",  // http://crbug.com/642141
+      "0136FCB13DB29FD5CD442F56E59E53B61F1DF96F"   // http://crbug.com/642141
     ]
   },
   "inlineInstallPrivate":[{
@@ -889,10 +797,6 @@
     "channel": "stable",
     "extension_types": ["platform_app"],
     "location": "component"
-  },
-  "screensaver": {
-    "channel": "stable",
-    "extension_types": ["legacy_packaged_app", "hosted_app", "platform_app"]
   },
   "sessions": {
     "channel": "stable",
@@ -1027,7 +931,11 @@
       // Hangouts test extension
       "80B9DC58E5210749F052F5B4DB239C50CF72AEB6",
       // Hangout Services component extension.
-      "DF84F03F9B960409CCDE0D895B9650EBE81C0A8E"
+      "DF84F03F9B960409CCDE0D895B9650EBE81C0A8E",
+      // Media Router dev extension
+      "63ED55E43214C211F82122ED56407FF1A807F2A3",
+      // Media Router release extension
+      "226CF815E39A363090A1E547D53063472B8279FA"
     ]
   },
   "webstorePrivate": {

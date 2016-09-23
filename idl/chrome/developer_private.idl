@@ -86,7 +86,8 @@ namespace developerPrivate {
   enum ExtensionState {
     ENABLED,
     DISABLED,
-    TERMINATED
+    TERMINATED,
+    BLACKLISTED
   };
 
   enum CommandScope {
@@ -179,12 +180,17 @@ namespace developerPrivate {
     boolean isExtensionAction;
   };
 
+  dictionary DependentExtension {
+    DOMString id;
+    DOMString name;
+  };
+
   dictionary ExtensionInfo {
     boolean actionButtonHidden;
     DOMString? blacklistText;
     Command[] commands;
     ControlledInfo? controlledInfo;
-    DOMString[] dependentExtensions;
+    DependentExtension[] dependentExtensions;
     DOMString description;
     DisableReasons disableReasons;
     AccessModifier errorCollection;
@@ -203,6 +209,7 @@ namespace developerPrivate {
     boolean offlineEnabled;
     OptionsPage? optionsPage;
     DOMString? path;
+    DOMString[] permissions;
     DOMString? prettifiedPath;
     AccessModifier runOnAllUrls;
     RuntimeError[] runtimeErrors;
@@ -219,6 +226,7 @@ namespace developerPrivate {
     boolean appInfoDialogEnabled;
     boolean canLoadUnpacked;
     boolean inDeveloperMode;
+    boolean isDeveloperModeControlledByPolicy;
     boolean isIncognitoAvailable;
     boolean isSupervised;
   };

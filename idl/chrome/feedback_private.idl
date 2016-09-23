@@ -23,7 +23,11 @@ namespace feedbackPrivate {
 
     // Flow on the ChromeOS login screen. URL entry, file attaching and landing
     // page is disabled for this flow.
-    login
+    login,
+
+    // Flow where a prompt to download the Chrome Cleanup Tool is displayed
+    // prior to showing the feedback form.
+    showSrtPrompt
   };
 
   dictionary FeedbackInfo {
@@ -44,7 +48,7 @@ namespace feedbackPrivate {
 
     // Optional product ID to override the Chrome [OS] product id that is
     // usually passed to the feedback server.
-    DOMString? productId;
+    long? productId;
 
     // Screenshot to send with this feedback.
     [instanceOf=Blob] object? screenshot;
@@ -67,10 +71,25 @@ namespace feedbackPrivate {
     // Used internally to store the blob uuid after parameter customization.
     DOMString? attachedFileBlobUuid;
     DOMString? screenshotBlobUuid;
+
+    // Whether to use the system-provided window frame or custom frame controls.
+    boolean useSystemWindowFrame;
   };
 
   // Status of the sending of a feedback report.
   enum Status {success, delayed};
+
+  // Result of presenting the user with a prompt to download SRT.
+  enum SrtPromptResult {
+    // User clicked the "Learn More" button.
+    accepted,
+
+    // User declined the prompt and proceeded to the feedback page.
+    declined,
+
+    // User closed the window altogether.
+    closed
+  };
 
   callback GetUserEmailCallback = void(DOMString email);
   callback GetSystemInformationCallback =
@@ -93,6 +112,10 @@ namespace feedbackPrivate {
     // strings as a dictionary mapping from string identifier to the
     // translated string to use in the feedback app UI.
     static void getStrings(GetStringsCallback callback);
+
+    // Logs whether the user accepted a prompt to try the Software Removal
+    // Tool.
+    static void logSrtPromptResult(SrtPromptResult result);
   };
 
   interface Events {

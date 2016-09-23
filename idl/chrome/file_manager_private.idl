@@ -9,7 +9,7 @@
 namespace fileManagerPrivate {
 // Type of the mounted volume.
 enum VolumeType { drive, downloads, removable, archive, provided, mtp,
-                  testing };
+                  media_view, testing };
 
 // Device type. Available if this is removable volume.
 enum DeviceType { usb, sd, optical, mobile, unknown };
@@ -167,6 +167,7 @@ enum EntryPropertyName {
   contentMimeType,
   sharedWithMe,
   shared,
+  starred,
   externalFileUrl
 };
 
@@ -184,6 +185,15 @@ enum Source {
   system
 };
 
+// File handler verbs used to describe the action that an extension performs
+// over a file or directory.
+enum Verb {
+  open_with,
+  add_to,
+  pack_with,
+  share_with
+};
+
 // A file task represents an action that the file manager can perform over the
 // currently selected files. See
 // chrome/browser/chromeos/extensions/file_manager/file_tasks.h for details
@@ -194,6 +204,10 @@ dictionary FileTask {
 
   // Task title (ex. App name).
   DOMString title;
+
+  // The verb that will be used to indicate the action a task performs over
+  // a file (ex. "open_with").
+  Verb? verb;
 
   // Task icon url (from chrome://extension-icon/...)
   DOMString iconUrl;
@@ -262,6 +276,9 @@ dictionary EntryProperties {
   // by others.)
   boolean? shared;
 
+  // True if the entry is starred by the user.
+  boolean? starred;
+
   // External file URL to open the file in browser.
   DOMString? externalFileUrl;
 };
@@ -329,6 +346,10 @@ dictionary VolumeMetadata {
 
   // Flag that specifies if volume is mounted in read-only mode.
   boolean isReadOnly;
+
+  // Flag that specifies if the device is write-protected.
+  // Valid only for the volumes of removable device partitions.
+  boolean isReadOnlyRemovableDevice;
 
   // Flag that specifies whether the volume contains media.
   boolean hasMedia;
@@ -636,6 +657,9 @@ callback GetProvidingExtensionsCallback = void(ProvidingExtension[] extensions);
 
 // |actions| List of actions.
 callback GetCustomActionsCallback = void(fileSystemProvider.Action[] actions);
+
+// |size| result size.
+callback GetDirectorySizeCallback = void(double size);
 
 interface Functions {
   // Logout the current user for navigating to the re-authentication screen for
@@ -956,6 +980,13 @@ interface Functions {
   static void executeCustomAction([instanceof=Entry] object[] entries,
                                   DOMString actionId,
                                   SimpleCallback callback);
+
+  // Get the total size of a directory.
+  // |entry| Entry of the target directory.
+  // |callback|
+  [nocompile]
+  static void getDirectorySize([instanceof=DirectoryEntry] object entry,
+                               GetDirectorySizeCallback callback);
 };
 
 interface Events {
@@ -974,5 +1005,7 @@ interface Events {
   static void onDeviceChanged(DeviceEvent event);
 
   static void onDriveSyncError(DriveSyncErrorEvent event);
+
+  static void onAppsUpdated();
 };
 };
