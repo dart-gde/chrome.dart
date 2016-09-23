@@ -86,7 +86,7 @@ namespace printerProvider {
     // undefined that indicates that the application has determined that the
     // device is not supported.
     static void onGetUsbPrinterInfoRequested(
-        UsbDevice device,
+        usb.Device device,
         PrinterInfoCallback resultCallback);
 
     // Event fired when print manager requests printer capabilities.
