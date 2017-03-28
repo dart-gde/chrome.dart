@@ -38,11 +38,35 @@ class ChromeProxy extends ChromeApi {
   ChromeSetting get settings => _createChromeSetting(_proxy['settings']);
 }
 
+class Scheme extends ChromeEnum {
+  static const Scheme HTTP = const Scheme._('http');
+  static const Scheme HTTPS = const Scheme._('https');
+  static const Scheme QUIC = const Scheme._('quic');
+  static const Scheme SOCKS4 = const Scheme._('socks4');
+  static const Scheme SOCKS5 = const Scheme._('socks5');
+
+  static const List<Scheme> VALUES = const[HTTP, HTTPS, QUIC, SOCKS4, SOCKS5];
+
+  const Scheme._(String str): super(str);
+}
+
+class Mode extends ChromeEnum {
+  static const Mode DIRECT = const Mode._('direct');
+  static const Mode AUTO_DETECT = const Mode._('auto_detect');
+  static const Mode PAC_SCRIPT = const Mode._('pac_script');
+  static const Mode FIXED_SERVERS = const Mode._('fixed_servers');
+  static const Mode SYSTEM = const Mode._('system');
+
+  static const List<Mode> VALUES = const[DIRECT, AUTO_DETECT, PAC_SCRIPT, FIXED_SERVERS, SYSTEM];
+
+  const Mode._(String str): super(str);
+}
+
 /**
  * An object encapsulating a single proxy server's specification.
  */
 class ProxyServer extends ChromeObject {
-  ProxyServer({String scheme, String host, int port}) {
+  ProxyServer({Scheme scheme, String host, int port}) {
     if (scheme != null) this.scheme = scheme;
     if (host != null) this.host = host;
     if (port != null) this.port = port;
@@ -51,10 +75,9 @@ class ProxyServer extends ChromeObject {
 
   /**
    * The scheme (protocol) of the proxy server itself. Defaults to 'http'.
-   * enum of `http`, `https`, `quic`, `socks4`, `socks5`
    */
-  String get scheme => this.jsProxy['scheme'];
-  set scheme(String value) => this.jsProxy['scheme'] = value;
+  Scheme get scheme => _createScheme(this.jsProxy['scheme']);
+  set scheme(Scheme value) => this.jsProxy['scheme'] = jsify(value);
 
   /**
    * The URI of the proxy server. This must be an ASCII hostname (in Punycode
@@ -162,7 +185,7 @@ class PacScript extends ChromeObject {
  * An object encapsulating a complete proxy configuration.
  */
 class ProxyConfig extends ChromeObject {
-  ProxyConfig({ProxyRules rules, PacScript pacScript, String mode}) {
+  ProxyConfig({ProxyRules rules, PacScript pacScript, Mode mode}) {
     if (rules != null) this.rules = rules;
     if (pacScript != null) this.pacScript = pacScript;
     if (mode != null) this.mode = mode;
@@ -187,13 +210,14 @@ class ProxyConfig extends ChromeObject {
    * 'direct' = Never use a proxy<br>'auto_detect' = Auto detect proxy
    * settings<br>'pac_script' = Use specified PAC script<br>'fixed_servers' =
    * Manually specify proxy servers<br>'system' = Use system proxy settings
-   * enum of `direct`, `auto_detect`, `pac_script`, `fixed_servers`, `system`
    */
-  String get mode => this.jsProxy['mode'];
-  set mode(String value) => this.jsProxy['mode'] = value;
+  Mode get mode => _createMode(this.jsProxy['mode']);
+  set mode(Mode value) => this.jsProxy['mode'] = jsify(value);
 }
 
 ChromeSetting _createChromeSetting(JsObject jsProxy) => jsProxy == null ? null : new ChromeSetting.fromProxy(jsProxy);
+Scheme _createScheme(String value) => Scheme.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ProxyServer _createProxyServer(JsObject jsProxy) => jsProxy == null ? null : new ProxyServer.fromProxy(jsProxy);
 ProxyRules _createProxyRules(JsObject jsProxy) => jsProxy == null ? null : new ProxyRules.fromProxy(jsProxy);
 PacScript _createPacScript(JsObject jsProxy) => jsProxy == null ? null : new PacScript.fromProxy(jsProxy);
+Mode _createMode(String value) => Mode.VALUES.singleWhere((ChromeEnum e) => e.value == value);

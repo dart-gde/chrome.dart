@@ -189,17 +189,15 @@ class WindowState extends ChromeEnum {
 }
 
 /**
- * Specifies what type of browser window to create. The 'panel' and
- * 'detached_panel' types create a popup unless the '--enable-panels' flag is
- * set.
+ * Specifies what type of browser window to create. 'panel' is deprecated and
+ * only available to existing whitelisted extensions on Chrome OS.
  */
 class CreateType extends ChromeEnum {
   static const CreateType NORMAL = const CreateType._('normal');
   static const CreateType POPUP = const CreateType._('popup');
   static const CreateType PANEL = const CreateType._('panel');
-  static const CreateType DETACHED_PANEL = const CreateType._('detached_panel');
 
-  static const List<CreateType> VALUES = const[NORMAL, POPUP, PANEL, DETACHED_PANEL];
+  static const List<CreateType> VALUES = const[NORMAL, POPUP, PANEL];
 
   const CreateType._(String str): super(str);
 }
@@ -483,9 +481,7 @@ class WindowsCreateParams extends ChromeObject {
   set incognito(bool value) => jsProxy['incognito'] = value;
 
   /**
-   * Specifies what type of browser window to create. The 'panel' and
-   * 'detached_panel' types create a popup unless the '--enable-panels' flag is
-   * set.
+   * Specifies what type of browser window to create.
    */
   CreateType get type => _createCreateType(jsProxy['type']);
   set type(CreateType value) => jsProxy['type'] = jsify(value);

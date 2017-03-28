@@ -27,9 +27,11 @@ class ChromeTabCapture extends ChromeApi {
 
   /**
    * Captures the visible area of the currently active tab. Capture can only be
-   * started on the currently active tab after the extension has been _invoked_.
-   * Capture is maintained across page navigations within the tab, and stops
-   * when the tab is closed, or the media stream is closed by the extension.
+   * started on the currently active tab after the extension has been _invoked_,
+   * similar to the way that <a
+   * href="activeTab#invoking-activeTab">activeTab</a> works. Capture is
+   * maintained across page navigations within the tab, and stops when the tab
+   * is closed, or the media stream is closed by the extension.
    * 
    * [options]: Configures the returned media stream.
    * [callback]: Callback with either the tab capture MediaStream or `null`.

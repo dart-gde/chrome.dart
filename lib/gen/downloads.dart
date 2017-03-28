@@ -421,9 +421,10 @@ class DownloadOptions extends ChromeObject {
  * The state of the process of downloading a file.
  */
 class DownloadItem extends ChromeObject {
-  DownloadItem({int id, String url, String referrer, String filename, bool incognito, DangerType danger, String mime, String startTime, String endTime, String estimatedEndTime, State state, bool paused, bool canResume, InterruptReason error, num bytesReceived, num totalBytes, num fileSize, bool exists, String byExtensionId, String byExtensionName}) {
+  DownloadItem({int id, String url, String finalUrl, String referrer, String filename, bool incognito, DangerType danger, String mime, String startTime, String endTime, String estimatedEndTime, State state, bool paused, bool canResume, InterruptReason error, num bytesReceived, num totalBytes, num fileSize, bool exists, String byExtensionId, String byExtensionName}) {
     if (id != null) this.id = id;
     if (url != null) this.url = url;
+    if (finalUrl != null) this.finalUrl = finalUrl;
     if (referrer != null) this.referrer = referrer;
     if (filename != null) this.filename = filename;
     if (incognito != null) this.incognito = incognito;
@@ -450,6 +451,9 @@ class DownloadItem extends ChromeObject {
 
   String get url => jsProxy['url'];
   set url(String value) => jsProxy['url'] = value;
+
+  String get finalUrl => jsProxy['finalUrl'];
+  set finalUrl(String value) => jsProxy['finalUrl'] = value;
 
   String get referrer => jsProxy['referrer'];
   set referrer(String value) => jsProxy['referrer'] = value;
@@ -507,7 +511,7 @@ class DownloadItem extends ChromeObject {
 }
 
 class DownloadQuery extends ChromeObject {
-  DownloadQuery({List<String> query, String startedBefore, String startedAfter, String endedBefore, String endedAfter, num totalBytesGreater, num totalBytesLess, String filenameRegex, String urlRegex, int limit, List<String> orderBy, int id, String url, String filename, DangerType danger, String mime, String startTime, String endTime, State state, bool paused, InterruptReason error, num bytesReceived, num totalBytes, num fileSize, bool exists}) {
+  DownloadQuery({List<String> query, String startedBefore, String startedAfter, String endedBefore, String endedAfter, num totalBytesGreater, num totalBytesLess, String filenameRegex, String urlRegex, String finalUrlRegex, int limit, List<String> orderBy, int id, String url, String finalUrl, String filename, DangerType danger, String mime, String startTime, String endTime, State state, bool paused, InterruptReason error, num bytesReceived, num totalBytes, num fileSize, bool exists}) {
     if (query != null) this.query = query;
     if (startedBefore != null) this.startedBefore = startedBefore;
     if (startedAfter != null) this.startedAfter = startedAfter;
@@ -517,10 +521,12 @@ class DownloadQuery extends ChromeObject {
     if (totalBytesLess != null) this.totalBytesLess = totalBytesLess;
     if (filenameRegex != null) this.filenameRegex = filenameRegex;
     if (urlRegex != null) this.urlRegex = urlRegex;
+    if (finalUrlRegex != null) this.finalUrlRegex = finalUrlRegex;
     if (limit != null) this.limit = limit;
     if (orderBy != null) this.orderBy = orderBy;
     if (id != null) this.id = id;
     if (url != null) this.url = url;
+    if (finalUrl != null) this.finalUrl = finalUrl;
     if (filename != null) this.filename = filename;
     if (danger != null) this.danger = danger;
     if (mime != null) this.mime = mime;
@@ -563,6 +569,9 @@ class DownloadQuery extends ChromeObject {
   String get urlRegex => jsProxy['urlRegex'];
   set urlRegex(String value) => jsProxy['urlRegex'] = value;
 
+  String get finalUrlRegex => jsProxy['finalUrlRegex'];
+  set finalUrlRegex(String value) => jsProxy['finalUrlRegex'] = value;
+
   int get limit => jsProxy['limit'];
   set limit(int value) => jsProxy['limit'] = value;
 
@@ -574,6 +583,9 @@ class DownloadQuery extends ChromeObject {
 
   String get url => jsProxy['url'];
   set url(String value) => jsProxy['url'] = value;
+
+  String get finalUrl => jsProxy['finalUrl'];
+  set finalUrl(String value) => jsProxy['finalUrl'] = value;
 
   String get filename => jsProxy['filename'];
   set filename(String value) => jsProxy['filename'] = value;
@@ -658,9 +670,10 @@ class BooleanDelta extends ChromeObject {
  * Encapsulates a change in a DownloadItem.
  */
 class DownloadDelta extends ChromeObject {
-  DownloadDelta({int id, StringDelta url, StringDelta filename, StringDelta danger, StringDelta mime, StringDelta startTime, StringDelta endTime, StringDelta state, BooleanDelta canResume, BooleanDelta paused, StringDelta error, DoubleDelta totalBytes, DoubleDelta fileSize, BooleanDelta exists}) {
+  DownloadDelta({int id, StringDelta url, StringDelta finalUrl, StringDelta filename, StringDelta danger, StringDelta mime, StringDelta startTime, StringDelta endTime, StringDelta state, BooleanDelta canResume, BooleanDelta paused, StringDelta error, DoubleDelta totalBytes, DoubleDelta fileSize, BooleanDelta exists}) {
     if (id != null) this.id = id;
     if (url != null) this.url = url;
+    if (finalUrl != null) this.finalUrl = finalUrl;
     if (filename != null) this.filename = filename;
     if (danger != null) this.danger = danger;
     if (mime != null) this.mime = mime;
@@ -681,6 +694,9 @@ class DownloadDelta extends ChromeObject {
 
   StringDelta get url => _createStringDelta(jsProxy['url']);
   set url(StringDelta value) => jsProxy['url'] = jsify(value);
+
+  StringDelta get finalUrl => _createStringDelta(jsProxy['finalUrl']);
+  set finalUrl(StringDelta value) => jsProxy['finalUrl'] = jsify(value);
 
   StringDelta get filename => _createStringDelta(jsProxy['filename']);
   set filename(StringDelta value) => jsProxy['filename'] = jsify(value);

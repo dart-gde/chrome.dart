@@ -11,6 +11,7 @@
 library chrome.declarativeWebRequest;
 
 import 'events.dart';
+import 'web_request.dart';
 import '../src/common.dart';
 
 /**
@@ -39,6 +40,161 @@ class ChromeDeclarativeWebRequest extends ChromeApi {
   }
 
   bool get available => _declarativeWebRequest != null;
+}
+
+class RequestMatcherInstanceType extends ChromeEnum {
+  static const RequestMatcherInstanceType DECLARATIVE_WEB_REQUEST_REQUEST_MATCHER = const RequestMatcherInstanceType._('declarativeWebRequestRequestMatcher');
+
+  static const List<RequestMatcherInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_REQUEST_MATCHER];
+
+  const RequestMatcherInstanceType._(String str): super(str);
+}
+
+class CancelRequestInstanceType extends ChromeEnum {
+  static const CancelRequestInstanceType DECLARATIVE_WEB_REQUEST_CANCEL_REQUEST = const CancelRequestInstanceType._('declarativeWebRequestCancelRequest');
+
+  static const List<CancelRequestInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_CANCEL_REQUEST];
+
+  const CancelRequestInstanceType._(String str): super(str);
+}
+
+class RedirectRequestInstanceType extends ChromeEnum {
+  static const RedirectRequestInstanceType DECLARATIVE_WEB_REQUEST_REDIRECT_REQUEST = const RedirectRequestInstanceType._('declarativeWebRequestRedirectRequest');
+
+  static const List<RedirectRequestInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_REDIRECT_REQUEST];
+
+  const RedirectRequestInstanceType._(String str): super(str);
+}
+
+class RedirectToTransparentImageInstanceType extends ChromeEnum {
+  static const RedirectToTransparentImageInstanceType DECLARATIVE_WEB_REQUEST_REDIRECT_TO_TRANSPARENT_IMAGE = const RedirectToTransparentImageInstanceType._('declarativeWebRequestRedirectToTransparentImage');
+
+  static const List<RedirectToTransparentImageInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_REDIRECT_TO_TRANSPARENT_IMAGE];
+
+  const RedirectToTransparentImageInstanceType._(String str): super(str);
+}
+
+class RedirectToEmptyDocumentInstanceType extends ChromeEnum {
+  static const RedirectToEmptyDocumentInstanceType DECLARATIVE_WEB_REQUEST_REDIRECT_TO_EMPTY_DOCUMENT = const RedirectToEmptyDocumentInstanceType._('declarativeWebRequestRedirectToEmptyDocument');
+
+  static const List<RedirectToEmptyDocumentInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_REDIRECT_TO_EMPTY_DOCUMENT];
+
+  const RedirectToEmptyDocumentInstanceType._(String str): super(str);
+}
+
+class RedirectByRegExInstanceType extends ChromeEnum {
+  static const RedirectByRegExInstanceType DECLARATIVE_WEB_REQUEST_REDIRECT_BY_REG_EX = const RedirectByRegExInstanceType._('declarativeWebRequestRedirectByRegEx');
+
+  static const List<RedirectByRegExInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_REDIRECT_BY_REG_EX];
+
+  const RedirectByRegExInstanceType._(String str): super(str);
+}
+
+class SetRequestHeaderInstanceType extends ChromeEnum {
+  static const SetRequestHeaderInstanceType DECLARATIVE_WEB_REQUEST_SET_REQUEST_HEADER = const SetRequestHeaderInstanceType._('declarativeWebRequestSetRequestHeader');
+
+  static const List<SetRequestHeaderInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_SET_REQUEST_HEADER];
+
+  const SetRequestHeaderInstanceType._(String str): super(str);
+}
+
+class RemoveRequestHeaderInstanceType extends ChromeEnum {
+  static const RemoveRequestHeaderInstanceType DECLARATIVE_WEB_REQUEST_REMOVE_REQUEST_HEADER = const RemoveRequestHeaderInstanceType._('declarativeWebRequestRemoveRequestHeader');
+
+  static const List<RemoveRequestHeaderInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_REMOVE_REQUEST_HEADER];
+
+  const RemoveRequestHeaderInstanceType._(String str): super(str);
+}
+
+class AddResponseHeaderInstanceType extends ChromeEnum {
+  static const AddResponseHeaderInstanceType DECLARATIVE_WEB_REQUEST_ADD_RESPONSE_HEADER = const AddResponseHeaderInstanceType._('declarativeWebRequestAddResponseHeader');
+
+  static const List<AddResponseHeaderInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_ADD_RESPONSE_HEADER];
+
+  const AddResponseHeaderInstanceType._(String str): super(str);
+}
+
+class RemoveResponseHeaderInstanceType extends ChromeEnum {
+  static const RemoveResponseHeaderInstanceType DECLARATIVE_WEB_REQUEST_REMOVE_RESPONSE_HEADER = const RemoveResponseHeaderInstanceType._('declarativeWebRequestRemoveResponseHeader');
+
+  static const List<RemoveResponseHeaderInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_REMOVE_RESPONSE_HEADER];
+
+  const RemoveResponseHeaderInstanceType._(String str): super(str);
+}
+
+class IgnoreRulesInstanceType extends ChromeEnum {
+  static const IgnoreRulesInstanceType DECLARATIVE_WEB_REQUEST_IGNORE_RULES = const IgnoreRulesInstanceType._('declarativeWebRequestIgnoreRules');
+
+  static const List<IgnoreRulesInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_IGNORE_RULES];
+
+  const IgnoreRulesInstanceType._(String str): super(str);
+}
+
+class SendMessageToExtensionInstanceType extends ChromeEnum {
+  static const SendMessageToExtensionInstanceType DECLARATIVE_WEB_REQUEST_SEND_MESSAGE_TO_EXTENSION = const SendMessageToExtensionInstanceType._('declarativeWebRequestSendMessageToExtension');
+
+  static const List<SendMessageToExtensionInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_SEND_MESSAGE_TO_EXTENSION];
+
+  const SendMessageToExtensionInstanceType._(String str): super(str);
+}
+
+class AddRequestCookieInstanceType extends ChromeEnum {
+  static const AddRequestCookieInstanceType DECLARATIVE_WEB_REQUEST_ADD_REQUEST_COOKIE = const AddRequestCookieInstanceType._('declarativeWebRequestAddRequestCookie');
+
+  static const List<AddRequestCookieInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_ADD_REQUEST_COOKIE];
+
+  const AddRequestCookieInstanceType._(String str): super(str);
+}
+
+class AddResponseCookieInstanceType extends ChromeEnum {
+  static const AddResponseCookieInstanceType DECLARATIVE_WEB_REQUEST_ADD_RESPONSE_COOKIE = const AddResponseCookieInstanceType._('declarativeWebRequestAddResponseCookie');
+
+  static const List<AddResponseCookieInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_ADD_RESPONSE_COOKIE];
+
+  const AddResponseCookieInstanceType._(String str): super(str);
+}
+
+class EditRequestCookieInstanceType extends ChromeEnum {
+  static const EditRequestCookieInstanceType DECLARATIVE_WEB_REQUEST_EDIT_REQUEST_COOKIE = const EditRequestCookieInstanceType._('declarativeWebRequestEditRequestCookie');
+
+  static const List<EditRequestCookieInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_EDIT_REQUEST_COOKIE];
+
+  const EditRequestCookieInstanceType._(String str): super(str);
+}
+
+class EditResponseCookieInstanceType extends ChromeEnum {
+  static const EditResponseCookieInstanceType DECLARATIVE_WEB_REQUEST_EDIT_RESPONSE_COOKIE = const EditResponseCookieInstanceType._('declarativeWebRequestEditResponseCookie');
+
+  static const List<EditResponseCookieInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_EDIT_RESPONSE_COOKIE];
+
+  const EditResponseCookieInstanceType._(String str): super(str);
+}
+
+class RemoveRequestCookieInstanceType extends ChromeEnum {
+  static const RemoveRequestCookieInstanceType DECLARATIVE_WEB_REQUEST_REMOVE_REQUEST_COOKIE = const RemoveRequestCookieInstanceType._('declarativeWebRequestRemoveRequestCookie');
+
+  static const List<RemoveRequestCookieInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_REMOVE_REQUEST_COOKIE];
+
+  const RemoveRequestCookieInstanceType._(String str): super(str);
+}
+
+class RemoveResponseCookieInstanceType extends ChromeEnum {
+  static const RemoveResponseCookieInstanceType DECLARATIVE_WEB_REQUEST_REMOVE_RESPONSE_COOKIE = const RemoveResponseCookieInstanceType._('declarativeWebRequestRemoveResponseCookie');
+
+  static const List<RemoveResponseCookieInstanceType> VALUES = const[DECLARATIVE_WEB_REQUEST_REMOVE_RESPONSE_COOKIE];
+
+  const RemoveResponseCookieInstanceType._(String str): super(str);
+}
+
+class Stage extends ChromeEnum {
+  static const Stage ON_BEFORE_REQUEST = const Stage._('onBeforeRequest');
+  static const Stage ON_BEFORE_SEND_HEADERS = const Stage._('onBeforeSendHeaders');
+  static const Stage ON_HEADERS_RECEIVED = const Stage._('onHeadersReceived');
+  static const Stage ON_AUTH_REQUIRED = const Stage._('onAuthRequired');
+
+  static const List<Stage> VALUES = const[ON_BEFORE_REQUEST, ON_BEFORE_SEND_HEADERS, ON_HEADERS_RECEIVED, ON_AUTH_REQUIRED];
+
+  const Stage._(String str): super(str);
 }
 
 /**
@@ -111,7 +267,7 @@ class HeaderFilter extends ChromeObject {
  * Matches network events by various criteria.
  */
 class RequestMatcher extends ChromeObject {
-  RequestMatcher({UrlFilter url, UrlFilter firstPartyForCookiesUrl, List<String> resourceType, List<String> contentType, List<String> excludeContentType, List<HeaderFilter> requestHeaders, List<HeaderFilter> excludeRequestHeaders, List<HeaderFilter> responseHeaders, List<HeaderFilter> excludeResponseHeaders, bool thirdPartyForCookies, List<String> stages}) {
+  RequestMatcher({UrlFilter url, UrlFilter firstPartyForCookiesUrl, List<ResourceType> resourceType, List<String> contentType, List<String> excludeContentType, List<HeaderFilter> requestHeaders, List<HeaderFilter> excludeRequestHeaders, List<HeaderFilter> responseHeaders, List<HeaderFilter> excludeResponseHeaders, bool thirdPartyForCookies, List<Stage> stages}) {
     if (url != null) this.url = url;
     if (firstPartyForCookiesUrl != null) this.firstPartyForCookiesUrl = firstPartyForCookiesUrl;
     if (resourceType != null) this.resourceType = resourceType;
@@ -146,8 +302,8 @@ class RequestMatcher extends ChromeObject {
    * Matches if the request type of a request is contained in the list. Requests
    * that cannot match any of the types will be filtered out.
    */
-  List<String> get resourceType => listify(jsProxy['resourceType']);
-  set resourceType(List<String> value) => jsProxy['resourceType'] = jsify(value);
+  List<ResourceType> get resourceType => listify(jsProxy['resourceType'], _createResourceType);
+  set resourceType(List<ResourceType> value) => jsProxy['resourceType'] = jsify(value);
 
   /**
    * Matches if the MIME media type of a response (from the HTTP Content-Type
@@ -205,8 +361,8 @@ class RequestMatcher extends ChromeObject {
    * applicable stages to those listed. Note that the whole condition is only
    * applicable in stages compatible with all attributes.
    */
-  List<String> get stages => listify(jsProxy['stages']);
-  set stages(List<String> value) => jsProxy['stages'] = jsify(value);
+  List<Stage> get stages => listify(jsProxy['stages'], _createStage);
+  set stages(List<Stage> value) => jsProxy['stages'] = jsify(value);
 }
 
 /**
@@ -724,7 +880,9 @@ class RemoveResponseCookie extends ChromeObject {
 }
 
 UrlFilter _createUrlFilter(JsObject jsProxy) => jsProxy == null ? null : new UrlFilter.fromProxy(jsProxy);
+ResourceType _createResourceType(String value) => ResourceType.VALUES.singleWhere((type) => type.value == value);
 HeaderFilter _createHeaderFilter(JsObject jsProxy) => jsProxy == null ? null : new HeaderFilter.fromProxy(jsProxy);
+Stage _createStage(String value) => Stage.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 RequestCookie _createRequestCookie(JsObject jsProxy) => jsProxy == null ? null : new RequestCookie.fromProxy(jsProxy);
 ResponseCookie _createResponseCookie(JsObject jsProxy) => jsProxy == null ? null : new ResponseCookie.fromProxy(jsProxy);
 FilterResponseCookie _createFilterResponseCookie(JsObject jsProxy) => jsProxy == null ? null : new FilterResponseCookie.fromProxy(jsProxy);

@@ -513,6 +513,26 @@ class ChromeTabs extends ChromeApi {
     return completer.future;
   }
 
+  /**
+   * Discards a tab from memory. Discarded tabs are still visible on the tab
+   * strip and are reloaded when activated.
+   * 
+   * [tabId] The ID of the tab to be discarded. If specified, the tab will be
+   * discarded unless it's active or already discarded. If omitted, the browser
+   * will discard the least important tab. This can fail if no discardable tabs
+   * exist.
+   * 
+   * Returns:
+   * Discarded tab if it was successfully discarded. Undefined otherwise.
+   */
+  Future<Tab> discard([int tabId]) {
+    if (_tabs == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<Tab>.oneArg(_createTab);
+    _tabs.callMethod('discard', [tabId, completer.callback]);
+    return completer.future;
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.tabs' is not available");
   }
@@ -768,7 +788,7 @@ class MutedInfo extends ChromeObject {
 }
 
 class Tab extends ChromeObject {
-  Tab({int id, int index, int windowId, int openerTabId, bool selected, bool highlighted, bool active, bool pinned, bool audible, MutedInfo mutedInfo, String url, String title, String favIconUrl, String status, bool incognito, int width, int height, String sessionId}) {
+  Tab({int id, int index, int windowId, int openerTabId, bool selected, bool highlighted, bool active, bool pinned, bool audible, bool discarded, bool autoDiscardable, MutedInfo mutedInfo, String url, String title, String favIconUrl, String status, bool incognito, int width, int height, String sessionId}) {
     if (id != null) this.id = id;
     if (index != null) this.index = index;
     if (windowId != null) this.windowId = windowId;
@@ -778,6 +798,8 @@ class Tab extends ChromeObject {
     if (active != null) this.active = active;
     if (pinned != null) this.pinned = pinned;
     if (audible != null) this.audible = audible;
+    if (discarded != null) this.discarded = discarded;
+    if (autoDiscardable != null) this.autoDiscardable = autoDiscardable;
     if (mutedInfo != null) this.mutedInfo = mutedInfo;
     if (url != null) this.url = url;
     if (title != null) this.title = title;
@@ -851,6 +873,21 @@ class Tab extends ChromeObject {
    */
   bool get audible => jsProxy['audible'];
   set audible(bool value) => jsProxy['audible'] = value;
+
+  /**
+   * Whether the tab is discarded. A discarded tab is one whose content has been
+   * unloaded from memory, but is still visible in the tab strip. Its content
+   * gets reloaded the next time it's activated.
+   */
+  bool get discarded => jsProxy['discarded'];
+  set discarded(bool value) => jsProxy['discarded'] = value;
+
+  /**
+   * Whether the tab can be discarded automatically by the browser when
+   * resources are low.
+   */
+  bool get autoDiscardable => jsProxy['autoDiscardable'];
+  set autoDiscardable(bool value) => jsProxy['autoDiscardable'] = value;
 
   /**
    * Current tab muted state and the reason for the last state change.
@@ -1046,12 +1083,14 @@ class TabsCreateParams extends ChromeObject {
 }
 
 class TabsQueryParams extends ChromeObject {
-  TabsQueryParams({bool active, bool pinned, bool audible, bool muted, bool highlighted, bool currentWindow, bool lastFocusedWindow, TabStatus status, String title, var url, int windowId, TabsWindowType windowType, int index}) {
+  TabsQueryParams({bool active, bool pinned, bool audible, bool muted, bool highlighted, bool discarded, bool autoDiscardable, bool currentWindow, bool lastFocusedWindow, TabStatus status, String title, var url, int windowId, TabsWindowType windowType, int index}) {
     if (active != null) this.active = active;
     if (pinned != null) this.pinned = pinned;
     if (audible != null) this.audible = audible;
     if (muted != null) this.muted = muted;
     if (highlighted != null) this.highlighted = highlighted;
+    if (discarded != null) this.discarded = discarded;
+    if (autoDiscardable != null) this.autoDiscardable = autoDiscardable;
     if (currentWindow != null) this.currentWindow = currentWindow;
     if (lastFocusedWindow != null) this.lastFocusedWindow = lastFocusedWindow;
     if (status != null) this.status = status;
@@ -1092,6 +1131,21 @@ class TabsQueryParams extends ChromeObject {
    */
   bool get highlighted => jsProxy['highlighted'];
   set highlighted(bool value) => jsProxy['highlighted'] = value;
+
+  /**
+   * Whether the tabs are discarded. A discarded tab is one whose content has
+   * been unloaded from memory, but is still visible in the tab strip. Its
+   * content gets reloaded the next time it's activated.
+   */
+  bool get discarded => jsProxy['discarded'];
+  set discarded(bool value) => jsProxy['discarded'] = value;
+
+  /**
+   * Whether the tabs can be discarded automatically by the browser when
+   * resources are low.
+   */
+  bool get autoDiscardable => jsProxy['autoDiscardable'];
+  set autoDiscardable(bool value) => jsProxy['autoDiscardable'] = value;
 
   /**
    * Whether the tabs are in the [current window](windows#current-window).
@@ -1167,7 +1221,7 @@ class TabsHighlightParams extends ChromeObject {
 }
 
 class TabsUpdateParams extends ChromeObject {
-  TabsUpdateParams({String url, bool active, bool highlighted, bool selected, bool pinned, bool muted, int openerTabId}) {
+  TabsUpdateParams({String url, bool active, bool highlighted, bool selected, bool pinned, bool muted, int openerTabId, bool autoDiscardable}) {
     if (url != null) this.url = url;
     if (active != null) this.active = active;
     if (highlighted != null) this.highlighted = highlighted;
@@ -1175,6 +1229,7 @@ class TabsUpdateParams extends ChromeObject {
     if (pinned != null) this.pinned = pinned;
     if (muted != null) this.muted = muted;
     if (openerTabId != null) this.openerTabId = openerTabId;
+    if (autoDiscardable != null) this.autoDiscardable = autoDiscardable;
   }
   TabsUpdateParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -1221,6 +1276,13 @@ class TabsUpdateParams extends ChromeObject {
    */
   int get openerTabId => jsProxy['openerTabId'];
   set openerTabId(int value) => jsProxy['openerTabId'] = value;
+
+  /**
+   * Whether the tab should be discarded automatically by the browser when
+   * resources are low.
+   */
+  bool get autoDiscardable => jsProxy['autoDiscardable'];
+  set autoDiscardable(bool value) => jsProxy['autoDiscardable'] = value;
 }
 
 class TabsMoveParams extends ChromeObject {

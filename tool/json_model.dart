@@ -229,7 +229,8 @@ class JsonConverter {
 
   ChromeEnumEntry _convertEnumEntry(value) {
     if (value is String) {
-      return new ChromeEnumEntry(value);
+      // Remove . so that conversion yields legal identifier.
+      return new ChromeEnumEntry(value.replaceAll('\.', ''));
     } else if (value is Map<String, String>) {
       return new ChromeEnumEntry(value['name'], value['description']);
     } else {

@@ -28,6 +28,38 @@ class ChromeDeclarativeContent extends ChromeApi {
   bool get available => _declarativeContent != null;
 }
 
+class PageStateMatcherInstanceType extends ChromeEnum {
+  static const PageStateMatcherInstanceType DECLARATIVE_CONTENT_PAGE_STATE_MATCHER = const PageStateMatcherInstanceType._('declarativeContentPageStateMatcher');
+
+  static const List<PageStateMatcherInstanceType> VALUES = const[DECLARATIVE_CONTENT_PAGE_STATE_MATCHER];
+
+  const PageStateMatcherInstanceType._(String str): super(str);
+}
+
+class ShowPageActionInstanceType extends ChromeEnum {
+  static const ShowPageActionInstanceType DECLARATIVE_CONTENT_SHOW_PAGE_ACTION = const ShowPageActionInstanceType._('declarativeContentShowPageAction');
+
+  static const List<ShowPageActionInstanceType> VALUES = const[DECLARATIVE_CONTENT_SHOW_PAGE_ACTION];
+
+  const ShowPageActionInstanceType._(String str): super(str);
+}
+
+class SetIconInstanceType extends ChromeEnum {
+  static const SetIconInstanceType DECLARATIVE_CONTENT_SET_ICON = const SetIconInstanceType._('declarativeContentSetIcon');
+
+  static const List<SetIconInstanceType> VALUES = const[DECLARATIVE_CONTENT_SET_ICON];
+
+  const SetIconInstanceType._(String str): super(str);
+}
+
+class RequestContentScriptInstanceType extends ChromeEnum {
+  static const RequestContentScriptInstanceType DECLARATIVE_CONTENT_REQUEST_CONTENT_SCRIPT = const RequestContentScriptInstanceType._('declarativeContentRequestContentScript');
+
+  static const List<RequestContentScriptInstanceType> VALUES = const[DECLARATIVE_CONTENT_REQUEST_CONTENT_SCRIPT];
+
+  const RequestContentScriptInstanceType._(String str): super(str);
+}
+
 /**
  * See <a
  * href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">https://developer.mozilla.org/en-US/docs/Web/API/ImageData</a>.
@@ -98,7 +130,7 @@ class ShowPageAction extends ChromeObject {
  * representation. The image representation in `imageData` is
  * an[ImageData](https://developer.mozilla.org/en-US/docs/Web/API/ImageData)
  * object, for example from a `<canvas>` element, while the image representation
- * in `path` is the path to an image file relative to he extension's manifest.
+ * in `path` is the path to an image file relative to the extension's manifest.
  * If `scale` screen pixels fit into a device-independent pixel, the `scale * n`
  * icon will be used.  If that scale is missing, another image will be resized
  * to the needed size.
