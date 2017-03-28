@@ -83,21 +83,14 @@ class ChromeContentSettings extends ChromeApi {
   ContentSetting get notifications => _createContentSetting(_contentSettings['notifications']);
 
   /**
-   * Whether to allow sites to toggle the fullscreen mode. One of<br>[allow]:
-   * Allow sites to toggle the fullscreen mode,<br>[ask]: Ask when a site wants
-   * to toggle the fullscreen mode. <br>Default is [ask].<br>The primary URL is
-   * the URL of the document which requested to toggle the fullscreen mode. The
-   * secondary URL is the URL of the top-level frame (which may or may not
-   * differ from the requesting URL).
+   * <i>Deprecated.</i> No longer has any effect. Fullscreen permission is now
+   * automatically granted for all sites. Value is always [allow].
    */
   ContentSetting get fullscreen => _createContentSetting(_contentSettings['fullscreen']);
 
   /**
-   * Whether to allow sites to disable the mouse cursor. One of <br>[allow]:
-   * Allow sites to disable the mouse cursor,<br>[block]: Don't allow sites to
-   * disable the mouse cursor,<br>[ask]: Ask when a site wants to disable the
-   * mouse cursor. <br>Default is [ask].<br>The primary URL is the URL of the
-   * top-level frame. The secondary URL is not used.
+   * <i>Deprecated.</i> No longer has any effect. Mouse lock permission is now
+   * automatically granted for all sites. Value is always [allow].
    */
   ContentSetting get mouselock => _createContentSetting(_contentSettings['mouselock']);
 
@@ -226,19 +219,16 @@ class NotificationsContentSetting extends ChromeEnum {
 
 class FullscreenContentSetting extends ChromeEnum {
   static const FullscreenContentSetting ALLOW = const FullscreenContentSetting._('allow');
-  static const FullscreenContentSetting ASK = const FullscreenContentSetting._('ask');
 
-  static const List<FullscreenContentSetting> VALUES = const[ALLOW, ASK];
+  static const List<FullscreenContentSetting> VALUES = const[ALLOW];
 
   const FullscreenContentSetting._(String str): super(str);
 }
 
 class MouselockContentSetting extends ChromeEnum {
   static const MouselockContentSetting ALLOW = const MouselockContentSetting._('allow');
-  static const MouselockContentSetting BLOCK = const MouselockContentSetting._('block');
-  static const MouselockContentSetting ASK = const MouselockContentSetting._('ask');
 
-  static const List<MouselockContentSetting> VALUES = const[ALLOW, BLOCK, ASK];
+  static const List<MouselockContentSetting> VALUES = const[ALLOW];
 
   const MouselockContentSetting._(String str): super(str);
 }

@@ -33,6 +33,18 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
   Stream<Descriptor> get onDescriptorValueChanged => _onDescriptorValueChanged.stream;
   ChromeStreamController<Descriptor> _onDescriptorValueChanged;
 
+  Stream<OnCharacteristicReadRequestEvent> get onCharacteristicReadRequest => _onCharacteristicReadRequest.stream;
+  ChromeStreamController<OnCharacteristicReadRequestEvent> _onCharacteristicReadRequest;
+
+  Stream<OnCharacteristicWriteRequestEvent> get onCharacteristicWriteRequest => _onCharacteristicWriteRequest.stream;
+  ChromeStreamController<OnCharacteristicWriteRequestEvent> _onCharacteristicWriteRequest;
+
+  Stream<OnDescriptorReadRequestEvent> get onDescriptorReadRequest => _onDescriptorReadRequest.stream;
+  ChromeStreamController<OnDescriptorReadRequestEvent> _onDescriptorReadRequest;
+
+  Stream<OnDescriptorWriteRequestEvent> get onDescriptorWriteRequest => _onDescriptorWriteRequest.stream;
+  ChromeStreamController<OnDescriptorWriteRequestEvent> _onDescriptorWriteRequest;
+
   ChromeBluetoothLowEnergy._() {
     var getApi = () => _bluetoothLowEnergy;
     _onServiceAdded = new ChromeStreamController<Service>.oneArg(getApi, 'onServiceAdded', _createService);
@@ -40,6 +52,10 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
     _onServiceRemoved = new ChromeStreamController<Service>.oneArg(getApi, 'onServiceRemoved', _createService);
     _onCharacteristicValueChanged = new ChromeStreamController<Characteristic>.oneArg(getApi, 'onCharacteristicValueChanged', _createCharacteristic);
     _onDescriptorValueChanged = new ChromeStreamController<Descriptor>.oneArg(getApi, 'onDescriptorValueChanged', _createDescriptor);
+    _onCharacteristicReadRequest = new ChromeStreamController<OnCharacteristicReadRequestEvent>.twoArgs(getApi, 'onCharacteristicReadRequest', _createOnCharacteristicReadRequestEvent);
+    _onCharacteristicWriteRequest = new ChromeStreamController<OnCharacteristicWriteRequestEvent>.twoArgs(getApi, 'onCharacteristicWriteRequest', _createOnCharacteristicWriteRequestEvent);
+    _onDescriptorReadRequest = new ChromeStreamController<OnDescriptorReadRequestEvent>.twoArgs(getApi, 'onDescriptorReadRequest', _createOnDescriptorReadRequestEvent);
+    _onDescriptorWriteRequest = new ChromeStreamController<OnDescriptorWriteRequestEvent>.twoArgs(getApi, 'onDescriptorWriteRequest', _createOnDescriptorWriteRequestEvent);
   }
 
   bool get available => _bluetoothLowEnergy != null;
@@ -94,6 +110,23 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
   }
 
   /**
+   * Create a locally hosted GATT service. This service can be registered to be
+   * available on a local GATT server. This function is only available if the
+   * app has both the bluetooth:low_energy and the bluetooth:peripheral
+   * permissions set to true. The peripheral permission may not be available to
+   * all apps.
+   * [service]: The service to create.
+   * [callback]: Called with the created services's unique ID.
+   */
+  Future<String> createService(Service service) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<String>.oneArg();
+    _bluetoothLowEnergy.callMethod('createService', [jsify(service), completer.callback]);
+    return completer.future;
+  }
+
+  /**
    * Get all the GATT services that were discovered on the remote device with
    * the given device address.
    * [deviceAddress]: The Bluetooth address of the remote device whose GATT
@@ -119,6 +152,24 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
 
     var completer = new ChromeCompleter<Characteristic>.oneArg(_createCharacteristic);
     _bluetoothLowEnergy.callMethod('getCharacteristic', [characteristicId, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Create a locally hosted GATT characteristic. This characteristic must be
+   * hosted under a valid service. If the service ID is not valid, the lastError
+   * will be set. This function is only available if the app has both the
+   * bluetooth:low_energy and the bluetooth:peripheral permissions set to true.
+   * The peripheral permission may not be available to all apps.
+   * [characteristic]: The characteristic to create.
+   * [serviceId]: ID of the service to create this characteristic for.
+   * [callback]: Called with the created characteristic's unique ID.
+   */
+  Future<String> createCharacteristic(Characteristic characteristic, String serviceId) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<String>.oneArg();
+    _bluetoothLowEnergy.callMethod('createCharacteristic', [jsify(characteristic), serviceId, completer.callback]);
     return completer.future;
   }
 
@@ -164,6 +215,24 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
 
     var completer = new ChromeCompleter<Descriptor>.oneArg(_createDescriptor);
     _bluetoothLowEnergy.callMethod('getDescriptor', [descriptorId, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Create a locally hosted GATT descriptor. This descriptor must be hosted
+   * under a valid characteristic. If the characteristic ID is not valid, the
+   * lastError will be set. This function is only available if the app has both
+   * the bluetooth:low_energy and the bluetooth:peripheral permissions set to
+   * true. The peripheral permission may not be available to all apps.
+   * [descriptor]: The descriptor to create.
+   * [characteristicId]: ID of the characteristic to create this descriptor for.
+   * [callback]: Called with the created descriptor's unique ID.
+   */
+  Future<String> createDescriptor(Descriptor descriptor, String characteristicId) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<String>.oneArg();
+    _bluetoothLowEnergy.callMethod('createDescriptor', [jsify(descriptor), characteristicId, completer.callback]);
     return completer.future;
   }
 
@@ -249,6 +318,27 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
   }
 
   /**
+   * Notify a remote device of a new value for a characteristic. If the
+   * shouldIndicate flag in the notification object is true, an indication will
+   * be sent instead of a notification. Note, the characteristic needs to
+   * correctly set the 'notify' or 'indicate' property during creation for this
+   * call to succeed. This function is only available if the app has both the
+   * bluetooth:low_energy and the bluetooth:peripheral permissions set to true.
+   * The peripheral permission may not be available to all apps.
+   * [characteristicId]: The characteristic to send the notication for.
+   * [notifcation]: The notification to send.
+   * [callback]: Callback called once the notification or indication has been
+   * sent successfully.
+   */
+  Future notifyCharacteristicValueChanged(String characteristicId, Notification notification) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _bluetoothLowEnergy.callMethod('notifyCharacteristicValueChanged', [characteristicId, jsify(notification), completer.callback]);
+    return completer.future;
+  }
+
+  /**
    * Retrieve the value of a specified characteristic descriptor from a remote
    * peripheral.
    * [descriptorId]: The instance ID of the GATT characteristic descriptor whose
@@ -279,6 +369,57 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
 
     var completer = new ChromeCompleter.noArgs();
     _bluetoothLowEnergy.callMethod('writeDescriptorValue', [descriptorId, jsify(value), completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Register the given service with the local GATT server. If the service ID is
+   * invalid, the lastError will be set. This function is only available if the
+   * app has both the bluetooth:low_energy and the bluetooth:peripheral
+   * permissions set to true. The peripheral permission may not be available to
+   * all apps.
+   * [serviceId]: Unique ID of a created service.
+   * [callback]: Callback with the result of the register operation.
+   */
+  Future registerService(String serviceId) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _bluetoothLowEnergy.callMethod('registerService', [serviceId, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Unregister the given service with the local GATT server. If the service ID
+   * is invalid, the lastError will be set. This function is only available if
+   * the app has both the bluetooth:low_energy and the bluetooth:peripheral
+   * permissions set to true. The peripheral permission may not be available to
+   * all apps.
+   * [serviceId]: Unique ID of a current registered service.
+   * [callback]: Callback with the result of the register operation.
+   */
+  Future unregisterService(String serviceId) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _bluetoothLowEnergy.callMethod('unregisterService', [serviceId, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Remove the specified service, unregistering it if it was registered. If the
+   * service ID is invalid, the lastError will be set. This function is only
+   * available if the app has both the bluetooth:low_energy and the
+   * bluetooth:peripheral permissions set to true. The peripheral permission may
+   * not be available to all apps.
+   * [serviceId]: Unique ID of a current registered service.
+   * [callback]: Callback called once the service is removed.
+   */
+  Future removeService(String serviceId) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _bluetoothLowEnergy.callMethod('removeService', [serviceId, completer.callback]);
     return completer.future;
   }
 
@@ -324,13 +465,60 @@ class ChromeBluetoothLowEnergy extends ChromeApi {
     return completer.future;
   }
 
+  /**
+   * Sends a response for a characteristic or descriptor read/write request.
+   * This function is only available if the app has both the
+   * bluetooth:low_energy and the bluetooth:peripheral permissions set to true.
+   * The peripheral permission may not be available to all apps.
+   * [response]: The response to the request.
+   */
+  void sendRequestResponse(Response response) {
+    if (_bluetoothLowEnergy == null) _throwNotAvailable();
+
+    _bluetoothLowEnergy.callMethod('sendRequestResponse', [jsify(response)]);
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.bluetoothLowEnergy' is not available");
   }
 }
 
+class OnCharacteristicReadRequestEvent {
+  final Request request;
+
+  final String characteristicId;
+
+  OnCharacteristicReadRequestEvent(this.request, this.characteristicId);
+}
+
+class OnCharacteristicWriteRequestEvent {
+  final Request request;
+
+  final String characteristicId;
+
+  OnCharacteristicWriteRequestEvent(this.request, this.characteristicId);
+}
+
+class OnDescriptorReadRequestEvent {
+  final Request request;
+
+  final String descriptorId;
+
+  OnDescriptorReadRequestEvent(this.request, this.descriptorId);
+}
+
+class OnDescriptorWriteRequestEvent {
+  final Request request;
+
+  final String descriptorId;
+
+  OnDescriptorWriteRequestEvent(this.request, this.descriptorId);
+}
+
 /**
  * Values representing the possible properties of a characteristic.
+ * Characteristic permissions are inferred from these properties. Please see the
+ * Bluetooth 4.x spec to see the meaning of each individual property.
  */
 class CharacteristicProperty extends ChromeEnum {
   static const CharacteristicProperty BROADCAST = const CharacteristicProperty._('broadcast');
@@ -343,10 +531,31 @@ class CharacteristicProperty extends ChromeEnum {
   static const CharacteristicProperty EXTENDED_PROPERTIES = const CharacteristicProperty._('extendedProperties');
   static const CharacteristicProperty RELIABLE_WRITE = const CharacteristicProperty._('reliableWrite');
   static const CharacteristicProperty WRITABLE_AUXILIARIES = const CharacteristicProperty._('writableAuxiliaries');
+  static const CharacteristicProperty ENCRYPT_READ = const CharacteristicProperty._('encryptRead');
+  static const CharacteristicProperty ENCRYPT_WRITE = const CharacteristicProperty._('encryptWrite');
+  static const CharacteristicProperty ENCRYPT_AUTHENTICATED_READ = const CharacteristicProperty._('encryptAuthenticatedRead');
+  static const CharacteristicProperty ENCRYPT_AUTHENTICATED_WRITE = const CharacteristicProperty._('encryptAuthenticatedWrite');
 
-  static const List<CharacteristicProperty> VALUES = const[BROADCAST, READ, WRITE_WITHOUT_RESPONSE, WRITE, NOTIFY, INDICATE, AUTHENTICATED_SIGNED_WRITES, EXTENDED_PROPERTIES, RELIABLE_WRITE, WRITABLE_AUXILIARIES];
+  static const List<CharacteristicProperty> VALUES = const[BROADCAST, READ, WRITE_WITHOUT_RESPONSE, WRITE, NOTIFY, INDICATE, AUTHENTICATED_SIGNED_WRITES, EXTENDED_PROPERTIES, RELIABLE_WRITE, WRITABLE_AUXILIARIES, ENCRYPT_READ, ENCRYPT_WRITE, ENCRYPT_AUTHENTICATED_READ, ENCRYPT_AUTHENTICATED_WRITE];
 
   const CharacteristicProperty._(String str): super(str);
+}
+
+/**
+ * Values representing possible permissions for a descriptor. Please see the
+ * Bluetooth 4.x spec to see the meaning of each individual permission.
+ */
+class DescriptorPermission extends ChromeEnum {
+  static const DescriptorPermission READ = const DescriptorPermission._('read');
+  static const DescriptorPermission WRITE = const DescriptorPermission._('write');
+  static const DescriptorPermission ENCRYPTED_READ = const DescriptorPermission._('encryptedRead');
+  static const DescriptorPermission ENCRYPTED_WRITE = const DescriptorPermission._('encryptedWrite');
+  static const DescriptorPermission ENCRYPTED_AUTHENTICATED_READ = const DescriptorPermission._('encryptedAuthenticatedRead');
+  static const DescriptorPermission ENCRYPTED_AUTHENTICATED_WRITE = const DescriptorPermission._('encryptedAuthenticatedWrite');
+
+  static const List<DescriptorPermission> VALUES = const[READ, WRITE, ENCRYPTED_READ, ENCRYPTED_WRITE, ENCRYPTED_AUTHENTICATED_READ, ENCRYPTED_AUTHENTICATED_WRITE];
+
+  const DescriptorPermission._(String str): super(str);
 }
 
 /**
@@ -366,15 +575,36 @@ class AdvertisementType extends ChromeEnum {
 }
 
 /**
+ * Represents a bluetooth central device that is connected to the local GATT
+ * server.
+ */
+class Device extends ChromeObject {
+  Device({String address, String name, int deviceClass}) {
+    if (address != null) this.address = address;
+    if (name != null) this.name = name;
+    if (deviceClass != null) this.deviceClass = deviceClass;
+  }
+  Device.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  String get address => jsProxy['address'];
+  set address(String value) => jsProxy['address'] = value;
+
+  String get name => jsProxy['name'];
+  set name(String value) => jsProxy['name'] = value;
+
+  int get deviceClass => jsProxy['deviceClass'];
+  set deviceClass(int value) => jsProxy['deviceClass'] = value;
+}
+
+/**
  * Represents a peripheral's Bluetooth GATT Service, a collection of
  * characteristics and relationships to other services that encapsulate the
  * behavior of part of a device.
  */
 class Service extends ChromeObject {
-  Service({String uuid, bool isPrimary, bool isLocal, String instanceId, String deviceAddress}) {
+  Service({String uuid, bool isPrimary, String instanceId, String deviceAddress}) {
     if (uuid != null) this.uuid = uuid;
     if (isPrimary != null) this.isPrimary = isPrimary;
-    if (isLocal != null) this.isLocal = isLocal;
     if (instanceId != null) this.instanceId = instanceId;
     if (deviceAddress != null) this.deviceAddress = deviceAddress;
   }
@@ -385,9 +615,6 @@ class Service extends ChromeObject {
 
   bool get isPrimary => jsProxy['isPrimary'];
   set isPrimary(bool value) => jsProxy['isPrimary'] = value;
-
-  bool get isLocal => jsProxy['isLocal'];
-  set isLocal(bool value) => jsProxy['isLocal'] = value;
 
   String get instanceId => jsProxy['instanceId'];
   set instanceId(String value) => jsProxy['instanceId'] = value;
@@ -401,9 +628,8 @@ class Service extends ChromeObject {
  * further information about a peripheral's service.
  */
 class Characteristic extends ChromeObject {
-  Characteristic({String uuid, bool isLocal, Service service, List<CharacteristicProperty> properties, String instanceId, ArrayBuffer value}) {
+  Characteristic({String uuid, Service service, List<CharacteristicProperty> properties, String instanceId, ArrayBuffer value}) {
     if (uuid != null) this.uuid = uuid;
-    if (isLocal != null) this.isLocal = isLocal;
     if (service != null) this.service = service;
     if (properties != null) this.properties = properties;
     if (instanceId != null) this.instanceId = instanceId;
@@ -413,9 +639,6 @@ class Characteristic extends ChromeObject {
 
   String get uuid => jsProxy['uuid'];
   set uuid(String value) => jsProxy['uuid'] = value;
-
-  bool get isLocal => jsProxy['isLocal'];
-  set isLocal(bool value) => jsProxy['isLocal'] = value;
 
   Service get service => _createService(jsProxy['service']);
   set service(Service value) => jsProxy['service'] = jsify(value);
@@ -435,10 +658,10 @@ class Characteristic extends ChromeObject {
  * information about a characteristic's value.
  */
 class Descriptor extends ChromeObject {
-  Descriptor({String uuid, bool isLocal, Characteristic characteristic, String instanceId, ArrayBuffer value}) {
+  Descriptor({String uuid, Characteristic characteristic, List<DescriptorPermission> permissions, String instanceId, ArrayBuffer value}) {
     if (uuid != null) this.uuid = uuid;
-    if (isLocal != null) this.isLocal = isLocal;
     if (characteristic != null) this.characteristic = characteristic;
+    if (permissions != null) this.permissions = permissions;
     if (instanceId != null) this.instanceId = instanceId;
     if (value != null) this.value = value;
   }
@@ -447,11 +670,11 @@ class Descriptor extends ChromeObject {
   String get uuid => jsProxy['uuid'];
   set uuid(String value) => jsProxy['uuid'] = value;
 
-  bool get isLocal => jsProxy['isLocal'];
-  set isLocal(bool value) => jsProxy['isLocal'] = value;
-
   Characteristic get characteristic => _createCharacteristic(jsProxy['characteristic']);
   set characteristic(Characteristic value) => jsProxy['characteristic'] = jsify(value);
+
+  List<DescriptorPermission> get permissions => listify(jsProxy['permissions'], _createDescriptorPermission);
+  set permissions(List<DescriptorPermission> value) => jsProxy['permissions'] = jsify(value);
 
   String get instanceId => jsProxy['instanceId'];
   set instanceId(String value) => jsProxy['instanceId'] = value;
@@ -552,11 +775,81 @@ class Advertisement extends ChromeObject {
   set serviceData(List<ServiceData> value) => jsProxy['serviceData'] = jsify(value);
 }
 
+/**
+ * Represents a an attribute read/write request.
+ */
+class Request extends ChromeObject {
+  Request({int requestId, Device device, ArrayBuffer value}) {
+    if (requestId != null) this.requestId = requestId;
+    if (device != null) this.device = device;
+    if (value != null) this.value = value;
+  }
+  Request.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get requestId => jsProxy['requestId'];
+  set requestId(int value) => jsProxy['requestId'] = value;
+
+  Device get device => _createDevice(jsProxy['device']);
+  set device(Device value) => jsProxy['device'] = jsify(value);
+
+  ArrayBuffer get value => _createArrayBuffer(jsProxy['value']);
+  set value(ArrayBuffer value) => jsProxy['value'] = jsify(value);
+}
+
+/**
+ * Represents a response to an attribute read/write request.
+ */
+class Response extends ChromeObject {
+  Response({int requestId, bool isError, ArrayBuffer value}) {
+    if (requestId != null) this.requestId = requestId;
+    if (isError != null) this.isError = isError;
+    if (value != null) this.value = value;
+  }
+  Response.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get requestId => jsProxy['requestId'];
+  set requestId(int value) => jsProxy['requestId'] = value;
+
+  bool get isError => jsProxy['isError'];
+  set isError(bool value) => jsProxy['isError'] = value;
+
+  ArrayBuffer get value => _createArrayBuffer(jsProxy['value']);
+  set value(ArrayBuffer value) => jsProxy['value'] = jsify(value);
+}
+
+/**
+ * Represents a notification to be sent to a remote device.
+ */
+class Notification extends ChromeObject {
+  Notification({ArrayBuffer value, bool shouldIndicate}) {
+    if (value != null) this.value = value;
+    if (shouldIndicate != null) this.shouldIndicate = shouldIndicate;
+  }
+  Notification.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  ArrayBuffer get value => _createArrayBuffer(jsProxy['value']);
+  set value(ArrayBuffer value) => jsProxy['value'] = jsify(value);
+
+  bool get shouldIndicate => jsProxy['shouldIndicate'];
+  set shouldIndicate(bool value) => jsProxy['shouldIndicate'] = value;
+}
+
 Service _createService(JsObject jsProxy) => jsProxy == null ? null : new Service.fromProxy(jsProxy);
 Characteristic _createCharacteristic(JsObject jsProxy) => jsProxy == null ? null : new Characteristic.fromProxy(jsProxy);
 Descriptor _createDescriptor(JsObject jsProxy) => jsProxy == null ? null : new Descriptor.fromProxy(jsProxy);
+OnCharacteristicReadRequestEvent _createOnCharacteristicReadRequestEvent(JsObject request, String characteristicId) =>
+    new OnCharacteristicReadRequestEvent(_createRequest(request), characteristicId);
+OnCharacteristicWriteRequestEvent _createOnCharacteristicWriteRequestEvent(JsObject request, String characteristicId) =>
+    new OnCharacteristicWriteRequestEvent(_createRequest(request), characteristicId);
+OnDescriptorReadRequestEvent _createOnDescriptorReadRequestEvent(JsObject request, String descriptorId) =>
+    new OnDescriptorReadRequestEvent(_createRequest(request), descriptorId);
+OnDescriptorWriteRequestEvent _createOnDescriptorWriteRequestEvent(JsObject request, String descriptorId) =>
+    new OnDescriptorWriteRequestEvent(_createRequest(request), descriptorId);
 CharacteristicProperty _createCharacteristicProperty(String value) => CharacteristicProperty.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ArrayBuffer _createArrayBuffer(/*JsObject*/ jsProxy) => jsProxy == null ? null : new ArrayBuffer.fromProxy(jsProxy);
+DescriptorPermission _createDescriptorPermission(String value) => DescriptorPermission.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 AdvertisementType _createAdvertisementType(String value) => AdvertisementType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ManufacturerData _createManufacturerData(JsObject jsProxy) => jsProxy == null ? null : new ManufacturerData.fromProxy(jsProxy);
 ServiceData _createServiceData(JsObject jsProxy) => jsProxy == null ? null : new ServiceData.fromProxy(jsProxy);
+Device _createDevice(JsObject jsProxy) => jsProxy == null ? null : new Device.fromProxy(jsProxy);
+Request _createRequest(JsObject jsProxy) => jsProxy == null ? null : new Request.fromProxy(jsProxy);

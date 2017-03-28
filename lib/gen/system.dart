@@ -264,6 +264,65 @@ class ChromeSystemDisplay extends ChromeApi {
     _system_display.callMethod('overscanCalibrationComplete', [id]);
   }
 
+  /**
+   * Displays the native touch calibration UX for the display with [id] as
+   * display id. This will show an overlay on the screen with required
+   * instructions on how to proceed. The callback will be invoked in case of
+   * successful calibraion only. If the calibration fails, this will throw an
+   * error.
+   * [id]: The display's unique identifier.
+   * [callback]: Optional callback to inform the caller that the touch
+   * calibration has ended. The argument of the callback informs if the
+   * calibration was a success or not.
+   */
+  Future<bool> showNativeTouchCalibration(String id) {
+    if (_system_display == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter<bool>.oneArg();
+    _system_display.callMethod('showNativeTouchCalibration', [id, completer.callback]);
+    return completer.future;
+  }
+
+  /**
+   * Starts custom touch calibration for a display. This should be called when
+   * using a custom UX for collecting calibration data. If another touch
+   * calibration is already in progress this will throw an error.
+   * [id]: The display's unique identifier.
+   */
+  void startCustomTouchCalibration(String id) {
+    if (_system_display == null) _throwNotAvailable();
+
+    _system_display.callMethod('startCustomTouchCalibration', [id]);
+  }
+
+  /**
+   * Sets the touch calibration pairs for a display. These [pairs] would be used
+   * to calibrate the touch screen for display with [id] called in
+   * startCustomTouchCalibration(). Always call [startCustomTouchCalibration]
+   * before calling this method. If another touch calibration is already in
+   * progress this will throw an error.
+   * [pairs]: The pairs of point used to calibrate the display.
+   * [bounds]: Bounds of the display when the touch calibration was performed.
+   * |bounds.left| and |bounds.top| values are ignored.
+   */
+  void completeCustomTouchCalibration(TouchCalibrationPairQuad pairs, Bounds bounds) {
+    if (_system_display == null) _throwNotAvailable();
+
+    _system_display.callMethod('completeCustomTouchCalibration', [jsify(pairs), jsify(bounds)]);
+  }
+
+  /**
+   * Resets the touch calibration for the display and brings it back to its
+   * default state by clearing any touch calibration data associated with the
+   * display.
+   * [id]: The display's unique identifier.
+   */
+  void clearTouchCalibration(String id) {
+    if (_system_display == null) _throwNotAvailable();
+
+    _system_display.callMethod('clearTouchCalibration', [id]);
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.system.display' is not available");
   }
@@ -303,6 +362,56 @@ class Insets extends ChromeObject {
 
   int get bottom => jsProxy['bottom'];
   set bottom(int value) => jsProxy['bottom'] = value;
+}
+
+class Point extends ChromeObject {
+  Point({int x, int y}) {
+    if (x != null) this.x = x;
+    if (y != null) this.y = y;
+  }
+  Point.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  int get x => jsProxy['x'];
+  set x(int value) => jsProxy['x'] = value;
+
+  int get y => jsProxy['y'];
+  set y(int value) => jsProxy['y'] = value;
+}
+
+class TouchCalibrationPair extends ChromeObject {
+  TouchCalibrationPair({Point displayPoint, Point touchPoint}) {
+    if (displayPoint != null) this.displayPoint = displayPoint;
+    if (touchPoint != null) this.touchPoint = touchPoint;
+  }
+  TouchCalibrationPair.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  Point get displayPoint => _createPoint(jsProxy['displayPoint']);
+  set displayPoint(Point value) => jsProxy['displayPoint'] = jsify(value);
+
+  Point get touchPoint => _createPoint(jsProxy['touchPoint']);
+  set touchPoint(Point value) => jsProxy['touchPoint'] = jsify(value);
+}
+
+class TouchCalibrationPairQuad extends ChromeObject {
+  TouchCalibrationPairQuad({TouchCalibrationPair pair1, TouchCalibrationPair pair2, TouchCalibrationPair pair3, TouchCalibrationPair pair4}) {
+    if (pair1 != null) this.pair1 = pair1;
+    if (pair2 != null) this.pair2 = pair2;
+    if (pair3 != null) this.pair3 = pair3;
+    if (pair4 != null) this.pair4 = pair4;
+  }
+  TouchCalibrationPairQuad.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  TouchCalibrationPair get pair1 => _createTouchCalibrationPair(jsProxy['pair1']);
+  set pair1(TouchCalibrationPair value) => jsProxy['pair1'] = jsify(value);
+
+  TouchCalibrationPair get pair2 => _createTouchCalibrationPair(jsProxy['pair2']);
+  set pair2(TouchCalibrationPair value) => jsProxy['pair2'] = jsify(value);
+
+  TouchCalibrationPair get pair3 => _createTouchCalibrationPair(jsProxy['pair3']);
+  set pair3(TouchCalibrationPair value) => jsProxy['pair3'] = jsify(value);
+
+  TouchCalibrationPair get pair4 => _createTouchCalibrationPair(jsProxy['pair4']);
+  set pair4(TouchCalibrationPair value) => jsProxy['pair4'] = jsify(value);
 }
 
 class DisplayMode extends ChromeObject {
@@ -366,7 +475,7 @@ class DisplayLayout extends ChromeObject {
 }
 
 class DisplayUnitInfo extends ChromeObject {
-  DisplayUnitInfo({String id, String name, String mirroringSourceId, bool isPrimary, bool isInternal, bool isEnabled, num dpiX, num dpiY, int rotation, Bounds bounds, Insets overscan, Bounds workArea, List<DisplayMode> modes}) {
+  DisplayUnitInfo({String id, String name, String mirroringSourceId, bool isPrimary, bool isInternal, bool isEnabled, num dpiX, num dpiY, int rotation, Bounds bounds, Insets overscan, Bounds workArea, List<DisplayMode> modes, bool hasTouchSupport}) {
     if (id != null) this.id = id;
     if (name != null) this.name = name;
     if (mirroringSourceId != null) this.mirroringSourceId = mirroringSourceId;
@@ -380,6 +489,7 @@ class DisplayUnitInfo extends ChromeObject {
     if (overscan != null) this.overscan = overscan;
     if (workArea != null) this.workArea = workArea;
     if (modes != null) this.modes = modes;
+    if (hasTouchSupport != null) this.hasTouchSupport = hasTouchSupport;
   }
   DisplayUnitInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -421,6 +531,9 @@ class DisplayUnitInfo extends ChromeObject {
 
   List<DisplayMode> get modes => listify(jsProxy['modes'], _createDisplayMode);
   set modes(List<DisplayMode> value) => jsProxy['modes'] = jsify(value);
+
+  bool get hasTouchSupport => jsProxy['hasTouchSupport'];
+  set hasTouchSupport(bool value) => jsProxy['hasTouchSupport'] = value;
 }
 
 class DisplayProperties extends ChromeObject {
@@ -459,6 +572,8 @@ class DisplayProperties extends ChromeObject {
 
 DisplayUnitInfo _createDisplayUnitInfo(JsObject jsProxy) => jsProxy == null ? null : new DisplayUnitInfo.fromProxy(jsProxy);
 DisplayLayout _createDisplayLayout(JsObject jsProxy) => jsProxy == null ? null : new DisplayLayout.fromProxy(jsProxy);
+Point _createPoint(JsObject jsProxy) => jsProxy == null ? null : new Point.fromProxy(jsProxy);
+TouchCalibrationPair _createTouchCalibrationPair(JsObject jsProxy) => jsProxy == null ? null : new TouchCalibrationPair.fromProxy(jsProxy);
 LayoutPosition _createLayoutPosition(String value) => LayoutPosition.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 Bounds _createBounds(JsObject jsProxy) => jsProxy == null ? null : new Bounds.fromProxy(jsProxy);
 Insets _createInsets(JsObject jsProxy) => jsProxy == null ? null : new Insets.fromProxy(jsProxy);

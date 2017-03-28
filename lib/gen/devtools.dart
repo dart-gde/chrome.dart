@@ -219,11 +219,10 @@ class DevtoolsInspectedWindowEvalParams extends ChromeObject {
 }
 
 class DevtoolsInspectedWindowReloadParams extends ChromeObject {
-  DevtoolsInspectedWindowReloadParams({bool ignoreCache, String userAgent, String injectedScript, String preprocessorScript}) {
+  DevtoolsInspectedWindowReloadParams({bool ignoreCache, String userAgent, String injectedScript}) {
     if (ignoreCache != null) this.ignoreCache = ignoreCache;
     if (userAgent != null) this.userAgent = userAgent;
     if (injectedScript != null) this.injectedScript = injectedScript;
-    if (preprocessorScript != null) this.preprocessorScript = preprocessorScript;
   }
   DevtoolsInspectedWindowReloadParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -253,17 +252,6 @@ class DevtoolsInspectedWindowReloadParams extends ChromeObject {
    */
   String get injectedScript => jsProxy['injectedScript'];
   set injectedScript(String value) => jsProxy['injectedScript'] = value;
-
-  /**
-   * If specified, this script evaluates into a function that accepts three
-   * string arguments: the source to preprocess, the URL of the source, and a
-   * function name if the source is an DOM event handler. The
-   * preprocessorerScript function should return a string to be compiled by
-   * Chrome in place of the input source. In the case that the source is a DOM
-   * event handler, the returned source must compile to a single JS function.
-   */
-  String get preprocessorScript => jsProxy['preprocessorScript'];
-  set preprocessorScript(String value) => jsProxy['preprocessorScript'] = value;
 }
 
 /**

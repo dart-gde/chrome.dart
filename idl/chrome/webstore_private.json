@@ -64,6 +64,9 @@
         }, {
           "name": "already_installed",
           "description": "The extension is already installed"
+        }, {
+          "name": "blocked_for_child_account",
+          "description": "The user is signed in to a child account, and not allowed to perform the operation"
         }],
         "description": "Whether the API call succeeded, or the reason for failure."
       },
@@ -314,6 +317,25 @@
                 "$ref": "Result",
                 "description": "Whether an attempt to launch an app succeeded, or the reason for failure."
               }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "isPendingCustodianApproval",
+        "description": "Checks if an extension installed on a Supervised User profile is pending custodian approval.",
+        "parameters": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "The extension id of the extension to be checked."
+          },
+          { 
+            "name": "callback",
+            "type": "function",
+            "optional": false,
+            "parameters": [
+              { "name": "is_pending_approval", "type": "boolean" }
             ]
           }
         ]

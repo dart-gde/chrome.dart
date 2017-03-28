@@ -251,9 +251,10 @@ class LastErrorExtension extends ChromeObject {
 }
 
 class ExtensionGetViewsParams extends ChromeObject {
-  ExtensionGetViewsParams({ViewType type, int windowId}) {
+  ExtensionGetViewsParams({ViewType type, int windowId, int tabId}) {
     if (type != null) this.type = type;
     if (windowId != null) this.windowId = windowId;
+    if (tabId != null) this.tabId = tabId;
   }
   ExtensionGetViewsParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -269,6 +270,13 @@ class ExtensionGetViewsParams extends ChromeObject {
    */
   int get windowId => jsProxy['windowId'];
   set windowId(int value) => jsProxy['windowId'] = value;
+
+  /**
+   * Find a view according to a tab id. If this field is omitted, returns all
+   * views.
+   */
+  int get tabId => jsProxy['tabId'];
+  set tabId(int value) => jsProxy['tabId'] = value;
 }
 
 OnRequestEvent _createOnRequestEvent(JsObject request, JsObject sender, JsObject sendResponse) =>

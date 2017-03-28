@@ -78,27 +78,28 @@ class ChromeRuntime extends ChromeApi {
 
   /**
    * Fired when a connection is made from either an extension process or a
-   * content script.
+   * content script (by [runtime.connect]).
    */
   Stream<Port> get onConnect => _onConnect.stream;
   ChromeStreamController<Port> _onConnect;
 
   /**
-   * Fired when a connection is made from another extension.
+   * Fired when a connection is made from another extension (by
+   * [runtime.connect]).
    */
   Stream<Port> get onConnectExternal => _onConnectExternal.stream;
   ChromeStreamController<Port> _onConnectExternal;
 
   /**
-   * Fired when a message is sent from either an extension process or a content
-   * script.
+   * Fired when a message is sent from either an extension process (by
+   * [runtime.sendMessage]) or a content script (by [tabs.sendMessage]).
    */
   Stream<OnMessageEvent> get onMessage => _onMessage.stream;
   ChromeStreamController<OnMessageEvent> _onMessage;
 
   /**
-   * Fired when a message is sent from another extension/app. Cannot be used in
-   * a content script.
+   * Fired when a message is sent from another extension/app (by
+   * [runtime.sendMessage]). Cannot be used in a content script.
    */
   Stream<OnMessageExternalEvent> get onMessageExternal => _onMessageExternal.stream;
   ChromeStreamController<OnMessageExternalEvent> _onMessageExternal;
@@ -234,7 +235,18 @@ class ChromeRuntime extends ChromeApi {
   }
 
   /**
-   * Requests an update check for this app/extension.
+   * Requests an immediate update check be done for this app/extension.
+   * <b>Important</b>: Most extensions/apps should <b>not</b> use this method,
+   * since chrome already does automatic checks every few hours, and you can
+   * listen for the [runtime.onUpdateAvailable] event without needing to call
+   * requestUpdateCheck.
+   * 
+   * This method is only appropriate to call in very limited circumstances, such
+   * as if your extension/app talks to a backend service, and the backend
+   * service has determined that the client extension/app version is very far
+   * out of date and you'd like to prompt a user to update. Most other uses of
+   * requestUpdateCheck, such as calling it unconditionally based on a repeating
+   * timer, probably only serve to waste client, network, and server resources.
    * 
    * Returns:
    * [status] Result of the update check.
@@ -260,13 +272,31 @@ class ChromeRuntime extends ChromeApi {
   }
 
   /**
+   * Restart the ChromeOS device when the app runs in kiosk mode after the given
+   * seconds. If called again before the time ends, the reboot will be delayed.
+   * If called with a value of -1, the reboot will be cancelled. It's a no-op in
+   * non-kiosk mode. It's only allowed to be called repeatedly by the first
+   * extension to invoke this API.
+   * 
+   * [seconds] Time to wait in seconds before rebooting the device, or -1 to
+   * cancel a scheduled reboot.
+   */
+  Future restartAfterDelay(int seconds) {
+    if (_runtime == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _runtime.callMethod('restartAfterDelay', [seconds, completer.callback]);
+    return completer.future;
+  }
+
+  /**
    * Attempts to connect to connect listeners within an extension/app (such as
    * the background page), or other extensions/apps. This is useful for content
    * scripts connecting to their extension processes, inter-app/extension
    * communication, and [web messaging](manifest/externally_connectable.html).
    * Note that this does not connect to any listeners in a content script.
-   * Extensions may connect to content scripts embedded in tabs via <a
-   * href="extensions/tabs#method-connect">tabs.connect</a>.
+   * Extensions may connect to content scripts embedded in tabs via
+   * [tabs.connect].
    * 
    * [extensionId] The ID of the extension or app to connect to. If omitted, a
    * connection will be attempted with your own extension. Required if sending
@@ -274,9 +304,8 @@ class ChromeRuntime extends ChromeApi {
    * messaging](manifest/externally_connectable.html).
    * 
    * Returns:
-   * Port through which messages can be sent and received. The port's
-   * $(ref:runtime.Port onDisconnect) event is fired if the extension/app does
-   * not exist.
+   * Port through which messages can be sent and received. The port's $(ref:Port
+   * onDisconnect) event is fired if the extension/app does not exist.
    */
   Port connect([String extensionId, RuntimeConnectParams connectInfo]) {
     if (_runtime == null) _throwNotAvailable();
@@ -285,7 +314,8 @@ class ChromeRuntime extends ChromeApi {
   }
 
   /**
-   * Connects to a native application in the host machine.
+   * Connects to a native application in the host machine. See [Native
+   * Messaging](nativeMessaging) for more information.
    * 
    * [application] The name of the registered application to connect to.
    * 
@@ -302,16 +332,19 @@ class ChromeRuntime extends ChromeApi {
    * Sends a single message to event listeners within your extension/app or a
    * different extension/app. Similar to [runtime.connect] but only sends a
    * single message, with an optional response. If sending to your extension,
-   * the [runtime.onMessage] event will be fired in each page, or
-   * [runtime.onMessageExternal], if a different extension. Note that extensions
-   * cannot send messages to content scripts using this method. To send messages
-   * to content scripts, use <a
-   * href="extensions/tabs#method-sendMessage">tabs.sendMessage</a>.
+   * the [runtime.onMessage] event will be fired in every frame of your
+   * extension (except for the sender's frame), or [runtime.onMessageExternal],
+   * if a different extension. Note that extensions cannot send messages to
+   * content scripts using this method. To send messages to content scripts, use
+   * [tabs.sendMessage].
    * 
    * [extensionId] The ID of the extension/app to send the message to. If
    * omitted, the message will be sent to your own extension/app. Required if
    * sending messages from a web page for [web
    * messaging](manifest/externally_connectable.html).
+   * 
+   * [message] The message to send. This message should be a JSON-ifiable
+   * object.
    * 
    * Returns:
    * The JSON response object sent by the handler of the message. If an error
@@ -374,8 +407,18 @@ class ChromeRuntime extends ChromeApi {
 }
 
 /**
- * Fired when a message is sent from either an extension process or a content
- * script.
+ * Fired when a [Port] is closed from the other side.
+ */
+
+class OnDisconnectEvent {
+  final Port port;
+
+  OnDisconnectEvent(this.port);
+}
+
+/**
+ * Fired when a message is sent from either an extension process (by
+ * [runtime.sendMessage]) or a content script (by [tabs.sendMessage]).
  */
 class OnMessageEvent {
   /**
@@ -392,10 +435,10 @@ class OnMessageEvent {
    * Function to call (at most once) when you have a response. The argument
    * should be any JSON-ifiable object. If you have more than one `onMessage`
    * listener in the same document, then only one may send a response. This
-   * function becomes invalid when the event listener returns, unless you return
-   * true from the event listener to indicate you wish to send a response
-   * asynchronously (this will keep the message channel open to the other end
-   * until `sendResponse` is called).
+   * function becomes invalid when the event listener returns, *unless you
+   * return true* from the event listener to indicate you wish to send a
+   * response asynchronously (this will keep the message channel open to the
+   * other end until `sendResponse` is called).
    */
   final dynamic sendResponse;
 
@@ -403,8 +446,8 @@ class OnMessageEvent {
 }
 
 /**
- * Fired when a message is sent from another extension/app. Cannot be used in a
- * content script.
+ * Fired when a message is sent from another extension/app (by
+ * [runtime.sendMessage]). Cannot be used in a content script.
  */
 class OnMessageExternalEvent {
   /**
@@ -421,10 +464,10 @@ class OnMessageExternalEvent {
    * Function to call (at most once) when you have a response. The argument
    * should be any JSON-ifiable object. If you have more than one `onMessage`
    * listener in the same document, then only one may send a response. This
-   * function becomes invalid when the event listener returns, unless you return
-   * true from the event listener to indicate you wish to send a response
-   * asynchronously (this will keep the message channel open to the other end
-   * until `sendResponse` is called).
+   * function becomes invalid when the event listener returns, *unless you
+   * return true* from the event listener to indicate you wish to send a
+   * response asynchronously (this will keep the message channel open to the
+   * other end until `sendResponse` is called).
    */
   final dynamic sendResponse;
 
@@ -529,7 +572,8 @@ class LastErrorRuntime extends ChromeObject {
 }
 
 /**
- * An object which allows two way communication with other pages.
+ * An object which allows two way communication with other pages. See <a
+ * href="messaging#connect">Long-lived connections</a> for more information.
  */
 class Port extends ChromeObject {
   Port({String name, MessageSender sender}) {
@@ -538,16 +582,19 @@ class Port extends ChromeObject {
   }
   Port.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
+  /**
+   * The name of the port, as specified in the call to [runtime.connect].
+   */
   String get name => jsProxy['name'];
   set name(String value) => jsProxy['name'] = value;
 
   void disconnect([var arg1]) =>
          jsProxy.callMethod('disconnect', [jsify(arg1)]);
 
-  ChromeStreamController _onDisconnect;
-  Stream get onDisconnect {
+  ChromeStreamController<OnDisconnectEvent> _onDisconnect;
+  Stream<OnDisconnectEvent> get onDisconnect {
     if (_onDisconnect == null)
-      _onDisconnect = new ChromeStreamController.noArgs(()=>jsProxy, 'onDisconnect');
+      _onDisconnect = new ChromeStreamController.oneArg(()=>jsProxy, 'onDisconnect', _createOnDisconnectEvent);
     return _onDisconnect.stream;
   }
 
@@ -563,7 +610,8 @@ class Port extends ChromeObject {
 
   /**
    * This property will <b>only</b> be present on ports passed to
-   * onConnect/onConnectExternal listeners.
+   * $(ref:runtime.onConnect onConnect) / $(ref:runtime.onConnectExternal
+   * onConnectExternal) listeners.
    */
   MessageSender get sender => _createMessageSender(jsProxy['sender']);
   set sender(MessageSender value) => jsProxy['sender'] = jsify(value);
@@ -703,6 +751,7 @@ class RequestUpdateCheckResult {
 }
 
 Port _createPort(JsObject jsProxy) => jsProxy == null ? null : new Port.fromProxy(jsProxy);
+OnDisconnectEvent _createOnDisconnectEvent(JsObject port) => new OnDisconnectEvent(_createPort(port));
 OnMessageEvent _createOnMessageEvent(JsObject message, JsObject sender, JsObject sendResponse) =>
     new OnMessageEvent(message, _createMessageSender(sender), sendResponse);
 OnMessageExternalEvent _createOnMessageExternalEvent(JsObject message, JsObject sender, JsObject sendResponse) =>

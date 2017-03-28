@@ -5,7 +5,6 @@ library chrome.app;
 import '../src/common.dart';
 import '../src/files.dart';
 import 'windows.dart';
-import 'input.dart';
 
 part 'app_patch.dart';
 
@@ -53,9 +52,14 @@ class ChromeAppRuntime extends ChromeApi {
 }
 
 /**
- * Enumeration of app launch sources.
+ * Enumeration of app launch sources. This should be kept in sync with
+ * AppLaunchSource in extensions/common/constants.h, and GetLaunchSourceEnum()
+ * in extensions/browser/api/app_runtime/app_runtime_api.cc. Note the
+ * enumeration is used in UMA histogram so entries should not be re-ordered or
+ * removed.
  */
 class LaunchSource extends ChromeEnum {
+  static const LaunchSource UNTRACKED = const LaunchSource._('untracked');
   static const LaunchSource APP_LAUNCHER = const LaunchSource._('app_launcher');
   static const LaunchSource NEW_TAB_PAGE = const LaunchSource._('new_tab_page');
   static const LaunchSource RELOAD = const LaunchSource._('reload');
@@ -74,10 +78,37 @@ class LaunchSource extends ChromeEnum {
   static const LaunchSource KIOSK = const LaunchSource._('kiosk');
   static const LaunchSource CHROME_INTERNAL = const LaunchSource._('chrome_internal');
   static const LaunchSource TEST = const LaunchSource._('test');
+  static const LaunchSource INSTALLED_NOTIFICATION = const LaunchSource._('installed_notification');
 
-  static const List<LaunchSource> VALUES = const[APP_LAUNCHER, NEW_TAB_PAGE, RELOAD, RESTART, LOAD_AND_LAUNCH, COMMAND_LINE, FILE_HANDLER, URL_HANDLER, SYSTEM_TRAY, ABOUT_PAGE, KEYBOARD, EXTENSIONS_PAGE, MANAGEMENT_API, EPHEMERAL_APP, BACKGROUND, KIOSK, CHROME_INTERNAL, TEST];
+  static const List<LaunchSource> VALUES = const[UNTRACKED, APP_LAUNCHER, NEW_TAB_PAGE, RELOAD, RESTART, LOAD_AND_LAUNCH, COMMAND_LINE, FILE_HANDLER, URL_HANDLER, SYSTEM_TRAY, ABOUT_PAGE, KEYBOARD, EXTENSIONS_PAGE, MANAGEMENT_API, EPHEMERAL_APP, BACKGROUND, KIOSK, CHROME_INTERNAL, TEST, INSTALLED_NOTIFICATION];
 
   const LaunchSource._(String str): super(str);
+}
+
+/**
+ * An app can be launched with a specific action in mind, for example, to create
+ * a new note. The type of action the app was launched with is available inside
+ * of the [actionData] field from the LaunchData instance.
+ */
+class ActionType extends ChromeEnum {
+  static const ActionType NEW_NOTE = const ActionType._('new_note');
+
+  static const List<ActionType> VALUES = const[NEW_NOTE];
+
+  const ActionType._(String str): super(str);
+}
+
+/**
+ * Status of the play store.
+ */
+class PlayStoreStatus extends ChromeEnum {
+  static const PlayStoreStatus ENABLED = const PlayStoreStatus._('enabled');
+  static const PlayStoreStatus AVAILABLE = const PlayStoreStatus._('available');
+  static const PlayStoreStatus UNKNOWN = const PlayStoreStatus._('unknown');
+
+  static const List<PlayStoreStatus> VALUES = const[ENABLED, AVAILABLE, UNKNOWN];
+
+  const PlayStoreStatus._(String str): super(str);
 }
 
 class LaunchItem extends ChromeObject {
@@ -95,11 +126,24 @@ class LaunchItem extends ChromeObject {
 }
 
 /**
+ * Optional data that includes action-specific launch information.
+ */
+class ActionData extends ChromeObject {
+  ActionData({ActionType actionType}) {
+    if (actionType != null) this.actionType = actionType;
+  }
+  ActionData.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  ActionType get actionType => _createActionType(jsProxy['actionType']);
+  set actionType(ActionType value) => jsProxy['actionType'] = jsify(value);
+}
+
+/**
  * Optional data for the launch. Either `items`, or the pair (`url,
  * referrerUrl`) can be present for any given launch.
  */
 class LaunchData extends ChromeObject {
-  LaunchData({String id, List<LaunchItem> items, String url, String referrerUrl, bool isKioskSession, bool isPublicSession, LaunchSource source}) {
+  LaunchData({String id, List<LaunchItem> items, String url, String referrerUrl, bool isKioskSession, bool isPublicSession, LaunchSource source, ActionData actionData, PlayStoreStatus playStoreStatus}) {
     if (id != null) this.id = id;
     if (items != null) this.items = items;
     if (url != null) this.url = url;
@@ -107,6 +151,8 @@ class LaunchData extends ChromeObject {
     if (isKioskSession != null) this.isKioskSession = isKioskSession;
     if (isPublicSession != null) this.isPublicSession = isPublicSession;
     if (source != null) this.source = source;
+    if (actionData != null) this.actionData = actionData;
+    if (playStoreStatus != null) this.playStoreStatus = playStoreStatus;
   }
   LaunchData.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -130,6 +176,12 @@ class LaunchData extends ChromeObject {
 
   LaunchSource get source => _createLaunchSource(jsProxy['source']);
   set source(LaunchSource value) => jsProxy['source'] = jsify(value);
+
+  ActionData get actionData => _createActionData(jsProxy['actionData']);
+  set actionData(ActionData value) => jsProxy['actionData'] = jsify(value);
+
+  PlayStoreStatus get playStoreStatus => _createPlayStoreStatus(jsProxy['playStoreStatus']);
+  set playStoreStatus(PlayStoreStatus value) => jsProxy['playStoreStatus'] = jsify(value);
 }
 
 /**
@@ -170,8 +222,11 @@ class EmbedRequest extends ChromeObject {
 EmbedRequest _createEmbedRequest(JsObject jsProxy) => jsProxy == null ? null : new EmbedRequest.fromProxy(jsProxy);
 LaunchData _createLaunchData(JsObject jsProxy) => jsProxy == null ? null : new LaunchData.fromProxy(jsProxy);
 Entry _createEntry(JsObject jsProxy) => jsProxy == null ? null : new CrEntry.fromProxy(jsProxy);
+ActionType _createActionType(String value) => ActionType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 LaunchItem _createLaunchItem(JsObject jsProxy) => jsProxy == null ? null : new LaunchItem.fromProxy(jsProxy);
 LaunchSource _createLaunchSource(String value) => LaunchSource.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+ActionData _createActionData(JsObject jsProxy) => jsProxy == null ? null : new ActionData.fromProxy(jsProxy);
+PlayStoreStatus _createPlayStoreStatus(String value) => PlayStoreStatus.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 
 /**
  * Use the `chrome.app.window` API to create windows. Windows have an optional
@@ -204,9 +259,6 @@ class _ChromeAppWindow extends ChromeApi {
   Stream get onAlphaEnabledChanged => _onAlphaEnabledChanged.stream;
   ChromeStreamController _onAlphaEnabledChanged;
 
-  Stream get onWindowFirstShown => _onWindowFirstShown.stream;
-  ChromeStreamController _onWindowFirstShown;
-
   _ChromeAppWindow._() {
     var getApi = () => _app_window;
     _onBoundsChanged = new ChromeStreamController.noArgs(getApi, 'onBoundsChanged');
@@ -216,7 +268,6 @@ class _ChromeAppWindow extends ChromeApi {
     _onMinimized = new ChromeStreamController.noArgs(getApi, 'onMinimized');
     _onRestored = new ChromeStreamController.noArgs(getApi, 'onRestored');
     _onAlphaEnabledChanged = new ChromeStreamController.noArgs(getApi, 'onAlphaEnabledChanged');
-    _onWindowFirstShown = new ChromeStreamController.noArgs(getApi, 'onWindowFirstShown');
   }
 
   bool get available => _app_window != null;
@@ -427,7 +478,7 @@ class FrameOptions extends ChromeObject {
 }
 
 class CreateWindowOptions extends ChromeObject {
-  CreateWindowOptions({String id, BoundsSpecification innerBounds, BoundsSpecification outerBounds, int defaultWidth, int defaultHeight, int defaultLeft, int defaultTop, int width, int height, int left, int top, int minWidth, int minHeight, int maxWidth, int maxHeight, WindowType type, bool ime, var frame, ContentBounds bounds, bool alphaEnabled, State state, bool hidden, bool resizable, bool singleton, bool alwaysOnTop, bool focused, bool visibleOnAllWorkspaces}) {
+  CreateWindowOptions({String id, BoundsSpecification innerBounds, BoundsSpecification outerBounds, int defaultWidth, int defaultHeight, int defaultLeft, int defaultTop, int width, int height, int left, int top, int minWidth, int minHeight, int maxWidth, int maxHeight, WindowType type, bool ime, bool showInShelf, String icon, var frame, ContentBounds bounds, bool alphaEnabled, State state, bool hidden, bool resizable, bool singleton, bool alwaysOnTop, bool focused, bool visibleOnAllWorkspaces}) {
     if (id != null) this.id = id;
     if (innerBounds != null) this.innerBounds = innerBounds;
     if (outerBounds != null) this.outerBounds = outerBounds;
@@ -445,6 +496,8 @@ class CreateWindowOptions extends ChromeObject {
     if (maxHeight != null) this.maxHeight = maxHeight;
     if (type != null) this.type = type;
     if (ime != null) this.ime = ime;
+    if (showInShelf != null) this.showInShelf = showInShelf;
+    if (icon != null) this.icon = icon;
     if (frame != null) this.frame = frame;
     if (bounds != null) this.bounds = bounds;
     if (alphaEnabled != null) this.alphaEnabled = alphaEnabled;
@@ -509,6 +562,12 @@ class CreateWindowOptions extends ChromeObject {
   bool get ime => jsProxy['ime'];
   set ime(bool value) => jsProxy['ime'] = value;
 
+  bool get showInShelf => jsProxy['showInShelf'];
+  set showInShelf(bool value) => jsProxy['showInShelf'] = value;
+
+  String get icon => jsProxy['icon'];
+  set icon(String value) => jsProxy['icon'] = value;
+
   dynamic get frame => jsProxy['frame'];
   set frame(var value) => jsProxy['frame'] = jsify(value);
 
@@ -541,11 +600,10 @@ class CreateWindowOptions extends ChromeObject {
 }
 
 class _AppWindow extends ChromeObject {
-  _AppWindow({bool hasFrameColor, int activeFrameColor, int inactiveFrameColor, bool firstShowHasHappened, Window contentWindow, String id, Bounds innerBounds, Bounds outerBounds}) {
+  _AppWindow({bool hasFrameColor, int activeFrameColor, int inactiveFrameColor, Window contentWindow, String id, Bounds innerBounds, Bounds outerBounds}) {
     if (hasFrameColor != null) this.hasFrameColor = hasFrameColor;
     if (activeFrameColor != null) this.activeFrameColor = activeFrameColor;
     if (inactiveFrameColor != null) this.inactiveFrameColor = inactiveFrameColor;
-    if (firstShowHasHappened != null) this.firstShowHasHappened = firstShowHasHappened;
     if (contentWindow != null) this.contentWindow = contentWindow;
     if (id != null) this.id = id;
     if (innerBounds != null) this.innerBounds = innerBounds;
@@ -561,9 +619,6 @@ class _AppWindow extends ChromeObject {
 
   int get inactiveFrameColor => jsProxy['inactiveFrameColor'];
   set inactiveFrameColor(int value) => jsProxy['inactiveFrameColor'] = value;
-
-  bool get firstShowHasHappened => jsProxy['firstShowHasHappened'];
-  set firstShowHasHappened(bool value) => jsProxy['firstShowHasHappened'] = value;
 
   Window get contentWindow => _createWindow(jsProxy['contentWindow']);
   set contentWindow(Window value) => jsProxy['contentWindow'] = jsify(value);

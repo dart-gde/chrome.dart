@@ -3,17 +3,8 @@
 // found in the LICENSE file.
 
 // This features file defines manifest keys implemented under src/chrome.
-// See extensions/common/features/* to understand this file, in particular
-// feature.h, simple_feature.h, and base_feature_provider.h.
-
-// To add a new whitelisted ID, SHA-1 it and force it to uppercase. In Bash:
-//
-// $ echo -n "aaaabbbbccccddddeeeeffffgggghhhh" | \
-// sha1sum | tr '[:lower:]' '[:upper:]'
-// 9A0417016F345C934A1A88F55CA17C05014EEEBA  -
-//
-// Google employees: please update http://go/chrome-api-whitelist to map
-// hashes back to ids.
+// See chrome/common/extensions/api/_features.md to understand this file, as
+// well as feature.h, simple_feature.h, and base_feature_provider.h.
 
 {
   "about_page": {
@@ -54,15 +45,11 @@
     "channel": "stable",
     "extension_types": ["extension"]
   },
-  "chrome_settings_overrides": [{
+  "chrome_settings_overrides": {
     "channel": "stable",
     "extension_types": ["extension"],
-    "platforms": ["win"]
-  }, {
-    "channel": "trunk",
-    "extension_types": ["extension"],
-    "platforms": ["mac"]
-  }],
+    "platforms": ["win", "mac"]
+  },
   "chrome_ui_overrides": [{
     "channel": "dev",
     "extension_types": ["extension"]
@@ -93,8 +80,7 @@
     "channel": "stable",
     "extension_types": [
       "extension", "legacy_packaged_app", "hosted_app"
-    ],
-    "no_doc": true
+    ]
   },
   "event_rules": {
     "channel": "stable",
@@ -159,10 +145,18 @@
       "location": "component"
     }
   ],
-  "file_system_provider_capabilities": {
+  "file_system_provider_capabilities": [{
     "channel": "stable",
     "extension_types": ["extension", "platform_app"]
-  },
+  }, {
+    "channel": "stable",
+    "extension_types": ["legacy_packaged_app"],
+    "platforms": ["chromeos"],
+    "whitelist": [
+      "0EA6B717932AD64C469C1CCB6911457733295907",  // http://crbug.com/673004
+      "58B0C2968C335964D5433E89CA4D86628A0E3D4B"   // http://crbug.com/673004
+    ]
+  }],
   "homepage_url": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"]
@@ -200,12 +194,6 @@
   "page_action": {
     "channel": "stable",
     "extension_types": ["extension"]
-  },
-  "permissions": {
-    "channel": "stable",
-    "extension_types": [
-      "extension", "legacy_packaged_app", "hosted_app", "platform_app"
-    ]
   },
   "platforms": {
     "channel": "stable",

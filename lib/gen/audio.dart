@@ -55,16 +55,16 @@ class ChromeAudio extends ChromeApi {
   }
 
   /**
-   * Sets the active devices to the devices specified by [ids]. It can pass in
-   * the "complete" active device id list of either input devices, or output
-   * devices, or both. If only input device ids are passed in, it will only
-   * change the input devices' active status, output devices will NOT be
-   * changed; similarly for the case if only output devices are passed. If the
-   * devices specified in [new_active_ids] are already active, they will remain
-   * active. Otherwise, the old active devices will be de-activated before we
-   * activate the new devices with the same type(input/output).
+   * Sets lists of active input and/or output devices.
+   * [ids]: <p>Specifies IDs of devices that should be active. If either the
+   * input or output list is not set, devices in that category are unaffected.
+   * </p> <p>It is an error to pass in a non-existent device ID.</p>
+   * <p><b>NOTE:</b> While the method signature allows device IDs to be passed
+   * as a list of strings, this method of setting active devices is deprecated
+   * and should not be relied upon to work. Please use $(ref: DeviceIdLists)
+   * instead. </p>
    */
-  Future setActiveDevices(List<String> ids) {
+  Future setActiveDevices(dynamic ids) {
     if (_audio == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter.noArgs();
@@ -214,6 +214,20 @@ class DeviceProperties extends ChromeObject {
 
   num get gain => jsProxy['gain'];
   set gain(num value) => jsProxy['gain'] = jsify(value);
+}
+
+class DeviceIdLists extends ChromeObject {
+  DeviceIdLists({List<String> input, List<String> output}) {
+    if (input != null) this.input = input;
+    if (output != null) this.output = output;
+  }
+  DeviceIdLists.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  List<String> get input => listify(jsProxy['input']);
+  set input(List<String> value) => jsProxy['input'] = jsify(value);
+
+  List<String> get output => listify(jsProxy['output']);
+  set output(List<String> value) => jsProxy['output'] = jsify(value);
 }
 
 /**
