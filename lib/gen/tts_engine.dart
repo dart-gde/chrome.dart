@@ -110,14 +110,5 @@ class OnSpeakEvent {
   OnSpeakEvent(this.utterance, this.options, this.sendTtsEvent);
 }
 
-class VoiceGender extends ChromeEnum {
-  static const VoiceGender MALE = const VoiceGender._('male');
-  static const VoiceGender FEMALE = const VoiceGender._('female');
-
-  static const List<VoiceGender> VALUES = const[MALE, FEMALE];
-
-  const VoiceGender._(String str): super(str);
-}
-
 OnSpeakEvent _createOnSpeakEvent(String utterance, JsObject options, JsObject sendTtsEvent) =>
     new OnSpeakEvent(utterance, mapify(options), sendTtsEvent);

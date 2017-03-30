@@ -18,12 +18,15 @@ final ChromeContextMenus contextMenus = new ChromeContextMenus._();
 class ChromeContextMenus extends ChromeApi {
   JsObject get _contextMenus => chrome['contextMenus'];
 
-  Stream get onClicked => _onClicked.stream;
-  ChromeStreamController _onClicked;
+  /**
+   * Fired when a context menu item is clicked.
+   */
+  Stream<OnClickedEvent> get onClicked => _onClicked.stream;
+  ChromeStreamController<OnClickedEvent> _onClicked;
 
   ChromeContextMenus._() {
     var getApi = () => _contextMenus;
-    _onClicked = new ChromeStreamController.noArgs(getApi, 'onClicked');
+    _onClicked = new ChromeStreamController<OnClickedEvent>.twoArgs(getApi, 'onClicked', _createOnClickedEvent);
   }
 
   bool get available => _contextMenus != null;
@@ -98,6 +101,29 @@ class ChromeContextMenus extends ChromeApi {
 }
 
 /**
+ * Fired when a context menu item is clicked.
+ */
+class OnClickedEvent {
+  /**
+   * Information about the item clicked and the context where the click
+   * happened.
+   */
+  final OnClickData info;
+
+  /**
+   * The details of the tab where the click took place. If the click did not
+   * take place in a tab, this parameter will be missing.
+   * `optional`
+   * 
+   * The details of the tab where the click took place. If the click did not
+   * take place in a tab, this parameter will be missing.
+   */
+  final Tab tab;
+
+  OnClickedEvent(this.info, this.tab);
+}
+
+/**
  * The different contexts a menu can appear in. Specifying 'all' is equivalent
  * to the combination of all other contexts except for 'launcher'. The
  * 'launcher' context is only supported by apps and is used to add menu items to
@@ -136,6 +162,107 @@ class ItemType extends ChromeEnum {
   static const List<ItemType> VALUES = const[NORMAL, CHECKBOX, RADIO, SEPARATOR];
 
   const ItemType._(String str): super(str);
+}
+
+/**
+ * Information sent when a context menu item is clicked.
+ */
+class OnClickData extends ChromeObject {
+  OnClickData({var menuItemId, var parentMenuItemId, String mediaType, String linkUrl, String srcUrl, String pageUrl, String frameUrl, int frameId, String selectionText, bool editable, bool wasChecked, bool checked}) {
+    if (menuItemId != null) this.menuItemId = menuItemId;
+    if (parentMenuItemId != null) this.parentMenuItemId = parentMenuItemId;
+    if (mediaType != null) this.mediaType = mediaType;
+    if (linkUrl != null) this.linkUrl = linkUrl;
+    if (srcUrl != null) this.srcUrl = srcUrl;
+    if (pageUrl != null) this.pageUrl = pageUrl;
+    if (frameUrl != null) this.frameUrl = frameUrl;
+    if (frameId != null) this.frameId = frameId;
+    if (selectionText != null) this.selectionText = selectionText;
+    if (editable != null) this.editable = editable;
+    if (wasChecked != null) this.wasChecked = wasChecked;
+    if (checked != null) this.checked = checked;
+  }
+  OnClickData.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  /**
+   * The ID of the menu item that was clicked.
+   */
+  dynamic get menuItemId => jsProxy['menuItemId'];
+  set menuItemId(var value) => jsProxy['menuItemId'] = jsify(value);
+
+  /**
+   * The parent ID, if any, for the item clicked.
+   */
+  dynamic get parentMenuItemId => jsProxy['parentMenuItemId'];
+  set parentMenuItemId(var value) => jsProxy['parentMenuItemId'] = jsify(value);
+
+  /**
+   * One of 'image', 'video', or 'audio' if the context menu was activated on
+   * one of these types of elements.
+   */
+  String get mediaType => jsProxy['mediaType'];
+  set mediaType(String value) => jsProxy['mediaType'] = value;
+
+  /**
+   * If the element is a link, the URL it points to.
+   */
+  String get linkUrl => jsProxy['linkUrl'];
+  set linkUrl(String value) => jsProxy['linkUrl'] = value;
+
+  /**
+   * Will be present for elements with a 'src' URL.
+   */
+  String get srcUrl => jsProxy['srcUrl'];
+  set srcUrl(String value) => jsProxy['srcUrl'] = value;
+
+  /**
+   * The URL of the page where the menu item was clicked. This property is not
+   * set if the click occured in a context where there is no current page, such
+   * as in a launcher context menu.
+   */
+  String get pageUrl => jsProxy['pageUrl'];
+  set pageUrl(String value) => jsProxy['pageUrl'] = value;
+
+  /**
+   * The URL of the frame of the element where the context menu was clicked, if
+   * it was in a frame.
+   */
+  String get frameUrl => jsProxy['frameUrl'];
+  set frameUrl(String value) => jsProxy['frameUrl'] = value;
+
+  /**
+   * The [ID of the frame](webNavigation#frame_ids) of the element where the
+   * context menu was clicked, if it was in a frame.
+   */
+  int get frameId => jsProxy['frameId'];
+  set frameId(int value) => jsProxy['frameId'] = value;
+
+  /**
+   * The text for the context selection, if any.
+   */
+  String get selectionText => jsProxy['selectionText'];
+  set selectionText(String value) => jsProxy['selectionText'] = value;
+
+  /**
+   * A flag indicating whether the element is editable (text input, textarea,
+   * etc.).
+   */
+  bool get editable => jsProxy['editable'];
+  set editable(bool value) => jsProxy['editable'] = value;
+
+  /**
+   * A flag indicating the state of a checkbox or radio item before it was
+   * clicked.
+   */
+  bool get wasChecked => jsProxy['wasChecked'];
+  set wasChecked(bool value) => jsProxy['wasChecked'] = value;
+
+  /**
+   * A flag indicating the state of a checkbox or radio item after it is
+   * clicked.
+   */
+  bool get checked => jsProxy['checked'];
+  set checked(bool value) => jsProxy['checked'] = value;
 }
 
 class ContextMenusCreateParams extends ChromeObject {
@@ -267,5 +394,9 @@ class ContextMenusUpdateParams extends ChromeObject {
   set enabled(bool value) => jsProxy['enabled'] = value;
 }
 
+OnClickedEvent _createOnClickedEvent(JsObject info, JsObject tab) =>
+    new OnClickedEvent(_createOnClickData(info), _createTab(tab));
 ItemType _createItemType(String value) => ItemType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ContextType _createContextType(String value) => ContextType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+OnClickData _createOnClickData(JsObject jsProxy) => jsProxy == null ? null : new OnClickData.fromProxy(jsProxy);
+Tab _createTab(JsObject jsProxy) => jsProxy == null ? null : new Tab.fromProxy(jsProxy);

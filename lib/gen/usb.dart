@@ -345,8 +345,8 @@ class TransferType extends ChromeEnum {
 }
 
 /**
- * For isochronous mode, SynchronizationType and UsageType map to their
- * namesakes within the USB specification.
+ * For interrupt and isochronous modes, SynchronizationType and UsageType map to
+ * their namesakes within the USB specification.
  */
 class SynchronizationType extends ChromeEnum {
   static const SynchronizationType ASYNCHRONOUS = const SynchronizationType._('asynchronous');
@@ -362,8 +362,10 @@ class UsageType extends ChromeEnum {
   static const UsageType DATA = const UsageType._('data');
   static const UsageType FEEDBACK = const UsageType._('feedback');
   static const UsageType EXPLICIT_FEEDBACK = const UsageType._('explicitFeedback');
+  static const UsageType PERIODIC = const UsageType._('periodic');
+  static const UsageType NOTIFICATION = const UsageType._('notification');
 
-  static const List<UsageType> VALUES = const[DATA, FEEDBACK, EXPLICIT_FEEDBACK];
+  static const List<UsageType> VALUES = const[DATA, FEEDBACK, EXPLICIT_FEEDBACK, PERIODIC, NOTIFICATION];
 
   const UsageType._(String str): super(str);
 }
