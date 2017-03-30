@@ -1,5 +1,8 @@
 # Changelog - chrome.dart
 
+## 0.9.31 2017-03-30
+- bug fixes for the ContextMenu and Runtime libraries
+
 ## 0.9.3 2017-03-27
 - updated to M57, with no new APIs
 
