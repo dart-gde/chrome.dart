@@ -3,7 +3,7 @@ library chrome_model_test;
 
 import 'package:test/test.dart';
 
-import '../tool/lib/chrome_model.dart';
+import '../lib/chrome_model.dart';
 
 void main() {
   group('chrome_model.ChromeType', chromeTypeTests);

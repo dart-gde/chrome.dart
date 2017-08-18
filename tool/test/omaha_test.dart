@@ -5,8 +5,8 @@ import 'dart:async';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../tool/src/omaha.dart';
-import '../tool/src/simple_http_client.dart';
+import '../src/omaha.dart';
+import '../src/simple_http_client.dart';
 
 void main() => defineTests();
 

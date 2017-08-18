@@ -3,7 +3,7 @@ library src_gen_test;
 
 import 'package:test/test.dart';
 
-import '../tool/src/src_gen.dart';
+import '../src/src_gen.dart';
 
 main() {
   group('generate_dart', () {

@@ -2,8 +2,8 @@ library chrome_idl_test;
 
 import 'package:test/test.dart';
 
-import '../tool/lib/chrome_idl_parser.dart';
-import '../tool/lib/chrome_idl_model.dart';
+import '../lib/chrome_idl_parser.dart';
+import '../lib/chrome_idl_model.dart';
 
 ChromeIDLParser chromeIDLParser;
 

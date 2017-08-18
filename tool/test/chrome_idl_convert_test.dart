@@ -2,10 +2,10 @@ library chrome_idl_convert_test;
 
 import 'package:test/test.dart';
 
-import '../tool/lib/chrome_idl_parser.dart';
-import '../tool/lib/chrome_idl_convert.dart';
-import '../tool/lib/chrome_idl_model.dart';
-import '../tool/lib/chrome_model.dart';
+import '../lib/chrome_idl_parser.dart';
+import '../lib/chrome_idl_convert.dart';
+import '../lib/chrome_idl_model.dart';
+import '../lib/chrome_model.dart';
 
 ChromeIDLParser chromeIDLParser;
 
