@@ -6,9 +6,9 @@ import 'dart:mirrors';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
-import '../tool/chrome_idl_parser.dart';
-import '../tool/chrome_idl_convert.dart';
-import '../tool/chrome_idl_model.dart';
+import '../tool/lib/chrome_idl_parser.dart';
+import '../tool/lib/chrome_idl_convert.dart';
+import '../tool/lib/chrome_idl_model.dart';
 
 void main() {
   final String testDirectory = path.dirname(

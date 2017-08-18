@@ -5,7 +5,7 @@
  */
 library chrome_model;
 
-import 'src/utils.dart';
+import '../src/utils.dart';
 
 abstract class ChromeElement {
   String documentation;

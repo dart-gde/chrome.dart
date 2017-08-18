@@ -3,8 +3,8 @@ library download_idls;
 import 'dart:async';
 import 'dart:io';
 
-import 'src/googlesource.dart';
-import 'src/omaha.dart';
+import '../src/googlesource.dart';
+import '../src/omaha.dart';
 
 main() => new IdlDownloader().downloadIdls();
 

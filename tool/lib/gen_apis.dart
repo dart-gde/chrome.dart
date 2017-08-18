@@ -8,8 +8,8 @@ import 'package:path/path.dart' as pathos;
 
 import 'gen_api.dart';
 import 'overrides.dart';
-import 'src/src_gen.dart';
-import 'src/utils.dart';
+import '../src/src_gen.dart';
+import '../src/utils.dart';
 
 // TODO: parse _api_features.json and add permissions info to the dartdoc for
 // the libraries

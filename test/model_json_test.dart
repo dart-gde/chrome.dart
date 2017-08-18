@@ -7,8 +7,8 @@ import 'dart:mirrors';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
-import '../tool/json_model.dart' as json_model;
-import '../tool/json_parser.dart' as json_parser;
+import '../tool/lib/json_model.dart' as json_model;
+import '../tool/lib/json_parser.dart' as json_parser;
 
 void main() {
   final String testDirectory = path

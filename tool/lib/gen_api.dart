@@ -11,8 +11,8 @@ import 'chrome_idl_parser.dart' as chrome_idl_parser;
 import 'chrome_idl_convert.dart' as chrome_idl_convert;
 import 'chrome_idl_model.dart' as chrome_idl_model;
 import 'overrides.dart';
-import 'src/src_gen.dart';
-import 'src/utils.dart';
+import '../src/src_gen.dart';
+import '../src/utils.dart';
 
 void main(List<String> args) {
   ArgParser parser = _createArgsParser();
