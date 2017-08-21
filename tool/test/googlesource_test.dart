@@ -5,8 +5,8 @@ import 'dart:convert';
 
 import 'package:test/test.dart';
 
-import '../tool/src/googlesource.dart';
-import '../tool/src/simple_http_client.dart';
+import '../src/googlesource.dart';
+import '../src/simple_http_client.dart';
 
 void main() => defineTests();
 

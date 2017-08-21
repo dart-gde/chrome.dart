@@ -6,9 +6,9 @@ import 'dart:mirrors';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
-import '../tool/chrome_idl_parser.dart';
-import '../tool/chrome_idl_convert.dart';
-import '../tool/chrome_idl_model.dart';
+import '../lib/chrome_idl_parser.dart';
+import '../lib/chrome_idl_convert.dart';
+import '../lib/chrome_idl_model.dart';
 
 void main() {
   final String testDirectory = path.dirname(
@@ -16,9 +16,13 @@ void main() {
 
   group('ChromeIDLParser', () {
     bool idlFileExtTest(FileSystemEntity file) => file.path.endsWith('.idl');
+    var idlPath = path.joinAll(path.split(testDirectory)
+      ..removeLast()
+      ..removeLast()
+      ..add('idl'));
 
     Iterable<FileSystemEntity> chromeIdlFileEntities =
-        new Directory(path.join(testDirectory, '..', 'idl'))
+        new Directory(idlPath)
             .listSync(recursive: false, followLinks: false)
             .where(idlFileExtTest);
 

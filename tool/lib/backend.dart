@@ -3,8 +3,8 @@ library backend;
 
 import 'chrome_model.dart';
 import 'overrides.dart';
-import 'src/src_gen.dart';
-import 'src/utils.dart';
+import '../src/src_gen.dart';
+import '../src/utils.dart';
 
 /**
  * An abstract superclass for anything that wants to translate from an IDL model

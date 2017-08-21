@@ -3,7 +3,8 @@ set -o xtrace
 set -e 
 
 # Ensure that the code is warning free.
-dartanalyzer --fatal-warnings tool/gen_apis.dart
+dartanalyzer --fatal-warnings tool/lib/gen_apis.dart
+dartanalyzer --fatal-warnings tool/test/all.dart
 dartanalyzer --fatal-warnings test/all.dart
 
 # TODO(adam): https://github.com/dart-gde/chrome.dart/issues/196

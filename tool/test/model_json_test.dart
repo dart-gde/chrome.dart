@@ -7,8 +7,8 @@ import 'dart:mirrors';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
-import '../tool/json_model.dart' as json_model;
-import '../tool/json_parser.dart' as json_parser;
+import '../lib/json_model.dart' as json_model;
+import '../lib/json_parser.dart' as json_parser;
 
 void main() {
   final String testDirectory = path
@@ -20,10 +20,13 @@ void main() {
 
     // The unittest script likes to be run with the cwd set to the project root.
     if (testFile.existsSync()) {
-      Iterable<File> jsonFiles =
-          new Directory(path.join(testDirectory, '..', 'idl'))
-              .listSync(recursive: true, followLinks: false)
-              .where((f) => f.path.endsWith('.json'));
+      var idlPath = path.joinAll(path.split(testDirectory)
+        ..removeLast()
+        ..removeLast()
+        ..add('idl'));
+      Iterable<File> jsonFiles = new Directory(idlPath)
+          .listSync(recursive: true, followLinks: false)
+          .where((f) => f.path.endsWith('.json'));
 
       for (File file in jsonFiles) {
         // skip _api_features.json, _manifest_features.json, _permission_features.json

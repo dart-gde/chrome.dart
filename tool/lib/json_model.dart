@@ -2,7 +2,7 @@
 library model_json;
 
 import 'chrome_model.dart';
-import 'src/utils.dart';
+import '../src/utils.dart';
 
 abstract class JsonObject {
   final Map<String, dynamic> json;

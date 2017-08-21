@@ -2,7 +2,7 @@ library chrome_idl_convert;
 
 import "chrome_idl_model.dart";
 import 'chrome_model.dart';
-import 'src/utils.dart';
+import '../src/utils.dart';
 
 // TODO: style nit, use .. notation more.
 

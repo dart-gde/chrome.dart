@@ -2,7 +2,7 @@ library tag_matcher_test;
 
 import 'package:test/test.dart';
 
-import '../tool/src/tag_matcher.dart';
+import '../src/tag_matcher.dart';
 
 void main() => defineTests();
 

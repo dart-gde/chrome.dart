@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../tool/src/simple_http_client.dart';
+import '../src/simple_http_client.dart';
 
 void main() => defineTests();
 
