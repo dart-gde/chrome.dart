@@ -25,7 +25,7 @@ class ChromeTransformer extends Transformer {
 
   // TODO: Remove the [assetOrId] hack.
   Future<bool> isPrimary(assetOrId) {
-    AssetId id = assetOrId is Asset ? assetOrId.id : assetOrId;
+    AssetId id = assetOrId is Asset ? (assetOrId as Asset).id : assetOrId;
     return new Future.value(id.extension == '.html');
   }
 
