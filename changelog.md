@@ -1,5 +1,8 @@
 # Changelog - chrome.dart
 
+## 0.9.32 2017-08-23
+- fix to transformers for strong mode
+
 ## 0.9.32 2017-08-21
 - fixes package structure to enable ddc
 
