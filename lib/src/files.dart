@@ -8,10 +8,9 @@ import 'dart:js';
 import 'dart:html' show
     Blob,
     DirectoryEntry, DirectoryReader,
-    Entry, EventTarget,
-    File, FileEntry, FileError, FileReader, FileSystem, FileWriter,
-    Metadata,
-    ProgressEvent;
+    Entry,
+    File, FileEntry, FileError, FileSystem, FileWriter,
+    Metadata;
 
 export 'dart:html' show
     Blob,
