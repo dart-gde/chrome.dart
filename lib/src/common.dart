@@ -49,9 +49,9 @@ dynamic jsify(dynamic obj) {
   if (obj == null || obj is num || obj is String) {
     return obj;
   } else if (obj is ChromeObject) {
-    return (obj as ChromeObject).jsProxy;
+    return obj.jsProxy;
   } else if (obj is ChromeEnum) {
-    return (obj as ChromeEnum).value;
+    return obj.value;
   } else if (obj is Map) {
     // Do a deep convert.
     Map m = {};
@@ -61,7 +61,7 @@ dynamic jsify(dynamic obj) {
     return new JsObject.jsify(m);
   } else if (obj is Iterable) {
     // Do a deep convert.
-    return new JsArray.from((obj as Iterable).map(jsify));
+    return new JsArray.from(obj).map(jsify);
   } else {
     return obj;
   }

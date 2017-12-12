@@ -9,7 +9,6 @@
 library chrome.runtime;
 
 import '../src/files.dart';
-import 'events.dart';
 import 'tabs.dart';
 import 'windows.dart';
 import '../src/common.dart';
