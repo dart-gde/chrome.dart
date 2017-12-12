@@ -24,7 +24,7 @@ void defineTests() {
       mockResponse = new MockHttpClientResponse();
 
       when(mockClient.getUrl(any)).thenReturn(mockRequest);
-      when(mockRequest.done).thenReturn(new Future(() => mockResponse));
+      when(mockRequest.done).thenAnswer((_) => new Future(() => mockResponse));
       when(mockResponse.transform(any)).thenAnswer((_) => html);
 
       simpleClient = new SimpleHttpClient(client: mockClient);
