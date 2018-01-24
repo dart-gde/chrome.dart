@@ -78,7 +78,7 @@ class ChromeCompleter<T> {
   Function _callback;
 
   ChromeCompleter.noArgs() {
-    this._callback = () {
+    this._callback = ([_]) {
       var le = lastError;
       if (le != null) {
         _completer.completeError(le);
