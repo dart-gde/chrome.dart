@@ -1,6 +1,6 @@
 # Changelog - chrome.dart
 
-## 0.9.33 2018-03-09
+## 0.9.34 2018-03-09
 - fixes issues with firefox and optional args
 
 ## 0.9.32 2017-08-23
