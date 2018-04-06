@@ -3,9 +3,9 @@ library chrome.src.files_exp;
 
 export 'dart:html' show
     Blob,
-    DirectoryEntry, DirectoryReader,
+    DirectoryEntry, DirectoryReader, DomException,
     Entry, EventTarget,
-    File, FileEntry, FileError, FileReader, FileSystem, FileWriter,
+    File, FileEntry, FileReader, FileSystem, FileWriter,
     Metadata,
     ProgressEvent;
 

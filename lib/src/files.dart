@@ -7,16 +7,16 @@ import 'dart:js';
 
 import 'dart:html' show
     Blob,
-    DirectoryEntry, DirectoryReader,
+    DirectoryEntry, DirectoryReader, DomException,
     Entry,
-    File, FileEntry, FileError, FileSystem, FileWriter,
+    File, FileEntry, FileSystem, FileWriter,
     Metadata;
 
 export 'dart:html' show
     Blob,
-    DirectoryEntry, DirectoryReader,
+    DirectoryEntry, DirectoryReader, DomException,
     Entry, EventTarget,
-    File, FileEntry, FileError, FileReader, FileSystem, FileWriter,
+    File, FileEntry, FileReader, FileSystem, FileWriter,
     Metadata,
     ProgressEvent;
 
@@ -427,7 +427,7 @@ class _ChromeCompleterWithError<T> {
   }
 }
 
-class CrFileError extends ChromeObject implements FileError {
+class CrFileError extends ChromeObject implements DomException {
   CrFileError.fromProxy(JsObject jsProxy) : super.fromProxy(jsProxy);
 
   int get code => jsProxy['code'];
