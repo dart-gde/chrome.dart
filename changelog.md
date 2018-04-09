@@ -1,6 +1,6 @@
 # Changelog - chrome.dart
 
-## 0.9.4 018-04-06
+## 0.9.4 2018-04-06
 - updated to be compatible with Chrome 63 IDL's.
 
 ## 0.9.34 2018-03-09
