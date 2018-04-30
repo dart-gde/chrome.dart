@@ -42,12 +42,19 @@ class ChromeOmnibox extends ChromeApi {
   Stream get onInputCancelled => _onInputCancelled.stream;
   ChromeStreamController _onInputCancelled;
 
+  /**
+   * User has deleted a suggested result.
+   */
+  Stream<String> get onDeleteSuggestion => _onDeleteSuggestion.stream;
+  ChromeStreamController<String> _onDeleteSuggestion;
+
   ChromeOmnibox._() {
     var getApi = () => _omnibox;
     _onInputStarted = new ChromeStreamController.noArgs(getApi, 'onInputStarted');
     _onInputChanged = new ChromeStreamController<OnInputChangedEvent>.twoArgs(getApi, 'onInputChanged', _createOnInputChangedEvent);
     _onInputEntered = new ChromeStreamController<OnInputEnteredEvent>.twoArgs(getApi, 'onInputEntered', _createOnInputEnteredEvent);
     _onInputCancelled = new ChromeStreamController.noArgs(getApi, 'onInputCancelled');
+    _onDeleteSuggestion = new ChromeStreamController<String>.oneArg(getApi, 'onDeleteSuggestion', selfConverter);
   }
 
   bool get available => _omnibox != null;
@@ -142,9 +149,10 @@ class OnInputEnteredDisposition extends ChromeEnum {
  * A suggest result.
  */
 class SuggestResult extends ChromeObject {
-  SuggestResult({String content, String description}) {
+  SuggestResult({String content, String description, bool deletable}) {
     if (content != null) this.content = content;
     if (description != null) this.description = description;
+    if (deletable != null) this.deletable = deletable;
   }
   SuggestResult.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -165,6 +173,12 @@ class SuggestResult extends ChromeObject {
    */
   String get description => jsProxy['description'];
   set description(String value) => jsProxy['description'] = value;
+
+  /**
+   * Whether the suggest result can be deleted by the user.
+   */
+  bool get deletable => jsProxy['deletable'];
+  set deletable(bool value) => jsProxy['deletable'] = value;
 }
 
 /**

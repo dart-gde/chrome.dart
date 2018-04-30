@@ -23,6 +23,7 @@
     "instanceId",
     "location",
     "mediaGalleries",
+    "networking.onc",
     "notifications",
     "permissions",
     "power",

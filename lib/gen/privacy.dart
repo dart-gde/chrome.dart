@@ -62,9 +62,10 @@ class NetworkPrivacy extends ChromeObject {
 
   /**
    * If enabled, Chrome attempts to speed up your web browsing experience by
-   * pre-resolving DNS entries, prerendering sites (`<link rel='prefetch'
-   * ...>`), and preemptively opening TCP and SSL connections to servers.  This
-   * preference's value is a boolean, defaulting to `true`.
+   * pre-resolving DNS entries and preemptively opening TCP and SSL connections
+   * to servers. This preference only affects actions taken by Chrome's internal
+   * prediction service. It does not affect webpage-initiated prefectches or
+   * preconnects. This preference's value is a boolean, defaulting to `true`.
    */
   ChromeSetting get networkPredictionEnabled => _createChromeSetting(jsProxy['networkPredictionEnabled']);
 
@@ -111,12 +112,6 @@ class ServicesPrivacy extends ChromeObject {
    * value is a boolean, defaulting to `true`.
    */
   ChromeSetting get autofillEnabled => _createChromeSetting(jsProxy['autofillEnabled']);
-
-  /**
-   * If enabled, Chrome will enable 'OK, Google' to start a voice search. This
-   * preference's value is a boolean, defaulting to `true`.
-   */
-  ChromeSetting get hotwordSearchEnabled => _createChromeSetting(jsProxy['hotwordSearchEnabled']);
 
   /**
    * If enabled, the password manager will ask if you want to save passwords.
@@ -183,6 +178,13 @@ class WebsitesPrivacy extends ChromeObject {
    * the default value is `true`.
    */
   ChromeSetting get referrersEnabled => _createChromeSetting(jsProxy['referrersEnabled']);
+
+  /**
+   * If enabled, Chrome sends 'Do Not Track' (`DNT: 1`) header with your
+   * requests. The value of this preference is of type boolean, and the default
+   * value is `false`.
+   */
+  ChromeSetting get doNotTrackEnabled => _createChromeSetting(jsProxy['doNotTrackEnabled']);
 
   /**
    * *Available on Windows and ChromeOS only*: If enabled, Chrome provides a

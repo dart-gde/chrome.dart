@@ -188,9 +188,8 @@ class TargetInfoType extends ChromeEnum {
 class DetachReason extends ChromeEnum {
   static const DetachReason TARGET_CLOSED = const DetachReason._('target_closed');
   static const DetachReason CANCELED_BY_USER = const DetachReason._('canceled_by_user');
-  static const DetachReason REPLACED_WITH_DEVTOOLS = const DetachReason._('replaced_with_devtools');
 
-  static const List<DetachReason> VALUES = const[TARGET_CLOSED, CANCELED_BY_USER, REPLACED_WITH_DEVTOOLS];
+  static const List<DetachReason> VALUES = const[TARGET_CLOSED, CANCELED_BY_USER];
 
   const DetachReason._(String str): super(str);
 }

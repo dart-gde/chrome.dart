@@ -140,24 +140,24 @@ class VendorIdSource extends ChromeEnum {
 /**
  * Common device types recognized by Chrome.
  */
-class DeviceType extends ChromeEnum {
-  static const DeviceType COMPUTER = const DeviceType._('computer');
-  static const DeviceType PHONE = const DeviceType._('phone');
-  static const DeviceType MODEM = const DeviceType._('modem');
-  static const DeviceType AUDIO = const DeviceType._('audio');
-  static const DeviceType CAR_AUDIO = const DeviceType._('carAudio');
-  static const DeviceType VIDEO = const DeviceType._('video');
-  static const DeviceType PERIPHERAL = const DeviceType._('peripheral');
-  static const DeviceType JOYSTICK = const DeviceType._('joystick');
-  static const DeviceType GAMEPAD = const DeviceType._('gamepad');
-  static const DeviceType KEYBOARD = const DeviceType._('keyboard');
-  static const DeviceType MOUSE = const DeviceType._('mouse');
-  static const DeviceType TABLET = const DeviceType._('tablet');
-  static const DeviceType KEYBOARD_MOUSE_COMBO = const DeviceType._('keyboardMouseCombo');
+class BluetoothDeviceType extends ChromeEnum {
+  static const BluetoothDeviceType COMPUTER = const BluetoothDeviceType._('computer');
+  static const BluetoothDeviceType PHONE = const BluetoothDeviceType._('phone');
+  static const BluetoothDeviceType MODEM = const BluetoothDeviceType._('modem');
+  static const BluetoothDeviceType AUDIO = const BluetoothDeviceType._('audio');
+  static const BluetoothDeviceType CAR_AUDIO = const BluetoothDeviceType._('carAudio');
+  static const BluetoothDeviceType VIDEO = const BluetoothDeviceType._('video');
+  static const BluetoothDeviceType PERIPHERAL = const BluetoothDeviceType._('peripheral');
+  static const BluetoothDeviceType JOYSTICK = const BluetoothDeviceType._('joystick');
+  static const BluetoothDeviceType GAMEPAD = const BluetoothDeviceType._('gamepad');
+  static const BluetoothDeviceType KEYBOARD = const BluetoothDeviceType._('keyboard');
+  static const BluetoothDeviceType MOUSE = const BluetoothDeviceType._('mouse');
+  static const BluetoothDeviceType TABLET = const BluetoothDeviceType._('tablet');
+  static const BluetoothDeviceType KEYBOARD_MOUSE_COMBO = const BluetoothDeviceType._('keyboardMouseCombo');
 
-  static const List<DeviceType> VALUES = const[COMPUTER, PHONE, MODEM, AUDIO, CAR_AUDIO, VIDEO, PERIPHERAL, JOYSTICK, GAMEPAD, KEYBOARD, MOUSE, TABLET, KEYBOARD_MOUSE_COMBO];
+  static const List<BluetoothDeviceType> VALUES = const[COMPUTER, PHONE, MODEM, AUDIO, CAR_AUDIO, VIDEO, PERIPHERAL, JOYSTICK, GAMEPAD, KEYBOARD, MOUSE, TABLET, KEYBOARD_MOUSE_COMBO];
 
-  const DeviceType._(String str): super(str);
+  const BluetoothDeviceType._(String str): super(str);
 }
 
 /**
@@ -194,7 +194,7 @@ class AdapterState extends ChromeObject {
  * dictionary is also used in bluetooth_private.idl
  */
 class BluetoothDevice extends ChromeObject {
-  BluetoothDevice({String address, String name, int deviceClass, VendorIdSource vendorIdSource, int vendorId, int productId, int deviceId, DeviceType type, bool paired, bool connected, bool connecting, bool connectable, List<String> uuids, int inquiryRssi, int inquiryTxPower}) {
+  BluetoothDevice({String address, String name, int deviceClass, VendorIdSource vendorIdSource, int vendorId, int productId, int deviceId, BluetoothDeviceType type, bool paired, bool connected, bool connecting, bool connectable, List<String> uuids, int inquiryRssi, int inquiryTxPower}) {
     if (address != null) this.address = address;
     if (name != null) this.name = name;
     if (deviceClass != null) this.deviceClass = deviceClass;
@@ -234,8 +234,8 @@ class BluetoothDevice extends ChromeObject {
   int get deviceId => jsProxy['deviceId'];
   set deviceId(int value) => jsProxy['deviceId'] = value;
 
-  DeviceType get type => _createDeviceType(jsProxy['type']);
-  set type(DeviceType value) => jsProxy['type'] = jsify(value);
+  BluetoothDeviceType get type => _createDeviceType(jsProxy['type']);
+  set type(BluetoothDeviceType value) => jsProxy['type'] = jsify(value);
 
   bool get paired => jsProxy['paired'];
   set paired(bool value) => jsProxy['paired'] = value;
@@ -262,4 +262,4 @@ class BluetoothDevice extends ChromeObject {
 AdapterState _createAdapterState(JsObject jsProxy) => jsProxy == null ? null : new AdapterState.fromProxy(jsProxy);
 BluetoothDevice _createDevice(JsObject jsProxy) => jsProxy == null ? null : new BluetoothDevice.fromProxy(jsProxy);
 VendorIdSource _createVendorIdSource(String value) => VendorIdSource.VALUES.singleWhere((ChromeEnum e) => e.value == value);
-DeviceType _createDeviceType(String value) => DeviceType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+BluetoothDeviceType _createDeviceType(String value) => BluetoothDeviceType.VALUES.singleWhere((ChromeEnum e) => e.value == value);

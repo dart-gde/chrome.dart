@@ -317,7 +317,7 @@ class IconInfo extends ChromeObject {
  * Information about an installed extension, app, or theme.
  */
 class ExtensionInfo extends ChromeObject {
-  ExtensionInfo({String id, String name, String shortName, String description, String version, String versionName, bool mayDisable, bool enabled, ExtensionDisabledReason disabledReason, bool isApp, ExtensionType type, String appLaunchUrl, String homepageUrl, String updateUrl, bool offlineEnabled, String optionsUrl, List<IconInfo> icons, List<String> permissions, List<String> hostPermissions, ExtensionInstallType installType, LaunchType launchType, List<LaunchType> availableLaunchTypes}) {
+  ExtensionInfo({String id, String name, String shortName, String description, String version, String versionName, bool mayDisable, bool mayEnable, bool enabled, ExtensionDisabledReason disabledReason, bool isApp, ExtensionType type, String appLaunchUrl, String homepageUrl, String updateUrl, bool offlineEnabled, String optionsUrl, List<IconInfo> icons, List<String> permissions, List<String> hostPermissions, ExtensionInstallType installType, LaunchType launchType, List<LaunchType> availableLaunchTypes}) {
     if (id != null) this.id = id;
     if (name != null) this.name = name;
     if (shortName != null) this.shortName = shortName;
@@ -325,6 +325,7 @@ class ExtensionInfo extends ChromeObject {
     if (version != null) this.version = version;
     if (versionName != null) this.versionName = versionName;
     if (mayDisable != null) this.mayDisable = mayDisable;
+    if (mayEnable != null) this.mayEnable = mayEnable;
     if (enabled != null) this.enabled = enabled;
     if (disabledReason != null) this.disabledReason = disabledReason;
     if (isApp != null) this.isApp = isApp;
@@ -385,6 +386,13 @@ class ExtensionInfo extends ChromeObject {
    */
   bool get mayDisable => jsProxy['mayDisable'];
   set mayDisable(bool value) => jsProxy['mayDisable'] = value;
+
+  /**
+   * Whether this extension can be enabled by the user. This is only returned
+   * for extensions which are not enabled.
+   */
+  bool get mayEnable => jsProxy['mayEnable'];
+  set mayEnable(bool value) => jsProxy['mayEnable'] = value;
 
   /**
    * Whether it is currently enabled or disabled.

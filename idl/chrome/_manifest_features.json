@@ -4,19 +4,23 @@
 
 // This features file defines manifest keys implemented under src/chrome.
 // See chrome/common/extensions/api/_features.md to understand this file, as
-// well as feature.h, simple_feature.h, and base_feature_provider.h.
+// well as feature.h, simple_feature.h, and feature_provider.h.
 
 {
   "about_page": {
     "channel": "stable",
     "extension_types": ["shared_module"]
   },
+  "action": {
+    "channel": "trunk",
+    "extension_types": ["extension"]
+  },
   "app.icon_color": {
     "channel": "stable",
     "extension_types": ["hosted_app"]
   },
   "app.linked_icons": {
-    "channel": "dev",
+    "channel": "stable",
     "extension_types": ["hosted_app"]
   },
   "app.isolation": {
@@ -28,6 +32,10 @@
   "app.launch": {
     "channel": "stable",
     "extension_types": ["legacy_packaged_app", "hosted_app"]
+  },
+  "app.theme_color": {
+    "channel": "stable",
+    "extension_types": ["hosted_app"]
   },
   "author": {
     "channel": "stable",
@@ -103,8 +111,8 @@
       "channel": "stable",
       "extension_types": ["legacy_packaged_app", "platform_app"],
       "whitelist": [
-        "nmmhkkegccagdldgiimedpiccmgmieda",
-        "oedeeodfidgoollimchfdnbmhcpnklnd",  // ZIP unpacker.
+        "64291898C201DAF15B090EC4B9EC270BEB6BE6FF",
+        "1630F9F78E4527E19E5D9008B99847A8D690F65D",  // ZIP unpacker.
         "07BD6A765FFC289FF755D7CAB2893A40EC337FEC",  // http://crbug.com/453955
         "896B85CC7E913E11C34892C1425A093C0701D386",  // http://crbug.com/453955
         "11A01C82EF355E674E4F9728A801F5C3CB40D83F",  // http://crbug.com/453955
@@ -122,7 +130,7 @@
       "channel": "stable",
       "extension_types": ["legacy_packaged_app", "platform_app"],
       "whitelist": [
-        "nmmhkkegccagdldgiimedpiccmgmieda",
+        "64291898C201DAF15B090EC4B9EC270BEB6BE6FF",
         "07BD6A765FFC289FF755D7CAB2893A40EC337FEC",  // http://crbug.com/453955
         "896B85CC7E913E11C34892C1425A093C0701D386",  // http://crbug.com/453955
         "11A01C82EF355E674E4F9728A801F5C3CB40D83F",  // http://crbug.com/453955
@@ -199,10 +207,6 @@
     "channel": "stable",
     "extension_types": "all"
   },
-  "plugins": {
-    "channel": "stable",
-    "extension_types": ["extension", "legacy_packaged_app", "hosted_app"]
-  },
   "requirements": {
     "channel": "stable",
     "extension_types": [
@@ -259,6 +263,6 @@
   },
   "url_handlers": {
     "channel": "stable",
-    "extension_types": ["platform_app"]
+    "extension_types": ["hosted_app", "platform_app"]
   }
 }

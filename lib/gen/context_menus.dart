@@ -7,7 +7,6 @@
  */
 library chrome.contextMenus;
 
-import 'tabs.dart';
 import '../src/common.dart';
 
 /**
@@ -18,15 +17,12 @@ final ChromeContextMenus contextMenus = new ChromeContextMenus._();
 class ChromeContextMenus extends ChromeApi {
   JsObject get _contextMenus => chrome['contextMenus'];
 
-  /**
-   * Fired when a context menu item is clicked.
-   */
-  Stream<OnClickedEvent> get onClicked => _onClicked.stream;
-  ChromeStreamController<OnClickedEvent> _onClicked;
+  Stream get onClicked => _onClicked.stream;
+  ChromeStreamController _onClicked;
 
   ChromeContextMenus._() {
     var getApi = () => _contextMenus;
-    _onClicked = new ChromeStreamController<OnClickedEvent>.twoArgs(getApi, 'onClicked', _createOnClickedEvent);
+    _onClicked = new ChromeStreamController.noArgs(getApi, 'onClicked');
   }
 
   bool get available => _contextMenus != null;
@@ -101,29 +97,6 @@ class ChromeContextMenus extends ChromeApi {
 }
 
 /**
- * Fired when a context menu item is clicked.
- */
-class OnClickedEvent {
-  /**
-   * Information about the item clicked and the context where the click
-   * happened.
-   */
-  final OnClickData info;
-
-  /**
-   * The details of the tab where the click took place. If the click did not
-   * take place in a tab, this parameter will be missing.
-   * `optional`
-   * 
-   * The details of the tab where the click took place. If the click did not
-   * take place in a tab, this parameter will be missing.
-   */
-  final Tab tab;
-
-  OnClickedEvent(this.info, this.tab);
-}
-
-/**
  * The different contexts a menu can appear in. Specifying 'all' is equivalent
  * to the combination of all other contexts except for 'launcher'. The
  * 'launcher' context is only supported by apps and is used to add menu items to
@@ -164,114 +137,14 @@ class ItemType extends ChromeEnum {
   const ItemType._(String str): super(str);
 }
 
-/**
- * Information sent when a context menu item is clicked.
- */
-class OnClickData extends ChromeObject {
-  OnClickData({var menuItemId, var parentMenuItemId, String mediaType, String linkUrl, String srcUrl, String pageUrl, String frameUrl, int frameId, String selectionText, bool editable, bool wasChecked, bool checked}) {
-    if (menuItemId != null) this.menuItemId = menuItemId;
-    if (parentMenuItemId != null) this.parentMenuItemId = parentMenuItemId;
-    if (mediaType != null) this.mediaType = mediaType;
-    if (linkUrl != null) this.linkUrl = linkUrl;
-    if (srcUrl != null) this.srcUrl = srcUrl;
-    if (pageUrl != null) this.pageUrl = pageUrl;
-    if (frameUrl != null) this.frameUrl = frameUrl;
-    if (frameId != null) this.frameId = frameId;
-    if (selectionText != null) this.selectionText = selectionText;
-    if (editable != null) this.editable = editable;
-    if (wasChecked != null) this.wasChecked = wasChecked;
-    if (checked != null) this.checked = checked;
-  }
-  OnClickData.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
-
-  /**
-   * The ID of the menu item that was clicked.
-   */
-  dynamic get menuItemId => jsProxy['menuItemId'];
-  set menuItemId(var value) => jsProxy['menuItemId'] = jsify(value);
-
-  /**
-   * The parent ID, if any, for the item clicked.
-   */
-  dynamic get parentMenuItemId => jsProxy['parentMenuItemId'];
-  set parentMenuItemId(var value) => jsProxy['parentMenuItemId'] = jsify(value);
-
-  /**
-   * One of 'image', 'video', or 'audio' if the context menu was activated on
-   * one of these types of elements.
-   */
-  String get mediaType => jsProxy['mediaType'];
-  set mediaType(String value) => jsProxy['mediaType'] = value;
-
-  /**
-   * If the element is a link, the URL it points to.
-   */
-  String get linkUrl => jsProxy['linkUrl'];
-  set linkUrl(String value) => jsProxy['linkUrl'] = value;
-
-  /**
-   * Will be present for elements with a 'src' URL.
-   */
-  String get srcUrl => jsProxy['srcUrl'];
-  set srcUrl(String value) => jsProxy['srcUrl'] = value;
-
-  /**
-   * The URL of the page where the menu item was clicked. This property is not
-   * set if the click occured in a context where there is no current page, such
-   * as in a launcher context menu.
-   */
-  String get pageUrl => jsProxy['pageUrl'];
-  set pageUrl(String value) => jsProxy['pageUrl'] = value;
-
-  /**
-   * The URL of the frame of the element where the context menu was clicked, if
-   * it was in a frame.
-   */
-  String get frameUrl => jsProxy['frameUrl'];
-  set frameUrl(String value) => jsProxy['frameUrl'] = value;
-
-  /**
-   * The [ID of the frame](webNavigation#frame_ids) of the element where the
-   * context menu was clicked, if it was in a frame.
-   */
-  int get frameId => jsProxy['frameId'];
-  set frameId(int value) => jsProxy['frameId'] = value;
-
-  /**
-   * The text for the context selection, if any.
-   */
-  String get selectionText => jsProxy['selectionText'];
-  set selectionText(String value) => jsProxy['selectionText'] = value;
-
-  /**
-   * A flag indicating whether the element is editable (text input, textarea,
-   * etc.).
-   */
-  bool get editable => jsProxy['editable'];
-  set editable(bool value) => jsProxy['editable'] = value;
-
-  /**
-   * A flag indicating the state of a checkbox or radio item before it was
-   * clicked.
-   */
-  bool get wasChecked => jsProxy['wasChecked'];
-  set wasChecked(bool value) => jsProxy['wasChecked'] = value;
-
-  /**
-   * A flag indicating the state of a checkbox or radio item after it is
-   * clicked.
-   */
-  bool get checked => jsProxy['checked'];
-  set checked(bool value) => jsProxy['checked'] = value;
-}
-
 class ContextMenusCreateParams extends ChromeObject {
-  ContextMenusCreateParams({ItemType type, String id, String title, bool checked, List<ContextType> contexts, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
+  ContextMenusCreateParams({ItemType type, String id, String title, bool checked, List<ContextType> contexts, bool visible, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
     if (type != null) this.type = type;
     if (id != null) this.id = id;
     if (title != null) this.title = title;
     if (checked != null) this.checked = checked;
     if (contexts != null) this.contexts = contexts;
+    if (visible != null) this.visible = visible;
     if (parentId != null) this.parentId = parentId;
     if (documentUrlPatterns != null) this.documentUrlPatterns = documentUrlPatterns;
     if (targetUrlPatterns != null) this.targetUrlPatterns = targetUrlPatterns;
@@ -317,6 +190,12 @@ class ContextMenusCreateParams extends ChromeObject {
   List<ContextType> get contexts => listify(jsProxy['contexts'], _createContextType);
   set contexts(List<ContextType> value) => jsProxy['contexts'] = jsify(value);
 
+  /**
+   * Whether the item is visible in the menu.
+   */
+  bool get visible => jsProxy['visible'];
+  set visible(bool value) => jsProxy['visible'] = value;
+
   void onclick([var arg1]) =>
          jsProxy.callMethod('onclick', [jsify(arg1)]);
 
@@ -350,11 +229,12 @@ class ContextMenusCreateParams extends ChromeObject {
 }
 
 class ContextMenusUpdateParams extends ChromeObject {
-  ContextMenusUpdateParams({ItemType type, String title, bool checked, List<ContextType> contexts, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
+  ContextMenusUpdateParams({ItemType type, String title, bool checked, List<ContextType> contexts, bool visible, var parentId, List<String> documentUrlPatterns, List<String> targetUrlPatterns, bool enabled}) {
     if (type != null) this.type = type;
     if (title != null) this.title = title;
     if (checked != null) this.checked = checked;
     if (contexts != null) this.contexts = contexts;
+    if (visible != null) this.visible = visible;
     if (parentId != null) this.parentId = parentId;
     if (documentUrlPatterns != null) this.documentUrlPatterns = documentUrlPatterns;
     if (targetUrlPatterns != null) this.targetUrlPatterns = targetUrlPatterns;
@@ -373,6 +253,12 @@ class ContextMenusUpdateParams extends ChromeObject {
 
   List<ContextType> get contexts => listify(jsProxy['contexts'], _createContextType);
   set contexts(List<ContextType> value) => jsProxy['contexts'] = jsify(value);
+
+  /**
+   * Whether the item is visible in the menu.
+   */
+  bool get visible => jsProxy['visible'];
+  set visible(bool value) => jsProxy['visible'] = value;
 
   void onclick([var arg1]) =>
          jsProxy.callMethod('onclick', [jsify(arg1)]);
@@ -394,9 +280,5 @@ class ContextMenusUpdateParams extends ChromeObject {
   set enabled(bool value) => jsProxy['enabled'] = value;
 }
 
-OnClickedEvent _createOnClickedEvent(JsObject info, JsObject tab) =>
-    new OnClickedEvent(_createOnClickData(info), _createTab(tab));
 ItemType _createItemType(String value) => ItemType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 ContextType _createContextType(String value) => ContextType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
-OnClickData _createOnClickData(JsObject jsProxy) => jsProxy == null ? null : new OnClickData.fromProxy(jsProxy);
-Tab _createTab(JsObject jsProxy) => jsProxy == null ? null : new Tab.fromProxy(jsProxy);

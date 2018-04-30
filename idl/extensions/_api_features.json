@@ -4,7 +4,7 @@
 
 // This features file defines extension APIs implemented under src/extensions.
 // See chrome/common/extensions/api/_features.md to understand this file, as
-// well as feature.h, simple_feature.h, and base_feature_provider.h.
+// well as feature.h, simple_feature.h, and feature_provider.h.
 //
 // Note that specifying "web_page", "blessed_web_page", or "all" as a context
 // type will require manually updating chrome/renderer/resources/dispatcher.cc.
@@ -16,7 +16,7 @@
   },
   "app.runtime": [{
     "channel": "stable",
-    "contexts": ["blessed_extension"],
+    "contexts": ["blessed_extension", "lock_screen_extension"],
     "extension_types": ["platform_app"],
     "noparent": true
   }, {
@@ -33,7 +33,7 @@
   }],
   "app.window": [{
     "channel": "stable",
-    "contexts": ["blessed_extension"],
+    "contexts": ["blessed_extension", "lock_screen_extension"],
     "extension_types": ["platform_app"],
     "noparent": true
   }, {
@@ -52,7 +52,7 @@
     "noparent": true,
     "internal": true,
     "channel": "stable",
-    "contexts": ["blessed_extension"]
+    "contexts": ["blessed_extension", "lock_screen_extension"]
   },
   "app.currentWindowInternal.setShape": {
     "dependencies": ["permission:app.window.shape"],
@@ -85,9 +85,7 @@
     "contexts": ["webui"],
     "matches": [
       "chrome://bluetooth-pairing/*",
-      "chrome://md-settings/*",
-      "chrome://settings/*",
-      "chrome://settings-frame/*"
+      "chrome://settings/*"
     ]
   }],
   "bluetoothLowEnergy": {
@@ -103,9 +101,7 @@
     "contexts": ["webui"],
     "matches": [
       "chrome://bluetooth-pairing/*",
-      "chrome://md-settings/*",
-      "chrome://settings/*",
-      "chrome://settings-frame/*"
+      "chrome://settings/*"
     ]
   }],
   "bluetoothSocket": {
@@ -121,6 +117,10 @@
   },
   "clipboard.setImageData": {
     "dependencies": ["permission:clipboardWrite"]
+  },
+  "declarativeNetRequest": {
+    "dependencies": ["permission:declarativeNetRequest"],
+    "contexts": ["blessed_extension"]
   },
   "declarativeWebRequest": {
     "dependencies": ["permission:declarativeWebRequest"],
@@ -173,6 +173,18 @@
     "contexts": "all",
     "matches": ["<all_urls>"]
   },
+  "feedbackPrivate": {
+    "dependencies": ["permission:feedbackPrivate"],
+    "contexts": ["blessed_extension"]
+  },
+  "feedbackPrivate.readLogSource": {
+    "platforms": ["chromeos"],
+    "session_types": ["kiosk"]
+  },
+  "fileSystem": {
+    "dependencies": ["permission:fileSystem"],
+    "contexts": ["blessed_extension"]
+  },
   "guestViewInternal": [
     {
       "internal": true,
@@ -180,7 +192,7 @@
       "contexts": ["blessed_extension"]
     }, {
       "internal": true,
-      "channel": "trunk",
+      "channel": "stable",
       "contexts": ["webui"],
       "matches": [
         "chrome://cast/*",
@@ -188,6 +200,7 @@
         "chrome://extensions/*",
         "chrome://chrome-signin/*",
         "chrome://media-router/*",
+        "chrome://mobilesetup/*",
         "chrome://oobe/*"
       ]
     }
@@ -205,6 +218,13 @@
     "dependencies": ["permission:idle"],
     "contexts": ["blessed_extension"]
   },
+  "lockScreen.data": {
+    "dependencies": ["permission:lockScreen"],
+    "contexts": ["blessed_extension", "lock_screen_extension"]
+  },
+  "lockScreen.data.create": {
+    "contexts": ["lock_screen_extension"]
+  },
   "management": [{
     "dependencies": ["permission:management"],
     "contexts": ["blessed_extension"],
@@ -216,9 +236,7 @@
       "chrome://extensions/*",
       "chrome://extensions-frame/*",
       "chrome://chrome/extensions/*",
-      "chrome://md-settings/*",
-      "chrome://settings/*",
-      "chrome://settings-frame/*"
+      "chrome://settings/*"
     ]
   }],
   "management.getPermissionWarningsByManifest": {
@@ -236,17 +254,21 @@
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"]
   },
+  "mediaPerceptionPrivate": {
+    "dependencies": ["permission:mediaPerceptionPrivate"],
+    "contexts": ["blessed_extension"]
+  },
   "metricsPrivate": [{
     "dependencies": ["permission:metricsPrivate"],
     "contexts": ["blessed_extension"],
     "default_parent": true
   }, {
-    "channel": "trunk",
+    "channel": "stable",
     "contexts": ["webui"],
     "matches": [
-      "chrome://md-settings/*",
-      "chrome://settings/*",
-      "chrome://settings-frame/*"
+      "chrome://bookmarks/*",
+      "chrome://extensions/*",
+      "chrome://settings/*"
     ]
   }],
   "metricsPrivate.getIsCrashReportingEnabled": {
@@ -267,16 +289,12 @@
       "3F65507A3B39259B38C8173C6FFA3D12DF64CCE9",  // http://crbug.com/371562.
       "D7986543275120831B39EF28D1327552FC343960",  // http://crbug.com/378067
       "A291B26E088FA6BA53FFD72F0916F06EBA7C585A",  // http://crbug.com/378067
-      "62CCAAD339E6451BBF97C4BBDF758E934A05AD0B",  // Hotword triggering
       "07BD6A765FFC289FF755D7CAB2893A40EC337FEC",  // http://crbug.com/456214
       "896B85CC7E913E11C34892C1425A093C0701D386",  // http://crbug.com/456214
       "11A01C82EF355E674E4F9728A801F5C3CB40D83F",  // http://crbug.com/456214
       "F410C88469990EE7947450311D24B8AF2ADB2595",  // http://crbug.com/456214
-      "226CF815E39A363090A1E547D53063472B8279FA",  // http://crbug.com/574889
-      "C17CD9E6868D7B9C67926E0EC612EA25C768418F",  // http://crbug.com/504940
-      "A45DABDB47A31CC812E5490AB748C7D05E2D32E9",  // http://crbug.com/504940
-      "BFEE2E3B80BE21A645E63E9346DFC383E7CB3BDA",  // http://crbug.com/504940
-      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // http://crbug.com/504940
+      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // Media Router Dev
+      "226CF815E39A363090A1E547D53063472B8279FA",  // Media Router Stable
       // TODO (ntang) Remove the following 2 hashes by 12/31/2017.
       "B620CF4203315F9F2E046EDED22C7571A935958D",  // http://crbug.com/510270
       "B206D8716769728278D2D300349C6CB7D7DE2EF9",  // http://crbug.com/510270
@@ -295,11 +313,8 @@
     "channel": "stable",
     "extension_types": ["platform_app", "extension"],
     "whitelist": [
-      "226CF815E39A363090A1E547D53063472B8279FA",  // http://crbug.com/574889
-      "C17CD9E6868D7B9C67926E0EC612EA25C768418F",  // http://crbug.com/448569
-      "A45DABDB47A31CC812E5490AB748C7D05E2D32E9",
-      "BFEE2E3B80BE21A645E63E9346DFC383E7CB3BDA",
-      "63ED55E43214C211F82122ED56407FF1A807F2A3"
+      "63ED55E43214C211F82122ED56407FF1A807F2A3",   // Media Router Dev
+      "226CF815E39A363090A1E547D53063472B8279FA"    // Media Router Stable
     ]
   },
   "networking.config": {
@@ -324,11 +339,11 @@
     "channel": "stable",
     "contexts": ["webui"],
     "matches": [
-      "chrome://md-settings/*",
       "chrome://network/*",
       "chrome://oobe/*",
-      "chrome://settings/*",
-      "chrome://settings-frame/*"
+      "chrome://internet-config-dialog/*",
+      "chrome://internet-detail-dialog/*",
+      "chrome://settings/*"
     ]
   }],
   "power": {
@@ -347,10 +362,15 @@
   "runtime": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app", "platform_app"],
-    "contexts": ["blessed_extension"]
+    "contexts": ["blessed_extension", "lock_screen_extension"]
   },
   "runtime.getManifest": {
-    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+    "contexts": [
+      "blessed_extension",
+      "lock_screen_extension",
+      "unblessed_extension",
+      "content_script"
+    ]
   },
   "runtime.connect": {
     // Everything except WebUI.
@@ -358,6 +378,7 @@
       "blessed_web_page",
       "content_script",
       "blessed_extension",
+      "lock_screen_extension",
       "unblessed_extension",
       "web_page"
     ],
@@ -368,10 +389,20 @@
     "contexts": ["blessed_extension"]
   },
   "runtime.getURL": {
-    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+    "contexts": [
+      "blessed_extension",
+      "lock_screen_extension",
+      "unblessed_extension",
+      "content_script"
+    ]
   },
   "runtime.id": {
-    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+    "contexts": [
+      "blessed_extension",
+      "lock_screen_extension",
+      "unblessed_extension",
+      "content_script"
+    ]
   },
   "runtime.lastError": {
     "contexts": "all",
@@ -379,10 +410,20 @@
     "matches": ["<all_urls>"]
   },
   "runtime.onConnect": {
-    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+    "contexts": [
+      "blessed_extension",
+      "lock_screen_extension",
+      "unblessed_extension",
+      "content_script"
+    ]
   },
   "runtime.onMessage": {
-    "contexts": ["blessed_extension", "unblessed_extension", "content_script"]
+    "contexts": [
+      "blessed_extension",
+      "lock_screen_extension",
+      "unblessed_extension",
+      "content_script"
+    ]
   },
   "runtime.sendMessage": {
     // Everything except WebUI.
@@ -390,6 +431,7 @@
       "blessed_web_page",
       "content_script",
       "blessed_extension",
+      "lock_screen_extension",
       "unblessed_extension",
       "web_page"
     ],
@@ -434,9 +476,7 @@
     "channel": "stable",
     "contexts": ["webui"],
     "matches": [
-      "chrome://md-settings/*",
-      "chrome://settings/*",
-      "chrome://settings-frame/*"
+      "chrome://settings/*"
     ]
   }],
   "system.memory": {
@@ -464,6 +504,7 @@
       "blessed_web_page",
       "content_script",
       "extension_service_worker",
+      "lock_screen_extension",
       "unblessed_extension"
     ]
   }, {
@@ -492,6 +533,10 @@
     "dependencies": ["permission:usb"],
     "contexts": ["blessed_extension"]
   },
+  "virtualKeyboard": {
+    "dependencies": ["permission:virtualKeyboard"],
+    "contexts": ["blessed_extension"]
+  },
   "vpnProvider": {
     "dependencies": ["permission:vpnProvider"],
     "contexts": ["blessed_extension"]
@@ -512,6 +557,7 @@
     "matches": [
       "chrome://chrome-signin/*",
       "chrome://media-router/*",
+      "chrome://mobilesetup/*",
       "chrome://oobe/*"
     ]
   }],
@@ -521,11 +567,12 @@
     "contexts": ["blessed_extension"]
   }, {
     "internal": true,
-    "channel": "dev",
+    "channel": "stable",
     "contexts": ["webui"],
     "matches": [
       "chrome://chrome-signin/*",
       "chrome://media-router/*",
+      "chrome://mobilesetup/*",
       "chrome://oobe/*"
     ]
   }],
@@ -538,6 +585,7 @@
     "matches": [
       "chrome://chrome-signin/*",
       "chrome://media-router/*",
+      "chrome://mobilesetup/*",
       "chrome://oobe/*"
     ]
   }]

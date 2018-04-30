@@ -160,10 +160,27 @@ class ChromeWindows extends ChromeApi {
  * [sessions] API.
  */
 class WindowWindowType extends ChromeEnum {
+  /**
+   * A normal browser window.
+   */
   static const WindowWindowType NORMAL = const WindowWindowType._('normal');
+  /**
+   * A browser popup window.
+   */
   static const WindowWindowType POPUP = const WindowWindowType._('popup');
+  /**
+   * <i>Deprecated in this API.</i> A Chrome App panel-style window. Extensions
+   * can only see their own panel windows.
+   */
   static const WindowWindowType PANEL = const WindowWindowType._('panel');
+  /**
+   * <i>Deprecated in this API.</i> A Chrome App window. Extensions can only see
+   * their app own windows.
+   */
   static const WindowWindowType APP = const WindowWindowType._('app');
+  /**
+   * A devtools window.
+   */
   static const WindowWindowType DEVTOOLS = const WindowWindowType._('devtools');
 
   static const List<WindowWindowType> VALUES = const[NORMAL, POPUP, PANEL, APP, DEVTOOLS];
@@ -177,13 +194,34 @@ class WindowWindowType extends ChromeEnum {
  * [sessions] API.
  */
 class WindowState extends ChromeEnum {
+  /**
+   * Normal window state (i.e. not minimized, maximized, or fullscreen).
+   */
   static const WindowState NORMAL = const WindowState._('normal');
+  /**
+   * Minimized window state.
+   */
   static const WindowState MINIMIZED = const WindowState._('minimized');
+  /**
+   * Maximized window state.
+   */
   static const WindowState MAXIMIZED = const WindowState._('maximized');
+  /**
+   * Fullscreen window state.
+   */
   static const WindowState FULLSCREEN = const WindowState._('fullscreen');
+  /**
+   * <i>Deprecated since Chrome M59.</i> Docked windows are no longer supported.
+   * This state will be converted to "normal".
+   */
   static const WindowState DOCKED = const WindowState._('docked');
+  /**
+   * Locked fullscreen window state. This fullscreen state cannot be exited by
+   * user action. It is available only to whitelisted extensions on Chrome OS.
+   */
+  static const WindowState LOCKED_FULLSCREEN = const WindowState._('locked-fullscreen');
 
-  static const List<WindowState> VALUES = const[NORMAL, MINIMIZED, MAXIMIZED, FULLSCREEN, DOCKED];
+  static const List<WindowState> VALUES = const[NORMAL, MINIMIZED, MAXIMIZED, FULLSCREEN, DOCKED, LOCKED_FULLSCREEN];
 
   const WindowState._(String str): super(str);
 }
@@ -322,9 +360,7 @@ class WindowsGetParams extends ChromeObject {
 
   /**
    * If set, the [windows.Window] returned will be filtered based on its type.
-   * If unset the default filter is set to `['app', 'normal', 'panel',
-   * 'popup']`, with `'app'` and `'panel'` window types limited to the
-   * extension's own windows.
+   * If unset the default filter is set to `['normal', 'popup']`.
    */
   List<WindowWindowType> get windowTypes => listify(jsProxy['windowTypes'], _createWindowType);
   set windowTypes(List<WindowWindowType> value) => jsProxy['windowTypes'] = jsify(value);
@@ -348,9 +384,7 @@ class WindowsGetCurrentParams extends ChromeObject {
 
   /**
    * If set, the [windows.Window] returned will be filtered based on its type.
-   * If unset the default filter is set to `['app', 'normal', 'panel',
-   * 'popup']`, with `'app'` and `'panel'` window types limited to the
-   * extension's own windows.
+   * If unset the default filter is set to `['normal', 'popup']`.
    */
   List<WindowWindowType> get windowTypes => listify(jsProxy['windowTypes'], _createWindowType);
   set windowTypes(List<WindowWindowType> value) => jsProxy['windowTypes'] = jsify(value);
@@ -374,9 +408,7 @@ class WindowsGetLastFocusedParams extends ChromeObject {
 
   /**
    * If set, the [windows.Window] returned will be filtered based on its type.
-   * If unset the default filter is set to `['app', 'normal', 'panel',
-   * 'popup']`, with `'app'` and `'panel'` window types limited to the
-   * extension's own windows.
+   * If unset the default filter is set to `['normal', 'popup']`.
    */
   List<WindowWindowType> get windowTypes => listify(jsProxy['windowTypes'], _createWindowType);
   set windowTypes(List<WindowWindowType> value) => jsProxy['windowTypes'] = jsify(value);
@@ -400,16 +432,14 @@ class WindowsGetAllParams extends ChromeObject {
 
   /**
    * If set, the [windows.Window] returned will be filtered based on its type.
-   * If unset the default filter is set to `['app', 'normal', 'panel',
-   * 'popup']`, with `'app'` and `'panel'` window types limited to the
-   * extension's own windows.
+   * If unset the default filter is set to `['normal', 'popup']`.
    */
   List<WindowWindowType> get windowTypes => listify(jsProxy['windowTypes'], _createWindowType);
   set windowTypes(List<WindowWindowType> value) => jsProxy['windowTypes'] = jsify(value);
 }
 
 class WindowsCreateParams extends ChromeObject {
-  WindowsCreateParams({var url, int tabId, int left, int top, int width, int height, bool focused, bool incognito, CreateType type, WindowState state}) {
+  WindowsCreateParams({var url, int tabId, int left, int top, int width, int height, bool focused, bool incognito, CreateType type, WindowState state, bool setSelfAsOpener}) {
     if (url != null) this.url = url;
     if (tabId != null) this.tabId = tabId;
     if (left != null) this.left = left;
@@ -420,6 +450,7 @@ class WindowsCreateParams extends ChromeObject {
     if (incognito != null) this.incognito = incognito;
     if (type != null) this.type = type;
     if (state != null) this.state = state;
+    if (setSelfAsOpener != null) this.setSelfAsOpener = setSelfAsOpener;
   }
   WindowsCreateParams.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -493,6 +524,16 @@ class WindowsCreateParams extends ChromeObject {
    */
   WindowState get state => _createWindowState(jsProxy['state']);
   set state(WindowState value) => jsProxy['state'] = jsify(value);
+
+  /**
+   * If 'setSelfAsOpener' is true, then the newly created window will have its
+   * 'window.opener' set to the caller and will be in the same [unit of related
+   * browsing
+   * contexts](https://www.w3.org/TR/html51/browsers.html#unit-of-related-browsing-contexts)
+   * as the caller.
+   */
+  bool get setSelfAsOpener => jsProxy['setSelfAsOpener'];
+  set setSelfAsOpener(bool value) => jsProxy['setSelfAsOpener'] = value;
 }
 
 class WindowsUpdateParams extends ChromeObject {

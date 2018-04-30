@@ -47,6 +47,19 @@ class RunAt extends ChromeEnum {
 }
 
 /**
+ * The [origin](https://www.w3.org/TR/css3-cascade/#cascading-origins) of
+ * injected CSS.
+ */
+class CSSOrigin extends ChromeEnum {
+  static const CSSOrigin AUTHOR = const CSSOrigin._('author');
+  static const CSSOrigin USER = const CSSOrigin._('user');
+
+  static const List<CSSOrigin> VALUES = const[AUTHOR, USER];
+
+  const CSSOrigin._(String str): super(str);
+}
+
+/**
  * Details about the format and quality of an image.
  */
 class ImageDetails extends ChromeObject {
@@ -77,13 +90,14 @@ class ImageDetails extends ChromeObject {
  * must be set, but both may not be set at the same time.
  */
 class InjectDetails extends ChromeObject {
-  InjectDetails({String code, String file, bool allFrames, int frameId, bool matchAboutBlank, RunAt runAt}) {
+  InjectDetails({String code, String file, bool allFrames, int frameId, bool matchAboutBlank, RunAt runAt, CSSOrigin cssOrigin}) {
     if (code != null) this.code = code;
     if (file != null) this.file = file;
     if (allFrames != null) this.allFrames = allFrames;
     if (frameId != null) this.frameId = frameId;
     if (matchAboutBlank != null) this.matchAboutBlank = matchAboutBlank;
     if (runAt != null) this.runAt = runAt;
+    if (cssOrigin != null) this.cssOrigin = cssOrigin;
   }
   InjectDetails.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -133,7 +147,16 @@ class InjectDetails extends ChromeObject {
    */
   RunAt get runAt => _createRunAt(jsProxy['runAt']);
   set runAt(RunAt value) => jsProxy['runAt'] = jsify(value);
+
+  /**
+   * The [origin](https://www.w3.org/TR/css3-cascade/#cascading-origins) of the
+   * CSS to inject. This may only be specified for CSS, not JavaScript. Defaults
+   * to `"author"`.
+   */
+  CSSOrigin get cssOrigin => _createCSSOrigin(jsProxy['cssOrigin']);
+  set cssOrigin(CSSOrigin value) => jsProxy['cssOrigin'] = jsify(value);
 }
 
 ImageFormat _createImageFormat(String value) => ImageFormat.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 RunAt _createRunAt(String value) => RunAt.VALUES.singleWhere((ChromeEnum e) => e.value == value);
+CSSOrigin _createCSSOrigin(String value) => CSSOrigin.VALUES.singleWhere((ChromeEnum e) => e.value == value);

@@ -17,6 +17,7 @@
 
   "renameClass": {
     "bluetooth.Device": "BluetoothDevice",
+    "bluetooth.DeviceType": "BluetoothDeviceType",
     "bluetoothSocket.AcceptErrorInfo": "BluetoothAcceptErrorInfo",
     "bluetoothSocket.AcceptInfo": "BluetoothAcceptInfo",
     "bluetoothSocket.CreateInfo": "BluetoothCreateInfo",
@@ -71,7 +72,9 @@
     "declarativeContent.ImageDataType": "DeclarativeContentImageDataType",
 
     "input.ime.WindowType": "InputWindowType",
-    "windows.WindowType": "WindowWindowType"
+    "windows.WindowType": "WindowWindowType",
+
+    "app.runtime.ActionType": "AppRuntimeActionType"
 
   }
 }

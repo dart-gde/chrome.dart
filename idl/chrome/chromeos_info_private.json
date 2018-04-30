@@ -40,6 +40,18 @@
         "type": "string",
         "enum": ["not available", "available", "enabled"],
         "description": "Status of the play store. Note: 'available' means that the device supports the playstore but it is not enabled."
+      },
+      {
+        "id": "ManagedDeviceStatus",
+        "type": "string",
+        "enum": ["managed", "not managed"],
+        "description": "Status of enterprise enrollment."
+      },
+      {
+        "id": "DeviceType",
+        "type": "string",
+        "enum": ["chromebase", "chromebit", "chromebook", "chromebox", "chromedevice"],
+        "description": "Device type."
       }
     ],
     "functions": [
@@ -71,6 +83,8 @@
                   "isOwner" : {"type": "boolean", "optional": true, "description": "True if current logged in user is device owner"},
                   "sessionType": {"$ref": "SessionType", "optional": true},
                   "playStoreStatus": {"$ref": "PlayStoreStatus", "optional": true},
+                  "managedDeviceStatus": {"$ref": "ManagedDeviceStatus", "optional": true},
+                  "deviceType": {"$ref": "DeviceType", "optional": true},
                   "clientId" : {"type": "string", "optional": true, "description": "Device client id"},
                   "timezone" : {"type": "string", "optional": true, "description": "Timezone"},
                   "a11yLargeCursorEnabled" : {"type": "boolean", "optional": true, "description": "If true, ChromeOS is showing enlarged cursor."},

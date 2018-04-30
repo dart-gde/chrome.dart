@@ -58,7 +58,7 @@ export 'gen/tab_capture.dart';
 export 'gen/tabs.dart';
 export 'gen/top_sites.dart';
 export 'gen/tts.dart';
-export 'gen/tts_engine.dart';
+export 'gen/tts_engine.dart' hide VoiceGender;
 export 'gen/types.dart';
 export 'gen/vpn_provider.dart';
 export 'gen/wallpaper.dart';
