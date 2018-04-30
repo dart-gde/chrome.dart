@@ -9,6 +9,7 @@
 library chrome.runtime;
 
 import '../src/files.dart';
+import 'events.dart';
 import 'tabs.dart';
 import 'windows.dart';
 import '../src/common.dart';
@@ -406,16 +407,6 @@ class ChromeRuntime extends ChromeApi {
 }
 
 /**
- * Fired when a [Port] is closed from the other side.
- */
-
-class OnDisconnectEvent {
-  final Port port;
-
-  OnDisconnectEvent(this.port);
-}
-
-/**
  * Fired when a message is sent from either an extension process (by
  * [runtime.sendMessage]) or a content script (by [tabs.sendMessage]).
  */
@@ -590,10 +581,10 @@ class Port extends ChromeObject {
   void disconnect([var arg1]) =>
          jsProxy.callMethod('disconnect', [jsify(arg1)]);
 
-  ChromeStreamController<OnDisconnectEvent> _onDisconnect;
-  Stream<OnDisconnectEvent> get onDisconnect {
+  ChromeStreamController _onDisconnect;
+  Stream get onDisconnect {
     if (_onDisconnect == null)
-      _onDisconnect = new ChromeStreamController.oneArg(()=>jsProxy, 'onDisconnect', _createOnDisconnectEvent);
+      _onDisconnect = new ChromeStreamController.noArgs(()=>jsProxy, 'onDisconnect');
     return _onDisconnect.stream;
   }
 
@@ -750,7 +741,6 @@ class RequestUpdateCheckResult {
 }
 
 Port _createPort(JsObject jsProxy) => jsProxy == null ? null : new Port.fromProxy(jsProxy);
-OnDisconnectEvent _createOnDisconnectEvent(JsObject port) => new OnDisconnectEvent(_createPort(port));
 OnMessageEvent _createOnMessageEvent(JsObject message, JsObject sender, JsObject sendResponse) =>
     new OnMessageEvent(message, _createMessageSender(sender), sendResponse);
 OnMessageExternalEvent _createOnMessageExternalEvent(JsObject message, JsObject sender, JsObject sendResponse) =>

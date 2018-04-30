@@ -3,8 +3,7 @@
 // found in the LICENSE file.
 
 // The <code>chrome.webrtcAudioPrivate</code> API allows enumeration
-// of audio output (sink) devices as well as getting and setting the
-// active device for a given requesting process.
+// of audio output (sink) devices.
 //
 // Note that device IDs as used in this API are opaque (i.e. they are
 // not the hardware identifier of the device) and while they are
@@ -37,9 +36,9 @@ namespace webrtcAudioPrivate {
     boolean isDefault;
   };
 
+  callback GenericDoneCallback = void();
   callback GetSinksCallback = void(SinkInfo[] sinkInfo);
   callback SinkIdCallback = void(DOMString sinkId);
-  callback CompletionCallback = void();
 
   dictionary RequestInfo {
     // The tab identifier from the chrome.tabs API, if the request is from a
@@ -50,19 +49,14 @@ namespace webrtcAudioPrivate {
     long? guestProcessId;
   };
 
+  dictionary AudioExperiments {
+    // Enables or disables the new acoustic echo canceller (AEC3) in WebRTC.
+    boolean? enableAec3;
+  };
+
   interface Functions {
     // Retrieves a list of available audio sink devices.
     static void getSinks(GetSinksCallback callback);
-
-    // Retrieves the currently active audio sink for the given requesting
-    // process.
-    static void getActiveSink(RequestInfo request,
-                              SinkIdCallback callback);
-
-    // Sets the active audio sink device for the specified requesting process.
-    static void setActiveSink(RequestInfo request,
-                              DOMString sinkId,
-                              optional CompletionCallback callback);
 
     // Given a security origin and an input device ID valid for that
     // security origin, retrieve an audio sink ID valid for the
@@ -75,6 +69,15 @@ namespace webrtcAudioPrivate {
     static void getAssociatedSink(DOMString securityOrigin,
                                   DOMString sourceIdInOrigin,
                                   SinkIdCallback cb);
+
+    // Sets the active audio experiments.
+    // |request|: Information about the requesting process.
+    // |securityOrigin|: The origin to restrict the settings to.
+    // |audioExperiments|: The experiments to enable or disable.
+    static void setAudioExperiments(RequestInfo request,
+                                    DOMString securityOrigin,
+                                    AudioExperiments audioExperiments,
+                                    GenericDoneCallback callback);
   };
 
   interface Events {

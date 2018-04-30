@@ -171,6 +171,12 @@
             "type": "integer",
             "minimum": 0,
             "optional": true
+          },
+          {
+            "type": "function",
+            "name": "callback",
+            "optional": true,
+            "parameters": []
           }
         ]
       },
@@ -202,16 +208,6 @@
         "name": "canEdit",
         "type": "function",
         "description": "Whether bookmarks can be modified.",
-        "parameters": [
-          {"type": "function", "name": "callback", "parameters": [
-            {"name": "result", "type": "boolean"}
-          ]}
-        ]
-      },
-      {
-        "name": "canOpenNewWindows",
-        "type": "function",
-        "description": "Whether bookmarks can be opened in new windows.",
         "parameters": [
           {"type": "function", "name": "callback", "parameters": [
             {"name": "result", "type": "boolean"}

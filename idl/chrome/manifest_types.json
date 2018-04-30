@@ -28,17 +28,17 @@
               "name": {
                 "type": "string",
                 "optional": true,
-                "description": "Name of the search engine displayed to user. This may only be ommitted if <em>prepopulated_id</em> is set."
+                "description": "Name of the search engine displayed to user. This may only be omitted if <em>prepopulated_id</em> is set."
               },
               "keyword": {
                 "type": "string",
                 "optional": true,
-                "description": "Omnibox keyword for the search engine. This may only be ommitted if <em>prepopulated_id</em> is set."
+                "description": "Omnibox keyword for the search engine. This may only be omitted if <em>prepopulated_id</em> is set."
               },
               "favicon_url": {
                 "type": "string",
                 "optional": true,
-                "description": "An icon URL for the search engine. This may only be ommitted if <em>prepopulated_id</em> is set."
+                "description": "An icon URL for the search engine. This may only be omitted if <em>prepopulated_id</em> is set."
               },
               "search_url": {
                 "type": "string",
@@ -47,17 +47,12 @@
               "encoding": {
                 "type": "string",
                 "optional": true,
-                "description": "Encoding of the search term. This may only be ommitted if <em>prepopulated_id</em> is set."
+                "description": "Encoding of the search term. This may only be omitted if <em>prepopulated_id</em> is set."
               },
               "suggest_url": {
                 "type": "string",
                 "optional": true,
                 "description": "If omitted, this engine does not support suggestions."
-              },
-              "instant_url": {
-                "type": "string",
-                "optional": true,
-                "description": "If omitted, this engine does not support instant."
               },
               "image_url": {
                 "type": "string",
@@ -73,11 +68,6 @@
                 "type": "string",
                 "optional": true,
                 "description": "The string of post parameters to suggest_url"
-              },
-              "instant_url_post_params": {
-                "type": "string",
-                "optional": true,
-                "description": "The string of post parameters to instant_url"
               },
               "image_url_post_params": {
                 "type": "string",

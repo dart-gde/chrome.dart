@@ -104,10 +104,10 @@ class ChromeFileSystemProvider extends ChromeApi {
 
   /**
    * Mounts a file system with the given `fileSystemId` and `displayName`.
-   * `displayName` will be shown in the left panel of Files.app. `displayName`
-   * can contain any characters including '/', but cannot be an empty string.
-   * `displayName` must be descriptive but doesn't have to be unique. The
-   * `fileSystemId` must not be an empty string.
+   * `displayName` will be shown in the left panel of the Files app.
+   * `displayName` can contain any characters including '/', but cannot be an
+   * empty string. `displayName` must be descriptive but doesn't have to be
+   * unique. The `fileSystemId` must not be an empty string.
    * 
    * Depending on the type of the file system being mounted, the `source` option
    * must be set appropriately.
@@ -592,12 +592,13 @@ class FileSystemInfo extends ChromeObject {
  * Options for the [mount] method.
  */
 class MountOptions extends ChromeObject {
-  MountOptions({String fileSystemId, String displayName, bool writable, int openedFilesLimit, bool supportsNotifyTag}) {
+  MountOptions({String fileSystemId, String displayName, bool writable, int openedFilesLimit, bool supportsNotifyTag, bool persistent}) {
     if (fileSystemId != null) this.fileSystemId = fileSystemId;
     if (displayName != null) this.displayName = displayName;
     if (writable != null) this.writable = writable;
     if (openedFilesLimit != null) this.openedFilesLimit = openedFilesLimit;
     if (supportsNotifyTag != null) this.supportsNotifyTag = supportsNotifyTag;
+    if (persistent != null) this.persistent = persistent;
   }
   MountOptions.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -615,6 +616,9 @@ class MountOptions extends ChromeObject {
 
   bool get supportsNotifyTag => jsProxy['supportsNotifyTag'];
   set supportsNotifyTag(bool value) => jsProxy['supportsNotifyTag'] = value;
+
+  bool get persistent => jsProxy['persistent'];
+  set persistent(bool value) => jsProxy['persistent'] = value;
 }
 
 /**

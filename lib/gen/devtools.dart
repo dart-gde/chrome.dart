@@ -395,6 +395,12 @@ class ChromeDevtoolsPanels extends ChromeApi {
   SourcesPanel get sources => _createSourcesPanel(_devtools_panels['sources']);
 
   /**
+   * The name of the color theme set in user's DevTools settings. Possible
+   * values: `default` (the default) and `dark`.
+   */
+  String get themeName => _devtools_panels['themeName'];
+
+  /**
    * Creates an extension panel.
    * 
    * [title] Title that is displayed next to the extension icon in the Developer

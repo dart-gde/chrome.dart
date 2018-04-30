@@ -16,7 +16,7 @@
       {
         "id": "ResourceType",
         "type": "string",
-        "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "font", "object", "xmlhttprequest", "ping", "other"]
+        "enum": ["main_frame", "sub_frame", "stylesheet", "script", "image", "font", "object", "xmlhttprequest", "ping", "csp_report", "media", "websocket", "other"]
       },
       {
         "id": "OnBeforeRequestOptions",
@@ -106,12 +106,12 @@
           "cancel": {
             "type": "boolean",
             "optional": true,
-            "description": "If true, the request is cancelled. Used in onBeforeRequest, this prevents the request from being sent."
+            "description": "If true, the request is cancelled. This prevents the request from being sent. This can be used as a response to the onBeforeRequest, onBeforeSendHeaders, onHeadersReceived and onAuthRequired events."
           },
           "redirectUrl": {
             "type": "string",
             "optional": true,
-            "description": "Only used as a response to the onBeforeRequest and onHeadersReceived events. If set, the original request is prevented from being sent/completed and is instead redirected to the given URL. Redirections to non-HTTP schemes such as data: are allowed. Redirects initiated by a redirect action use the original request method for the redirect, with one exception: If the redirect is initiated at the onHeadersReceived stage, then the redirect will be issued using the GET method."
+            "description": "Only used as a response to the onBeforeRequest and onHeadersReceived events. If set, the original request is prevented from being sent/completed and is instead redirected to the given URL. Redirections to non-HTTP schemes such as <code>data:</code> are allowed. Redirects initiated by a redirect action use the original request method for the redirect, with one exception: If the redirect is initiated at the onHeadersReceived stage, then the redirect will be issued using the GET method. Redirects from URLs with <code>ws://</code> and <code>wss://</code> schemes are <b>ignored</b>."
           },
           "requestHeaders": {
             "$ref": "HttpHeaders",
@@ -150,12 +150,21 @@
           }
         },
         "description": "Contains data uploaded in a URL request."
+      },
+      {
+        "id": "FormDataItem",
+        "choices": [
+          { "type": "binary" },
+          { "type": "string" }
+        ],
+        "description": "Contains data passed within form data. For urlencoded form it is stored as string if data is utf-8 string and as ArrayBuffer otherwise. For form-data it is ArrayBuffer. If form-data represents uploading file, it is string with filename, if the filename is provided."
       }
     ],
     "functions": [
       {
         "name": "handlerBehaviorChanged",
         "type": "function",
+        "forIOThread": true,
         "description": "Needs to be called when the behavior of the webRequest handlers has changed to prevent incorrect handling due to caching. This function call is expensive. Don't call it often.",
         "parameters": [
           {"type": "function", "name": "callback", "optional": true, "parameters": []}
@@ -190,7 +199,7 @@
                     "properties": {},
                     "additionalProperties": {
                       "type": "array",
-                      "items": { "type": "string" }
+                      "items": { "$ref": "FormDataItem" }
                     }
                   },
                   "raw" : {
@@ -203,6 +212,7 @@
               },
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
               "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
+              "initiator": {"type": "string", "optional": true, "description": "The origin where the request was initiated. This does not change through redirects. If this is an opaque origin, the string 'null' will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."}
             }
           }
@@ -245,6 +255,7 @@
               "frameId": {"type": "integer", "description": "The value 0 indicates that the request happens in the main frame; a positive value indicates the ID of a subframe in which the request happens. If the document of a (sub-)frame is loaded (<code>type</code> is <code>main_frame</code> or <code>sub_frame</code>), <code>frameId</code> indicates the ID of this frame, not the ID of the outer frame. Frame IDs are unique within a tab."},
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
+              "initiator": {"type": "string", "optional": true, "description": "The origin where the request was initiated. This does not change through redirects. If this is an opaque origin, the string 'null' will be used."},
               "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "requestHeaders": {"$ref": "HttpHeaders", "optional": true, "description": "The HTTP request headers that are going to be sent out with this request."}
@@ -290,6 +301,7 @@
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
               "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
+              "initiator": {"type": "string", "optional": true, "description": "The origin where the request was initiated. This does not change through redirects. If this is an opaque origin, the string 'null' will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "requestHeaders": {"$ref": "HttpHeaders", "optional": true, "description": "The HTTP request headers that have been sent out with this request."}
             }
@@ -329,6 +341,7 @@
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
               "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
+              "initiator": {"type": "string", "optional": true, "description": "The origin where the request was initiated. This does not change through redirects. If this is an opaque origin, the string 'null' will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "statusLine": {"type": "string", "description": "HTTP status line of the response or the 'HTTP/0.9 200 OK' string for HTTP/0.9 responses (i.e., responses that lack a status line)."},
               "responseHeaders": {"$ref": "HttpHeaders", "optional": true, "description": "The HTTP response headers that have been received with this response."},
@@ -362,7 +375,7 @@
         "name": "onAuthRequired",
         "nocompile": true,
         "type": "function",
-        "description": "Fired when an authentication failure is received. The listener has three options: it can provide authentication credentials, it can cancel the request and display the error page, or it can take no action on the challenge. If bad user credentials are provided, this may be called multiple times for the same request.",
+        "description": "Fired when an authentication failure is received. The listener has three options: it can provide authentication credentials, it can cancel the request and display the error page, or it can take no action on the challenge. If bad user credentials are provided, this may be called multiple times for the same request. Note, only one of <code>'blocking'</code> or <code>'asyncBlocking'</code> modes must be specified in the <code>extraInfoSpec</code> parameter.",
         "parameters": [
           {
             "type": "object",
@@ -375,6 +388,7 @@
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
               "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
+              "initiator": {"type": "string", "optional": true, "description": "The origin where the request was initiated. This does not change through redirects. If this is an opaque origin, the string 'null' will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "scheme": {"type": "string", "description": "The authentication scheme, e.g. Basic or Digest."},
               "realm": {"type": "string", "description": "The authentication realm provided by the server, if there is one.", "optional": true},
@@ -388,7 +402,8 @@
           {
             "type": "function",
             "optional": true,
-            "name": "callback",
+            "description" : "Only valid if <code>'asyncBlocking'</code> is specified as one of the <code>OnAuthRequiredOptions</code>.",
+            "name": "asyncCallback",
             "parameters": [
               {"name": "response", "$ref": "BlockingResponse"}
             ]
@@ -433,6 +448,7 @@
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
               "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
+              "initiator": {"type": "string", "optional": true, "description": "The origin where the request was initiated. This does not change through redirects. If this is an opaque origin, the string 'null' will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "ip": {"type": "string", "optional": true, "description": "The server IP address that the request was actually sent to. Note that it may be a literal IPv6 address."},
               "fromCache": {"type": "boolean", "description": "Indicates if this response was fetched from disk cache."},
@@ -476,6 +492,7 @@
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
               "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
+              "initiator": {"type": "string", "optional": true, "description": "The origin where the request was initiated. This does not change through redirects. If this is an opaque origin, the string 'null' will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "ip": {"type": "string", "optional": true, "description": "The server IP address that the request was actually sent to. Note that it may be a literal IPv6 address."},
               "fromCache": {"type": "boolean", "description": "Indicates if this response was fetched from disk cache."},
@@ -520,6 +537,7 @@
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
               "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
+              "initiator": {"type": "string", "optional": true, "description": "The origin where the request was initiated. This does not change through redirects. If this is an opaque origin, the string 'null' will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "ip": {"type": "string", "optional": true, "description": "The server IP address that the request was actually sent to. Note that it may be a literal IPv6 address."},
               "fromCache": {"type": "boolean", "description": "Indicates if this response was fetched from disk cache."},
@@ -562,6 +580,7 @@
               "parentFrameId": {"type": "integer", "description": "ID of frame that wraps the frame which sent the request. Set to -1 if no parent frame exists."},
               "tabId": {"type": "integer", "description": "The ID of the tab in which the request takes place. Set to -1 if the request isn't related to a tab."},
               "type": {"$ref": "ResourceType", "description": "How the requested resource will be used."},
+              "initiator": {"type": "string", "optional": true, "description": "The origin where the request was initiated. This does not change through redirects. If this is an opaque origin, the string 'null' will be used."},
               "timeStamp": {"type": "number", "description": "The time when this signal is triggered, in milliseconds since the epoch."},
               "ip": {"type": "string", "optional": true, "description": "The server IP address that the request was actually sent to. Note that it may be a literal IPv6 address."},
               "fromCache": {"type": "boolean", "description": "Indicates if this response was fetched from disk cache."},

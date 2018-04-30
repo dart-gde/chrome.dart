@@ -98,12 +98,13 @@ class ProcessorInfo extends ChromeObject {
 }
 
 class CpuInfo extends ChromeObject {
-  CpuInfo({int numOfProcessors, String archName, String modelName, List<String> features, List<ProcessorInfo> processors}) {
+  CpuInfo({int numOfProcessors, String archName, String modelName, List<String> features, List<ProcessorInfo> processors, List<num> temperatures}) {
     if (numOfProcessors != null) this.numOfProcessors = numOfProcessors;
     if (archName != null) this.archName = archName;
     if (modelName != null) this.modelName = modelName;
     if (features != null) this.features = features;
     if (processors != null) this.processors = processors;
+    if (temperatures != null) this.temperatures = temperatures;
   }
   CpuInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -121,6 +122,9 @@ class CpuInfo extends ChromeObject {
 
   List<ProcessorInfo> get processors => listify(jsProxy['processors'], _createProcessorInfo);
   set processors(List<ProcessorInfo> value) => jsProxy['processors'] = jsify(value);
+
+  List<num> get temperatures => listify(jsProxy['temperatures']);
+  set temperatures(List<num> value) => jsProxy['temperatures'] = jsify(value);
 }
 
 CpuInfo _createCpuInfo(JsObject jsProxy) => jsProxy == null ? null : new CpuInfo.fromProxy(jsProxy);
@@ -144,19 +148,22 @@ class ChromeSystemDisplay extends ChromeApi {
   bool get available => _system_display != null;
 
   /**
-   * Get the information of all attached display devices.
+   * Requests the information for all attached display devices.
+   * [flags]: Options affecting how the information is returned.
+   * [callback]: The callback to invoke with the results.
    */
-  Future<List<DisplayUnitInfo>> getInfo() {
+  Future<List<DisplayUnitInfo>> getInfo([GetInfoFlags flags]) {
     if (_system_display == null) _throwNotAvailable();
 
     var completer = new ChromeCompleter<List<DisplayUnitInfo>>.oneArg((e) => listify(e, _createDisplayUnitInfo));
-    _system_display.callMethod('getInfo', [completer.callback]);
+    _system_display.callMethod('getInfo', [jsify(flags), completer.callback]);
     return completer.future;
   }
 
   /**
-   * Get the layout info for all displays. NOTE: This is only available to
+   * Requests the layout info for all displays. NOTE: This is only available to
    * Chrome OS Kiosk apps and Web UI.
+   * [callback]: The callback to invoke with the results.
    */
   Future<List<DisplayLayout>> getDisplayLayout() {
     if (_system_display == null) _throwNotAvailable();
@@ -323,6 +330,24 @@ class ChromeSystemDisplay extends ChromeApi {
     _system_display.callMethod('clearTouchCalibration', [id]);
   }
 
+  /**
+   * Sets the display mode to the specified mirror mode. Each call resets the
+   * state from previous calls. Calling setDisplayProperties() will fail for the
+   * mirroring destination displays. NOTE: This is only available to Chrome OS
+   * Kiosk apps and Web UI.
+   * [info]: The information of the mirror mode that should be applied to the
+   * display mode.
+   * [callback]: Empty function called when the function finishes. To find out
+   * whether the function succeeded, [runtime.lastError] should be queried.
+   */
+  Future setMirrorMode(MirrorModeInfo info) {
+    if (_system_display == null) _throwNotAvailable();
+
+    var completer = new ChromeCompleter.noArgs();
+    _system_display.callMethod('setMirrorMode', [jsify(info), completer.callback]);
+    return completer.future;
+  }
+
   void _throwNotAvailable() {
     throw new UnsupportedError("'chrome.system.display' is not available");
   }
@@ -340,6 +365,20 @@ class LayoutPosition extends ChromeEnum {
   static const List<LayoutPosition> VALUES = const[TOP, RIGHT, BOTTOM, LEFT];
 
   const LayoutPosition._(String str): super(str);
+}
+
+/**
+ * Mirror mode, i.e. different ways of how a display is mirrored to other
+ * displays.
+ */
+class MirrorMode extends ChromeEnum {
+  static const MirrorMode OFF = const MirrorMode._('off');
+  static const MirrorMode NORMAL = const MirrorMode._('normal');
+  static const MirrorMode MIXED = const MirrorMode._('mixed');
+
+  static const List<MirrorMode> VALUES = const[OFF, NORMAL, MIXED];
+
+  const MirrorMode._(String str): super(str);
 }
 
 class Insets extends ChromeObject {
@@ -475,13 +514,16 @@ class DisplayLayout extends ChromeObject {
 }
 
 class DisplayUnitInfo extends ChromeObject {
-  DisplayUnitInfo({String id, String name, String mirroringSourceId, bool isPrimary, bool isInternal, bool isEnabled, num dpiX, num dpiY, int rotation, Bounds bounds, Insets overscan, Bounds workArea, List<DisplayMode> modes, bool hasTouchSupport}) {
+  DisplayUnitInfo({String id, String name, String mirroringSourceId, List<String> mirroringDestinationIds, bool isPrimary, bool isInternal, bool isEnabled, bool isUnified, bool isTabletMode, num dpiX, num dpiY, int rotation, Bounds bounds, Insets overscan, Bounds workArea, List<DisplayMode> modes, bool hasTouchSupport, bool hasAccelerometerSupport, num displayZoomFactor}) {
     if (id != null) this.id = id;
     if (name != null) this.name = name;
     if (mirroringSourceId != null) this.mirroringSourceId = mirroringSourceId;
+    if (mirroringDestinationIds != null) this.mirroringDestinationIds = mirroringDestinationIds;
     if (isPrimary != null) this.isPrimary = isPrimary;
     if (isInternal != null) this.isInternal = isInternal;
     if (isEnabled != null) this.isEnabled = isEnabled;
+    if (isUnified != null) this.isUnified = isUnified;
+    if (isTabletMode != null) this.isTabletMode = isTabletMode;
     if (dpiX != null) this.dpiX = dpiX;
     if (dpiY != null) this.dpiY = dpiY;
     if (rotation != null) this.rotation = rotation;
@@ -490,6 +532,8 @@ class DisplayUnitInfo extends ChromeObject {
     if (workArea != null) this.workArea = workArea;
     if (modes != null) this.modes = modes;
     if (hasTouchSupport != null) this.hasTouchSupport = hasTouchSupport;
+    if (hasAccelerometerSupport != null) this.hasAccelerometerSupport = hasAccelerometerSupport;
+    if (displayZoomFactor != null) this.displayZoomFactor = displayZoomFactor;
   }
   DisplayUnitInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
@@ -502,6 +546,9 @@ class DisplayUnitInfo extends ChromeObject {
   String get mirroringSourceId => jsProxy['mirroringSourceId'];
   set mirroringSourceId(String value) => jsProxy['mirroringSourceId'] = value;
 
+  List<String> get mirroringDestinationIds => listify(jsProxy['mirroringDestinationIds']);
+  set mirroringDestinationIds(List<String> value) => jsProxy['mirroringDestinationIds'] = jsify(value);
+
   bool get isPrimary => jsProxy['isPrimary'];
   set isPrimary(bool value) => jsProxy['isPrimary'] = value;
 
@@ -510,6 +557,12 @@ class DisplayUnitInfo extends ChromeObject {
 
   bool get isEnabled => jsProxy['isEnabled'];
   set isEnabled(bool value) => jsProxy['isEnabled'] = value;
+
+  bool get isUnified => jsProxy['isUnified'];
+  set isUnified(bool value) => jsProxy['isUnified'] = value;
+
+  bool get isTabletMode => jsProxy['isTabletMode'];
+  set isTabletMode(bool value) => jsProxy['isTabletMode'] = value;
 
   num get dpiX => jsProxy['dpiX'];
   set dpiX(num value) => jsProxy['dpiX'] = jsify(value);
@@ -534,10 +587,17 @@ class DisplayUnitInfo extends ChromeObject {
 
   bool get hasTouchSupport => jsProxy['hasTouchSupport'];
   set hasTouchSupport(bool value) => jsProxy['hasTouchSupport'] = value;
+
+  bool get hasAccelerometerSupport => jsProxy['hasAccelerometerSupport'];
+  set hasAccelerometerSupport(bool value) => jsProxy['hasAccelerometerSupport'] = value;
+
+  num get displayZoomFactor => jsProxy['displayZoomFactor'];
+  set displayZoomFactor(num value) => jsProxy['displayZoomFactor'] = jsify(value);
 }
 
 class DisplayProperties extends ChromeObject {
-  DisplayProperties({String mirroringSourceId, bool isPrimary, Insets overscan, int rotation, int boundsOriginX, int boundsOriginY, DisplayMode displayMode}) {
+  DisplayProperties({bool isUnified, String mirroringSourceId, bool isPrimary, Insets overscan, int rotation, int boundsOriginX, int boundsOriginY, DisplayMode displayMode, num displayZoomFactor}) {
+    if (isUnified != null) this.isUnified = isUnified;
     if (mirroringSourceId != null) this.mirroringSourceId = mirroringSourceId;
     if (isPrimary != null) this.isPrimary = isPrimary;
     if (overscan != null) this.overscan = overscan;
@@ -545,8 +605,12 @@ class DisplayProperties extends ChromeObject {
     if (boundsOriginX != null) this.boundsOriginX = boundsOriginX;
     if (boundsOriginY != null) this.boundsOriginY = boundsOriginY;
     if (displayMode != null) this.displayMode = displayMode;
+    if (displayZoomFactor != null) this.displayZoomFactor = displayZoomFactor;
   }
   DisplayProperties.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  bool get isUnified => jsProxy['isUnified'];
+  set isUnified(bool value) => jsProxy['isUnified'] = value;
 
   String get mirroringSourceId => jsProxy['mirroringSourceId'];
   set mirroringSourceId(String value) => jsProxy['mirroringSourceId'] = value;
@@ -568,6 +632,37 @@ class DisplayProperties extends ChromeObject {
 
   DisplayMode get displayMode => _createDisplayMode(jsProxy['displayMode']);
   set displayMode(DisplayMode value) => jsProxy['displayMode'] = jsify(value);
+
+  num get displayZoomFactor => jsProxy['displayZoomFactor'];
+  set displayZoomFactor(num value) => jsProxy['displayZoomFactor'] = jsify(value);
+}
+
+class GetInfoFlags extends ChromeObject {
+  GetInfoFlags({bool singleUnified}) {
+    if (singleUnified != null) this.singleUnified = singleUnified;
+  }
+  GetInfoFlags.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  bool get singleUnified => jsProxy['singleUnified'];
+  set singleUnified(bool value) => jsProxy['singleUnified'] = value;
+}
+
+class MirrorModeInfo extends ChromeObject {
+  MirrorModeInfo({MirrorMode mode, String mirroringSourceId, List<String> mirroringDestinationIds}) {
+    if (mode != null) this.mode = mode;
+    if (mirroringSourceId != null) this.mirroringSourceId = mirroringSourceId;
+    if (mirroringDestinationIds != null) this.mirroringDestinationIds = mirroringDestinationIds;
+  }
+  MirrorModeInfo.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+
+  MirrorMode get mode => _createMirrorMode(jsProxy['mode']);
+  set mode(MirrorMode value) => jsProxy['mode'] = jsify(value);
+
+  String get mirroringSourceId => jsProxy['mirroringSourceId'];
+  set mirroringSourceId(String value) => jsProxy['mirroringSourceId'] = value;
+
+  List<String> get mirroringDestinationIds => listify(jsProxy['mirroringDestinationIds']);
+  set mirroringDestinationIds(List<String> value) => jsProxy['mirroringDestinationIds'] = jsify(value);
 }
 
 DisplayUnitInfo _createDisplayUnitInfo(JsObject jsProxy) => jsProxy == null ? null : new DisplayUnitInfo.fromProxy(jsProxy);
@@ -578,6 +673,7 @@ LayoutPosition _createLayoutPosition(String value) => LayoutPosition.VALUES.sing
 Bounds _createBounds(JsObject jsProxy) => jsProxy == null ? null : new Bounds.fromProxy(jsProxy);
 Insets _createInsets(JsObject jsProxy) => jsProxy == null ? null : new Insets.fromProxy(jsProxy);
 DisplayMode _createDisplayMode(JsObject jsProxy) => jsProxy == null ? null : new DisplayMode.fromProxy(jsProxy);
+MirrorMode _createMirrorMode(String value) => MirrorMode.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 
 /**
  * The `chrome.system.memory` API.

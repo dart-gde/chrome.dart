@@ -144,7 +144,7 @@ class VoiceGender extends ChromeEnum {
  * An event from the TTS engine to communicate the status of an utterance.
  */
 class TtsEvent extends ChromeObject {
-  TtsEvent({EventType type, var charIndex, String errorMessage}) {
+  TtsEvent({EventType type, int charIndex, String errorMessage}) {
     if (type != null) this.type = type;
     if (charIndex != null) this.charIndex = charIndex;
     if (errorMessage != null) this.errorMessage = errorMessage;
@@ -169,8 +169,8 @@ class TtsEvent extends ChromeObject {
   /**
    * The index of the current character in the utterance.
    */
-  dynamic get charIndex => jsProxy['charIndex'];
-  set charIndex(var value) => jsProxy['charIndex'] = jsify(value);
+  int get charIndex => jsProxy['charIndex'];
+  set charIndex(int value) => jsProxy['charIndex'] = value;
 
   /**
    * The error description, if the event type is 'error'.
@@ -183,7 +183,7 @@ class TtsEvent extends ChromeObject {
  * A description of a voice available for speech synthesis.
  */
 class TtsVoice extends ChromeObject {
-  TtsVoice({String voiceName, String lang, VoiceGender gender, bool remote, String extensionId, List<String> eventTypes}) {
+  TtsVoice({String voiceName, String lang, VoiceGender gender, bool remote, String extensionId, List<EventType> eventTypes}) {
     if (voiceName != null) this.voiceName = voiceName;
     if (lang != null) this.lang = lang;
     if (gender != null) this.gender = gender;
@@ -228,8 +228,8 @@ class TtsVoice extends ChromeObject {
   /**
    * All of the callback event types that this voice is capable of sending.
    */
-  List<String> get eventTypes => listify(jsProxy['eventTypes']);
-  set eventTypes(List<String> value) => jsProxy['eventTypes'] = jsify(value);
+  List<EventType> get eventTypes => listify(jsProxy['eventTypes'], _createEventType);
+  set eventTypes(List<EventType> value) => jsProxy['eventTypes'] = jsify(value);
 }
 
 class TtsSpeakParams extends ChromeObject {

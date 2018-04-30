@@ -120,6 +120,12 @@ namespace system.display {
     // (including the display being mirrored).
     DOMString mirroringSourceId;
 
+    // Chrome OS only. Identifiers of the displays to which the source display
+    // is being mirrored. Empty if no displays are being mirrored. This will be
+    // set to the same value for all displays. This must not include
+    // |mirroringSourceId|.
+    DOMString[] mirroringDestinationIds;
+
     // True if this is the primary display.
     boolean isPrimary;
 
@@ -128,6 +134,17 @@ namespace system.display {
 
     // True if this display is enabled.
     boolean isEnabled;
+
+    // True for all displays when in unified desktop mode. See documentation
+    // for $(ref:enableUnifiedDesktop).
+    boolean isUnified;
+
+    // True when the display is in tablet mode. This may be set for touch
+    // devices where hasAccelerometerSupport is true, e.g. when an app opens in
+    // tablet mode. The default value is false.
+    // Provided for ChromeOS Settings UI only. TODO(stevenjb): Remove when
+    // Settings switches to a mojo API.
+    [nodoc] boolean? isTabletMode;
 
     // The number of pixels per inch along the x-axis.
     double dpiX;
@@ -160,9 +177,27 @@ namespace system.display {
 
     // True if this display has a touch input device associated with it.
     boolean hasTouchSupport;
+
+    // True if this display has an accelerometer associated with it.
+    // Provided for ChromeOS Settings UI only. TODO(stevenjb): Remove when
+    // Settings switches to a mojo API. NOTE: The name of this may change.
+    [nodoc] boolean hasAccelerometerSupport;
+
+    // The ratio between the display's current and default zoom.
+    // For example, value 1 is equivalent to 100% zoom, and value 1.5 is
+    // equivalent to 150% zoom.
+    double displayZoomFactor;
   };
 
   dictionary DisplayProperties {
+    // Chrome OS only. If set to true, changes the display mode to unified
+    // desktop (see $(ref:enableUnifiedDesktop) for details). If set to false,
+    // unified desktop mode will be disabled. This is only valid for the
+    // primary display. If provided, mirroringSourceId must not be provided and
+    // other properties may not apply. This is has no effect if not provided.
+    boolean? isUnified;
+
+    // Deprecated. Please use setMirrorMode() instead.
     // Chrome OS only. If set and not empty, enables mirroring for this display.
     // Otherwise disables mirroring for this display. This value should indicate
     // the id of the source display to mirror, which must not be the same as the
@@ -201,6 +236,44 @@ namespace system.display {
 
     // If set, updates the display mode to the mode matching this value.
     DisplayMode? displayMode;
+
+    // If set, updates the zoom associated with the display. This zoom performs
+    // relayout and repaint thus resulting in a better quality zoom than just
+    // performing a pixel by pixel stretch enlargement.
+    double? displayZoomFactor;
+  };
+
+  dictionary GetInfoFlags {
+    // If set to true, only a single $(ref:DisplayUnitInfo) will be returned
+    // by $(ref:getInfo) when in unified desktop mode (see
+    // $(ref:enableUnifiedDesktop)). Defaults to false.
+    boolean? singleUnified;
+  };
+
+  // Mirror mode, i.e. different ways of how a display is mirrored to other
+  // displays.
+  enum MirrorMode {
+    // Use the default mode (extended or unified desktop).
+    off,
+
+    // The default source display will be mirrored to all other displays.
+    normal,
+
+    // The specified source display will be mirrored to the provided
+    // destination displays. All other connected displays will be extended.
+    mixed
+  };
+
+  dictionary MirrorModeInfo {
+    // The mirror mode that should be set.
+    MirrorMode mode;
+
+    // The id of the mirroring source display. This is only valid for 'mixed'.
+    DOMString? mirroringSourceId;
+
+    // The ids of the mirroring destination displays. This is only valid for
+    // 'mixed'.
+    DOMString[]? mirroringDestinationIds;
   };
 
   callback DisplayInfoCallback = void (DisplayUnitInfo[] displayInfo);
@@ -208,13 +281,18 @@ namespace system.display {
   callback SetDisplayUnitInfoCallback = void();
   callback SetDisplayLayoutCallback = void();
   callback NativeTouchCalibrationCallback = void(boolean success);
+  callback SetMirrorModeCallback = void();
 
   interface Functions {
-    // Get the information of all attached display devices.
-    static void getInfo(DisplayInfoCallback callback);
+    // Requests the information for all attached display devices.
+    // |flags|: Options affecting how the information is returned.
+    // |callback|: The callback to invoke with the results.
+    static void getInfo(optional GetInfoFlags flags,
+                        DisplayInfoCallback callback);
 
-    // Get the layout info for all displays.
+    // Requests the layout info for all displays.
     // NOTE: This is only available to Chrome OS Kiosk apps and Web UI.
+    // |callback|: The callback to invoke with the results.
     static void getDisplayLayout(DisplayLayoutCallback callback);
 
     // Updates the properties for the display specified by |id|, according to
@@ -311,6 +389,18 @@ namespace system.display {
     // display.
     // |id|: The display's unique identifier.
     static void clearTouchCalibration(DOMString id);
+
+    // Sets the display mode to the specified mirror mode. Each call resets the
+    // state from previous calls. Calling setDisplayProperties() will fail for
+    // the mirroring destination displays.
+    // NOTE: This is only available to Chrome OS Kiosk apps and Web UI.
+    // |info|: The information of the mirror mode that should be applied to the
+    //     display mode.
+    // |callback|: Empty function called when the function finishes. To find out
+    //     whether the function succeeded, $(ref:runtime.lastError) should be
+    //     queried.
+    static void setMirrorMode(MirrorModeInfo info,
+                              optional SetMirrorModeCallback callback);
   };
 
   interface Events {

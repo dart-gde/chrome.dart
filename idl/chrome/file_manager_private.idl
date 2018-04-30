@@ -112,7 +112,13 @@ enum DeviceEventType {
   // Format succeeded.
   format_success,
   // Format failed.
-  format_fail
+  format_fail,
+  // Rename started.
+  rename_start,
+  // Rename succeeded.
+  rename_success,
+  // Rename failed.
+  rename_fail
 };
 
 // Drive sync error type.
@@ -152,6 +158,7 @@ enum DriveShareType {
 enum EntryPropertyName {
   size,
   modificationTime,
+  modificationByMeTime,
   thumbnailUrl,
   croppedThumbnailUrl,
   imageWidth,
@@ -194,6 +201,18 @@ enum Verb {
   share_with
 };
 
+// Recent file sources allowed in getRecentFiles().
+enum SourceRestriction {
+  // Allows any source.
+  any_source,
+
+  // Allows source with native local file system only.
+  native_source,
+
+  // Allows native source and Drive source.
+  native_or_drive_source
+};
+
 // A file task represents an action that the file manager can perform over the
 // currently selected files. See
 // chrome/browser/chromeos/extensions/file_manager/file_tasks.h for details
@@ -229,6 +248,9 @@ dictionary EntryProperties {
 
   // Timestamp of entry update time, in milliseconds past the epoch.
   double? modificationTime;
+
+  // Timestamp of entry update time by me, in milliseconds past the epoch.
+  double? modificationByMeTime;
 
   // URL to the Drive thumbnail image for this file.
   DOMString? thumbnailUrl;
@@ -306,6 +328,12 @@ dictionary ProfileInfo {
   boolean isCurrentProfile;
 };
 
+// Represents an icon in multiple dimensions. All are optional.
+dictionary IconSet {
+  DOMString? icon16x16Url;
+  DOMString? icon32x32Url;
+};
+
 // Mounted disk volume metadata.
 dictionary VolumeMetadata {
   // ID of the disk volume.
@@ -314,8 +342,8 @@ dictionary VolumeMetadata {
   // Id the provided file system (for provided file systems).
   DOMString? fileSystemId;
 
-  // Extension providing this volume (for provided file systems).
-  DOMString? extensionId;
+  // ID of the provider, if the volume is backed by FSP.
+  DOMString? providerId;
 
   // Source of the volume's data.
   Source source;
@@ -366,6 +394,12 @@ dictionary VolumeMetadata {
 
   // Context in which the volume has been mounted.
   MountContext? mountContext;
+
+  // File system type indentifier.
+  DOMString? diskFileSystemType;
+
+  // Icons for the volume.
+  IconSet iconSet;
 };
 
 // Payload data for mount event.
@@ -538,12 +572,15 @@ dictionary DeviceEvent {
   DOMString devicePath;
 };
 
-// Describes an installed providing extension.
-dictionary ProvidingExtension {
-  // ID of the providing extension.
-  DOMString extensionId;
+// Describes an installed provider.
+dictionary Provider {
+  // ID of the provider.
+  DOMString providerId;
 
-  // Name of the providing extension.
+  // Set of icons for the provider.
+  IconSet iconSet;
+
+  // Name of the provider.
   DOMString name;
 
   // Whether supports configuration dialog.
@@ -652,14 +689,17 @@ callback ResolveEntriesCallback =
 // |checksum| Result checksum.
 callback ComputeChecksumCallback = void(DOMString checksum);
 
-// |extensions| List of providing extensions.
-callback GetProvidingExtensionsCallback = void(ProvidingExtension[] extensions);
+// |extensions| List of providers.
+callback GetProvidersCallback = void(Provider[] extensions);
 
 // |actions| List of actions.
 callback GetCustomActionsCallback = void(fileSystemProvider.Action[] actions);
 
 // |size| result size.
 callback GetDirectorySizeCallback = void(double size);
+
+// |entries| Recently modified entries.
+callback GetRecentFilesCallback = void([instanceOf=Entry] object[] entries);
 
 interface Functions {
   // Logout the current user for navigating to the re-authentication screen for
@@ -836,6 +876,11 @@ interface Functions {
   // |volumeId| ID of the volume to be formatted.
   static void formatVolume(DOMString volumeId);
 
+  // Renames a mounted volume.
+  // |volumeId| ID of the volume to be renamed.
+  // |newName| New name of the target volume.
+  static void renameVolume(DOMString volumeId, DOMString newName);
+
   // Retrieves file manager preferences.
   // |callback|
   static void getPreferences(GetPreferencesCallback callback);
@@ -890,7 +935,7 @@ interface Functions {
       DOMString name,
       ValidatePathNameLengthCallback callback);
 
-  // Changes the zoom factor of the Files.app.
+  // Changes the zoom factor of the Files app.
   // |operation| Zooming mode.
   static void zoom(ZoomOperationType operation);
 
@@ -956,12 +1001,12 @@ interface Functions {
   // Returns if Piex loader is enabled.
   static void isPiexLoaderEnabled(BooleanCallback callback);
 
-  // Returns list of available providing extensions.
-  static void getProvidingExtensions(GetProvidingExtensionsCallback callback);
+  // Returns list of available providers.
+  static void getProviders(GetProvidersCallback callback);
 
   // Requests adding a new provided file system. If not possible, then an error
   // via chrome.runtime.lastError is returned.
-  static void addProvidedFileSystem(DOMString extension_id,
+  static void addProvidedFileSystem(DOMString provider_id,
                                     SimpleCallback callback);
 
   // Requests configuring an existing volume. If not possible, then returns
@@ -987,6 +1032,13 @@ interface Functions {
   [nocompile]
   static void getDirectorySize([instanceof=DirectoryEntry] object entry,
                                GetDirectorySizeCallback callback);
+
+  // Gets recently modified files across file systems.
+  // |restriction| Flag to restrict sources of recent files.
+  // |callback|
+  [nocompile]
+  static void getRecentFiles(SourceRestriction restriction,
+                             GetRecentFilesCallback callback);
 };
 
 interface Events {

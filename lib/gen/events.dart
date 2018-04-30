@@ -53,7 +53,7 @@ class Rule extends ChromeObject {
   set conditions(List<dynamic> value) => jsProxy['conditions'] = jsify(value);
 
   /**
-   * List of actions that are triggered if one of the condtions is fulfilled.
+   * List of actions that are triggered if one of the conditions is fulfilled.
    */
   List<dynamic> get actions => listify(jsProxy['actions']);
   set actions(List<dynamic> value) => jsProxy['actions'] = jsify(value);

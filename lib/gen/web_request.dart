@@ -49,7 +49,8 @@ class ChromeWebRequest extends ChromeApi {
    * options: it can provide authentication credentials, it can cancel the
    * request and display the error page, or it can take no action on the
    * challenge. If bad user credentials are provided, this may be called
-   * multiple times for the same request.
+   * multiple times for the same request. Note, only one of `'blocking'` or
+   * `'asyncBlocking'` modes must be specified in the `extraInfoSpec` parameter.
    */
   Stream<OnAuthRequiredEvent> get onAuthRequired => _onAuthRequired.stream;
   ChromeStreamController<OnAuthRequiredEvent> _onAuthRequired;
@@ -125,17 +126,23 @@ class ChromeWebRequest extends ChromeApi {
  * options: it can provide authentication credentials, it can cancel the request
  * and display the error page, or it can take no action on the challenge. If bad
  * user credentials are provided, this may be called multiple times for the same
- * request.
+ * request. Note, only one of `'blocking'` or `'asyncBlocking'` modes must be
+ * specified in the `extraInfoSpec` parameter.
  */
 class OnAuthRequiredEvent {
   final Map details;
 
   /**
+   * Only valid if `'asyncBlocking'` is specified as one of the
+   * `OnAuthRequiredOptions`.
    * `optional`
+   * 
+   * Only valid if `'asyncBlocking'` is specified as one of the
+   * `OnAuthRequiredOptions`.
    */
-  final dynamic callback;
+  final dynamic asyncCallback;
 
-  OnAuthRequiredEvent(this.details, this.callback);
+  OnAuthRequiredEvent(this.details, this.asyncCallback);
 }
 
 class ResourceType extends ChromeEnum {
@@ -148,9 +155,12 @@ class ResourceType extends ChromeEnum {
   static const ResourceType OBJECT = const ResourceType._('object');
   static const ResourceType XMLHTTPREQUEST = const ResourceType._('xmlhttprequest');
   static const ResourceType PING = const ResourceType._('ping');
+  static const ResourceType CSP_REPORT = const ResourceType._('csp_report');
+  static const ResourceType MEDIA = const ResourceType._('media');
+  static const ResourceType WEBSOCKET = const ResourceType._('websocket');
   static const ResourceType OTHER = const ResourceType._('other');
 
-  static const List<ResourceType> VALUES = const[MAIN_FRAME, SUB_FRAME, STYLESHEET, SCRIPT, IMAGE, FONT, OBJECT, XMLHTTPREQUEST, PING, OTHER];
+  static const List<ResourceType> VALUES = const[MAIN_FRAME, SUB_FRAME, STYLESHEET, SCRIPT, IMAGE, FONT, OBJECT, XMLHTTPREQUEST, PING, CSP_REPORT, MEDIA, WEBSOCKET, OTHER];
 
   const ResourceType._(String str): super(str);
 }
@@ -295,8 +305,9 @@ class BlockingResponse extends ChromeObject {
   BlockingResponse.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
 
   /**
-   * If true, the request is cancelled. Used in onBeforeRequest, this prevents
-   * the request from being sent.
+   * If true, the request is cancelled. This prevents the request from being
+   * sent. This can be used as a response to the onBeforeRequest,
+   * onBeforeSendHeaders, onHeadersReceived and onAuthRequired events.
    */
   bool get cancel => jsProxy['cancel'];
   set cancel(bool value) => jsProxy['cancel'] = value;
@@ -305,10 +316,11 @@ class BlockingResponse extends ChromeObject {
    * Only used as a response to the onBeforeRequest and onHeadersReceived
    * events. If set, the original request is prevented from being sent/completed
    * and is instead redirected to the given URL. Redirections to non-HTTP
-   * schemes such as data: are allowed. Redirects initiated by a redirect action
-   * use the original request method for the redirect, with one exception: If
-   * the redirect is initiated at the onHeadersReceived stage, then the redirect
-   * will be issued using the GET method.
+   * schemes such as `data:` are allowed. Redirects initiated by a redirect
+   * action use the original request method for the redirect, with one
+   * exception: If the redirect is initiated at the onHeadersReceived stage,
+   * then the redirect will be issued using the GET method. Redirects from URLs
+   * with `ws://` and `wss://` schemes are <b>ignored</b>.
    */
   String get redirectUrl => jsProxy['redirectUrl'];
   set redirectUrl(String value) => jsProxy['redirectUrl'] = value;
@@ -361,6 +373,17 @@ class UploadData extends ChromeObject {
   set file(String value) => jsProxy['file'] = value;
 }
 
+/**
+ * Contains data passed within form data. For urlencoded form it is stored as
+ * string if data is utf-8 string and as ArrayBuffer otherwise. For form-data it
+ * is ArrayBuffer. If form-data represents uploading file, it is string with
+ * filename, if the filename is provided.
+ */
+class FormDataItem extends ChromeObject {
+  FormDataItem();
+  FormDataItem.fromProxy(JsObject jsProxy): super.fromProxy(jsProxy);
+}
+
 class RequestBodyWebRequest extends ChromeObject {
   RequestBodyWebRequest({String error, Map formData, List<UploadData> raw}) {
     if (error != null) this.error = error;
@@ -409,8 +432,8 @@ class ChallengerWebRequest extends ChromeObject {
   set port(int value) => jsProxy['port'] = value;
 }
 
-OnAuthRequiredEvent _createOnAuthRequiredEvent(JsObject details, JsObject callback) =>
-    new OnAuthRequiredEvent(mapify(details), callback);
+OnAuthRequiredEvent _createOnAuthRequiredEvent(JsObject details, JsObject asyncCallback) =>
+    new OnAuthRequiredEvent(mapify(details), asyncCallback);
 ResourceType _createResourceType(String value) => ResourceType.VALUES.singleWhere((ChromeEnum e) => e.value == value);
 HttpHeaders _createHttpHeaders(JsObject jsProxy) => jsProxy == null ? null : new HttpHeaders.fromProxy(jsProxy);
 AuthCredentialsWebRequest _createAuthCredentialsWebRequest(JsObject jsProxy) => jsProxy == null ? null : new AuthCredentialsWebRequest.fromProxy(jsProxy);

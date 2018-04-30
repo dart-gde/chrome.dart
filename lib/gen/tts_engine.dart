@@ -65,6 +65,19 @@ class ChromeTtsEngine extends ChromeApi {
   bool get available => _ttsEngine != null;
 
   /**
+   * Called by an engine to update its list of voices. This list overrides any
+   * voices declared in this extension's manifest.
+   * 
+   * [voices] Array of [tts.TtsVoice] objects representing the available voices
+   * for speech synthesis.
+   */
+  void updateVoices(List<TtsVoice> voices) {
+    if (_ttsEngine == null) _throwNotAvailable();
+
+    _ttsEngine.callMethod('updateVoices', [jsify(voices)]);
+  }
+
+  /**
    * Routes a TTS event from a speech engine to a client.
    * 
    * [event] The update event from the text-to-speech engine indicating the
@@ -108,6 +121,15 @@ class OnSpeakEvent {
   final dynamic sendTtsEvent;
 
   OnSpeakEvent(this.utterance, this.options, this.sendTtsEvent);
+}
+
+class VoiceGender extends ChromeEnum {
+  static const VoiceGender MALE = const VoiceGender._('male');
+  static const VoiceGender FEMALE = const VoiceGender._('female');
+
+  static const List<VoiceGender> VALUES = const[MALE, FEMALE];
+
+  const VoiceGender._(String str): super(str);
 }
 
 OnSpeakEvent _createOnSpeakEvent(String utterance, JsObject options, JsObject sendTtsEvent) =>

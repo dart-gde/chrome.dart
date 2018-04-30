@@ -5,7 +5,7 @@
 // This features file defines permissions for extension APIs implemented
 // under src/chrome.
 // See chrome/common/extensions/api/_features.md to understand this file, as
-// well as feature.h, simple_feature.h, and base_feature_provider.h.
+// well as feature.h, simple_feature.h, and feature_provider.h.
 
 // If you add a new platform_app permission please update the "stubs_app" test:
 // chrome/test/data/extensions/api_test/stubs_app/manifest.json
@@ -48,7 +48,8 @@
     "channel": "stable",
     "extension_types": ["extension"],
     "whitelist": [
-      "0D209B5E4401BB8E7873B5AB5B1346A1CB067015"  // Autotest: crbug.com/654525
+      "0D209B5E4401BB8E7873B5AB5B1346A1CB067015", // http://crbug.com/654525
+      "93CFDA3681E923AD7AB291CEDD98248396B5496C"  // http://crbug.com/803543
     ]
   },
   "background": {
@@ -91,13 +92,8 @@
     "channel": "stable",
     "extension_types": ["extension"],
     "whitelist": [
-      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // Dev
-      "FA01E0B81978950F2BC5A50512FD769725F57510",  // Beta
-      "B11A93E7E5B541F8010245EBDE2C74647D6C14B9",  // Canary
-      "F155646B5D1CA545F7E1E4E20D573DFDD44C2540",  // Google Cast Beta
-      "16CA7A47AAE4BE49B1E75A6B960C3875E945B264",  // Google Cast Stable
-      "C17CD9E6868D7B9C67926E0EC612EA25C768418F",  // http://crbug.com/457908
-      "226CF815E39A363090A1E547D53063472B8279FA"   // http://crbug.com/574889
+      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // Media Router Dev
+      "226CF815E39A363090A1E547D53063472B8279FA"   // Media Router Stable
     ]
   }],
   "certificateProvider": {
@@ -143,7 +139,9 @@
       "2B6C6A4A5940017146F3E58B7F90116206E84685",  // http://crbug.com/642141
       "B6C2EFAB3EC3BF6EF03701408B6B09A67B2D0069",  // http://crbug.com/642141
       "96FF2FFA5C9173C76D47184B3E86D267B37781DE",  // http://crbug.com/642141
-      "0136FCB13DB29FD5CD442F56E59E53B61F1DF96F"   // http://crbug.com/642141
+      "0136FCB13DB29FD5CD442F56E59E53B61F1DF96F",  // http://crbug.com/642141
+      "9834387FDA1F66A1B5CA06CB442137B556F12F2A",  // http://crbug.com/772346
+      "930F7D9989A5FBCDCCD7D85BB5C3B7006C24D91D"   // http://crbug.com/782139
     ]
   },
   "clipboardRead": {
@@ -262,14 +260,8 @@
     "channel": "stable",
     "extension_types": ["extension"],
     "whitelist": [
-      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // Dev
-      "FA01E0B81978950F2BC5A50512FD769725F57510",  // Beta
-      "B11A93E7E5B541F8010245EBDE2C74647D6C14B9",  // Canary
-      "F155646B5D1CA545F7E1E4E20D573DFDD44C2540",  // Google Cast Beta
-      "16CA7A47AAE4BE49B1E75A6B960C3875E945B264",  // Google Cast Stable
-      "C17CD9E6868D7B9C67926E0EC612EA25C768418F",  // http://crbug.com/457908
-      "226CF815E39A363090A1E547D53063472B8279FA"   // http://crbug.com/574889
-
+      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // Media Router Dev
+      "226CF815E39A363090A1E547D53063472B8279FA"   // Media Router Stable
     ]
   },
   "easyUnlockPrivate": {
@@ -290,7 +282,7 @@
   "enterprise.platformKeys": {
     "channel": "stable",
     "platforms": ["chromeos"],
-    "extension_types": ["extension", "legacy_packaged_app"],
+    "extension_types": ["extension", "platform_app", "legacy_packaged_app"],
     "location": "policy"
   },
   "enterprise.platformKeysPrivate": {
@@ -306,34 +298,11 @@
       "2C18988BCDC297196D5D6893005175DA1BC1E893"   // http://crbug.com/570127
     ]
   },
-  "experienceSamplingPrivate": {
-    "channel": "stable",
-    "extension_types": ["extension"],
-    "whitelist": [
-      "0B5B953E53AC1859AC1DD3F67E115D1A5C2D6123"  // https://crbug.com/384635
-    ]
-  },
   "experimental": {
     "channel": "stable",
     "command_line_switch": "experimental-extension-apis",
     "extension_types": [
       "extension", "legacy_packaged_app", "hosted_app", "platform_app"
-    ]
-  },
-  "feedbackPrivate": {
-    "channel": "stable",
-    "extension_types": ["extension", "platform_app"],
-    "whitelist": [
-      "7910EAFDAF64B947E1CB31B333A9BD14CA556B6C",  // Feedback UI.
-      "1C93BD3CF875F4A73C0B2A163BB8FBDA8B8B3D80",  // http://crbug.com/293683
-      "A3BC37E2148AC4E99BE4B16AF9D42DD1E592BBBE",  // http://crbug.com/293683
-      "8C3741E3AF0B93B6E8E0DDD499BB0B74839EA578",  // http://crbug.com/234235
-      "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB",  // http://crbug.com/234235
-      "307E96539209F95A1A8740C713E6998A73657D96",  // http://crbug.com/329690
-      "4F25792AF1AA7483936DE29C07806F203C7170A0",  // http://crbug.com/407693
-      "BD8781D757D830FC2E85470A1B6E8A718B7EE0D9",  // http://crbug.com/407693
-      "4AC2B6C63C6480D150DFDA13E4A5956EB1D0DDBB",  // http://crbug.com/407693
-      "81986D4F846CEDDDB962643FA501D1780DD441BB"   // http://crbug.com/407693
     ]
   },
   "fileBrowserHandler": {
@@ -354,54 +323,6 @@
       "397F221E63F86BE34C30165613E95B6CC8D22A52"   // http://crbug.com/415846
     ]
   },
-  "fileSystem": [{
-    "channel": "stable",
-    "extension_types": ["platform_app"],
-    "default_parent": true
-  },{
-    "channel": "stable",
-    "extension_types": ["extension"],
-    "whitelist": [
-      "2FC374607C2DF285634B67C64A2E356C607091C3",  // Quickoffice
-      "3727DD3E564B6055387425027AD74C58784ACC15",  // Quickoffice internal
-      "12E618C3C6E97495AAECF2AC12DEB082353241C6",  // QO component extension
-      "D5736E4B5CF695CB93A2FB57E4FDC6E5AFAB6FE2",  // http://crbug.com/312900
-      "D57DE394F36DC1C3220E7604C575D29C51A6C495",  // http://crbug.com/319444
-      "3F65507A3B39259B38C8173C6FFA3D12DF64CCE9",  // http://crbug.com/371562
-      "2B6C6A4A5940017146F3E58B7F90116206E84685",  // http://crbug.com/642141
-      "B6C2EFAB3EC3BF6EF03701408B6B09A67B2D0069",  // http://crbug.com/642141
-      "96FF2FFA5C9173C76D47184B3E86D267B37781DE",  // http://crbug.com/642141
-      "0136FCB13DB29FD5CD442F56E59E53B61F1DF96F"   // http://crbug.com/642141
-    ]
-  }],
-  "fileSystem.directory": {
-    "channel": "stable",
-    "extension_types": ["platform_app"]
-  },
-  "fileSystem.retainEntries": {
-    "channel": "stable",
-    "extension_types": ["platform_app"]
-  },
-  "fileSystem.write": [{
-    "channel": "stable",
-    "extension_types": ["platform_app"]
-  },{
-    "channel": "stable",
-    "extension_types": ["extension"],
-    "whitelist": [
-      "2FC374607C2DF285634B67C64A2E356C607091C3",  // Quickoffice
-      "3727DD3E564B6055387425027AD74C58784ACC15",  // Quickoffice internal
-      "12E618C3C6E97495AAECF2AC12DEB082353241C6",  // QO component extension
-      "D5736E4B5CF695CB93A2FB57E4FDC6E5AFAB6FE2",  // http://crbug.com/312900
-      "D57DE394F36DC1C3220E7604C575D29C51A6C495",  // http://crbug.com/319444
-      "3F65507A3B39259B38C8173C6FFA3D12DF64CCE9"   // http://crbug.com/371562
-    ]
-  }],
-  "fileSystem.requestFileSystem": [{
-    "channel": "stable",
-    "extension_types": ["platform_app"],
-    "platforms": ["chromeos"]
-  }],
   "fileSystemProvider": [{
     "channel": "stable",
     "extension_types": ["extension", "platform_app"],
@@ -425,16 +346,6 @@
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"]
   },
-  "gcdPrivate": {
-    "channel": "stable",
-    "extension_types": ["extension", "platform_app"],
-    "whitelist": [
-      "11B478CEC461C766A2DC1E5BEEB7970AE06DC9C2",  // http://crbug.com/394124
-      "0EFB879311E9EFBB7C45251F89EC655711B1F6ED",  // http://crbug.com/394124
-      "9193D3A51E2FE33B496CDA53EA330423166E7F02",  // http://crbug.com/394124
-      "F9119B8B18C7C82B51E7BC6FF816B694F2EC3E89"   // http://crbug.com/394124
-    ]
-  },
   "gcm": {
     "channel": "stable",
     "extension_types": ["extension", "platform_app"]
@@ -448,14 +359,6 @@
   "history": {
     "channel": "stable",
     "extension_types": ["extension", "legacy_packaged_app"]
-  },
-  "hotwordPrivate": {
-    "channel": "stable",
-    "extension_types": ["extension", "platform_app"],
-    "whitelist": [
-      "62CCAAD339E6451BBF97C4BBDF758E934A05AD0B",  // hotword component
-      "B6356EFF4047BC5F868C7D91868B6F5C01951A8A"   // hotword_audio_verification
-    ]
   },
   "identity": {
     "channel": "stable",
@@ -508,25 +411,37 @@
       "A948368FC53BE437A55FEB414106E207925482F5"  // File Manager
     ]
   },
-  "logPrivate": {
+  "lockWindowFullscreenPrivate": {
     "channel": "stable",
-    "extension_types": ["extension", "platform_app"],
+    "component_extensions_auto_granted": false,
+    "extension_types": ["extension"],
+    "platforms": ["chromeos"],
     "whitelist": [
-      "ddammdhioacbehjngdmkjcjbnfginlla",          // Test
-      "1C93BD3CF875F4A73C0B2A163BB8FBDA8B8B3D80",  // http://crbug.com/293683
-      "A3BC37E2148AC4E99BE4B16AF9D42DD1E592BBBE",  // http://crbug.com/293683
-      "8C3741E3AF0B93B6E8E0DDD499BB0B74839EA578",  // http://crbug.com/234235
-      "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB",  // http://crbug.com/234235
-      "307E96539209F95A1A8740C713E6998A73657D96",  // http://crbug.com/329690
-      "4F25792AF1AA7483936DE29C07806F203C7170A0",  // http://crbug.com/407693
-      "BD8781D757D830FC2E85470A1B6E8A718B7EE0D9",  // http://crbug.com/407693
-      "4AC2B6C63C6480D150DFDA13E4A5956EB1D0DDBB",  // http://crbug.com/407693
-      "81986D4F846CEDDDB962643FA501D1780DD441BB"   // http://crbug.com/407693
+      "6A4A0389E8D47118E96E6221B0B7221CA3715801",  // Apitest extension
+      "EC8EA268128FECE14CEC68B90686D87755D87083",  // Assessment Assistant
+      "AA1C88257F51F7A9AFB947720AACE8CA7E9CF85C",  // Assessment Assistant (dev)
+      "A4577D8C2AF4CF26F40CBCA83FFA4251D6F6C8F8",  // Share to Classroom
+      "EFCF5358672FEE04789FD2EC3638A67ADEDB6C8C",  // Share to Classroom (test)
+      "A8208CCC87F8261AFAEB6B85D5E8D47372DDEA6B"   // Share to Classroom
+                                                   // (staging)
     ]
   },
   "webcamPrivate": {
     "channel": "stable",
     "extension_types": ["extension", "platform_app"]
+  },
+  "networking.castPrivate": {
+    "channel": "stable",
+    "extension_types": ["extension", "platform_app"],
+    "platforms": ["chromeos", "mac", "win"],
+    "whitelist": [
+      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // http://crbug.com/588179
+      "FA01E0B81978950F2BC5A50512FD769725F57510",  // http://crbug.com/588179
+      "B11A93E7E5B541F8010245EBDE2C74647D6C14B9",  // http://crbug.com/588179
+      "F155646B5D1CA545F7E1E4E20D573DFDD44C2540",  // http://crbug.com/588179
+      "16CA7A47AAE4BE49B1E75A6B960C3875E945B264",  // http://crbug.com/588179
+      "226CF815E39A363090A1E547D53063472B8279FA"   // http://crbug.com/588179
+    ]
   },
   "management": [
     {
@@ -548,10 +463,6 @@
         "9FDE6E7F06FCFA11D9A05041C7FF6D8AE662F5D1",  // Spark release.
         "50B4A905D522C06E27CA6D099E3E54BDA1F152C5",  // Spark Beta channel.
         "BA0C8BB92084C9741312D90D3EA882526853455F",  // Spark dev channel.
-        "11B478CEC461C766A2DC1E5BEEB7970AE06DC9C2",  // http://crbug.com/408276
-        "0EFB879311E9EFBB7C45251F89EC655711B1F6ED",  // http://crbug.com/408276
-        "9193D3A51E2FE33B496CDA53EA330423166E7F02",  // http://crbug.com/408276
-        "F9119B8B18C7C82B51E7BC6FF816B694F2EC3E89",  // http://crbug.com/408276
         "5F57A9AE8DFF5D6BB09DF8606270402612E871E5"   // http://crbug.com/422624
       ]
     },
@@ -561,6 +472,11 @@
       "whitelist": [
         "B44D08FD98F1523ED5837D78D0A606EA9D6206E5"  // Web Store
       ]
+    },
+    {
+      "channel": "dev",
+      "extension_types": ["platform_app"],
+      "session_types": ["kiosk"]
     }
   ],
   "mediaGalleries": {
@@ -597,28 +513,16 @@
     "channel": "stable",
     "extension_types": ["extension"],
     "whitelist": [
-      "226CF815E39A363090A1E547D53063472B8279FA",  // http://crbug.com/574889
-      "C17CD9E6868D7B9C67926E0EC612EA25C768418F",  // http://crbug.com/448569
-      "A45DABDB47A31CC812E5490AB748C7D05E2D32E9",  // http://crbug.com/448569
-      "BFEE2E3B80BE21A645E63E9346DFC383E7CB3BDA",  // http://crbug.com/448569
-      "63ED55E43214C211F82122ED56407FF1A807F2A3"   // http://crbug.com/448569
+      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // Media Router Dev
+      "226CF815E39A363090A1E547D53063472B8279FA"   // Media Router Stable
     ]
   },
   "mdns": [{
     "channel": "stable",
     "extension_types": ["extension"],
     "whitelist": [
-      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // Dev
-      "FA01E0B81978950F2BC5A50512FD769725F57510",  // Beta
-      "B11A93E7E5B541F8010245EBDE2C74647D6C14B9",  // Canary
-      "F155646B5D1CA545F7E1E4E20D573DFDD44C2540",  // Google Cast Beta
-      "16CA7A47AAE4BE49B1E75A6B960C3875E945B264",  // Google Cast Stable
-      "11B478CEC461C766A2DC1E5BEEB7970AE06DC9C2",  // http://crbug.com/397691
-      "0EFB879311E9EFBB7C45251F89EC655711B1F6ED",  // http://crbug.com/397691
-      "9193D3A51E2FE33B496CDA53EA330423166E7F02",  // http://crbug.com/397691
-      "F9119B8B18C7C82B51E7BC6FF816B694F2EC3E89",  // http://crbug.com/397691
-      "C17CD9E6868D7B9C67926E0EC612EA25C768418F",  // http://crbug.com/457908
-      "226CF815E39A363090A1E547D53063472B8279FA",  // http://crbug.com/457908
+      "63ED55E43214C211F82122ED56407FF1A807F2A3",  // Media Router Dev
+      "226CF815E39A363090A1E547D53063472B8279FA",  // Media Router Stable
       "1BFB3A47AA4A1E1C4714D919217602685CDD0FA7"   // http://crbug.com/574600
     ]
   },
@@ -638,16 +542,6 @@
       "A6C87307BBE5886CC5F1393025000E2FE8060BF2",
       "3407516021EA3669C0EC8E65E6B9837E5A521B9C"
     ]
-  },
-  "nativeMessaging": {
-    "channel": "stable",
-    "extension_types": [
-      "extension", "legacy_packaged_app", "platform_app"
-    ]
-  },
-  "notificationProvider": {
-    "channel": "trunk",
-    "extension_types": ["extension", "platform_app"]
   },
   "notifications": {
     // The chrome.notifications functionality listed in notifications.idl is
@@ -758,7 +652,7 @@
       "0136FCB13DB29FD5CD442F56E59E53B61F1DF96F"   // http://crbug.com/642141
     ]
   },
-  "inlineInstallPrivate":[{
+  "inlineInstallPrivate": {
     "channel": "dev",
     "extension_types": ["platform_app"],
     "whitelist": [
@@ -766,16 +660,7 @@
       "3A78E13285C1949EF84AA85E3BF65D1E83A3D9AB", // Test Extension
       "4477F0B4FE934D0A8C88922C0986DA7B25D881E1"  // API Test
     ]
-  }, {
-    "channel": "stable",
-    "extension_types": ["platform_app"],
-    "whitelist": [
-      "11B478CEC461C766A2DC1E5BEEB7970AE06DC9C2", // http://crbug.com/439526
-      "0EFB879311E9EFBB7C45251F89EC655711B1F6ED", // http://crbug.com/439526
-      "9193D3A51E2FE33B496CDA53EA330423166E7F02", // http://crbug.com/439526
-      "F9119B8B18C7C82B51E7BC6FF816B694F2EC3E89"  // http://crbug.com/439526
-    ]
-  }],
+  },
   "resourcesPrivate": {
     "channel": "stable",
     "extension_types": [
@@ -796,7 +681,8 @@
   "screenlockPrivate": {
     "channel": "stable",
     "extension_types": ["platform_app"],
-    "location": "component"
+    "location": "component",
+    "platforms": ["chromeos"]
   },
   "sessions": {
     "channel": "stable",
@@ -813,6 +699,22 @@
     "whitelist": [
       "63ED55E43214C211F82122ED56407FF1A807F2A3",  // Media Router Dev
       "226CF815E39A363090A1E547D53063472B8279FA"   // Media Router Release
+    ]
+  },
+  {
+    "channel": "stable",
+    "extension_types": ["platform_app"],
+    "platforms": ["chromeos"],
+    "session_types": ["kiosk"],
+    "whitelist": [
+      "E703483CEF33DEC18B4B6DD84B5C776FB9182BDB",  // https://crbug.com/803362
+      "A3BC37E2148AC4E99BE4B16AF9D42DD1E592BBBE",  // https://crbug.com/803362
+      "1C93BD3CF875F4A73C0B2A163BB8FBDA8B8B3D80",  // https://crbug.com/803362
+      "307E96539209F95A1A8740C713E6998A73657D96",  // https://crbug.com/803362
+      "4F25792AF1AA7483936DE29C07806F203C7170A0",  // https://crbug.com/803362
+      "BD8781D757D830FC2E85470A1B6E8A718B7EE0D9",  // https://crbug.com/803362
+      "4AC2B6C63C6480D150DFDA13E4A5956EB1D0DDBB",  // https://crbug.com/803362
+      "81986D4F846CEDDDB962643FA501D1780DD441BB"   // https://crbug.com/803362
     ]
   }],
   "signedInDevices": {
@@ -926,7 +828,7 @@
   },
   "webrtcLoggingPrivate": {
     "channel": "stable",
-    "extension_types": ["extension"],
+    "extension_types": ["extension", "platform_app"],
     "whitelist": [
       // Hangouts test extension
       "80B9DC58E5210749F052F5B4DB239C50CF72AEB6",
@@ -935,7 +837,27 @@
       // Media Router dev extension
       "63ED55E43214C211F82122ED56407FF1A807F2A3",
       // Media Router release extension
-      "226CF815E39A363090A1E547D53063472B8279FA"
+      "226CF815E39A363090A1E547D53063472B8279FA",
+      // Extension used for API test.
+      "ADFA45434ABA2F1A4647E673F53FF37F8F6047A3",
+      "4F25792AF1AA7483936DE29C07806F203C7170A0",  // http://crbug.com/777967
+      "BD8781D757D830FC2E85470A1B6E8A718B7EE0D9",  // http://crbug.com/777967
+      "4AC2B6C63C6480D150DFDA13E4A5956EB1D0DDBB",  // http://crbug.com/777967
+      "81986D4F846CEDDDB962643FA501D1780DD441BB"   // http://crbug.com/777967
+    ]
+  },
+  "webrtcLoggingPrivate.audioDebug": {
+    "channel": "stable",
+    "extension_types": ["platform_app"],
+    "component_extensions_auto_granted": false,
+    "whitelist": [
+      // Extension used for API test.
+      "ADFA45434ABA2F1A4647E673F53FF37F8F6047A3",
+      // These apps are for internal Google use only.
+      "4F25792AF1AA7483936DE29C07806F203C7170A0",  // http://crbug.com/777967
+      "BD8781D757D830FC2E85470A1B6E8A718B7EE0D9",  // http://crbug.com/777967
+      "4AC2B6C63C6480D150DFDA13E4A5956EB1D0DDBB",  // http://crbug.com/777967
+      "81986D4F846CEDDDB962643FA501D1780DD441BB"   // http://crbug.com/777967
     ]
   },
   "webstorePrivate": {

@@ -25,22 +25,33 @@ namespace automationInternal {
     // The mouse coordinates when this event fired.
     double mouseX;
     double mouseY;
+
+
+    // ID of an action request resulting in this event.
+    long actionRequestID;
   };
 
   // All possible actions that can be performed on automation nodes.
   enum ActionType {
-    focus,
+    customAction,
     doDefault,
+    focus,
     getImageData,
+    hitTest,
     makeVisible,
     resumeMedia,
-    setAccessibilityFocus,
+    scrollBackward,
+    scrollForward,
+    scrollUp,
+    scrollDown,
+    scrollLeft,
+    scrollRight,
     setSequentialFocusNavigationStartingPoint,
     setSelection,
+    showContextMenu,
     startDuckingMedia,
     stopDuckingMedia,
-    suspendMedia,
-    showContextMenu
+    suspendMedia
   };
 
   // Arguments required for all actions supplied to performAction.
@@ -48,6 +59,13 @@ namespace automationInternal {
     long treeID;
     long automationNodeID;
     ActionType actionType;
+    long? requestID;
+  };
+
+  // Arguments for the customAction action. Those args are passed to
+  // performAction as opt_args.
+  dictionary PerformCustomActionParams {
+    long customActionID;
   };
 
   // Arguments for the setSelection action supplied to performAction.
@@ -68,14 +86,20 @@ namespace automationInternal {
 
   // Arguments for the enableTab function.
   dictionary EnableTabParams {
-    long routingID;
     long? tabID;
   };
 
-  // Arguments for the getImageData function.
+  // Arguments for the getImageData action.
   dictionary GetImageDataParams {
     long maxWidth;
     long maxHeight;
+  };
+
+  // Arguments for the hitTest action.
+  dictionary HitTestParams {
+    long x;
+    long y;
+    DOMString eventToFire;
   };
 
   // Returns the accessibility tree id of the web contents who's accessibility
@@ -99,8 +123,7 @@ namespace automationInternal {
     static void enableFrame(long tree_id);
 
     // Enables desktop automation.
-    static void enableDesktop(long routingID,
-                              EnableDesktopCallback callback);
+    static void enableDesktop(EnableDesktopCallback callback);
 
     // Performs an action on an automation node.
     static void performAction(PerformActionRequiredParams args,
@@ -127,5 +150,7 @@ namespace automationInternal {
     static void onNodesRemoved(long treeID, long[] nodeIDs);
 
     static void onAccessibilityTreeSerializationError(long treeID);
+
+    static void onActionResult(long treeID, long requestID, boolean result);
   };
 };
