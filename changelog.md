@@ -1,5 +1,8 @@
 # Changelog - chrome.dart
 
+## 0.10.1 2018-05-02
+- fix missing classes on generated `app.dart` file.
+
 ## 0.10.0 2018-04-30
 - updated to be compatible with Chrome 66 IDL's
   - Ignoring `app.runtime.ActionType` in AppWindow API
