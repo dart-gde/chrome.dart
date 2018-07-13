@@ -1,5 +1,8 @@
 # Changelog - chrome.dart
 
+## 0.10.2 2018-07-13
+- change core library constants to lowercase.
+
 ## 0.10.1 2018-05-02
 - fix missing classes on generated `app.dart` file.
 
@@ -98,11 +101,11 @@
 
 ## 0.5.2 2014-02-14 (SDK 1.3.0-dev.3.2 r33495)
 
-- Updated to use docgen for api documentation 
+- Updated to use docgen for api documentation
 - Make the window close event sync instead of async
 - Clean up warnings in unit tests
 - Add app/ to drone_io.sh script
-- Add a chrome pub transformer  
+- Add a chrome pub transformer
 - Fix an issue w/ the hand-overridden API
 - Use a getter to fetch the JsObject for an API each time it is needed
 

@@ -42,7 +42,7 @@ List listify(JsObject obj, [Function transformer = null]) {
 
 Map mapify(JsObject obj) {
   if (obj == null) return null;
-  return JSON.decode(_jsJSON.callMethod('stringify', [obj]));
+  return jsonDecode(_jsJSON.callMethod('stringify', [obj]));
 }
 
 dynamic jsify(dynamic obj) {
