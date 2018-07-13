@@ -35,7 +35,7 @@ void defineTests() {
     test('unescapes files', () {
       var testEscapeString = 'this & that is <\"\'>';
       var escapedHtmlFile = '<table><tr><td></td><td><a name="1"></a><span>'
-          '${HTML_ESCAPE.convert(testEscapeString)}</span></td></tr></table>';
+          '${htmlEscape.convert(testEscapeString)}</span></td></tr></table>';
       file = new GoogleSourceFile(escapedHtmlFile, 'www.example.com');
 
       expect(file.fileContents, testEscapeString);

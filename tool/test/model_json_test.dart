@@ -76,7 +76,7 @@ void main() {
         "description": "A simple enum with two values",
         "enum": ["firstVal", "secondVal"]
       }]''';
-      var jsonEnum = json_model.JsonEnum.parse(JSON.decode(data)).single;
+      var jsonEnum = json_model.JsonEnum.parse(jsonDecode(data)).single;
 
       expect(jsonEnum.name, 'simpleEnum');
       expect(jsonEnum.values.length, 2);
@@ -98,7 +98,7 @@ void main() {
         "description": "A very simple enum with one value",
         "enum": ["onlyVal"]
       }]''';
-      var jsonEnums = json_model.JsonEnum.parse(JSON.decode(data));
+      var jsonEnums = json_model.JsonEnum.parse(jsonDecode(data));
 
       expect(jsonEnums.length, 2);
       expect(jsonEnums[0].name, 'simpleEnum');
@@ -124,7 +124,7 @@ void main() {
         "description": "A very simple enum with one value",
         "enum": ["onlyVal"]
       }]''';
-      var jsonEnums = json_model.JsonEnum.parse(JSON.decode(data));
+      var jsonEnums = json_model.JsonEnum.parse(jsonDecode(data));
 
       expect(jsonEnums.length, 2);
       expect(jsonEnums[0].name, 'simpleEnum');
@@ -147,7 +147,7 @@ void main() {
           }
         ]
       }]''';
-      var jsonEnum = json_model.JsonEnum.parse(JSON.decode(data)).single;
+      var jsonEnum = json_model.JsonEnum.parse(jsonDecode(data)).single;
 
       expect(jsonEnum.name, 'describedEnum');
       expect(jsonEnum.values.length, 2);
@@ -211,7 +211,7 @@ void main() {
       }]""";
 
       List<json_model.JsonFunction> functions =
-          json_model.JsonFunction.parse(JSON.decode(data));
+          json_model.JsonFunction.parse(jsonDecode(data));
       expect(functions, isNotNull);
       expect(functions, hasLength(1));
       json_model.JsonFunction function = functions[0];

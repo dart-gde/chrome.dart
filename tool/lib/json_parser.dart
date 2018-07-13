@@ -30,7 +30,7 @@ JsonNamespace parse(String jsonText) {
     }
   });
 
-  return _parseJson(JSON.decode(newLines.join('\n')));
+  return _parseJson(jsonDecode(newLines.join('\n')));
 }
 
 JsonNamespace _parseJson(dynamic json) {

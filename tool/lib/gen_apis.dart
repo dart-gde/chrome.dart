@@ -49,7 +49,7 @@ class GenApis {
   void generate() {
     _logger.info("reading ${apisFile.path}...");
 
-    var apisInfo = JSON.decode(apisFile.readAsStringSync());
+    var apisInfo = jsonDecode(apisFile.readAsStringSync());
 
     _generateApi('app', apisInfo['packaged_app'], includeAppSrc: true);
     _generateApi('ext', apisInfo['extension'], alreadyWritten: apisInfo['packaged_app']);

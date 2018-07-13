@@ -16,6 +16,6 @@ class SimpleHttpClient {
     HttpClientRequest request = await _client.getUrl(uri);
     request.close();
     HttpClientResponse response = await request.done;
-    return await response.transform(UTF8.decoder).join('');
+    return await response.transform(utf8.decoder).join('');
   }
 }
