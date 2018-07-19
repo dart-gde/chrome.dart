@@ -124,7 +124,7 @@ class JsonType extends JsonObject {
     super(json) {
 
     if (parameters.isEmpty && json.containsKey('items')) {
-      parameters.add(new JsonType(json['items']));
+      parameters.add(new JsonParamType(json['items']));
     }
   }
 
