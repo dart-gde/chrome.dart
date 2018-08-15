@@ -596,7 +596,7 @@
           },
           "modification": {
             "$ref": "declarativeWebRequest.RequestCookie",
-            "description": "Attributes that shall be overridden in cookies that machted the filter. Attributes that are set to an empty string are removed."
+            "description": "Attributes that shall be overridden in cookies that matched the filter. Attributes that are set to an empty string are removed."
           }
         }
       },
@@ -615,7 +615,7 @@
           },
           "modification": {
             "$ref": "declarativeWebRequest.ResponseCookie",
-            "description": "Attributes that shall be overridden in cookies that machted the filter. Attributes that are set to an empty string are removed."
+            "description": "Attributes that shall be overridden in cookies that matched the filter. Attributes that are set to an empty string are removed."
           }
         }
       },
