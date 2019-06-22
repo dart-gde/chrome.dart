@@ -61,7 +61,7 @@ dynamic jsify(dynamic obj) {
     return new JsObject.jsify(m);
   } else if (obj is Iterable) {
     // Do a deep convert.
-    return new JsArray.from(obj).map(jsify);
+    return new JsArray.from(obj.map(jsify));
   } else {
     return obj;
   }
